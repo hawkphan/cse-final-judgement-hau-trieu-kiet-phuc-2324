@@ -5,6 +5,8 @@
 
 #REACT FILES/FOLDERS
 
+#port file
+server-app/API/Properties/launchSettings.json
 
 # User-specific files
 *.rsuser
