@@ -478,3 +478,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 server-app/API/Properties/launchSettings.json
+server-app/API/reactivities.db-shm
