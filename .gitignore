@@ -5,9 +5,6 @@
 
 #REACT FILES/FOLDERS
 
-#port file
-server-app/API/Properties/launchSettings.json
-
 # User-specific files
 *.rsuser
 *.suo
@@ -480,3 +477,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+server-app/API/Properties/launchSettings.json
