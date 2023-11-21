@@ -479,3 +479,5 @@ $RECYCLE.BIN/
 *.lnk
 server-app/API/Properties/launchSettings.json
 server-app/API/reactivities.db-shm
+server-app/API/reactivities.db-wal
+server-app/API/Properties/launchSettings.json
