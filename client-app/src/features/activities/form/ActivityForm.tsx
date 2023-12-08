@@ -6,32 +6,61 @@ interface Props {
   activity: Activity | undefined;
   closeForm: () => void;
   createOrEdit: (activity: Activity) => void;
-
 }
-export default function ActivityForm({ activity: selectedActivity, closeForm ,createOrEdit}: Props) {
-    const initialState = selectedActivity ?? {
-        id:'',title:'',category:'',description:'', date:'',city:'',venue:''
-    }
-    const[activity,setActivity] = useState(initialState);
-    function handleSubmit(){
-        createOrEdit(activity);
-    }
-    function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
-        const {name,value} =event.target;
-        setActivity({...activity,[name]:value})
-    }
-    return (
+export default function ActivityForm({
+  activity: selectedActivity,
+  closeForm,
+  createOrEdit,
+}: Props) {
+  const initialState = selectedActivity ?? {
+    id: "",
+    title: "",
+    category: "",
+    description: "",
+    date: "",
+    city: "",
+    venue: "",
+  };
+  const [activity, setActivity] = useState(initialState);
+  function handleSubmit() {
+    createOrEdit(activity);
+  }
+  function handleInputChange(
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    const { name, value } = event.target;
+    setActivity({ ...activity, [name]: value });
+  }
+  return (
     <Segment clearing>
-      <Form autoComplete="off">
-        <Form.Input placeholder="Title" value={activity.title} name="title" onChange={handleInputChange} />
-        <Form.Input placeholder="Description" value={activity.description} name="description" onChange={handleInputChange}/>
-        <Form.Input placeholder="Category" name ="category" value={activity.category} onChange={handleInputChange}/>
-        <Form.Input placeholder="Date" name="date" value={activity.date} onChange={handleInputChange}/>
-        <Form.Input placeholder="City" name="city" value={activity.city} onChange={handleInputChange}/>
-        <Form.Input placeholder="Venue" name = "venue" value={activity.venue} onChange={handleInputChange}/>
-        <Button floated="right" positive type="submit" content="Submit" onClick={handleSubmit}/>
-        <Button onClick={closeForm} floated="right" positive type="button" content="Cancel" />
-      </Form>
+      <div className="user-infomation" style={{ margin: "10px 0 0 10px" }}>
+        <img src="src/assets/avatar/avatar.png" alt="" />
+        <p className="" style={{ fontSize: "24px" }}>
+          FangTriggerXtreme1
+        </p>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "auto auto auto" }}>
+        <div>
+          <img src="../../src/assets/folder-icon.png" alt="" />
+        </div>
+        <div>
+          <img src="../../src/assets/folder-icon.png" alt="" />
+        </div>
+        <div>
+          <img src="../../src/assets/folder-icon.png" alt="" />
+        </div>
+        <div>
+          <img src="../../src/assets/folder-icon.png" alt="" />
+        </div>
+      </div>
+      <br />
+      <Button
+        onClick={closeForm}
+        floated="right"
+        positive
+        type="button"
+        content="Cancel"
+      />
     </Segment>
   );
 }
