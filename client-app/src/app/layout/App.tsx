@@ -64,6 +64,7 @@ function App() {
           deleteActivity={handleDeleteActivity}
         />
       </Container>
+      <CustomFooter />
     </Fragment>
 
 
