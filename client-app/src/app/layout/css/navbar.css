@@ -1,0 +1,21 @@
+.avatar-container {
+  margin-right: 10px !important;
+  background-color: #89b4f8;
+  display: block;
+  -moz-border-radius: 200x;
+  -webkit-border-radius: 20px;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  /* background-color: red; */
+}
+.user-infomation {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.user-infomation img {
+  background: #89b4f8;
+  max-width: 50px;
+  max-height: 50px;
+  border-radius: 25px;
+}

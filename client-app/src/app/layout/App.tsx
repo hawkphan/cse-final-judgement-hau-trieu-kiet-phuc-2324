@@ -3,7 +3,9 @@ import { Activity } from "../models/activity";
 import { Fragment, useEffect, useState } from "react";
 import { Container } from "semantic-ui-react";
 import { v4 as uuid } from "uuid";
+import "./css/navbar.css";
 import NavBar from "./NavBar";
+import CustomFooter from "./Footer";
 import ActivitityDashboard from "../../features/activities/dashboard/ActivityDashboard";
 
 function App() {
@@ -35,9 +37,9 @@ function App() {
   function handleCreateOrEditActivity(activity: Activity) {
     activity.id
       ? setActivities([
-          ...activities.filter((x) => x.id !== activity.id),
-          activity,
-        ])
+        ...activities.filter((x) => x.id !== activity.id),
+        activity,
+      ])
       : setActivities([...activities, { ...activity, id: uuid() }]);
     setEditMode(false);
     setSelectedActivity(activity);
@@ -63,6 +65,12 @@ function App() {
         />
       </Container>
     </Fragment>
+
+
+
+
+
+
   );
 }
 
