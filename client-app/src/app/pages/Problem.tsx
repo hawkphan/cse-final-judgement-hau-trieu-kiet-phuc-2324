@@ -12,7 +12,6 @@ import {
   Button,
   Form,
   TextArea,
-  Rating,
 } from "semantic-ui-react";
 
 interface Props {}
