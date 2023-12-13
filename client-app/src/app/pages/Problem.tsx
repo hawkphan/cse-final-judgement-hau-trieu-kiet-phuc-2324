@@ -20,6 +20,7 @@ interface Props {}
 export default function ProblemDecription_Page() {
   const [accorionSelected, setAccorionSelected] = useState(-1);
   const [languageSelected, setLanguageSelected] = useState("C#");
+  const [isOpenConsole, setIsOpenConsole] = useState(false)
 
   const panes = [
     {
@@ -143,6 +144,36 @@ export default function ProblemDecription_Page() {
               <TextArea placeholder="Coding here" style={{ minHeight: 400 }} />
             </Form>
           </Segment>
+
+          <Segment clearing>
+            
+            <Accordion>
+            
+            <Button content="submit" floated="right" color="green"/>
+            <Button content="run" floated="right"/>
+            <Button icon floated="right">
+              <Icon name='bug'/>
+            </Button>
+              <Accordion.Title
+                active={isOpenConsole}
+                index={0}
+                onClick={isOpenConsole ?() => setIsOpenConsole(false) : ()=> setIsOpenConsole(true)}
+              >
+                <Icon name="dropdown" />
+                Console
+              </Accordion.Title>
+              
+              <Accordion.Content active={isOpenConsole} style={{outerHeight:400}}>
+                <p>
+                  A dog is a type of domesticated animal. Known for its loyalty
+                  and faithfulness, it can be found as a welcome guest in many
+                  households across the world.
+                </p>
+              </Accordion.Content>
+            </Accordion>
+            
+          </Segment>
+
         </Grid.Column>
       </Grid.Row>
     </Grid>
