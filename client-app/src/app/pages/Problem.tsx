@@ -13,18 +13,22 @@ import {
   Form,
   TextArea,
 } from "semantic-ui-react";
+import "../layout/css/style_kiet.css";
+import ProblemTest from "../layout/testData/problemTest";
 
 interface Props {}
 
 export default function ProblemDecription_Page() {
   const [accorionSelected, setAccorionSelected] = useState(-1);
   const [languageSelected, setLanguageSelected] = useState("C#");
-  const [isOpenConsole, setIsOpenConsole] = useState(false)
+  const [isOpenConsole, setIsOpenConsole] = useState(false);
 
   const panes = [
     {
       menuItem: "Description",
-      render: () => <Tab.Pane attached={false}>Description</Tab.Pane>,
+      render: () => <Tab.Pane attached={false}>
+        <ProblemTest/>
+      </Tab.Pane>,
     },
     {
       menuItem: "Editorial",
@@ -40,6 +44,9 @@ export default function ProblemDecription_Page() {
     },
   ];
   const Languages = ["C#", "Java", "Python"];
+
+
+
   return (
     <Grid divided="vertically">
       <Grid.Row columns={2}>
@@ -145,34 +152,37 @@ export default function ProblemDecription_Page() {
           </Segment>
 
           <Segment clearing>
-            
             <Accordion>
-            
-            <Button content="submit" floated="right" color="green"/>
-            <Button content="run" floated="right"/>
-            <Button icon floated="right">
-              <Icon name='bug'/>
-            </Button>
+              <Button content="submit" floated="right" color="green" />
+              <Button content="run" floated="right" />
+              <Button icon floated="right">
+                <Icon name="bug" />
+              </Button>
               <Accordion.Title
                 active={isOpenConsole}
                 index={0}
-                onClick={isOpenConsole ?() => setIsOpenConsole(false) : ()=> setIsOpenConsole(true)}
+                onClick={
+                  isOpenConsole
+                    ? () => setIsOpenConsole(false)
+                    : () => setIsOpenConsole(true)
+                }
               >
                 <Icon name="dropdown" />
                 Console
               </Accordion.Title>
-              
-              <Accordion.Content active={isOpenConsole} style={{outerHeight:400}}>
-                <p>
-                  A dog is a type of domesticated animal. Known for its loyalty
-                  and faithfulness, it can be found as a welcome guest in many
-                  households across the world.
-                </p>
+
+              <Accordion.Content
+                active={isOpenConsole}
+                style={{ outerHeight: 400 }}
+              >
+                <div className="container01">
+                  <p>
+        
+                  </p>
+                </div>
               </Accordion.Content>
             </Accordion>
-            
           </Segment>
-
         </Grid.Column>
       </Grid.Row>
     </Grid>
