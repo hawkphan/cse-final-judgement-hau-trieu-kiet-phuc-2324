@@ -7,6 +7,7 @@ import "./css/navbar.css";
 import NavBar from "./NavBar";
 import CustomFooter from "./Footer";
 import ActivitityDashboard from "../../features/activities/dashboard/ActivityDashboard";
+import ProblemPage from "../pages/Problem";
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -50,9 +51,9 @@ function App() {
 
   return (
     <Fragment>
-      <NavBar openForm={handleFormOpen} />
+      <NavBar openForm={handleFormOpen}/>
       <Container style={{ marginTop: "7em" }}>
-        <ActivitityDashboard
+{/*         <ActivitityDashboard
           activities={activities}
           selectedActivity={selectedActivity}
           selectActivity={handleSelectActivity}
@@ -62,7 +63,8 @@ function App() {
           closeForm={handleFormClose}
           createOrEdit={handleCreateOrEditActivity}
           deleteActivity={handleDeleteActivity}
-        />
+        /> */}
+        <ProblemPage/>
       </Container>
       <CustomFooter />
     </Fragment>
