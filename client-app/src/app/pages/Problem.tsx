@@ -14,11 +14,14 @@ import {
   TextArea,
 } from "semantic-ui-react";
 import "../layout/css/style_kiet.css";
-import ProblemTest from "../layout/testData/problemTest";
+import { Submission } from "../models/Submission";
+import Description from "./DescriptionTab";
 
-interface Props {}
+interface Props {
+  submissions: Submission[]
+}
 
-export default function ProblemDecription_Page() {
+export default function ProblemDecription_Page({submissions}: Props) {
   const [accorionSelected, setAccorionSelected] = useState(-1);
   const [languageSelected, setLanguageSelected] = useState("C#");
   const [isOpenConsole, setIsOpenConsole] = useState(false);
@@ -27,7 +30,8 @@ export default function ProblemDecription_Page() {
     {
       menuItem: "Description",
       render: () => <Tab.Pane attached={false}>
-        <ProblemTest/>
+<Description/>
+        
       </Tab.Pane>,
     },
     {
@@ -43,7 +47,7 @@ export default function ProblemDecription_Page() {
       render: () => <Tab.Pane attached={false}>Submissions</Tab.Pane>,
     },
   ];
-  const Languages = ["C#", "Java", "Python"];
+
 
 
 
@@ -58,15 +62,15 @@ export default function ProblemDecription_Page() {
                 <Grid>
                   <Grid.Row columns={3}>
                     <Grid.Column>
-                      <p>Accepted: {} |</p>
+                      <p>Accepted: <strong>25.5 K</strong> |</p>
                     </Grid.Column>
 
                     <Grid.Column>
-                      <p>Submissions: {} |</p>
+                      <p>Submissions: <strong>32.2 K</strong> |</p>
                     </Grid.Column>
 
                     <Grid.Column>
-                      <p>Acceptance rate: {}</p>
+                      <p>Acceptance rate: <strong>82%</strong></p>
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -75,7 +79,9 @@ export default function ProblemDecription_Page() {
               <Divider />
 
               <Container>
-                <p>Questions</p>
+                <p>Seen this question in real interview before?    1/4</p>
+                <Button content='yes'/>
+                <Button content='no'/>
                 <Divider />
 
                 <Accordion>
@@ -85,7 +91,7 @@ export default function ProblemDecription_Page() {
                     onClick={() => setAccorionSelected(0)}
                   >
                     <Icon name="dropdown" />
-                    Discusions ({})
+                    Discusions (15)
                   </Accordion.Title>
                   <Accordion.Content active={accorionSelected === 0}>
                     <p>
@@ -103,7 +109,7 @@ export default function ProblemDecription_Page() {
                     onClick={() => setAccorionSelected(1)}
                   >
                     <Icon name="dropdown" />
-                    Related topic ({})
+                    Related topic
                   </Accordion.Title>
                   <Accordion.Content active={accorionSelected === 1}>
                     <p>
@@ -151,7 +157,7 @@ export default function ProblemDecription_Page() {
             </Form>
           </Segment>
 
-          <Segment clearing>
+          <Segment clearing style={{ maxHeight: 500}}>
             <Accordion>
               <Button content="submit" floated="right" color="green" />
               <Button content="run" floated="right" />
@@ -173,13 +179,10 @@ export default function ProblemDecription_Page() {
 
               <Accordion.Content
                 active={isOpenConsole}
-                style={{ outerHeight: 400 }}
               >
-                <div className="container01">
-                  <p>
-        
-                  </p>
-                </div>
+                <Segment clearing style={{overflow: 'auto' , maxHeight: 150, minHeight: 150}}>
+
+                </Segment>
               </Accordion.Content>
             </Accordion>
           </Segment>

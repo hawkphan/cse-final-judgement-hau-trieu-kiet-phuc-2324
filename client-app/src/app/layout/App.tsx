@@ -23,6 +23,7 @@ function App() {
       setActivities(response.data);
     });
   }, []);
+  
   function handleSelectActivity(id: String) {
     setSelectedActivity(activities.find((x) => x.id === id));
   }
