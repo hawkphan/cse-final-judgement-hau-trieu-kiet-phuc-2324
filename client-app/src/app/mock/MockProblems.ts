@@ -6,7 +6,7 @@ export const mockCourseList: Course[] = [
 ];
 
 export const diffitcultyFilter = [
-  { key: 0, text: "All Difficulty", value: 1 },
+  { key: 0, text: "All Difficulty", value: 0 },
   { key: 1, text: "Easy", value: 1 },
   { key: 2, text: "Medium", value: 2 },
   { key: 3, text: "Hard", value: 3 },
