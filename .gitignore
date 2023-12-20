@@ -482,3 +482,4 @@ server-app/API/reactivities.db-shm
 server-app/API/reactivities.db-wal
 server-app/API/Properties/launchSettings.json
 client-app/tsconfig.json
+client-app/package-lock.json
