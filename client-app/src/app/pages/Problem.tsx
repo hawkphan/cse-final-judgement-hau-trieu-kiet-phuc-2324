@@ -14,14 +14,14 @@ import {
   TextArea,
 } from "semantic-ui-react";
 import "../layout/css/style_kiet.css";
-import { Submission } from "../models/Submission";
 import Description from "./DescriptionTab";
+import { Submission } from "../models/Submission";
 
 interface Props {
   submissions: Submission[]
 }
 
-export default function ProblemDecription_Page({submissions}: Props) {
+export default function ProblemDecription_Page({}: Props) {
   const [accorionSelected, setAccorionSelected] = useState(-1);
   const [languageSelected, setLanguageSelected] = useState("C#");
   const [isOpenConsole, setIsOpenConsole] = useState(false);

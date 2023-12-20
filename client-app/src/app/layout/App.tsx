@@ -94,7 +94,6 @@ function App(){
       <Container style={{ marginTop: "7em" }}>
         <Outlet />
         {/* <ProblemSet problems={mockProblemList} /> */}
-        /> 
         {/* <ProblemPage/> */}
       </Container>
 
