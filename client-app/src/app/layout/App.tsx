@@ -55,7 +55,7 @@ function App() {
     <Fragment>
       <NavBar openForm={handleFormOpen}/>
       <Container style={{ marginTop: "7em" }}>
-{/*         <ActivitityDashboard
+         <ActivitityDashboard
           activities={activities}
           selectedActivity={selectedActivity}
           selectActivity={handleSelectActivity}
@@ -65,8 +65,8 @@ function App() {
           closeForm={handleFormClose}
           createOrEdit={handleCreateOrEditActivity}
           deleteActivity={handleDeleteActivity}
-        /> */}
-        <ProblemPage/>
+        /> 
+        {/* <ProblemPage/> */}
       </Container>
       <CustomFooter />
     </Fragment>
