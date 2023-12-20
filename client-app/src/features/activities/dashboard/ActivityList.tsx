@@ -3,7 +3,7 @@ import { Activity } from "../../../app/models/activity";
 import { Button, Item, Label, Segment } from "semantic-ui-react";
 interface Props {
   activities: Activity[];
-  //selectedActivity: Activity | undefined;
+  selectedActivity: Activity | undefined;
   selectActivity: (id: string) => void;
   //cancelSelectActivity: () => void;
   deleteActivity: (id: string) => void

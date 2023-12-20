@@ -29,7 +29,8 @@ export default function ActivitityDashboard({
     <Grid>
       
       <Grid.Column width="10">
-        <ActivityList activities={activities} selectActivity={selectActivity} deleteActivity={deleteActivity} />
+        <ActivityList activities={activities} selectActivity={selectActivity} deleteActivity={deleteActivity} selectedActivity={undefined} cancelSelectActivity={function (): void {
+        } } />
       </Grid.Column>
 
       <GridColumn width="6">
