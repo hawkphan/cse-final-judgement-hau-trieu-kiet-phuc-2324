@@ -39,7 +39,7 @@ const getDifficultyColorClass = (difficulty: string): any => {
   }
 };
 
-export default function ProblemSet({ problems }: Props) {
+export default function ProblemSet({}: Props) {
   const [list, setList] = React.useState("");
   const [difficulty, setDifficulty] = React.useState("");
 

@@ -18,6 +18,7 @@ import NavBar from "./NavBar";
 import CustomFooter from "./Footer";
 import ActivitityDashboard from "../../features/activities/dashboard/ActivityDashboard";
 
+import { Outlet } from "react-router-dom";
 import { Problem } from "../models/problem";
 import ProblemSet from "../pages/ProblemSet";
 import { mockProblemList } from "../mock/MockProblems";
@@ -87,7 +88,8 @@ function App(){
       </Container> */}
 
       <Container style={{ marginTop: "7em" }}>
-        <ProblemSet problems={mockProblemList} />
+        <Outlet />
+        {/* <ProblemSet problems={mockProblemList} /> */}
       </Container>
 
       <CustomFooter />
