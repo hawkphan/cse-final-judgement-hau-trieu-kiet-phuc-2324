@@ -27,10 +27,12 @@ export default function ActivitityDashboard({
 }: Props) {
   return (
     <Grid>
+      
       <Grid.Column width="10">
         <ActivityList activities={activities} selectActivity={selectActivity} deleteActivity={deleteActivity} selectedActivity={undefined} cancelSelectActivity={function (): void {
         } } />
       </Grid.Column>
+
       <GridColumn width="6">
         {selectedActivity && !editMode && 
           <ActivityDetails

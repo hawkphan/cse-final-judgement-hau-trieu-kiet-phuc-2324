@@ -17,6 +17,8 @@ import "./css/navbar.css";
 import NavBar from "./NavBar";
 import CustomFooter from "./Footer";
 import ActivitityDashboard from "../../features/activities/dashboard/ActivityDashboard";
+import ProblemPage from "../pages/Problem";
+
 
 import { Outlet } from "react-router-dom";
 import { Problem } from "../models/problem";
@@ -36,7 +38,6 @@ function App(){
       setActivities(response.data);
     });
   }, []);
-
   function handleSelectActivity(id: String) {
     setSelectedActivity(activities.find((x) => x.id === id));
   }
@@ -75,6 +76,9 @@ function App(){
       <NavBar openForm={handleFormOpen} />
       {/* <Container style={{ marginTop: "7em" }}>
         <ActivitityDashboard
+      <NavBar openForm={handleFormOpen}/>
+      <Container style={{ marginTop: "7em" }}>
+         <ActivitityDashboard
           activities={activities}
           selectedActivity={selectedActivity}
           selectActivity={handleSelectActivity}
@@ -90,6 +94,8 @@ function App(){
       <Container style={{ marginTop: "7em" }}>
         <Outlet />
         {/* <ProblemSet problems={mockProblemList} /> */}
+        /> 
+        {/* <ProblemPage/> */}
       </Container>
 
       <CustomFooter />
