@@ -13,18 +13,26 @@ import {
   Form,
   TextArea,
 } from "semantic-ui-react";
+import "../layout/css/style_kiet.css";
+import { Submission } from "../models/Submission";
+import Description from "./DescriptionTab";
 
-interface Props {}
+interface Props {
+  submissions: Submission[]
+}
 
-export default function ProblemDecription_Page() {
+export default function ProblemDecription_Page({submissions}: Props) {
   const [accorionSelected, setAccorionSelected] = useState(-1);
   const [languageSelected, setLanguageSelected] = useState("C#");
-  const [isOpenConsole, setIsOpenConsole] = useState(false)
+  const [isOpenConsole, setIsOpenConsole] = useState(false);
 
   const panes = [
     {
       menuItem: "Description",
-      render: () => <Tab.Pane attached={false}>Description</Tab.Pane>,
+      render: () => <Tab.Pane attached={false}>
+<Description/>
+        
+      </Tab.Pane>,
     },
     {
       menuItem: "Editorial",
@@ -39,7 +47,10 @@ export default function ProblemDecription_Page() {
       render: () => <Tab.Pane attached={false}>Submissions</Tab.Pane>,
     },
   ];
-  const Languages = ["C#", "Java", "Python"];
+
+
+
+
   return (
     <Grid divided="vertically">
       <Grid.Row columns={2}>
@@ -51,15 +62,15 @@ export default function ProblemDecription_Page() {
                 <Grid>
                   <Grid.Row columns={3}>
                     <Grid.Column>
-                      <p>Accepted: {} |</p>
+                      <p>Accepted: <strong>25.5 K</strong> |</p>
                     </Grid.Column>
 
                     <Grid.Column>
-                      <p>Submissions: {} |</p>
+                      <p>Submissions: <strong>32.2 K</strong> |</p>
                     </Grid.Column>
 
                     <Grid.Column>
-                      <p>Acceptance rate: {}</p>
+                      <p>Acceptance rate: <strong>82%</strong></p>
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -68,7 +79,9 @@ export default function ProblemDecription_Page() {
               <Divider />
 
               <Container>
-                <p>Questions</p>
+                <p>Seen this question in real interview before?    1/4</p>
+                <Button content='yes'/>
+                <Button content='no'/>
                 <Divider />
 
                 <Accordion>
@@ -78,7 +91,7 @@ export default function ProblemDecription_Page() {
                     onClick={() => setAccorionSelected(0)}
                   >
                     <Icon name="dropdown" />
-                    Discusions ({})
+                    Discusions (15)
                   </Accordion.Title>
                   <Accordion.Content active={accorionSelected === 0}>
                     <p>
@@ -96,7 +109,7 @@ export default function ProblemDecription_Page() {
                     onClick={() => setAccorionSelected(1)}
                   >
                     <Icon name="dropdown" />
-                    Related topic ({})
+                    Related topic
                   </Accordion.Title>
                   <Accordion.Content active={accorionSelected === 1}>
                     <p>
@@ -144,35 +157,35 @@ export default function ProblemDecription_Page() {
             </Form>
           </Segment>
 
-          <Segment clearing>
-            
+          <Segment clearing style={{ maxHeight: 500}}>
             <Accordion>
-            
-            <Button content="submit" floated="right" color="green"/>
-            <Button content="run" floated="right"/>
-            <Button icon floated="right">
-              <Icon name='bug'/>
-            </Button>
+              <Button content="submit" floated="right" color="green" />
+              <Button content="run" floated="right" />
+              <Button icon floated="right">
+                <Icon name="bug" />
+              </Button>
               <Accordion.Title
                 active={isOpenConsole}
                 index={0}
-                onClick={isOpenConsole ?() => setIsOpenConsole(false) : ()=> setIsOpenConsole(true)}
+                onClick={
+                  isOpenConsole
+                    ? () => setIsOpenConsole(false)
+                    : () => setIsOpenConsole(true)
+                }
               >
                 <Icon name="dropdown" />
                 Console
               </Accordion.Title>
-              
-              <Accordion.Content active={isOpenConsole} style={{outerHeight:400}}>
-                <p>
-                  A dog is a type of domesticated animal. Known for its loyalty
-                  and faithfulness, it can be found as a welcome guest in many
-                  households across the world.
-                </p>
+
+              <Accordion.Content
+                active={isOpenConsole}
+              >
+                <Segment clearing style={{overflow: 'auto' , maxHeight: 150, minHeight: 150}}>
+
+                </Segment>
               </Accordion.Content>
             </Accordion>
-            
           </Segment>
-
         </Grid.Column>
       </Grid.Row>
     </Grid>
