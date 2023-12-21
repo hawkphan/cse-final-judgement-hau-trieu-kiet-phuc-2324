@@ -1,4 +1,4 @@
-import { Grid, GridColumn, List } from "semantic-ui-react";
+import { Grid, GridColumn } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
 import ActivityList from "./ActivityList";
 import ActivityDetails from "../details/ActivityDetail";
@@ -29,8 +29,13 @@ export default function ActivitityDashboard({
     <Grid>
       
       <Grid.Column width="10">
-        <ActivityList activities={activities} selectActivity={selectActivity} deleteActivity={deleteActivity} selectedActivity={undefined} cancelSelectActivity={function (): void {
-        } } />
+        <ActivityList 
+            activities={activities} 
+            selectActivity={selectActivity}   
+            deleteActivity={deleteActivity} 
+            selectedActivity={undefined} 
+            //cancelSelectActivity={function (): void { } } 
+            />
       </Grid.Column>
 
       <GridColumn width="6">

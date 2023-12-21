@@ -22,10 +22,23 @@ import {
   value,
 } from "../mock/MockProblems";
 import React, { useState } from "react";
-import { Grid, Select, SelectChangeEvent } from "@mui/material";
+import { Grid, Select, SelectChangeEvent, createTheme } from "@mui/material";
+
+import { ThemeProvider } from '@mui/system';
+
 interface Props {
   problems: Problem[];
 }
+
+const theme = createTheme({
+  palette: {
+    background: {
+      paper: '#fff',
+    }
+  },
+});
+
+
 const getDifficultyColorClass = (difficulty: string): any => {
   switch (difficulty) {
     case "easy":
@@ -42,6 +55,7 @@ const getDifficultyColorClass = (difficulty: string): any => {
 export default function ProblemSet({}: Props) {
   const [list, setList] = React.useState("");
   const [difficulty, setDifficulty] = React.useState("");
+
 
   const handleDifficultyChange = (event: SelectChangeEvent) => {
     setDifficulty(event.target.value as string);
@@ -97,10 +111,10 @@ export default function ProblemSet({}: Props) {
         </Grid>
       </Grid>
 
-      <TableContainer component={Paper}>
-        <Table sx={{}} aria-label="simple table">
+      <TableContainer component={Paper} style={{marginTop: '20px'}}>
+        <Table sx={{}} aria-label="simple table" >
           <TableHead>
-            <TableRow>
+            <TableRow >
               <TableCell>Title</TableCell>
               <TableCell align="left">Description</TableCell>
               <TableCell align="center">Difficulty</TableCell>
