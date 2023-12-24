@@ -8,7 +8,7 @@ import Image from "react-bootstrap/Image";
 import Row from "react-bootstrap/Row";
 import { Divider } from "semantic-ui-react";
 
-const Test = () => {
+const MainPage = () => {
   return (
     <>
       <Carousel style={{marginBottom: '50px'}}>
@@ -188,4 +188,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default MainPage;

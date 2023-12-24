@@ -24,8 +24,9 @@ import { Outlet } from "react-router-dom";
 import { Problem } from "../models/problem";
 import ProblemSet from "../pages/ProblemSet";
 import { mockProblemList } from "../mock/MockProblems";
-import Test from "../pages/Test";
+import Test from "../pages/MainPage";
 import ASD from "../pages/HomePage";
+import MainPage from "../pages/MainPage";
 
 // Code Start Here
 function App(){
@@ -98,7 +99,7 @@ function App(){
         <Outlet />
         {/* <ProblemSet problems={mockProblemList} /> */}
          {/* <ProblemPage/>  */}
-       <Test/>
+       <MainPage/>
       </Container>
 
       <CustomFooter />
