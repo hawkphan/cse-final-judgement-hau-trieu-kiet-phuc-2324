@@ -24,6 +24,9 @@ import { Outlet } from "react-router-dom";
 import { Problem } from "../models/problem";
 import ProblemSet from "../pages/ProblemSet";
 import { mockProblemList } from "../mock/MockProblems";
+import Test from "../pages/Test";
+import ASD from "../pages/HomePage";
+
 // Code Start Here
 function App(){
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -95,6 +98,7 @@ function App(){
         <Outlet />
         {/* <ProblemSet problems={mockProblemList} /> */}
          {/* <ProblemPage/>  */}
+       <Test/>
       </Container>
 
       <CustomFooter />
