@@ -136,6 +136,7 @@ export default function ProblemSet({}: Props) {
                 <TableCell align="left">{problem.description}</TableCell>
                 <TableCell align="center">
                   <Button
+                    style={{minWidth:"80px"}}
                     variant="contained"
                     color={getDifficultyColorClass(problem.difficulty)}
                   >

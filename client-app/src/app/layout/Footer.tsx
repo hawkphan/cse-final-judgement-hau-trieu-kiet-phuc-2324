@@ -2,7 +2,8 @@ import { Container, Menu } from "semantic-ui-react";
 
 export default function CustomFooter({}) {
   return (
-    <Menu inverted fixed="bottom">
+    // fixed="bottom"
+    <Menu inverted >
       <Container>
         <Menu.Item>Programmer Island &#169;</Menu.Item>
         <Menu.Item className="nav-action link" name="Help Center" />
