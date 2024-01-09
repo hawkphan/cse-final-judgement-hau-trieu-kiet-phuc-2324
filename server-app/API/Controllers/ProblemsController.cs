@@ -30,10 +30,10 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Edit(Guid id, Problem Problem)
+        public async Task<ActionResult> Edit(Guid id, Problem problem)
         {
-            Problem.Id = id;
-            await Mediator.Send(new Edit.Command { Problem = Problem });
+            problem.Id = id;
+            await Mediator.Send(new Edit.Command { Problem = problem });
 
             return Ok();
         }

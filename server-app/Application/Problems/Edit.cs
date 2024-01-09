@@ -25,7 +25,7 @@ namespace Application.Problems
 
             public async Task Handle(Command request, CancellationToken cancellationToken)
             {
-                var Problem = await _context.Problems.FindAsync(request.Problem);
+                var Problem = await _context.Problems.FindAsync(request.Problem.Id);
 
                 _mapper.Map(request.Problem, Problem);
 
