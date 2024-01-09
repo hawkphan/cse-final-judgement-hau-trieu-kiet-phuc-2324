@@ -10,7 +10,25 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context)
         {
-            if (context.Activities.Any()) return;
+            // if (!context.Activities.Any()) await seedActivities(context);
+            if (!context.Problems.Any()) await seedProblems(context);
+
+        }
+        static async Task seedProblems(DataContext context)
+        {
+            var problems = new List<Problem>{
+                new Problem{
+                    Title= "Trộm nhà thầy Ngọc",
+                    Code="THIEF",
+                    Description="Tân hôm nay đi ăn trộm nhà thầy ngọc, Tân cần bạn vận dụng kiến thức quy hoạch động để trộm được nhiều giá trị nhất có thể",
+                    Difficulty="easy",
+                }
+            };
+            await context.Problems.AddRangeAsync(problems);
+            await context.SaveChangesAsync();
+        }
+        static async Task seedActivities(DataContext context)
+        {
 
             var activities = new List<Activity>
             {
