@@ -2,28 +2,33 @@ using Domain;
 using MediatR;
 using Persistence;
 
-namespace Application.Activities
+namespace Application.Problems
 {
-    public class Create
+    public class Delete
     {
-        public class Command : IRequest
-        {
-            public Activity Activity { get; set; }
+        public class Command : IRequest{
+            public Guid Id {get;set;}
         }
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
-            public Handler(DataContext context)
-            {
-                _context = context;
+
+
+            public Handler(DataContext context){
+                _context =context;
             }
+
+
             public async Task Handle(Command request, CancellationToken cancellationToken)
             {
-                _context.Activities.Add(request.Activity);
+
+                var problem = await _context.Problems.FindAsync(request.Id);
+                _context.Remove(problem);
 
                 await _context.SaveChangesAsync();
             }
-
         }
+
+
     }
 }
