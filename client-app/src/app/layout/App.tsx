@@ -25,7 +25,6 @@ import { Problem } from "../models/problem";
 import ProblemSet from "../pages/ProblemSet";
 import { mockProblemList } from "../mock/MockProblems";
 import Test from "../pages/MainPage";
-import ASD from "../pages/HomePage";
 import MainPage from "../pages/MainPage";
 
 // Code Start Here
@@ -77,24 +76,7 @@ function App(){
 
   return (
     <Fragment>
-      <NavBar openForm={handleFormOpen} />
-      {/* <Container style={{ marginTop: "7em" }}>
-        <ActivitityDashboard
-      <NavBar openForm={handleFormOpen}/>
-      <Container style={{ marginTop: "7em" }}>
-         <ActivitityDashboard
-          activities={activities}
-          selectedActivity={selectedActivity}
-          selectActivity={handleSelectActivity}
-          cancelSelectActivity={handleCancelSelectedActivity}
-          editMode={editMode}
-          openForm={handleFormOpen}
-          closeForm={handleFormClose}
-          createOrEdit={handleCreateOrEditActivity}
-          deleteActivity={handleDeleteActivity}
-        />
-      </Container> */}
-
+      <NavBar />
       <Container style={{ marginTop: "7em" }}>
         <Outlet />
         {/* <ProblemSet problems={mockProblemList} /> */}
