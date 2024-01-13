@@ -1,8 +1,8 @@
 import { Fragment } from "react";
-import { Container } from "semantic-ui-react";
 
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { Container } from "@mui/material";
 
 // Code Start Here
 function App() {

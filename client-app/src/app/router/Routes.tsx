@@ -1,6 +1,7 @@
 import { RouteObject, createBrowserRouter } from "react-router-dom";
 import App from "../layout/App";
 import HomePage from "../../features/Home";
+import Developer from "../components/Developer";
 
 export const routes: RouteObject[] = [
   {
@@ -18,7 +19,7 @@ export const routes: RouteObject[] = [
 
       {
         path: "developer",
-        element: <div>this is developer</div>,
+        element: <Developer />,
       },
     ],
   },

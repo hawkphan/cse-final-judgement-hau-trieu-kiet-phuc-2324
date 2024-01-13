@@ -104,13 +104,11 @@ function Navbar() {
             </Tooltip>
             <Menu
               sx={{ mt: "45px" }}
-              id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: "top",
                 horizontal: "right",
               }}
-              keepMounted
               transformOrigin={{
                 vertical: "top",
                 horizontal: "right",
@@ -120,7 +118,7 @@ function Navbar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography textAlign="center" component={Box}>{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>
