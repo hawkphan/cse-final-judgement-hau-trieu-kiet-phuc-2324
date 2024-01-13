@@ -12,6 +12,21 @@ namespace Persistence
         {
             // if (!context.Activities.Any()) await seedActivities(context);
             if (!context.Problems.Any()) await seedProblems(context);
+            if (!context.Examples.Any()) await seedExamples(context);
+
+            await context.SaveChangesAsync();
+        }
+        static async Task seedExamples(DataContext context)
+        {
+            var examples = new List<Example>{
+                new Example{
+                    ProblemId = new Guid("083C09D1-E102-439B-9115-CECBF9B5D0B8"),
+                    Input = "```1 2 3 5 7 1 -2```",
+                    Output = "```7```",
+                    Explaination = "Find the biggest number"
+                }
+            };
+            await context.Examples.AddRangeAsync(examples);
 
         }
         static async Task seedProblems(DataContext context)
@@ -25,7 +40,6 @@ namespace Persistence
                 }
             };
             await context.Problems.AddRangeAsync(problems);
-            await context.SaveChangesAsync();
         }
         static async Task seedActivities(DataContext context)
         {
@@ -125,7 +139,6 @@ namespace Persistence
             };
 
             await context.Activities.AddRangeAsync(activities);
-            await context.SaveChangesAsync();
         }
     }
 }
