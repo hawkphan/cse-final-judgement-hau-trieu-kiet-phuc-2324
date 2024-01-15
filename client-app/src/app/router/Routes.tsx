@@ -2,6 +2,7 @@ import { RouteObject, createBrowserRouter } from "react-router-dom";
 import App from "../layout/App";
 import HomePage from "../../features/Home";
 import Developer from "../components/Developer";
+import Problems from "../components/Problems";
 
 export const routes: RouteObject[] = [
   {
@@ -14,7 +15,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: "problems",
-        element: <div>this is problem list view</div>,
+        element: <Problems />,
       },
 
       {

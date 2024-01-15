@@ -8,7 +8,7 @@ const Table = ({
 }: Props) => {
   const options = {
     filterType: "checkbox",
-    rowsPerPage: [3],
+    rowsPerPage: [6],
     rowsPerPageOptions: [1, 3, 5, 6],
     jumpToPage: true,
     textLabels: {
