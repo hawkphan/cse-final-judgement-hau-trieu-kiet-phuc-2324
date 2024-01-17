@@ -1,0 +1,67 @@
+@use '../../scss/vars' as *;
+@use '../../scss/mixin' as *;
+
+.cmp-code-field {
+  &__container {
+    display: flex;
+    justify-content: start;
+    width: 100%;
+
+    & .MuiInputBase-root {
+      width: 60px !important;
+      height: 60px !important;
+    }
+  }
+
+  &__input--container {
+    div {
+      margin: 0 4px;
+      width: auto;
+    }
+  }
+
+  &__input--container:first-child {
+    div {
+      margin-left: 0;
+    }
+  }
+
+  &__input--container:last-child {
+    div {
+      margin-right: 0;
+    }
+  }
+
+  &__input--container-small {
+    div {
+      margin: 0 4px;
+      width: auto;
+    }
+  }
+
+  &__input--container-small:first-child {
+    div {
+      margin-left: 0;
+    }
+  }
+
+  &__input--container-small:last-child {
+    div {
+      margin-right: 0;
+    }
+  }
+
+  &__input {
+    input {
+      text-align: center;
+      padding: 0;
+      height: 60px !important;
+      width: 60px !important;
+
+      @include mobileScreen {
+        height: calc((95vw - 52px) / 6) !important;
+        width: calc((95vw - 52px) / 6) !important;
+      }
+    }
+  }
+}

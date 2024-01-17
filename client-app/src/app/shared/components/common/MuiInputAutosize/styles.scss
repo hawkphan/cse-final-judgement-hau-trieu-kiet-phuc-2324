@@ -1,0 +1,20 @@
+@use '../../scss/vars' as *;
+@use '../../scss/mixin' as *;
+
+.cmp-field-area {
+  .MuiTypography-root {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+.cmp-input-autosize {
+  &__icon {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+
+    @include hover;
+  }
+}

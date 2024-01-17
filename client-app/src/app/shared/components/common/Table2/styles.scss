@@ -1,0 +1,21 @@
+.table__bottom {
+  height: 100%;
+
+  ul {
+    gap: 4px;
+    height: inherit;
+
+    li {
+      height: inherit;
+
+      button {
+        height: inherit;
+        width: 32px;
+      }
+    }
+  }
+}
+
+.MuiTableCell-head {
+  background-color: #eceef0 !important;
+}

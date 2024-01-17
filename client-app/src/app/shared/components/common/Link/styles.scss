@@ -1,0 +1,13 @@
+@use '../../scss/vars' as *;
+@use '../../scss/mixin' as *;
+
+.cmp-link {
+  display: inline-flex;
+  color: $color-link;
+  font-size: 1rem;
+
+  @include hover {
+    text-decoration: underline;
+    color: $color-link;
+  }
+}

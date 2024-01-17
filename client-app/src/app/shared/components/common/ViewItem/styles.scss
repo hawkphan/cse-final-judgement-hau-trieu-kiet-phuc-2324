@@ -1,0 +1,32 @@
+@use '../../scss/vars' as *;
+@use '../../scss/mixin' as *;
+
+.cmp-view-item {
+  &__label {
+    font-weight: 500;
+    color: $color-grey-700;
+    font-size: 16px;
+  }
+
+  &__value {
+    font-size: $color-text-size;
+    white-space: pre-line;
+  }
+
+  &__empty {
+    @include mobileScreen {
+      display: none;
+    }
+  }
+
+  &--row {
+    display: flex !important;
+    align-items: center;
+
+    & .cmp-view-item {
+      &__label {
+        min-width: 120px;
+      }
+    }
+  }
+}

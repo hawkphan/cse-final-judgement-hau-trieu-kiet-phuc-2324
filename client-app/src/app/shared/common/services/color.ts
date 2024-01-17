@@ -1,0 +1,90 @@
+import { COLOR_CODE, ColorConfigs } from '..';
+
+const TEMP_COLOR_CODE = {
+  PRIMARY: '#0361D0',
+  PRIMARY_DARK: '#00367A', // primary 900
+  PRIMARY_LIGHT: '#3191CB', // primary 300
+  SECONDARY: '#005FA9',
+  SUCCESS: '#2D934E',
+  WARNING: '#E87839',
+  DANGER: '#DB0012',
+  WHITE: '#ffffff',
+  BACKGROUND: '#f7f8fa',
+  INFO: '#0088CC',
+  LINK: '#0088CC',
+  DISABLED: '#91979E',
+  ORANGE_400: '#FF9B00',
+  PRIMARY_900: '#001b38',
+  PRIMARY_800: '#002758',
+  PRIMARY_700: '#003a7d',
+  PRIMARY_600: '#00479b',
+  PRIMARY_500: '#005ab7',
+  PRIMARY_400: '#0361d0',
+  PRIMARY_300: '#1985e6',
+  PRIMARY_200: '#55b9ff',
+  PRIMARY_100: '#b6d8ff',
+  PRIMARY_50: '#d7e9ff',
+  PRIMARY_00: '#eef6ff',
+  DEFAULT_BORDER: '1px solid #ccc',
+  LABEL: '#333333',
+  HEADER: '#2D2F31',
+  GREY_00: '#FFFFFF',
+  GREY_50: '#F7FAFB',
+  GREY_100: '#E1E5E8',
+  GREY_200: '#D3D7DC',
+  GREY_300: '#C4CAD1',
+  GREY_400: '#B5BDC5',
+  GREY_500: '#91979E',
+  GREY_600: '#6D7176',
+  GREY_700: '#484C4F',
+  GREY_800: '#2D2F31',
+  GREY_900: '#1B1C1E',
+  GREY_1000: '#F8F8F9',
+  RED_500: '#E51F23',
+  DISABLED_INPUT: '#EDEFF1',
+  SECTION_BORDER: '1px solid #C4CAD1',
+  DEFAULT_BORDER_FOCUS: '1px solid #333333',
+  DEFAULT_TABLE_ERROR_BORDER: '3px solid #DB0012',
+  DEFAULT_ROW_ERROR_BORDER: '2px solid #DB0012',
+  DEFAULT_BORDER_RADIUS: '8px',
+  BG_DISABLED: '#f5f5f5',
+  BG_TAG_VIOLET: '#722ED126',
+  VIOLET: '#722ED1',
+  BG_SURFACE_HOVER: '#EEF6FF',
+  TRANSPARENT: 'transparent',
+  BG_INPUT_DISABLED: '#EDEFF1',
+  BILLING_STATUS_DRAFT: '#ABABAB',
+  BILLING_STATUS_REJECTED_BY_PM: '#F85F5F',
+  BILLING_STATUS_SUBMITTED: '#4594D3',
+  BILLING_STATUS_APPROVED_BY_PM: '#722ED1',
+  BILLING_STATUS_PAYMENT_PENDING: '#F8812B',
+  BILLING_STATUS_PARTLY_PAID: '#F558B6',
+  BILLING_STATUS_PAID: '#2DBC9A',
+  BG_BILLING_STATUS_DRAFT: '#ABABAB26',
+  BG_BILLING_STATUS_REJECTED_BY_PM: '#F85F5F26',
+  BG_BILLING_STATUS_SUBMITTED: '#4594D326',
+  BG_BILLING_STATUS_APPROVED_BY_PM: '#722ED126',
+  BG_BILLING_STATUS_PAYMENT_PENDING: '#F8812B26',
+  BG_BILLING_STATUS_PARTLY_PAID: '#F558B626',
+  BG_BILLING_STATUS_PAID: '#2DBC9A26',
+  TEXT_BODY: '#2D2F31',
+};
+
+let _colorsConfig: ColorConfigs = TEMP_COLOR_CODE;
+
+function getColorsConfig() {
+  return _colorsConfig;
+}
+
+function setConfigs(configs: ColorConfigs) {
+  _colorsConfig = configs;
+}
+
+function appendConfigs(configs: Partial<ColorConfigs>) {
+  _colorsConfig = {
+    ..._colorsConfig,
+    ...configs,
+  };
+}
+
+export { appendConfigs, getColorsConfig, setConfigs };

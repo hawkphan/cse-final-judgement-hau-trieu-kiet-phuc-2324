@@ -1,0 +1,25 @@
+@use '../scss/vars' as *;
+@use '../scss/mixin' as *;
+
+.cmp-popover {
+  >.MuiPopover-paper {
+    border: 1px solid #e0e0e0;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.25), 0px 2px 7px rgba(137, 140, 141, 0.35);
+    border-radius: 8px;
+    min-width: 274px;
+    margin-top: 4px;
+  }
+
+  &.is-mini {
+    >.MuiPopover-paper {
+      min-width: 174px;
+    }
+  }
+}
+
+button.cmp-popover__button {
+  min-width: 0;
+  padding: 10px 16px;
+  text-transform: none;
+}

@@ -1,0 +1,58 @@
+@use '../../scss/vars' as *;
+@use '../../scss/mixin' as *;
+
+.cmp-text-area {
+  height: 72px;
+  padding: 8px 14px;
+  border: $default-border;
+  background-color: $color-white;
+  transition: $default-transition;
+  border-radius: $input-border-radius;
+  font-size: $body-size;
+  min-height: $input-medium;
+  width: 100%;
+
+  &:focus {
+    box-shadow: $focus-shadow;
+  }
+
+  &--error {
+    border-color: $color-danger;
+
+    &:focus {
+      box-shadow: $error-shadow;
+    }
+  }
+
+  &--disabled,
+  &:disabled {
+    color: $color-black-100;
+    background-color: #f5f5f5;
+    border: none;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+
+    @include hover;
+  }
+
+  &__resize--horizontal {
+    resize: horizontal;
+  }
+
+  &__resize--vertical {
+    resize: vertical;
+  }
+
+  &__resize--both {
+    resize: both;
+  }
+
+  &__resize--none {
+    resize: none;
+  }
+}

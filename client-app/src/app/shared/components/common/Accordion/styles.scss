@@ -1,0 +1,48 @@
+@use '../../scss/vars' as *;
+@use '../../scss/mixin' as *;
+
+.cmp-accordion-item {
+  border-radius: $default-border-radius;
+
+  &--bordered {
+    border: 1px solid var(--grayscale-400, $color-primary-600);
+  }
+
+  &--collapsed {
+    overflow: hidden;
+  }
+
+  &__header {
+    padding: 12px 16px;
+    border-top-left-radius: $default-border-radius;
+    border-top-right-radius: $default-border-radius;
+    cursor: pointer;
+    background-color: $color-white;
+    &--collapsed {
+      background-color: $color-white;
+    }
+
+    &--disabled {
+      background-color: rgba(238, 238, 238, 1);
+      cursor: not-allowed;
+    }
+
+    &__icon {
+      display: flex;
+      width: 24px;
+      height: 24px;
+      padding: 4px;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+      border-radius: 12px;
+      border: 1px solid var(--grayscale-400, $color-primary-600);
+      background: var(--grayscale-00-white, $color-white);
+    }
+  }
+
+  &__body {
+    padding: 16px;
+    background-color: $color-white;
+  }
+}

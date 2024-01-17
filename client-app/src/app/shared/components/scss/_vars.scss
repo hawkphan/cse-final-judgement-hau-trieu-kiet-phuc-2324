@@ -1,0 +1,167 @@
+:root {
+  --primary: #0361d0;
+  --secondary: #005fa9;
+  --danger: #db0012;
+  --success: #169448;
+  --white: #ffffff;
+  --black: #000000;
+  --light-black: #656263;
+  --background: #f7fafb;
+  --gray: #8d8d8d;
+  --gray-light: #9f9f9f;
+  --link: #005fa9;
+  --link-dark: #2a5cb1;
+}
+
+$primary: #0361d0;
+$link: #005fa9;
+$success: #169448;
+$warning: #e87839;
+$danger: #db0012;
+$danger-light: #f5d5cd;
+
+// Basic Colors
+$color-white: #ffffff;
+$color-black: var(--black);
+$color-light-black: var(--light-black);
+$color-green: #1da832;
+$color-red: #db0012;
+$color-warning: #e87839;
+
+$color-black-500: #2f302f;
+$color-black-400: #444141;
+$color-black-300: #656263;
+$color-black-200: #918f90;
+$color-black-100: #bdbcbc;
+$color-black-50: #e5e4e4;
+
+$color-primary-900: #001b38;
+$color-primary-800: #002758;
+$color-primary-700: #003a7d;
+$color-primary-600: #00479b;
+$color-primary-500: #005ab7;
+$color-primary-400: #0361d0;
+$color-primary-300: #1985e6;
+$color-primary-200: #55b9ff;
+$color-primary-100: #b6d8ff;
+$color-primary-50: #d7e9ff;
+$color-primary-00: #eef6ff;
+
+$color-grey-900: #1b1c1e;
+$color-grey-800: #2d2f31;
+$color-grey-700: #484c4f;
+$color-grey-600: #6d7176;
+$color-grey-500: #91979e;
+$color-grey-400: #b5bdc5;
+$color-grey-300: #c4cad1;
+$color-grey-200: #d3d7dc;
+$color-grey-100: #e1e5e8;
+$color-grey-50: #f7fafb;
+$color-grey-00: #ffffff;
+
+$color-red-light: #ffeeee;
+$color-primary-red-light: #eefaff;
+
+$color-bg-input-disabled: #edeff1;
+
+// Style color
+$color-link: var(--link);
+$color-link-dark: var(--link-dark);
+$color-text: $color-black-500;
+$color-text-gray: var(--gray);
+$color-text-inactive: var(--gray-light);
+$color-tab-panel: var(--light-black);
+
+$color-header: $color-black-500;
+$color-border: #cccccc;
+$color-placeholder: #999999;
+
+$color-primary: var(--primary);
+$color-primary-background: var(--background);
+$color-secondary: var(--secondary);
+
+$color-info: #1069d1;
+$color-info-bg: #e1f6fd;
+$color-success: var(--success);
+$color-success-bg: #d2fbd6;
+$color-danger: var(--danger);
+$color-danger-bg: #fee0e0;
+$color-func-danger: #e51f23;
+$color-warning: #dc8d16;
+$color-warning-bg: #faf0e6;
+$color-success-tag: #ebf9eb;
+$color-input-disabled: #eeeeee;
+
+$color-success-func-bg: #06b307;
+$color-warning-func-bg: #fff8da;
+$color-warning-func-fg: #a13d00;
+
+$green-gradient-transparent: #22767c95;
+$orange-gradient-transparent: #8a722b95;
+$red-gradient-transparent: #c6000095;
+$option-gradient-transparent: #29287020;
+
+// Font
+$font-primary: 'Roboto', sans-serif;
+$font-secondary: 'Open Sans';
+$font-weight-bold: 700;
+$font-weight-medium: 500;
+$font-weight-regular: 400;
+
+// Size
+$body-size: 16px;
+$color-text-size: 14px;
+
+// button
+$button-small: 40px;
+$button-normal: 48px;
+$button-medium: 44px;
+
+// input
+$input-small: 40px;
+$input-normal: 48px;
+$input-medium: 56px;
+
+$input-padding: 0 12px;
+$input-border-radius: 8px;
+
+// border
+$default-border: 1px solid $color-border;
+$default-border-primary: 1px solid $color-primary;
+$default-border-danger: 1px solid $color-red;
+$default-border-grey: 1px solid $color-grey-500;
+$default-space: 12px;
+$default-transition: all 0.2s ease-in-out;
+$default-transition-med: all 0.4s ease-in-out;
+$default-linear-trans: all 0.2s linear;
+$default-linear-trans-med: all 0.4s linear;
+$default-border-radius: 8px;
+
+$navbar-height: 68px;
+$footer-height: $navbar-height;
+
+$sidebar-width: 264px;
+$sidebar-mini-width: 80px;
+
+// reponsive checkpoint
+$widescreen: 1440px;
+$desktop: 1280px;
+$tablet: 960px;
+$mobile: 600px;
+
+$secondary-container-width: 1100px;
+$form-width-medium: 944px;
+$form-width-normal: 770px;
+$form-width-mini: 580px;
+
+$default-shadow: 0px 4px 20px rgba(224, 224, 224, 0.5);
+
+$focus-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+$error-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(218, 92, 92, 0.6);
+
+$sidebar-bg-color: #001529;
+$icon-bg-color: #001529;
+$submenu-bg-color: #000c17;
+$submenu-bg-color-collapsed: #000c17;
+
+$modal-fixed-shadow: 2px 2px 14px 0px rgba(67, 71, 72, 0.35), 0px 0px 2px 0px rgba(0, 0, 0, 0.1);

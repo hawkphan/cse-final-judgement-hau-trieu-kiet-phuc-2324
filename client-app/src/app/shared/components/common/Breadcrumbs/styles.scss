@@ -1,0 +1,9 @@
+@use '../../scss/vars' as *;
+@use '../../scss/mixin' as *;
+
+.cmp-breadcrumbs {
+  &__item {
+    font-size: 14px;
+    color: $color-primary-300;
+  }
+}

@@ -1,0 +1,88 @@
+@use '../scss/vars' as *;
+@use '../scss/mixin' as *;
+
+.cmp-filter-container {
+  &__label {
+    > i {
+      margin-right: 4px;
+      font-size: 16px;
+    }
+  }
+
+  &__label.is-focus {
+    color: $color-primary;
+  }
+
+  &__label.is-filter {
+    color: $color-primary;
+
+    & p {
+      position: relative;
+
+      &::before {
+        content: '';
+
+        position: absolute;
+        top: -4px;
+        left: -12px;
+
+        width: 6px;
+        height: 6px;
+
+        border-radius: 50%;
+        background-color: $color-danger;
+        z-index: 99;
+      }
+    }
+  }
+
+  &__form {
+    width: 364px;
+    padding: 16px;
+  }
+}
+
+.cmp-filter-checkbox {
+  margin-bottom: 8px;
+
+  .cmp-filter-checkbox {
+    &__label {
+      @include hover {
+        cursor: pointer;
+      }
+
+      > i {
+        transition: 0.2s;
+        font-size: 20px;
+      }
+    }
+
+    &__label.is-expanded {
+      > i {
+        transform: rotateZ(180deg);
+      }
+    }
+
+    &__menu {
+      &__checkbox {
+        max-height: 140px;
+        overflow: auto;
+      }
+    }
+  }
+
+  .cmp-filter-date-picker {
+    &__menu {
+      &--clear {
+        position: absolute;
+        right: 40px;
+        top: 12px;
+        cursor: pointer;
+        padding: 1px;
+        color: $color-grey-500;
+        font-size: 16px;
+        font-weight: 700;
+      }
+    }
+  }
+}

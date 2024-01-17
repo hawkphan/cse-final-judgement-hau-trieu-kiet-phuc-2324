@@ -1,0 +1,49 @@
+@use '../../scss/vars' as *;
+@use '../../scss/mixin' as *;
+
+.cmp-validate-password {
+  font-size: 14px;
+  transition: 0.4s;
+
+  &--show &__item {
+    text-align: left;
+    height: auto;
+
+    @include mobileScreen {
+      height: 2.8rem;
+    }
+  }
+
+  &__item {
+    transition: 0.1s;
+    height: 0;
+    overflow: hidden;
+
+    @include mobileScreen {
+      align-items: flex-start;
+    }
+
+    > i {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    &--valid {
+      & p {
+        color: $color-success !important;
+      }
+      color: $color-success !important;
+    }
+
+    &--invalid {
+      & p {
+        color: $color-danger !important;
+      }
+      color: $color-danger !important;
+    }
+  }
+
+  // &--show &__item:last-child {
+  // margin-bottom: 8px;
+  // }
+}

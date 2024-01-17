@@ -1,0 +1,25 @@
+@use '../../scss/vars' as *;
+@use '../../scss/mixin' as *;
+
+.cmp-date-range-mui {
+    &__popper {
+        &>div.MuiPaper-root {
+            span.MuiTypography-subtitle1 {
+                font-size: 18px;
+            }
+
+            span.MuiTypography-caption {
+                font-size: 16px;
+                font-weight: 600,
+            }
+
+            div.MuiDateRangePickerDay-rangeIntervalPreview {
+                button {
+                    font-size: 14px;
+                    font-weight: 400;
+                }
+            }
+        }
+    }
+
+}
