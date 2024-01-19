@@ -11,9 +11,9 @@ function App() {
     <Fragment>
       <Navbar />
       <Container style={{ marginTop: "7em" }}>
-        {/* <Outlet /> */}
+      <Outlet />
       </Container> 
-      <UserProfile/>
+      {/* <UserProfile/> */}
     </Fragment>
   );
 }
