@@ -1,9 +1,8 @@
 import { Fragment } from "react";
 
 import { Outlet } from "react-router-dom";
-import { Container } from "@mui/material";
 import Navbar from "../containers/Navbar";
-import UserProfile from "../containers/Navbar/UserProfile";
+import { Container } from "@mui/material";
 
 // Code Start Here
 function App() {
@@ -11,9 +10,8 @@ function App() {
     <Fragment>
       <Navbar />
       <Container style={{ marginTop: "7em" }}>
-      <Outlet />
-      </Container> 
-      {/* <UserProfile/> */}
+        <Outlet />
+      </Container>
     </Fragment>
   );
 }

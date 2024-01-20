@@ -1,6 +1,6 @@
 import { RouteObject, createBrowserRouter } from "react-router-dom";
 import App from "../layout/App";
-import HomePage from "../../features/Home";
+import HomePage from "../containers/HomePage";
 import Problems from "../containers/Problems";
 import Developer from "../containers/Developer";
 import UserProfile from "../containers/Navbar/UserProfile";

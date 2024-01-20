@@ -12,10 +12,8 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
-import { MuiMenuItem } from "./MuiMenuItem";
 import { KEYS, LABELS, PATHS } from "./helpers";
-
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+import { MuiMenuItem } from "./MuiMenuItem";
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -85,12 +83,12 @@ function Navbar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <MuiMenuItem
-              key={KEYS.problems}
+              itemKey={KEYS.problems}
               label={LABELS.problems}
               path={PATHS.problems}
             />
             <MuiMenuItem
-              key={KEYS.developer}
+              itemKey={KEYS.developer}
               label={LABELS.developer}
               path={PATHS.developer}
             />
@@ -116,11 +114,20 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center" component={Box}>{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem key="menu-profile" onClick={handleCloseUserMenu}>
+                <Link to="/profile" style={{textDecoration: 'none', color: 'black'}}>
+                  <Typography textAlign="center" component={Box} style={{textDecoration: 'none'}}>
+                    Profile
+                  </Typography>
+                </Link>
+              </MenuItem>
+              <MenuItem key="menu-profile" onClick={handleCloseUserMenu}>
+                <Link to="/logout" style={{textDecoration: 'none', color: 'black'}}>
+                  <Typography textAlign="center" component={Box} style={{textDecoration: 'none'}}>
+                    Logout
+                  </Typography>
+                </Link>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

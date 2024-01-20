@@ -1,12 +1,11 @@
-import * as React from "react";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import { Box, Grid } from "@mui/material";
+
+
 import UserDetailInformation from "./UserDetailInformation";
-import UserAcchivements from "./UserAcchivements";
 import UserActivityReport from "./UserActivityReport";
 import UserSubmission from "./UserSubmission";
 import UserAnnualReport from "./UserAnnualSubmissionReport";
+import { Box, Grid } from "@mui/material";
+import UserAchievement from "./UserAchievements";
 
 export default function UserProfile() {
   return (
@@ -28,7 +27,7 @@ export default function UserProfile() {
             </Box>
 
             <Box sx={{ width: "49%"}}>
-              <UserAcchivements />
+              <UserAchievement />
             </Box>
           </Box>
 

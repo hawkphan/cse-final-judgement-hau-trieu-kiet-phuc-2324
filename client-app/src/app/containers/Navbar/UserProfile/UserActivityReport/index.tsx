@@ -1,14 +1,5 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  CircularProgress,
-  CircularProgressProps,
-  LinearProgress,
-  List,
-  ListItem,
-  Typography,
-} from "@mui/material";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Box, Card, CardContent, CircularProgress, CircularProgressProps, LinearProgress, Typography } from "@mui/material";
 import { useState } from "react";
 
 function CircularProgressWithLabel(

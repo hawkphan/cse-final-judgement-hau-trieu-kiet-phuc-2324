@@ -1,6 +1,6 @@
-import { Toastify } from '@common-services';
-import { Button, Typo } from '@components';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack } from "@mui/material";
+import { Button, Toastify, Typo } from "../../../shared";
+
 
 const TemplateToast = () => {
   return (

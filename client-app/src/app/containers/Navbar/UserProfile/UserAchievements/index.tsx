@@ -1,6 +1,6 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
 
-export default function UserAcchivements() {
+export default function UserAchievements() {
   return (
     <Card
       style={{
