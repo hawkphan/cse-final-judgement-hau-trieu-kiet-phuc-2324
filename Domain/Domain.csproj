@@ -6,4 +6,11 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.1" />
+  </ItemGroup>
+
 </Project>

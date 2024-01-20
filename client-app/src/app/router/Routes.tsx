@@ -3,6 +3,8 @@ import App from "../layout/App";
 import HomePage from "../../features/Home";
 import Problems from "../containers/Problems";
 import Developer from "../containers/Developer";
+import UserProfile from "../containers/Navbar/UserProfile";
+import LoginForm from "../containers/User/LoginForm";
 
 export const routes: RouteObject[] = [
   {
@@ -21,6 +23,15 @@ export const routes: RouteObject[] = [
       {
         path: "developer",
         element: <Developer />,
+      },
+
+      {
+        path: "profile",
+        element: <UserProfile />,
+      },
+      {
+        path: "login",
+        element: <LoginForm />,
       },
     ],
   },
