@@ -9,7 +9,7 @@ function App() {
   return (
     <Fragment>
       <Navbar />
-      <Container style={{ marginTop: "7em" }}>
+      <Container>
         <Outlet />
       </Container>
     </Fragment>

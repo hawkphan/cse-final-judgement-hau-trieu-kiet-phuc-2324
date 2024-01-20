@@ -1,68 +1,69 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Divider } from '@mui/material';
-import { FC, Suspense, lazy, useCallback, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { AnimatedTabPanel, TabsBar } from '../../shared';
-
+import { Box, Divider } from "@mui/material";
+import { FC, Suspense, lazy, useCallback, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { AnimatedTabPanel, TabsBar } from "../../shared";
 
 export enum DevContainerParams {
-  TAB = 'tab',
+  TAB = "tab",
 }
 
 export enum DevContainerTab {
-  COMMON = 'COMMON',
-  DIALOG = 'DIALOG',
-  TOAST = 'TOAST',
-  TAG = 'TAG',
-  TAB_BARS = 'TAB_BARS',
-  MATERIAL_REACT_TABLE = 'MATERIAL_REACT_TABLE',
-  CHART = 'CHART',
+  COMMON = "COMMON",
+  DIALOG = "DIALOG",
+  TOAST = "TOAST",
+  TAG = "TAG",
+  TAB_BARS = "TAB_BARS",
+  MATERIAL_REACT_TABLE = "MATERIAL_REACT_TABLE",
+  CHART = "CHART",
+  MARKDOWN = "MARKDOWN",
 }
 
 const TAB_LIST = [
   {
-    label: 'Common',
+    label: "Common",
     value: DevContainerTab.COMMON,
   },
   {
-    label: 'Dialog',
+    label: "Markdown",
+    value: DevContainerTab.MARKDOWN,
+  },
+  {
+    label: "Dialog",
     value: DevContainerTab.DIALOG,
   },
   {
-    label: 'Toast',
+    label: "Toast",
     value: DevContainerTab.TOAST,
   },
   {
-    label: 'Tag',
+    label: "Tag",
     value: DevContainerTab.TAG,
   },
   {
-    label: 'TabBars',
+    label: "TabBars",
     value: DevContainerTab.TAB_BARS,
   },
   {
-    label: 'Material React Table',
-    value: DevContainerTab.MATERIAL_REACT_TABLE,
-  },
-  {
-    label: 'Chart',
+    label: "Chart",
     value: DevContainerTab.CHART,
   },
 ];
 
-const Common = lazy(() => import('./Common'));
-const MaterialReactTable = lazy(() => import('./MaterialReactTable'));
-const Dialog = lazy(() => import('./Dialog'));
-const Toast = lazy(() => import('./Toast'));
-const Tag = lazy(() => import('./Tag'));
-const TabBars = lazy(() => import('./TabBars'));
-const Chart = lazy(() => import('./Chart'));
+const Common = lazy(() => import("./Common"));
+const Dialog = lazy(() => import("./Dialog"));
+const Toast = lazy(() => import("./Toast"));
+const Tag = lazy(() => import("./Tag"));
+const TabBars = lazy(() => import("./TabBars"));
+const Chart = lazy(() => import("./Chart"));
+const Markdown = lazy(() => import("./Markdown"));
 
 const Developer: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const defaultTab = useMemo(
     () => searchParams.get(DevContainerParams.TAB) || DevContainerTab.COMMON,
-    [searchParams],
+    [searchParams]
   );
   const [tab, setTab] = useState(defaultTab);
 
@@ -76,6 +77,8 @@ const Developer: FC = () => {
     switch (tab) {
       case DevContainerTab.COMMON:
         return <Common />;
+      case DevContainerTab.MARKDOWN:
+        return <Markdown />;
       case DevContainerTab.DIALOG:
         return <Dialog />;
       case DevContainerTab.TOAST:
@@ -84,8 +87,6 @@ const Developer: FC = () => {
         return <Tag />;
       case DevContainerTab.TAB_BARS:
         return <TabBars />;
-      case DevContainerTab.MATERIAL_REACT_TABLE:
-        return <MaterialReactTable />;
       case DevContainerTab.CHART:
         return <Chart />;
       default:
@@ -94,7 +95,7 @@ const Developer: FC = () => {
   }, [tab]);
 
   return (
-    <Box px={3} py={'2px'}>
+    <Box px={3} py={"2px"}>
       <Suspense fallback={<div>Loading...</div>}>
         <TabsBar tabsList={TAB_LIST} onChange={handleChangeTab} value={tab} />
         <Divider sx={{ mb: 1 }} />
