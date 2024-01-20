@@ -20,10 +20,13 @@ builder.Services.AddControllers(opt=>
     }
 
 );
-builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 
+builder.Services.AddApplicationServices(builder.Configuration);
+
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -34,12 +37,12 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 
-app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseCors("CorsPolicy");
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 
