@@ -1,4 +1,18 @@
 import MUIDataTable from "mui-datatables";
+import { Problem } from "../../models/problem";
+import axios from "axios";
+import { useEffect } from "react";
+
+
+
+// useEffect(() => {
+//   axios
+//     .get<Problem[]>("http://localhost:5000/api/problems")
+//     .then((response) => {
+//       setProblems(response.data);
+//     });
+// }, []);
+
 
 const Table = ({
   columns,
@@ -45,7 +59,7 @@ const Table = ({
 interface Props {
   title?: string;
   columns: unknown;
-  data: string[][];
+  data: Problem[];
   selectableRowsHideCheckboxes?: boolean;
 }
 

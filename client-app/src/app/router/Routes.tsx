@@ -5,6 +5,7 @@ import Problems from "../containers/Problems";
 import Developer from "../containers/Developer";
 import UserProfile from "../containers/Navbar/UserProfile";
 import LoginForm from "../containers/User/LoginForm";
+import LoginSide from "../containers/User/LoginForm";
 import { PATHS } from "../configs/paths";
 
 export const routes: RouteObject[] = [
@@ -31,8 +32,8 @@ export const routes: RouteObject[] = [
         element: <UserProfile />,
       },
       {
-        path: PATHS.login,
-        element: <LoginForm />,
+        path: "login",
+        element: <LoginSide />,
       },
     ],
   },

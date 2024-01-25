@@ -1,6 +1,8 @@
+using Application.Core;
 using Application.Problems;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -9,18 +11,19 @@ namespace API.Controllers
 {
     public class ProblemsController : BaseApiController
     {
+        [AllowAnonymous]
         [HttpGet] //api/problems
-        public async Task<ActionResult<List<Problem>>> GetProblems(CancellationToken ct)
+        public async Task<IActionResult> GetProblems([FromQuery]PagingParams param)
         {
-            return await Mediator.Send(new List.Query(), ct);
+            return HandlePagedResult(await Mediator.Send(new List.Query{Params = param}));
         }
-
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<Problem>> GetProblem(Guid id)
         {
             return await Mediator.Send(new Details.Query { Id = id });
         }
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> CreateProblem(Problem newProblem)
         {
@@ -28,7 +31,7 @@ namespace API.Controllers
 
             return Ok();
         }
-
+        [AllowAnonymous]
         [HttpPut("{id}")]
         public async Task<ActionResult> Edit(Guid id, Problem problem)
         {
@@ -37,6 +40,7 @@ namespace API.Controllers
 
             return Ok();
         }
+        [AllowAnonymous]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {

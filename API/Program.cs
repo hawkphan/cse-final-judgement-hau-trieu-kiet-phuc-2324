@@ -35,14 +35,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+
 app.MapControllers();
 
-app.UseCors("CorsPolicy");
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 

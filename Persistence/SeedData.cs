@@ -11,12 +11,12 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
         {
-            if (!userManager.Users.Any()) await seedAccounts(context,userManager);
+            // if (!userManager.Users.Any()) await seedAccounts(context,userManager);
             // if (!context.Activities.Any()) await seedActivities(context);
-            // if (!context.Problems.Any()) await seedProblems(context);
+            if (!context.Problems.Any()) await seedProblems(context);
 
         }
-        static async Task seedAccounts(DataContext context,UserManager<AppUser> userManager)
+        static async Task seedAccounts(DataContext context, UserManager<AppUser> userManager)
         {
             var users = new List<AppUser>{
                 new AppUser{
@@ -33,9 +33,10 @@ namespace Persistence
                     Email = "hau.phantrung.set19@eiu.edu.vn"
                 }
             };
-            foreach(var user in users){
-                await userManager.CreateAsync(user,"Pa$$word123");
-                Console.WriteLine(user.UserName+"seeded");
+            foreach (var user in users)
+            {
+                await userManager.CreateAsync(user, "Pa$$word123");
+                Console.WriteLine(user.UserName + "seeded");
             }
             await context.SaveChangesAsync();
 
@@ -45,11 +46,56 @@ namespace Persistence
             var problems = new List<Problem>{
                 new Problem{
                     Title= "Trộm nhà thầy Ngọc",
-                    Code="THIEF",
+                    Code="THIEF2",
+                    Description="Tân hôm nay đi ăn trộm nhà thầy, Tân cần bạn vận dụng kiến thức quy hoạch động để trộm được nhiều giá trị nhất có thể",
+                    Difficulty="easy",
+                    Date=DateTime.UtcNow
+                },new Problem{
+                    Title= "Trộm nhà thầy Giàu",
+                    Code="THIEF3",
+                    Description="Tân hôm nay đi ăn trộm nhà thầy, Tân cần bạn vận dụng kiến thức quy hoạch động để trộm được nhiều giá trị nhất có thể",
+                    Difficulty="easy",
+                    Date=DateTime.UtcNow
+                },new Problem{
+                    Title= "Trộm nhà thầy Phúc",
+                    Code="THIEF4",
+                    Description="Tân hôm nay đi ăn trộm nhà thầy, Tân cần bạn vận dụng kiến thức quy hoạch động để trộm được nhiều giá trị nhất có thể",
+                    Difficulty="easy",
+                    Date=DateTime.UtcNow
+                },new Problem{
+                    Title= "Trộm nhà thầy Cường",
+                    Code="THIEF5",
                     Description="Tân hôm nay đi ăn trộm nhà thầy ngọc, Tân cần bạn vận dụng kiến thức quy hoạch động để trộm được nhiều giá trị nhất có thể",
                     Difficulty="easy",
-                }
+                    Date=DateTime.UtcNow
+                },new Problem{
+                    Title= "Trộm nhà thầy Huấn",
+                    Code="THIEF6",
+                    Description="Tân hôm nay đi ăn trộm nhà thầy, Tân cần bạn vận dụng kiến thức quy hoạch động để trộm được nhiều giá trị nhất có thể",
+                    Difficulty="easy",
+                    Date=DateTime.UtcNow
+                },new Problem{
+                    Title= "Trộm nhà thầy Phước",
+                    Code="THIEF7",
+                    Description="Tân hôm nay đi ăn trộm nhà thầy, Tân cần bạn vận dụng kiến thức quy hoạch động để trộm được nhiều giá trị nhất có thể",
+                    Difficulty="easy",
+                    Date=DateTime.UtcNow
+                },new Problem{
+                    Title= "Trộm nhà thầy Tài",
+                    Code="THIEF8",
+                    Description="Tân hôm nay đi ăn trộm nhà thầy, Tân cần bạn vận dụng kiến thức quy hoạch động để trộm được nhiều giá trị nhất có thể",
+                    Difficulty="easy",
+                    Date=DateTime.UtcNow
+                },
+                new Problem{
+                    Title= "Trộm nhà thầy Phát",
+                    Code="THIEF",
+                    Description="Trộm nốt cho đủ KPI",
+                    Difficulty="easy",
+                    Date=DateTime.UtcNow
+                },
             };
+
             await context.Problems.AddRangeAsync(problems);
             await context.SaveChangesAsync();
         }
