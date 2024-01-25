@@ -4,7 +4,7 @@ export type Problem = {
     title: string
     description: string
     difficulty: Difficulty
-    
+    date: Date
     solution: string
     acceptance: string
     tags: Tag[]
