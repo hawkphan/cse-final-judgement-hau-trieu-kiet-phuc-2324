@@ -9,9 +9,7 @@ function App() {
   return (
     <Fragment>
       <Navbar />
-      <Container style={{fontFamily: 'Roboto'}}>
-        <Outlet />
-      </Container>
+      <Outlet />
     </Fragment>
   );
 }
