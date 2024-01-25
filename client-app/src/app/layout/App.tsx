@@ -3,12 +3,12 @@ import { Fragment } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "../containers/Navbar";
 
-const ComponentToHide = (props) => {
+const ConditionalNavbar = () => {
   const location = useLocation();
-  const hideOn = ["/login", "/signup", "/signin", "/signup"];
+  const unusedPaths = ["/login", "/signup", "/signin", "/signup"];
 
-  if (hideOn.includes(location.pathname)) {
-    return <div></div>;
+  if (unusedPaths.includes(location.pathname)) {
+    return <></>;
   }
   return <Navbar />;
 };
@@ -16,8 +16,7 @@ const ComponentToHide = (props) => {
 function App() {
   return (
     <Fragment>
-      <ComponentToHide />
-      <Navbar />
+      <ConditionalNavbar />
       <Outlet />
     </Fragment>
   );

@@ -4,7 +4,6 @@ import HomePage from "../containers/HomePage";
 import Problems from "../containers/Problems";
 import Developer from "../containers/Developer";
 import UserProfile from "../containers/Navbar/UserProfile";
-import LoginForm from "../containers/User/LoginForm";
 import LoginSide from "../containers/User/LoginForm";
 import { PATHS } from "../configs/paths";
 
