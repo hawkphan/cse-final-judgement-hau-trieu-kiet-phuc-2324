@@ -18,6 +18,7 @@ export enum DevContainerTab {
   MATERIAL_REACT_TABLE = "MATERIAL_REACT_TABLE",
   CHART = "CHART",
   MARKDOWN = "MARKDOWN",
+  IDE = "IDE",
 }
 
 const TAB_LIST = [
@@ -28,6 +29,10 @@ const TAB_LIST = [
   {
     label: "Markdown",
     value: DevContainerTab.MARKDOWN,
+  },
+  {
+    label: "IDE",
+    value: DevContainerTab.IDE,
   },
   {
     label: "Dialog",
@@ -58,6 +63,7 @@ const Tag = lazy(() => import("./Tag"));
 const TabBars = lazy(() => import("./TabBars"));
 const Chart = lazy(() => import("./Chart"));
 const Markdown = lazy(() => import("./Markdown"));
+const IDE = lazy(() => import("./IDE"));
 
 const Developer: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -79,6 +85,8 @@ const Developer: FC = () => {
         return <Common />;
       case DevContainerTab.MARKDOWN:
         return <Markdown />;
+      case DevContainerTab.IDE:
+        return <IDE />;
       case DevContainerTab.DIALOG:
         return <Dialog />;
       case DevContainerTab.TOAST:

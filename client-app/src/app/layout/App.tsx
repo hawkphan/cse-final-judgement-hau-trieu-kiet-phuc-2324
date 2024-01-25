@@ -2,7 +2,6 @@ import { Fragment } from "react";
 
 import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "../containers/Navbar";
-import { Container } from "@mui/material";
 
 const ComponentToHide = (props) => {
   const location = useLocation();
@@ -18,6 +17,7 @@ function App() {
   return (
     <Fragment>
       <ComponentToHide />
+      <Navbar />
       <Outlet />
     </Fragment>
   );

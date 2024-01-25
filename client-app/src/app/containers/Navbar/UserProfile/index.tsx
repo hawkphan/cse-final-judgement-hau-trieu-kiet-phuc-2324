@@ -9,7 +9,7 @@ import UserAchievement from "./UserAchievements";
 
 export default function UserProfile() {
   return (
-    <Grid container spacing={2} style={{ padding: "10px" }} wrap='wrap'>
+    <Grid container spacing={2} style={{ padding: "10px", fontFamily: 'Roboto' }} wrap='wrap'>
       <Grid item xs={3}>
         <UserDetailInformation />
       </Grid>
