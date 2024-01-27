@@ -125,17 +125,20 @@ export default function UserDetailInformation() {
         >
           Languages
         </Typography>
-        <ListItem>
-          <Box display="flex" flexDirection="column">
-            {user.userProfile.languages === null ? (
-              <ListItemText secondary="Not enough data" />
-            ) : (
-              user.userProfile.languages.map((language) => (
-                <ListItemText secondary={`${language}`} />
-              ))
-            )}
-          </Box>
-        </ListItem>
+        <Box display="flex" flexDirection="column">
+          {user.userProfile.languages === null ? (
+            <ListItemText secondary="Not enough data" />
+          ) : (
+            user.userProfile.languages.map((language) => (
+              <ListItem>
+                <ListItemIcon>
+                  <TbPointFilled />
+                </ListItemIcon>
+                <ListItemText primary={`${language}`} />
+              </ListItem>
+            ))
+          )}
+        </Box>
       </List>
       <Divider style={{ marginTop: "20px", marginBottom: "5px" }} />
       <List
