@@ -18,10 +18,10 @@ namespace API.Controllers
         {
             if (result == null) return NotFound();
 
-            if (result.IsSuccess && result.Value != null)
-                return Ok(result.Value);
+            if (result.IsSuccess && result.Data != null)
+                return Ok(result.Data);
 
-            if (result.IsSuccess && result.Value == null)
+            if (result.IsSuccess && result.Data == null)
                 return NotFound();
 
             return BadRequest(result.Error);
@@ -29,15 +29,23 @@ namespace API.Controllers
 
         protected ActionResult HandlePagedResult<T>(Result<PagedList<T>> result)
         {
+
             if (result == null) return NotFound();
-            if (result.IsSuccess && result.Value != null)
+            if (result.IsSuccess && result.Data != null)
             {
-                Response.AddPaginationHeader(result.Value.CurrentPage, result.Value.PageSize,
-                    result.Value.TotalCount, result.Value.TotalPages);
-                return Ok(result.Value);
+                Response.AddPaginationHeader(result.Data.CurrentPage, result.Data.PageSize,
+                    result.Data.TotalCount, result.Data.TotalPages);
+
+                result.totalCount = result.Data.TotalCount;
+                result.pageSize = result.Data.PageSize;
+                result.records = result.Data.TotalCount;
+                result.totalPage = result.Data.TotalPages;
+                result.pageNo = result.Data.CurrentPage;
+
+                return Ok(result);
             }
 
-            if (result.IsSuccess && result.Value == null)
+            if (result.IsSuccess && result.Data == null)
                 return NotFound();
             return BadRequest(result.Error);
         }

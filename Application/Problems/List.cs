@@ -24,9 +24,10 @@ namespace Application.Problems
 
             public async Task<Result<PagedList<Problem>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var query = _context.Problems.AsQueryable();
+                // var query = _context.Problems.AsQueryable();
+                var problems = _context.Problems.ToList();
                 return Result<PagedList<Problem>>.Success(
-                    await PagedList<Problem>.CreateAsync(query, request.Params.pageNumber, request.Params.PageSize)
+                    PagedList<Problem>.CreateAsyncUsingList(problems, request.Params.pageNumber, request.Params.PageSize)
                 );
             }
         }

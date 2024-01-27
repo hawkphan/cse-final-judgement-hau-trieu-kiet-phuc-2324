@@ -38,8 +38,8 @@ namespace API.Extensions
                         ValidateAudience = false
                     };
                 });
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/login");
             services.AddScoped<TokenService>();
-
 
             return services;
         }

@@ -16,6 +16,14 @@ namespace Application.Core
             TotalCount = count;
             AddRange(items);
         }
+         public static PagedList<T> CreateAsyncUsingList(IList<T> source, int pageNumber, int pageSize)
+        {
+            var count = source.Count();
+            var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+
+            return new PagedList<T>(items, count, pageNumber, pageSize);
+        }
         public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
         {
             var count = await source.CountAsync();
