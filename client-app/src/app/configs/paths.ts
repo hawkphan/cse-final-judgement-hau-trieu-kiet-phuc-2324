@@ -8,6 +8,7 @@ export const PATHS = {
   profile: '/profile',
 
   problems: "/problems",
+  problemDetails : 'problems/:id'
 };
 
 export const HIDE_NAV_PATHS: string | string[] = [];
