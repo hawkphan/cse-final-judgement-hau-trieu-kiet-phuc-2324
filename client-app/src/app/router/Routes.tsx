@@ -6,6 +6,7 @@ import Developer from "../containers/Developer";
 import UserProfile from "../containers/Navbar/UserProfile";
 import LoginSide from "../containers/User/LoginForm";
 import { PATHS } from "../configs/paths";
+import SignUp from "../containers/User/SignUpForm";
 
 export const routes: RouteObject[] = [
   {
@@ -33,6 +34,9 @@ export const routes: RouteObject[] = [
       {
         path: PATHS.login,
         element: <LoginSide />,
+      },{
+        path: PATHS.signup,
+        element: <SignUp />,
       },
       {
         path: PATHS.problemDetails,
