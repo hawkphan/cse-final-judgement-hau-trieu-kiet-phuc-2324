@@ -12,7 +12,7 @@ namespace Application.Core
         public T Data { get; set; }
         public string[] Errors { get; set; }
 
-        public static Result<T> Success(T value) => new Result<T> { Succeeded = true, Data = value };
+        public static Result<T> Success(T value) => new Result<T> { Succeeded = true, Data = value , Errors = new string[0]};
         public static Result<T> Failure(string[] error) => new Result<T> { Succeeded = false, Errors = error };
     }
 }
