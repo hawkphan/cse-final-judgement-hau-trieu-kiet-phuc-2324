@@ -1,3 +1,5 @@
+import { Table2Params } from "../common/types";
+
 export interface Problem {
   id?: string;
   code?: string;
@@ -6,3 +8,6 @@ export interface Problem {
   description?: string;
   date?: string;
 }
+export type GetPropertiesParams = Table2Params & {
+  [key: string]: string | number | string[];
+};

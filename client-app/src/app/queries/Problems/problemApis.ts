@@ -1,10 +1,9 @@
 import axios from "axios";
 import { API_URL } from "../common/constants";
 import { stringify } from "../../shared";
-import { TableParamsNet } from "../common/types";
-import { Problem } from "./types";
+import { GetPropertiesParams, Problem } from "./types";
 
-const getProblems = (params: TableParamsNet) => {
+const getProblems = (params: GetPropertiesParams) => {
   const queryString = stringify(params);
   return axios.get<Problem[]>(`${API_URL}/api/problems?${queryString}`, {});
 };

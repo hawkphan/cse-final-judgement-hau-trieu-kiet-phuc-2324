@@ -4,24 +4,27 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useState } from "react";
-import { PaginationResponseNetType, responseWrapper } from "../../shared";
+import {
+  PaginationResponseNetType,
+  isEmpty,
+  responseWrapper,
+} from "../../shared";
 import { Problem } from "./types";
-import { TableParamsNet } from "../common/types";
 import { API_QUERIES } from "../common/constants";
 import { getProblems } from "./problemApis";
+import { Table2Params } from "../common/types";
 
 export function useGetProblems(
   options?: UseQueryOptions<PaginationResponseNetType<Problem>, Error> & {
     [key: string]: string | number | string[];
   }
 ) {
-  const [params, setParams] = useState<TableParamsNet>({});
-
+  const [params, setParams] = useState<Table2Params>({});
   const {
-    data,
     error,
+    data,
     isFetching,
-    refetch: onGetNestedChargeCode,
+    refetch: onGetProblems,
   } = useQuery<PaginationResponseNetType<Problem>, Error>({
     queryKey: [API_QUERIES.GET_PROBLEMS, params],
     queryFn: (query) => {
@@ -31,19 +34,19 @@ export function useGetProblems(
         params
       );
     },
+
     notifyOnChangeProps: ["data", "isFetching"],
-    enabled: !!params,
-    staleTime: 0,
+    enabled: !isEmpty(params),
     ...options,
   });
 
   const queryClient = useQueryClient();
 
-  const handleInvalidateNestedChargeCode = () =>
+  const handleInvalidateProblems = () =>
     queryClient.invalidateQueries({ queryKey: [API_QUERIES.GET_PROBLEMS] });
 
-  const { data: problems, pageSize, totalCount, succeeded } = data || {};
-  
+  const { data: problems = [], pageSize, totalCount, succeeded } = data || {};
+
   return {
     problems,
     payloadSize: pageSize,
@@ -52,8 +55,8 @@ export function useGetProblems(
     isFetching,
     succeeded,
     params,
-    onGetNestedChargeCode,
+    onGetProblems,
     setParams,
-    handleInvalidateNestedChargeCode,
+    handleInvalidateProblems,
   };
 }
