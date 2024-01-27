@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 import { ImNotification } from "react-icons/im";
 
 export default function UserAnnualReport() {

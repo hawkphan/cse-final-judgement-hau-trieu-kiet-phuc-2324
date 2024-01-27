@@ -4,11 +4,11 @@ import { CustomTableSearch, EmptyTable, Table2 } from "../../shared";
 import { allColumns } from "./allColumns";
 import { Problem } from "../../queries/Problems/types";
 import { useNavigate } from "react-router-dom";
-const Problems = () => {
 
+
+const Problems = () => {
   //TODO: Integrate API
   // const {problems} = useGetProblems();
-
   const navigate = useNavigate();
 
   const data = problems.data as Problem[];
