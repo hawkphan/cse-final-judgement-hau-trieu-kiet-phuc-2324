@@ -31,8 +31,12 @@ export const routes: RouteObject[] = [
         element: <UserProfile />,
       },
       {
-        path: "login",
+        path: PATHS.login,
         element: <LoginSide />,
+      },
+      {
+        path: PATHS.problemDetails,
+        element: <>123</>,
       },
     ],
   },

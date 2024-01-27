@@ -86,9 +86,11 @@ export const allColumns = (): MRT_ColumnDef<Problem>[] => {
       Cell: () => (
         <RowActions
           hideEdit={false}
+          hideDetail={false}
           hideDelete={false}
           DeleteFunction={() => () => {}}
           EditFunction={() => () => {}}
+          DetailFunction={() => {}}
         />
       ),
     },

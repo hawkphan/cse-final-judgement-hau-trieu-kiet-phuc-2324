@@ -3,10 +3,13 @@ import { problems } from "../../queries/Problems";
 import { CustomTableSearch, EmptyTable, Table2 } from "../../shared";
 import { allColumns } from "./allColumns";
 import { Problem } from "../../queries/Problems/types";
+import { useNavigate } from "react-router-dom";
 const Problems = () => {
 
   //TODO: Integrate API
   // const {problems} = useGetProblems();
+
+  const navigate = useNavigate();
 
   const data = problems.data as Problem[];
 
@@ -33,6 +36,12 @@ const Problems = () => {
             state={{
               isLoading: false,
             }}
+            muiTableBodyRowProps={({ row }) => ({
+              onClick: () => {
+                console.log(row.original);
+                navigate(`${row.original.id}`);
+              },
+            })}
             renderTopToolbarCustomActions={() => (
               <Stack direction="row" spacing={1} my={0.5}>
                 <Stack width="328px">

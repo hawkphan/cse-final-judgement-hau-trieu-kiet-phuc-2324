@@ -1,7 +1,8 @@
-import { COLOR_CODE } from '@common-config';
+
 import { IconButton, Stack, Tooltip } from '@mui/material';
-import { Callback } from '@redux/types';
 import { MaterialSymbol } from 'react-material-symbols';
+import { COLOR_CODE } from '../../..';
+import { Callback } from '../../../../queries/common/types';
 
 const RowActions: React.FC<Props> = ({
   DetailFunction,
