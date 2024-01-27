@@ -46,7 +46,7 @@ export default function UserActivityReport() {
         marginTop: "20px",
         padding: "20px",
         paddingTop: "10px",
-        minHeight: "200px",
+        minHeight: "270px",
         minWidth: "180px",
       }}
       elevation={4}
@@ -61,7 +61,7 @@ export default function UserActivityReport() {
         </Typography>
 
         <Box display="flex" flexDirection="row">
-          <Box flexDirection="column" sx={{ width: "150px" }}>
+          <Box flexDirection="column" sx={{ width: "150px", marginTop: '40px' }}>
             <CircularProgressWithLabel value={progress} />
           </Box>
 
@@ -81,15 +81,16 @@ export default function UserActivityReport() {
             >
               <Box
                 display="flex"
-                flexDirection="row"
+                flexDirection="column"
                 justifyContent="space-between"
               >
                 <Typography color="text.secondary">easy</Typography>
-                <Box display="flex" flexDirection="row">
+                <Box display="flex" flexDirection="row" justifyContent="space-between">
                   <Typography color="text.primary">0</Typography>
                   <Typography color="text.secondary">/ 725</Typography>
+                  <Typography color="text.secondary">not enough data</Typography>
                 </Box>
-                <Typography color="text.secondary">not enough data</Typography>
+
               </Box>
 
               <LinearProgress
@@ -107,15 +108,16 @@ export default function UserActivityReport() {
             >
               <Box
                 display="flex"
-                flexDirection="row"
+                flexDirection="column"
                 justifyContent="space-between"
               >
                 <Typography color="text.secondary">medium</Typography>
-                <Box display="flex" flexDirection="row">
+                <Box display="flex" flexDirection="row" justifyContent="space-between">
                   <Typography color="text.primary">0</Typography>
                   <Typography color="text.secondary">/ 725</Typography>
+                  <Typography color="text.secondary">not enough data</Typography>
                 </Box>
-                <Typography color="text.secondary">not enough data</Typography>
+
               </Box>
               <LinearProgress
                 variant="determinate"
@@ -137,15 +139,16 @@ export default function UserActivityReport() {
             >
               <Box
                 display="flex"
-                flexDirection="row"
+                flexDirection="column"
                 justifyContent="space-between"
               >
                 <Typography color="text.secondary">hard</Typography>
-                <Box display="flex" flexDirection="row">
+                <Box display="flex" flexDirection="row" justifyContent="space-between" >
                   <Typography color="text.primary">0</Typography>
                   <Typography color="text.secondary">/ 725</Typography>
+                  <Typography color="text.secondary">not enough data</Typography>
                 </Box>
-                <Typography color="text.secondary">not enough data</Typography>
+
               </Box>
               <LinearProgress
                 variant="determinate"

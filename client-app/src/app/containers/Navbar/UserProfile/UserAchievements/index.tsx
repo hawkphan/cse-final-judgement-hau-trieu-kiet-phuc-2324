@@ -7,7 +7,7 @@ export default function UserAchievements() {
         marginTop: "20px",
         padding: '20px',
         paddingTop: '10px',
-        minHeight: "200px",
+        minHeight: "270px",
         minWidth: "180px",
       }}
       elevation={4}
