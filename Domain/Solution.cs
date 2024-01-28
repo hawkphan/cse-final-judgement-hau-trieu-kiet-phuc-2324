@@ -9,11 +9,16 @@ namespace Domain
     public class Solution
     {
         [Key]
-        public long SolutionId;
-        public Problem Problem;
-        public string FileName;
-        public string Language;
-        public string Output;
-        public double Score;
+        public Guid Id { get; set; }
+
+        public Guid UserId { get; set; }
+        public AppUser User { get; set; }
+        public Guid ProblemId { get; set; }
+        public Problem Problem { get; set; }
+        public string FileName { get; set; }
+        public string Language { get; set; }
+        public string Status { get; set; }
+        public ICollection<Result> Results { get; set; }
+        public double Score { get; set; }
     }
 }
