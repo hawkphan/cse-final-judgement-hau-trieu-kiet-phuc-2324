@@ -8,9 +8,6 @@ namespace Domain
     public class AppUser : IdentityUser
     {
         public string DisplayName { get; set; }
-        public string Bio { get; set; }
-        // public string Name {get;set;}
-        // public string FullName {get;set;}
-
+        public ICollection<Solution> Solutions { get; set; }
     }
 }
