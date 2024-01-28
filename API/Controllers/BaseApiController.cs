@@ -2,6 +2,7 @@
 using Application.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Controllers
 {
@@ -41,7 +42,6 @@ namespace API.Controllers
                 result.Records = result.Data.TotalCount;
                 result.TotalPage = result.Data.TotalPages;
                 result.PageNo = result.Data.CurrentPage;
-
                 return Ok(result);
             }
 
