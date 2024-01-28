@@ -9,4 +9,6 @@ export interface UserFormValues {
     password: string;
     displayName?: string;
     userName?: string;
+    firstName?:string;
+    lastName?:string;
 }

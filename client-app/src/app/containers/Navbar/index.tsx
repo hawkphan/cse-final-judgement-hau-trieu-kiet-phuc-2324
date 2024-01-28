@@ -14,8 +14,11 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 import { KEYS, LABELS, PATHS } from "./helpers";
 import { MuiMenuItem } from "./MuiMenuItem";
+import { useStore } from "../../shared/common/stores/store";
 
 function Navbar() {
+  const { userStore } = useStore();
+
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -121,8 +124,8 @@ function Navbar() {
                   </Typography>
                 </Link>
               </MenuItem>
-              <MenuItem key="menu-profile" onClick={handleCloseUserMenu}>
-                <Link to="/logout" style={{textDecoration: 'none', color: 'black'}}>
+              <MenuItem key="menu-profile" onClick={userStore.logout}>
+                <Link style={{ textDecoration: 'none', color: 'black' }} to={""}>
                   <Typography textAlign="center" component={Box} style={{textDecoration: 'none'}}>
                     Logout
                   </Typography>
