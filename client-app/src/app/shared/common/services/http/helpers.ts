@@ -1,19 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-async-promise-executor */
 /* eslint-disable @typescript-eslint/ban-types */
-import { ApisauceInstance } from 'apisauce';
+import { ApisauceInstance } from "apisauce";
 // import { Auth } from 'aws-amplify';
-import { ErrorService, Toastify, TokenService } from '..';
+import { ErrorService, Toastify, TokenService } from "..";
 
 type ApiCall = (..._args: any[]) => Promise<any>;
 
-export async function responseWrapper<T>(func: ApiCall, [...args]: any[] = []): Promise<T> {
+export async function responseWrapper<T>(
+  func: ApiCall,
+  [...args]: any[] = []
+): Promise<T> {
   return new Promise(async (res, rej) => {
     try {
       const response = (await func(...args)) || {};
-      if (response.ok) res(response.data);
-      if (response?.originalError?.message === 'CONNECTION_TIMEOUT') {
-        Toastify.error('Connection timeout. Please check your network and try again.');
+      if (response.status == 200) res(response.data);
+      if (response?.originalError?.message === "CONNECTION_TIMEOUT") {
+        Toastify.error(
+          "Connection timeout. Please check your network and try again."
+        );
       }
       rej(response.data);
     } catch (err) {
@@ -22,7 +27,10 @@ export async function responseWrapper<T>(func: ApiCall, [...args]: any[] = []): 
   });
 }
 
-export async function authResponseWrapper<T>(func: ApiCall, [...args]: any[] = []): Promise<T> {
+export async function authResponseWrapper<T>(
+  func: ApiCall,
+  [...args]: any[] = []
+): Promise<T> {
   return new Promise(async (res, rej) => {
     try {
       const response = (await func(...args)) || {};
@@ -87,7 +95,7 @@ export const configApiInstance = (api: ApisauceInstance) => {
         config.headers.Authorization = `Bearer ${token}`;
         return Promise.resolve(config);
       })
-      .catch(() => Promise.resolve(config)),
+      .catch(() => Promise.resolve(config))
   );
 
   api.axiosInstance.interceptors.response.use(undefined, (error) => {

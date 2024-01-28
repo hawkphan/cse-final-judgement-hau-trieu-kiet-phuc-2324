@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Button,
   Card,
   Divider,
@@ -15,17 +16,23 @@ import { FaEye, FaCheckCircle, FaStar } from "react-icons/fa";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { TbPointFilled } from "react-icons/tb";
 
+//Test data
+import { User } from "../TestData/userProfileModel";
+import { profileInfo } from "../TestData/dataUserProfile.mock";
+
 //User Detail Information box contain the user basic information, includes:
 //Basic info:           Avatar, username, id, rank, option to edit profile
 //Activity tracking:    Views, Solution, Disscuss, Reputation
 //Languages used:       java, c, c+, c++, c#,...
 //Skill: ?
 export default function UserDetailInformation() {
+  const user = profileInfo.user as User;
+
   return (
     <Card
       style={{
         marginTop: "20px",
-        padding: '20px',
+        padding: "20px",
         minHeight: "200px",
         minWidth: "180px",
       }}
@@ -37,9 +44,9 @@ export default function UserDetailInformation() {
         </Avatar>
 
         <Stack direction="column" spacing={0.5}>
-          <h4>Hoang Trieu Le</h4>
-          <h5>user53183</h5>
-          <h5>Rank ~ 5,000,000</h5>
+          <h4>{user.displayName}</h4>
+          <h5>{user.userName}</h5>
+          <h5>{user.userProfile.rank}</h5>
         </Stack>
       </Stack>
       <Button
@@ -72,14 +79,20 @@ export default function UserDetailInformation() {
           <ListItemIcon>
             <FaEye style={{ color: "blue" }} />
           </ListItemIcon>
-          <ListItemText primary="Views 0" secondary="Last week 0" />
+          <ListItemText
+            primary={`Views ${user.userProfile.views}`}
+            secondary="Last week 0"
+          />
         </ListItem>
 
         <ListItem>
           <ListItemIcon>
             <FaCheckCircle style={{ color: "#8AFF72" }} />
           </ListItemIcon>
-          <ListItemText primary="Solutions 0" secondary="Last week 0" />
+          <ListItemText
+            primary={`Solutions ${user.userProfile.solutions}`}
+            secondary="Last week 0"
+          />
         </ListItem>
 
         <ListItem>
@@ -93,7 +106,10 @@ export default function UserDetailInformation() {
           <ListItemIcon>
             <FaStar style={{ color: "#EBF068" }} />
           </ListItemIcon>
-          <ListItemText primary="Reputation 0" secondary="Last week 0" />
+          <ListItemText
+            primary={`Reputation ${user.userProfile.reputation}`}
+            secondary="Last week 0"
+          />
         </ListItem>
       </List>
 
@@ -109,9 +125,20 @@ export default function UserDetailInformation() {
         >
           Languages
         </Typography>
-        <ListItem>
-          <ListItemText secondary="Not enough data" />
-        </ListItem>
+        <Box display="flex" flexDirection="column">
+          {user.userProfile.languages === null ? (
+            <ListItemText secondary="Not enough data" />
+          ) : (
+            user.userProfile.languages.map((language) => (
+              <ListItem>
+                <ListItemIcon>
+                  <TbPointFilled />
+                </ListItemIcon>
+                <ListItemText primary={`${language}`} />
+              </ListItem>
+            ))
+          )}
+        </Box>
       </List>
       <Divider style={{ marginTop: "20px", marginBottom: "5px" }} />
       <List

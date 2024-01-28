@@ -11,12 +11,12 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
         {
-            // if (!userManager.Users.Any()) await seedAccounts(context,userManager);
+            // if (!userManager.Users.Any()) await SeedAccounts(context,userManager);
             // if (!context.Activities.Any()) await seedActivities(context);
             if (!context.Problems.Any()) await seedProblems(context);
 
         }
-        static async Task seedAccounts(DataContext context, UserManager<AppUser> userManager)
+        static async Task SeedAccounts(DataContext context, UserManager<AppUser> userManager)
         {
             var users = new List<AppUser>{
                 new AppUser{

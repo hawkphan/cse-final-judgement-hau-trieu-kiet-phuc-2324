@@ -7,6 +7,7 @@ import UserProfile from "../containers/Navbar/UserProfile";
 import LoginSide from "../containers/User/LoginForm";
 import { PATHS } from "../configs/paths";
 import SignUp from "../containers/User/SignUpForm";
+import ProblemDetail from "../containers/Problems/ProblemDetails";
 
 export const routes: RouteObject[] = [
   {
@@ -26,7 +27,6 @@ export const routes: RouteObject[] = [
         path: PATHS.dev,
         element: <Developer />,
       },
-
       {
         path: PATHS.profile,
         element: <UserProfile />,
@@ -40,7 +40,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: PATHS.problemDetails,
-        element: <>123</>,
+        element: <ProblemDetail /> ,
       },
     ],
   },

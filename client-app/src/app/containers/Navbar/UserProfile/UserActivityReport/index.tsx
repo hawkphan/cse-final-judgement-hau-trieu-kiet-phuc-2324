@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, Card, CardContent, CircularProgress, CircularProgressProps, LinearProgress, Typography } from "@mui/material";
-import { useState } from "react";
+//Test data
+import { profileInfo } from "../TestData/dataUserProfile.mock";
+import { User } from "../TestData/userProfileModel";
 
 function CircularProgressWithLabel(
   props: CircularProgressProps & { value: number }
@@ -27,7 +29,7 @@ function CircularProgressWithLabel(
         }}
       >
         <Typography variant="caption" component="div" color="text.secondary">
-          {`${Math.round(props.value)}`}
+          {`${Math.round(props.value)} %`}
         </Typography>
         <Typography variant="caption" component="div" color="text.primary">
           SOLVED
@@ -38,7 +40,25 @@ function CircularProgressWithLabel(
 }
 
 export default function UserActivityReport() {
-  const [progress, setProgress] = useState(90);
+  const user = profileInfo.user as User;
+  const totalSubmit = parseInt(user.userProfile.easyProblemSubmitted) + parseInt(user.userProfile.mediumProblemSubmitted) +parseInt(user.userProfile.hardProblemSubmitted);
+  const totalSolved = parseInt(user.userProfile.easyProblemSolved) + parseInt(user.userProfile.mediumProblemSolved) +parseInt(user.userProfile.hardProblemSolved);
+
+  function calculateTotalProblemSolvedPercent(){    
+    return (totalSolved / totalSubmit)*100;
+  }
+
+  function calculateEasyProblemSolvedPercent(){    
+    return (parseInt(user.userProfile.easyProblemSolved) / parseInt(user.userProfile.easyProblemSubmitted))*100;
+  }
+
+  function calculateMediumProblemSolvedPercent(){    
+    return( parseInt(user.userProfile.mediumProblemSolved) / parseInt(user.userProfile.mediumProblemSubmitted))*100;
+  }
+
+  function calculateHardProblemSolvedPercent(){    
+    return (parseInt(user.userProfile.hardProblemSolved) / parseInt(user.userProfile.hardProblemSubmitted))*100;
+  }
 
   return (
     <Card
@@ -62,7 +82,7 @@ export default function UserActivityReport() {
 
         <Box display="flex" flexDirection="row">
           <Box flexDirection="column" sx={{ width: "150px", marginTop: '40px' }}>
-            <CircularProgressWithLabel value={progress} />
+            <CircularProgressWithLabel value={calculateTotalProblemSolvedPercent()} />
           </Box>
 
           <Box
@@ -86,16 +106,14 @@ export default function UserActivityReport() {
               >
                 <Typography color="text.secondary">easy</Typography>
                 <Box display="flex" flexDirection="row" justifyContent="space-between">
-                  <Typography color="text.primary">0</Typography>
-                  <Typography color="text.secondary">/ 725</Typography>
-                  <Typography color="text.secondary">not enough data</Typography>
+                  <Typography color="text.primary">{user.userProfile.easyProblemSolved} /{user.userProfile.easyProblemSubmitted}  </Typography>
                 </Box>
 
               </Box>
 
               <LinearProgress
                 variant="determinate"
-                value={progress}
+                value={calculateEasyProblemSolvedPercent()} 
                 color="success"
               />
             </Box>
@@ -113,15 +131,13 @@ export default function UserActivityReport() {
               >
                 <Typography color="text.secondary">medium</Typography>
                 <Box display="flex" flexDirection="row" justifyContent="space-between">
-                  <Typography color="text.primary">0</Typography>
-                  <Typography color="text.secondary">/ 725</Typography>
-                  <Typography color="text.secondary">not enough data</Typography>
+                  <Typography color="text.primary">{user.userProfile.mediumProblemSolved} /{user.userProfile.mediumProblemSubmitted}</Typography>
                 </Box>
 
               </Box>
               <LinearProgress
                 variant="determinate"
-                value={progress}
+                value={calculateMediumProblemSolvedPercent()} 
                 sx={{
                   backgroundColor: "#FFEECB",
                   "& .MuiLinearProgress-bar": {
@@ -144,15 +160,13 @@ export default function UserActivityReport() {
               >
                 <Typography color="text.secondary">hard</Typography>
                 <Box display="flex" flexDirection="row" justifyContent="space-between" >
-                  <Typography color="text.primary">0</Typography>
-                  <Typography color="text.secondary">/ 725</Typography>
-                  <Typography color="text.secondary">not enough data</Typography>
+                  <Typography color="text.primary">{user.userProfile.hardProblemSolved} /{user.userProfile.hardProblemSubmitted}</Typography>
                 </Box>
 
               </Box>
               <LinearProgress
                 variant="determinate"
-                value={progress}
+                value={calculateHardProblemSolvedPercent()} 
                 sx={{
                   backgroundColor: "#FDDBDB",
                   "& .MuiLinearProgress-bar": {
