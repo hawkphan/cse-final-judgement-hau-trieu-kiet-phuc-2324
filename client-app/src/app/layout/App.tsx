@@ -7,7 +7,7 @@ import "react-material-symbols/sharp";
 
 const ConditionalNavbar = () => {
   const location = useLocation();
-  const unusedPaths = ["/login", "/register"];
+  const unusedPaths = ["/login", "/signup"];
 
   if (unusedPaths.includes(location.pathname)) {
     return <></>;
