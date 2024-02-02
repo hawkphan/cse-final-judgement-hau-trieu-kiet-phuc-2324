@@ -38,7 +38,6 @@ namespace API.Extensions
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<Create>();
             services.AddHttpContextAccessor();
-            services.AddHttpContextAccessor();
             services.AddScoped<IUserAccessor, UserAccessor>();
             return services;
         }
