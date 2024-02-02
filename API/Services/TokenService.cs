@@ -13,16 +13,17 @@ namespace API.Services
         {
             var claims = new List<Claim>{
                 new Claim(ClaimTypes.Name,user.UserName),
-                new Claim(ClaimTypes.NameIdentifier,user.Id),
+                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
                 new Claim(ClaimTypes.Email,user.Email),
             };
             byte[] bytes = Encoding.UTF8.GetBytes("6N*hMsuKu~5P#-TTDJJ]9x/hdS3-G(U6RRT3;CxFNC7Sbsk5/<Nydj~'gaLJL&{>");
             var key = new SymmetricSecurityKey(bytes);
-            var creds = new SigningCredentials(key,SecurityAlgorithms.HmacSha512Signature);
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenDes = new SecurityTokenDescriptor{
-                Subject=new ClaimsIdentity(claims),
-                Expires=DateTime.UtcNow.AddDays(7),
+            var tokenDes = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = creds
             };
 
