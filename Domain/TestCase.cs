@@ -8,6 +8,7 @@ namespace Domain
     public class TestCase
     {
         public Guid Id { get; set; }
+        public Guid ProblemId { get; set; }
         public Problem Problem { get; set; }
         public String Input { get; set; }
         public String Output { get; set; }

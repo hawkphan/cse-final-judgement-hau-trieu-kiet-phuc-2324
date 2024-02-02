@@ -1,4 +1,6 @@
 using Application.Core;
+using Application.Interfaces;
+using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,18 +18,28 @@ namespace Application.Problems
         public class Handler : IRequestHandler<Query, Result<PagedList<Problem>>>
         {
             private readonly DataContext _context;
-
-            public Handler(DataContext context)
+            private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
+            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor)
             {
                 _context = context;
+                _mapper = mapper;
+                _userAccessor = userAccessor;
             }
 
             public async Task<Result<PagedList<Problem>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                // var query = _context.Problems.AsQueryable();
-                var problems = _context.Problems.ToList();
+                var problems = _context.Problems
+                .Include(u => u.User)
+                .Include(s => s.Solutions)
+                    .ThenInclude(su => su.User)
+                .Include(t => t.TestCases)
+                .Include(pl => pl.ProblemLanguages)
+                .ToList();
+
+                var pagedProblems = PagedList<Problem>.CreateAsyncUsingList(problems, request.Params.pageNumber, request.Params.PageSize);
                 return Result<PagedList<Problem>>.Success(
-                    PagedList<Problem>.CreateAsyncUsingList(problems, request.Params.pageNumber, request.Params.PageSize)
+                    pagedProblems
                 );
             }
         }

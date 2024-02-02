@@ -12,7 +12,6 @@ namespace Domain
         public Guid Id;
         public Guid SolutionId { get; set; }
         public Solution Solution { get; set; }
-
         public Guid TestCaseId { get; set; }
         public TestCase TestCase { get; set; }
         public String Output { get; set; }

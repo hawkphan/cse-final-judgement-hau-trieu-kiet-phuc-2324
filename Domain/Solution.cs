@@ -21,4 +21,5 @@ namespace Domain
         public ICollection<Result> Results { get; set; }
         public double Score { get; set; }
     }
+    
 }

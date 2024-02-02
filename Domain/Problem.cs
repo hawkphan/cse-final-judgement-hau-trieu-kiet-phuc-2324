@@ -15,10 +15,10 @@ public class Problem
     public string Description { get; set; }
     public DateTime Date { get; set; }
     public double TimeLimit { get; set; }
-    public ICollection<TestCase> TestCases { get; set; }
-    public ICollection<Result> Results { get; set; }
-    public ICollection<Solution> Solutions { get; set; }
-    public ICollection<ProblemLanguage> ProblemLanguages { get; set; }
+    public ICollection<TestCase> TestCases { get; set; } = new List<TestCase>();
+    public ICollection<Result> Results { get; set; } = new List<Result>();
+    public ICollection<Solution> Solutions { get; set; } = new List<Solution>();
+    public ICollection<ProblemLanguage> ProblemLanguages { get; set; } = new List<ProblemLanguage>();
 
 
 }
