@@ -19,7 +19,7 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<ActionResult<Language>> GetLanguage(Guid id)
+        public async Task<ActionResult<LanguageDto>> GetLanguage(Guid id)
         {
             return await Mediator.Send(new Details.Query { Id = id });
         }

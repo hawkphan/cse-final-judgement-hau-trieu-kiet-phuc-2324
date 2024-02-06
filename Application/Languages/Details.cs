@@ -1,3 +1,4 @@
+using AutoMapper;
 using Domain;
 using MediatR;
 using Persistence;
@@ -6,21 +7,27 @@ namespace Application.Languages
 {
     public class Details
     {
-        public class Query : IRequest<Language>
+        public class Query : IRequest<LanguageDto>
         {
             public Guid Id { get; set; }
 
         }
-        public class Handler : IRequestHandler<Query, Language>
+        public class Handler : IRequestHandler<Query, LanguageDto>
         {
             private readonly DataContext _context;
-            public Handler(DataContext context)
+            private readonly IMapper _mapper;
+
+            public Handler(DataContext context, IMapper mapper)
             {
+                _mapper = mapper;
                 _context = context;
             }
-            public async Task<Language> Handle(Query request, CancellationToken cancellationToken)
+
+            public async Task<LanguageDto> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Languages.FindAsync(request.Id);
+                var languageEntity = await _context.Languages.FindAsync(request.Id);
+                var languageDto = _mapper.Map<LanguageDto>(languageEntity);
+                return languageDto;
             }
         }
     }

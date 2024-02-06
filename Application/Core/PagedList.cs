@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Core
@@ -19,6 +16,7 @@ namespace Application.Core
          public static PagedList<T> CreateAsyncUsingList(IList<T> source, int pageNumber, int pageSize)
         {
             var count = source.Count();
+            
             var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
 
@@ -32,6 +30,8 @@ namespace Application.Core
 
             return new PagedList<T>(items, count, pageNumber, pageSize);
         }
+
+
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
         public int PageSize { get; set; }

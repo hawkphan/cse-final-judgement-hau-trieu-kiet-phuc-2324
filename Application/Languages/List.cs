@@ -1,6 +1,7 @@
 using Application.Core;
 using Application.Interfaces;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +11,12 @@ namespace Application.Languages
 {
     public class List
     {
-        public class Query : IRequest<Result<PagedList<Language>>>
+        public class Query : IRequest<Result<PagedList<LanguageDto>>>
         {
             public PagingParams Params { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Result<PagedList<Language>>>
+        public class Handler : IRequestHandler<Query, Result<PagedList<LanguageDto>>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -27,17 +28,14 @@ namespace Application.Languages
                 _userAccessor = userAccessor;
             }
 
-            public async Task<Result<PagedList<Language>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<PagedList<LanguageDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var Languages = _context.Languages
-                // .Include(u => u.User.GetSafeProfileObject())
-                .Include(pl => pl.ProblemLanguages).ThenInclude(pp => pp.Problem)
-                .ToList();
-
-                var pagedLanguages = PagedList<Language>.CreateAsyncUsingList(Languages, request.Params.pageNumber, request.Params.PageSize);
-                return Result<PagedList<Language>>.Success(
-                    pagedLanguages
-                );
+                var query = await _context.Languages
+                    .ProjectTo<LanguageDto>(_mapper.ConfigurationProvider)
+                    .ToListAsync();
+                return Result<PagedList<LanguageDto>>
+                    .Success(PagedList<LanguageDto>.CreateAsyncUsingList(query,
+                        request.Params.PageNumber, request.Params.PageSize));
             }
         }
     }
