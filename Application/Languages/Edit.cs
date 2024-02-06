@@ -26,7 +26,7 @@ namespace Application.Languages
             public async Task Handle(Command request, CancellationToken cancellationToken)
             {
                 var Language = await _context.Languages.FindAsync(request.Language.Id);
-
+                
                 _mapper.Map(request.Language, Language);
 
                 await _context.SaveChangesAsync();

@@ -18,19 +18,6 @@ namespace Domain
         public ICollection<Solution> Solutions { get; set; }
         [JsonIgnore]
         public ICollection<Language> Languages { get; set; }
-        public object GetSafeProfileObject()
-        {
-            return new
-            {
-                Id,
-                UserName,
-                FirstName,
-                LastName,
-                IsFemale,
-                DisplayName,
-            };
-        }
-
     }
 
 }

@@ -17,6 +17,7 @@ namespace Domain
         public Guid UserId { get; set; }
         public AppUser User { get; set; }
         public string Name { get; set; } = "null";
+        
         [NotMapped]
         public List<String> RunCommands { get; set; } = new List<string>();
     }

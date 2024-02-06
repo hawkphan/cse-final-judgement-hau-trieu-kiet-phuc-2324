@@ -1,6 +1,7 @@
 using Application.Core;
 using Application.Interfaces;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,37 +11,40 @@ namespace Application.Problems
 {
     public class List
     {
-        public class Query : IRequest<Result<PagedList<Problem>>>
+        public class Query : IRequest<Result<PagedList<ProblemDto>>>
         {
             public PagingParams Params { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Result<PagedList<Problem>>>
+        public class Handler : IRequestHandler<Query, Result<PagedList<ProblemDto>>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
-            private readonly IUserAccessor _userAccessor;
-            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor)
+            public Handler(DataContext context, IMapper mapper)
             {
                 _context = context;
                 _mapper = mapper;
-                _userAccessor = userAccessor;
             }
 
-            public async Task<Result<PagedList<Problem>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<PagedList<ProblemDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var problems = _context.Problems
-                .Include(u => u.User)
-                .Include(s => s.Solutions)
-                    .ThenInclude(su => su.User)
-                .Include(t => t.TestCases)
-                .Include(pl => pl.ProblemLanguages)
-                .ToList();
+                string key = request.Params.Keywords;
+                var query = await _context.Problems
+                .ProjectTo<ProblemDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+                if (!string.IsNullOrEmpty(key))
+                {
+                    query = await _context.Problems.
+                    Where(problem =>
+                    problem.Title.Contains(request.Params.Keywords) || problem.Code.Contains(request.Params.Keywords))
+                    .ProjectTo<ProblemDto>(_mapper.ConfigurationProvider)
+                    .ToListAsync();
+                }
 
-                var pagedProblems = PagedList<Problem>.CreateAsyncUsingList(problems, request.Params.pageNumber, request.Params.PageSize);
-                return Result<PagedList<Problem>>.Success(
-                    pagedProblems
-                );
+
+                return Result<PagedList<ProblemDto>>
+                    .Success(PagedList<ProblemDto>.CreateAsyncUsingList(query,
+                        request.Params.PageNumber, request.Params.PageSize));
             }
         }
     }
