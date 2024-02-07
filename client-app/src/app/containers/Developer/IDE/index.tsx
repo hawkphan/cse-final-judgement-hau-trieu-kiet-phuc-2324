@@ -28,7 +28,6 @@ const IDE = () => {
     monaco: Monaco
   ) => {
     editorRef.current = editor;
-    console.log(monaco);
   };
 
   const toggleDarkOrLightTheme = () => {

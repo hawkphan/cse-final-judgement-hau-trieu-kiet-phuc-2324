@@ -8,6 +8,7 @@ import LoginSide from "../containers/User/LoginForm";
 import { PATHS } from "../configs/paths";
 import SignUp from "../containers/User/SignUpForm";
 import ProblemDetail from "../containers/Problems/ProblemDetails";
+import ProblemForm from "../containers/Problems/ProblemForm";
 
 export const routes: RouteObject[] = [
   {
@@ -40,7 +41,15 @@ export const routes: RouteObject[] = [
       },
       {
         path: PATHS.problemDetails,
-        element: <ProblemDetail /> ,
+        element: <ProblemDetail />,
+      },
+      {
+        path: PATHS.createProblem,
+        element: <ProblemForm />,
+      },
+      {
+        path: PATHS.editProblem,
+        element: <ProblemForm />,
       },
     ],
   },

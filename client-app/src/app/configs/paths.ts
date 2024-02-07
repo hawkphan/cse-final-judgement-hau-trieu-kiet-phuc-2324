@@ -9,7 +9,9 @@ export const PATHS = {
   profile: '/profile',
 
   problems: "/problems",
-  problemDetails : 'problems/:id'
+  problemDetails : '/problems/:id',
+  createProblem: '/problems/create',
+  editProblem: '/problems/:id/edit'
 };
 
 export const HIDE_NAV_PATHS: string | string[] = [];

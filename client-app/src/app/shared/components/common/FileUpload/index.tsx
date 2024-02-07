@@ -1,19 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import cn from 'classnames';
-import React from 'react';
-import { Accept, FileRejection, useDropzone } from 'react-dropzone';
+import cn from "classnames";
+import React from "react";
+import { Accept, FileRejection, useDropzone } from "react-dropzone";
 
-
-import { IconButton, Stack } from '@mui/material';
-import { Trans } from 'react-i18next';
-import { FaRegTrashAlt } from 'react-icons/fa';
-import Button from '../Button';
-import Typo from '../Typo';
-import View from '../View';
-import { getFilesInfo } from './helpers';
-import './styles.scss';
-import { COLOR_CODE, COMMON_TYPE, Toastify } from '../../..';
-import configs from '../../../../configs';
+import { IconButton, Stack } from "@mui/material";
+import { Trans } from "react-i18next";
+import { FaRegTrashAlt } from "react-icons/fa";
+import Button from "../Button";
+import Typo from "../Typo";
+import View from "../View";
+import { getFilesInfo } from "./helpers";
+import "./styles.scss";
+import { COLOR_CODE, COMMON_TYPE, Toastify } from "../../..";
 
 const DEFAULT_MESSAGE = (
   <Trans i18nKey="default_message_file_upload">
@@ -37,16 +35,16 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
       onError,
       acceptFileType,
       message = DEFAULT_MESSAGE,
-      errorMessage = '',
+      errorMessage = "",
     },
-    innerRef,
+    innerRef
   ) => {
     const [myFiles, setMyFiles] = React.useState<File[]>([]);
     const [rejectFiles, setRejectFiles] = React.useState<FileRejection[]>([]);
     const [isFileSelected, setIsFileSelected] = React.useState<boolean>(false);
 
     const hasError = !!errorMessage;
-
+    const MAXIMUM_FILE_SIZE = 1024 * 1024 * 50;
     const onDrop = (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       setMyFiles(acceptedFiles);
       setRejectFiles(fileRejections);
@@ -63,7 +61,7 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
     const { getRootProps, getInputProps } = useDropzone({
       onDrop,
       accept: acceptFileType || COMMON_TYPE,
-      maxSize: configs.MAXIMUM_FILE_SIZE,
+      maxSize: MAXIMUM_FILE_SIZE,
     });
 
     React.useEffect(() => {
@@ -74,11 +72,11 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
         });
       }
       if (rejectFiles.length > 0) {
-        if (rejectFiles[0]?.file?.size > configs.MAXIMUM_FILE_SIZE) {
-          onError('Your file size is greater than 50MB. Please try again.');
+        if (rejectFiles[0]?.file?.size > MAXIMUM_FILE_SIZE) {
+          onError("Your file size is greater than 50MB. Please try again.");
         }
       }
-    }, [onError, rejectFiles]);
+    }, [MAXIMUM_FILE_SIZE, onError, rejectFiles]);
 
     React.useEffect(() => {
       if (!!numberAllow && myFiles.length > numberAllow) {
@@ -99,9 +97,8 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
     };
 
     const handleFileDownload = (file: File) => {
-      const downloadLink = document.createElement('a');
+      const downloadLink = document.createElement("a");
       const objectUrl = URL.createObjectURL(file);
-
       downloadLink.href = objectUrl;
       downloadLink.download = file.name;
       downloadLink.click();
@@ -112,7 +109,7 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
     // For more info about react dropzone follow:
     // https://react-dropzone.js.org/
     return (
-      <Stack className={cn(className, 'cmp-file-upload')}>
+      <Stack className={cn(className, "cmp-file-upload")}>
         {isFileSelected ? (
           <View>
             {myFiles.map((file, index) => (
@@ -121,18 +118,18 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
                   <Button
                     label={file.name}
                     variant="link-primary"
-                    onClick={() => handleFileDownload}
+                    onClick={() => handleFileDownload(file)}
                     style={{ fontWeight: 500 }}
                   />
                   <IconButton
                     sx={{
                       color: COLOR_CODE.HEADER,
-                      p: '10px',
+                      p: "10px",
                       borderRadius: 1,
-                      '&:hover': {
+                      "&:hover": {
                         backgroundColor: COLOR_CODE.BG_SURFACE_HOVER,
                       },
-                      float: 'right',
+                      float: "right",
                     }}
                     onClick={() => handleFileDelete(index)}
                   >
@@ -145,7 +142,9 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
         ) : (
           <Stack
             {...getRootProps({
-              className: cn('cmp-file-upload__body', { 'cmp-file-upload__body--error': hasError }),
+              className: cn("cmp-file-upload__body", {
+                "cmp-file-upload__body--error": hasError,
+              }),
             })}
           >
             <input
@@ -156,7 +155,11 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
               })}
             />
             <Stack my={1} justifyContent="center" alignItems="center">
-              <Typo variant="body1" fontWeight={500} color={COLOR_CODE.GREY_600}>
+              <Typo
+                variant="body1"
+                fontWeight={500}
+                color={COLOR_CODE.GREY_600}
+              >
                 {message}
               </Typo>
               <Typo mt={1} color={COLOR_CODE.GREY_500} variant="body2">
@@ -172,7 +175,7 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
                 </Trans>
               </Typo>
               <Typo color={COLOR_CODE.GREY_500} variant="body2">
-                <Trans i18nKey={'support_types_file_upload'}>
+                <Trans i18nKey={"support_types_file_upload"}>
                   Supported file types:
                   <span
                     style={{
@@ -193,7 +196,7 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
         )}
       </Stack>
     );
-  },
+  }
 );
 
 type Props = {

@@ -1,28 +1,24 @@
 import { MRT_ColumnDef } from "material-react-table";
-import {
-  Tag,
-  formatDateOrNull,
-  formatValueOrNull,
-} from "../../shared";
+import { Tag, formatDateOrNull, formatValueOrNull } from "../../shared";
 import { Problem } from "../../queries/Problems/types";
 import "material-symbols";
 import RowActions from "../../shared/components/RowActions";
 
-const renderDifficultyTag = (value: string) => {
-  switch (value.toLowerCase()) {
-    case "easy":
+const renderDifficultyTag = (value: number) => {
+  switch (value) {
+    case 1:
       return (
         <Tag variant="is-customize" backgroundColor="#D1F5D3" color="#4CAF50">
           Easy
         </Tag>
       );
-    case "medium":
+    case 2:
       return (
         <Tag variant="is-customize" backgroundColor="#FFE082" color="#FF9800">
           Medium
         </Tag>
       );
-    case "hard":
+    case 3:
       return (
         <Tag variant="is-customize" backgroundColor="#FFCDD2" color="#F44336">
           Hard
@@ -33,7 +29,10 @@ const renderDifficultyTag = (value: string) => {
   }
 };
 
-export const allColumns = (): MRT_ColumnDef<Problem>[] => {
+export const allColumns = ({
+  handleEditProblem,
+  handleClickOpenDeleteDialog,
+}: Props): MRT_ColumnDef<Problem>[] => {
   return [
     {
       accessorKey: "code",
@@ -63,7 +62,7 @@ export const allColumns = (): MRT_ColumnDef<Problem>[] => {
       muiTableHeadCellProps: {
         align: "center",
       },
-      Cell: ({ cell }) => renderDifficultyTag(cell.getValue<string>()),
+      Cell: ({ cell }) => renderDifficultyTag(cell.getValue<number>()),
     },
     {
       accessorKey: "date",
@@ -83,14 +82,19 @@ export const allColumns = (): MRT_ColumnDef<Problem>[] => {
       enableSorting: false,
       size: 96,
 
-      Cell: () => (
+      Cell: ({ row }) => (
         <RowActions
           hideEdit={false}
           hideDelete={false}
-          DeleteFunction={() => () => {}}
-          EditFunction={() => () => {}}
+          DeleteFunction={() => handleClickOpenDeleteDialog()}
+          EditFunction={() => handleEditProblem(row.original.id)}
         />
       ),
     },
   ];
 };
+
+interface Props {
+  handleEditProblem: (id: string) => void;
+  handleClickOpenDeleteDialog: () => void;
+}

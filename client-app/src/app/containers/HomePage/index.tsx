@@ -1,19 +1,10 @@
 import { useStore } from "../../shared/common/stores/store";
 
-
-const printUser = () =>{
-  const { userStore } = useStore();
-  console.log(userStore.getUser);
-}
-
 const HomePage = () => {
+  const { userStore } = useStore();
+  userStore.getUser();
 
-  return <>
-  
-  
-  <div>HomePage</div>
-  {printUser}
-  </>
+  return <div>HomePage</div>;
 };
 
 export default HomePage;

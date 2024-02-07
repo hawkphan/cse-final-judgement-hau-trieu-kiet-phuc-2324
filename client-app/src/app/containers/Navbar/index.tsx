@@ -11,13 +11,21 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { KEYS, LABELS, PATHS } from "./helpers";
 import { MuiMenuItem } from "./MuiMenuItem";
 import { useStore } from "../../shared/common/stores/store";
 
 function Navbar() {
   const { userStore } = useStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem("jwt")) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
@@ -118,15 +126,29 @@ function Navbar() {
               onClose={handleCloseUserMenu}
             >
               <MenuItem key="menu-profile" onClick={handleCloseUserMenu}>
-                <Link to="/profile" style={{textDecoration: 'none', color: 'black'}}>
-                  <Typography textAlign="center" component={Box} style={{textDecoration: 'none'}}>
+                <Link
+                  to="/profile"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <Typography
+                    textAlign="center"
+                    component={Box}
+                    style={{ textDecoration: "none" }}
+                  >
                     Profile
                   </Typography>
                 </Link>
               </MenuItem>
               <MenuItem key="menu-profile" onClick={userStore.logout}>
-                <Link style={{ textDecoration: 'none', color: 'black' }} to={""}>
-                  <Typography textAlign="center" component={Box} style={{textDecoration: 'none'}}>
+                <Link
+                  style={{ textDecoration: "none", color: "black" }}
+                  to={""}
+                >
+                  <Typography
+                    textAlign="center"
+                    component={Box}
+                    style={{ textDecoration: "none" }}
+                  >
                     Logout
                   </Typography>
                 </Link>

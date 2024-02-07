@@ -9,9 +9,6 @@ namespace Application.Core
     public class PagingParams
     {
         private const int MaxPageSize = 50;
-
-
-
         [FromQuery(Name = "pageNo")]
         public int PageNumber { get; set; } = 1;
         public string Keywords { get; set;} = "";

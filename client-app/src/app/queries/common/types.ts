@@ -19,4 +19,16 @@ export type Table2Params = {
   [key: string]: number | boolean | string | string[] | undefined;
 };
 
+export interface PaginationResponseNetType<T> {
+  data: T[];
+  pageSize?: number;
+  pageNo?: number;
+  hasNext?: boolean;
+  skippedRecords?: number;
+  totalCount?: number;
+  succeeded?: boolean;
+  skip?: number;
+  take?: number;
+}
+
 export type Callback = (..._args: any[]) => void;

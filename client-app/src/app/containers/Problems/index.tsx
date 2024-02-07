@@ -1,12 +1,36 @@
-import { Container, Stack } from "@mui/material";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Stack } from "@mui/material";
 import { Button, CustomTableSearch, EmptyTable, Table2 } from "../../shared";
 import { allColumns } from "./allColumns";
 import { GetPropertiesParams, Problem } from "../../queries/Problems/types";
 import { useNavigate } from "react-router-dom";
 import { useGetProblems } from "../../queries/Problems/useGetProblems";
 import PostAddRoundedIcon from "@mui/icons-material/PostAddRounded";
+import { PATHS } from "../../configs/paths";
+import { forwardRef, useState } from "react";
+import { TransitionProps } from '@mui/material/transitions';
+
+const Transition = forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const Problems = () => {
   const { problems, totalRecords, setParams, isFetching } = useGetProblems();
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const handleClickOpenDeleteDialog = () => {
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
 
   const navigate = useNavigate();
 
@@ -18,7 +42,11 @@ const Problems = () => {
     navigate(id);
   };
 
-  const columns = allColumns();
+  const handleEditProblem = (id: string) => {
+    navigate(`/problems/${id}/edit`)
+  }
+
+  const columns = allColumns({handleEditProblem, handleClickOpenDeleteDialog});
   return (
     <Container maxWidth="xl">
       <Table2<Problem>
@@ -61,6 +89,7 @@ const Problems = () => {
                 className="btn btn-primary"
                 icon={<PostAddRoundedIcon fontSize="medium" />}
                 style={{ fontFamily: "Roboto", marginTop: "6px" }}
+                onClick={() => navigate(PATHS.createProblem)}
               >
                 New
               </Button>
@@ -77,6 +106,24 @@ const Problems = () => {
           },
         }}
       />
+      <Dialog
+        open={openDeleteDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseDeleteDialog}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle style={{color: 'red'}}>{"Are you sure to delete this problem?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Other people will be notified about this problem deletion status before it will be completely removed in the next 15 days. The action can not be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} style={{backgroundColor: 'gray'}}>Cancel</Button>
+          <Button onClick={handleCloseDeleteDialog} style={{backgroundColor: 'red'}}>Delete</Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
