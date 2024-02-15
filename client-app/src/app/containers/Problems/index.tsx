@@ -1,27 +1,42 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Stack } from "@mui/material";
-import { Button, CustomTableSearch, EmptyTable, Table2 } from "../../shared";
+import {
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Slide,
+  Stack,
+} from "@mui/material";
+import { Button, CustomTableSearch, EmptyTable, MuiSwitch, Table2 } from "../../shared";
 import { allColumns } from "./allColumns";
 import { GetPropertiesParams, Problem } from "../../queries/Problems/types";
 import { useNavigate } from "react-router-dom";
 import { useGetProblems } from "../../queries/Problems/useGetProblems";
 import PostAddRoundedIcon from "@mui/icons-material/PostAddRounded";
 import { PATHS } from "../../configs/paths";
-import { forwardRef, useState } from "react";
-import { TransitionProps } from '@mui/material/transitions';
+import { forwardRef, useCallback, useMemo, useState } from "react";
+import { TransitionProps } from "@mui/material/transitions";
+import { useStore } from "../../shared/common/stores/store";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
   },
-  ref: React.Ref<unknown>,
+  ref: React.Ref<unknown>
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const Problems = () => {
-  const { problems, totalRecords, setParams, isFetching } = useGetProblems();
+  const { userStore } = useStore();
+  const navigate = useNavigate();
+  const user = userStore.user;
+
+  const { problems, totalRecords, setParams, isFetching, params } = useGetProblems();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [isOnlyDedication, setIsOnlyDedication] = useState(false);
 
   const handleClickOpenDeleteDialog = () => {
     setOpenDeleteDialog(true);
@@ -31,22 +46,30 @@ const Problems = () => {
     setOpenDeleteDialog(false);
   };
 
+  const handleChangeIsOnlyDedication = useCallback(() => {
+    
+    setParams({...params, isOnly: !isOnlyDedication, userId: user?.id});
+    setIsOnlyDedication(!isOnlyDedication);
+  }, [isOnlyDedication, params, setParams, user?.id]);
 
-  const navigate = useNavigate();
-
-  const handleGetProblems = (params: GetPropertiesParams) => {
-    setParams(params);
-  };
+  const handleGetProblems = useCallback((params: GetPropertiesParams) => {
+    setParams({...params, isOnly: isOnlyDedication, userId: user?.id});
+  }, [isOnlyDedication, setParams, user?.id]);
 
   const handleNavigateToDetail = (id: string) => {
     navigate(id);
   };
 
-  const handleEditProblem = (id: string) => {
-    navigate(`/problems/${id}/edit`)
-  }
+  const handleEditProblem = useCallback((id: string) => {
+    navigate(`/problems/${id}/edit`);
+  }, [navigate]);
 
-  const columns = allColumns({handleEditProblem, handleClickOpenDeleteDialog});
+  const columns = useMemo(() => allColumns({
+    handleEditProblem,
+    handleClickOpenDeleteDialog,
+    userId: user?.id,
+  }), [handleEditProblem, user?.id]);
+
   return (
     <Container maxWidth="xl">
       <Table2<Problem>
@@ -80,7 +103,9 @@ const Problems = () => {
                 searchKey="keywords"
               />
             </Stack>
+            <MuiSwitch label='Only your dedication' isShowDescription={false} onChange={handleChangeIsOnlyDedication} checked={isOnlyDedication} />
           </Stack>
+          
         )}
         renderToolbarInternalActions={() => {
           return (
@@ -113,15 +138,29 @@ const Problems = () => {
         onClose={handleCloseDeleteDialog}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle style={{color: 'red'}}>{"Are you sure to delete this problem?"}</DialogTitle>
+        <DialogTitle style={{ color: "red" }}>
+          {"Are you sure to delete this problem?"}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Other people will be notified about this problem deletion status before it will be completely removed in the next 15 days. The action can not be undone.
+            Other people will be notified about this problem deletion status
+            before it will be completely removed in the next 15 days. The action
+            can not be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog} style={{backgroundColor: 'gray'}}>Cancel</Button>
-          <Button onClick={handleCloseDeleteDialog} style={{backgroundColor: 'red'}}>Delete</Button>
+          <Button
+            onClick={handleCloseDeleteDialog}
+            style={{ backgroundColor: "gray" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleCloseDeleteDialog}
+            style={{ backgroundColor: "red" }}
+          >
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
     </Container>

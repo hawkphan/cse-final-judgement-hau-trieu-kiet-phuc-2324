@@ -20,6 +20,8 @@ const MuiSwitch: React.FC<MuiSwitchProps> = ({
 }) => {
   return (
     <Stack>
+     
+      <Stack direction="row" alignItems="center" gap={1} height="40px" mb="4px">
       <InputLabel
         {...{
           infoTooltipMessage,
@@ -29,7 +31,6 @@ const MuiSwitch: React.FC<MuiSwitchProps> = ({
           required,
         }}
       />
-      <Stack direction="row" alignItems="center" gap={1} height="40px" mb="4px">
         <Switch
           checked={checked}
           onChange={onChange}

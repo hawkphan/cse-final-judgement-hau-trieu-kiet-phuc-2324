@@ -1,14 +1,20 @@
-import { Breadcrumbs, Card, Container, Stack, Typography } from "@mui/material";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  Breadcrumbs,
+  Card,
+  Container,
+  Stack,
+  Typography,
+} from "@mui/material";
 import {
   Button,
   COLOR_CODE,
-  FileUpload,
   Form,
   Grid,
   MuiInput,
   TextArea,
-  UploadFileType,
 } from "../../../shared";
+import { MuiFileInput } from "mui-file-input";
 import { Controller, useForm } from "react-hook-form";
 import { Problem } from "../../../queries/Problems/types";
 import { Link, useParams } from "react-router-dom";
@@ -17,19 +23,23 @@ import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
 import { acceptedFileType } from "./helpers";
+import BasicFileUpload from "../../../shared/components/common/BasicFileUpload";
 
 const ProblemForm = () => {
   const { id } = useParams();
 
   const isEdit = !id && id !== "";
 
-  const [files, setFiles] = useState<UploadFileType[]>([]);
+  const [file, setFile] = useState<File | null>(null)
+
+  const handleChange = (newValue: File | null) => {
+    setFile(newValue);
+  }
 
   const onSubmit = (data: Problem) => {
+    setValue("testCasesFiles", file);
 
-    setValue('testCasesFiles', files);
-
-    console.log('formSubmit', JSON.stringify(data));
+    console.log("formSubmit", JSON.stringify(data));
   };
 
   const { control, setValue, handleSubmit } = useForm<Problem>({
@@ -165,13 +175,27 @@ const ProblemForm = () => {
           </Grid.Wrap>
           <Grid.Wrap>
             <Grid.Item xs={12}>
-              <FileUpload
-                onChange={(value: UploadFileType[]) => setFiles([...value])}
+              <BasicFileUpload />
+              {/* <MuiFileInput
+                value={file}
+                onChange={handleChange}
+                size="small"
+                variant="outlined"
+                
+                InputProps={{
+                  inputProps: {
+                    accept: "application/zip",
+                  },
+       
+                }}
+              /> */}
+              {/* <FileUpload
+                onChange={(value: any) => setFiles([...value])}
                 numberAllow={1}
                 acceptFileType={acceptedFileType}
                 message="Upload your test cases"
                 errorMessage={""}
-              />
+              /> */}
             </Grid.Item>
           </Grid.Wrap>
           <Stack direction="row" justifyContent="flex-end" mt={4}>

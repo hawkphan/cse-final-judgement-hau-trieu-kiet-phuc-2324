@@ -1,44 +1,27 @@
 import { MRT_ColumnDef } from "material-react-table";
-import { Tag, formatDateOrNull, formatValueOrNull } from "../../shared";
+import { formatDateOrNull, formatValueOrNull } from "../../shared";
 import { Problem } from "../../queries/Problems/types";
 import "material-symbols";
 import RowActions from "../../shared/components/RowActions";
+import { renderDifficultyTag } from "./helpers";
 
-const renderDifficultyTag = (value: number) => {
-  switch (value) {
-    case 1:
-      return (
-        <Tag variant="is-customize" backgroundColor="#D1F5D3" color="#4CAF50">
-          Easy
-        </Tag>
-      );
-    case 2:
-      return (
-        <Tag variant="is-customize" backgroundColor="#FFE082" color="#FF9800">
-          Medium
-        </Tag>
-      );
-    case 3:
-      return (
-        <Tag variant="is-customize" backgroundColor="#FFCDD2" color="#F44336">
-          Hard
-        </Tag>
-      );
-    default:
-      return "--";
-  }
-};
+interface Props {
+  handleEditProblem: (id: string) => void;
+  handleClickOpenDeleteDialog: () => void;
+  userId: string;
+}
 
 export const allColumns = ({
   handleEditProblem,
   handleClickOpenDeleteDialog,
+  userId
 }: Props): MRT_ColumnDef<Problem>[] => {
   return [
     {
       accessorKey: "code",
       header: "Code",
       enableColumnFilterModes: false,
-      enableSorting: true,
+      enableSorting: false,
       size: 114,
       Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
     },
@@ -46,7 +29,7 @@ export const allColumns = ({
       accessorKey: "title",
       header: "Title",
       enableColumnFilterModes: false,
-      enableSorting: true,
+      enableSorting: false,
       size: 114,
       Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
     },
@@ -54,7 +37,7 @@ export const allColumns = ({
       accessorKey: "difficulty",
       header: "Difficulty",
       enableColumnFilterModes: false,
-      enableSorting: true,
+      enableSorting: false,
       size: 114,
       muiTableBodyCellProps: {
         align: "center",
@@ -68,7 +51,7 @@ export const allColumns = ({
       accessorKey: "date",
       header: "Date Published",
       enableColumnFilterModes: false,
-      enableSorting: true,
+      enableSorting: false,
       size: 114,
       Cell: ({ cell }) => formatDateOrNull(cell.getValue<string>()),
     },
@@ -82,7 +65,7 @@ export const allColumns = ({
       enableSorting: false,
       size: 96,
 
-      Cell: ({ row }) => (
+      Cell: ({ row }) => userId === row.original.userId && (
         <RowActions
           hideEdit={false}
           hideDelete={false}
@@ -93,8 +76,3 @@ export const allColumns = ({
     },
   ];
 };
-
-interface Props {
-  handleEditProblem: (id: string) => void;
-  handleClickOpenDeleteDialog: () => void;
-}

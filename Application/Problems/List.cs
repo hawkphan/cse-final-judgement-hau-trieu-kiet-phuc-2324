@@ -14,6 +14,8 @@ namespace Application.Problems
         public class Query : IRequest<Result<PagedList<ProblemDto>>>
         {
             public PagingParams Params { get; set; }
+            public bool? IsOnly { get; set; }
+            public Guid? UserId { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, Result<PagedList<ProblemDto>>>
@@ -29,18 +31,26 @@ namespace Application.Problems
             public async Task<Result<PagedList<ProblemDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 string key = request.Params.Keywords;
-                var query = await _context.Problems
-                .ProjectTo<ProblemDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
-                if (!string.IsNullOrEmpty(key))
+                bool? isOnly = request.IsOnly;
+                Guid? userId = request.UserId;
+                var problems = _context.Problems.AsQueryable();
+
+                if ((bool)isOnly && userId != null)
                 {
-                    query = await _context.Problems.
-                    Where(problem =>
-                    problem.Title.Contains(request.Params.Keywords) || problem.Code.Contains(request.Params.Keywords))
-                    .ProjectTo<ProblemDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync();
+                    problems = _context.Problems.Where(problem =>
+                    problem.UserId.Equals(userId));
                 }
 
+                if (!string.IsNullOrEmpty(key))
+                {
+                    problems = _context.Problems.
+                    Where(problem =>
+                    problem.Title.Contains(request.Params.Keywords) || problem.Code.Contains(request.Params.Keywords));
+
+                }
+
+                var query = await problems.ProjectTo<ProblemDto>(_mapper.ConfigurationProvider)
+                    .ToListAsync(cancellationToken: cancellationToken);
 
                 return Result<PagedList<ProblemDto>>
                     .Success(PagedList<ProblemDto>.CreateAsyncUsingList(query,

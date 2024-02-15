@@ -21,6 +21,8 @@ function Navbar() {
   const { userStore } = useStore();
   const navigate = useNavigate();
 
+  userStore.getUser();
+
   useEffect(() => {
     if (!localStorage.getItem("jwt")) {
       navigate("/login");

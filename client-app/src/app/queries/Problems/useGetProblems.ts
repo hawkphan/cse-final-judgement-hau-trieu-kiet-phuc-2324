@@ -16,7 +16,7 @@ import { Table2Params } from "../common/types";
 
 export function useGetProblems(
   options?: UseQueryOptions<PaginationResponseNetType<Problem>, Error> & {
-    [key: string]: string | number | string[];
+    [key: string]: string | number | string[] | boolean;
   }
 ) {
   const [params, setParams] = useState<Table2Params>({});

@@ -38,6 +38,7 @@
     "material-symbols": "^0.14.6",
     "mobx": "^6.12.0",
     "mui-datatables": "^4.3.0",
+    "mui-file-input": "^4.0.3",
     "mui-styles": "^1.0.7",
     "mui-tel-input": "^5.0.0",
     "node-sass": "^9.0.0",

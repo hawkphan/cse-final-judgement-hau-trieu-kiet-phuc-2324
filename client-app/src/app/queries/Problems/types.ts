@@ -1,5 +1,4 @@
-
-import { UploadFileType } from "../../shared";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Table2Params } from "../common/types";
 
 export interface Problem {
@@ -10,7 +9,7 @@ export interface Problem {
   description?: string;
   date?: string;
   userId?: string;
-  testCasesFiles?: UploadFileType[];
+  testCasesFiles?: any;
 }
 
 export type GetPropertiesParams = Table2Params & {
