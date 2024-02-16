@@ -11,10 +11,10 @@ namespace Application.Problems
     {
         public ProblemValidator()
         {
-            RuleFor(x => x.Title).NotEmpty();
-            RuleFor(x => x.Code).NotEmpty();
-            RuleFor(x => x.Description).NotEmpty();
-            RuleFor(x => x.Difficulty).NotEmpty();
+            // RuleFor(x => x.Title).NotEmpty();
+            // RuleFor(x => x.Code).NotEmpty();
+            // RuleFor(x => x.Description).NotEmpty();
+            // RuleFor(x => x.Difficulty).NotEmpty();
         }
     }
 }
