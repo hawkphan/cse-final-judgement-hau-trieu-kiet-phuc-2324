@@ -2,6 +2,8 @@ using Application.Interfaces;
 using Domain;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -32,7 +34,8 @@ namespace Application.Problems
             public async Task Handle(Command request, CancellationToken cancellationToken)
             {
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUserName());
-                // request.Problem.UserId = user.Id;
+
+
                 request.Problem.User = user;
                 request.Problem.Date = DateTime.UtcNow;
                 _context.Problems.Add(request.Problem);

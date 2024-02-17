@@ -2,6 +2,7 @@ using AutoMapper;
 using Domain;
 using MediatR;
 using Persistence;
+using FluentValidation;
 
 namespace Application.Problems
 {
@@ -11,8 +12,15 @@ namespace Application.Problems
         {
             public Problem Problem { get; set; }
         }
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Problem).SetValidator(new ProblemValidator());
+            }
+        }
 
-       public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
