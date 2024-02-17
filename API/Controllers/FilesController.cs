@@ -11,8 +11,6 @@ namespace API.Controllers
 {
     public class FilesController : BaseApiController
     {
-        private const string FileUploadDirectory = "./UploadedFiles";
-
         //api/files
         [AllowAnonymous]
         [HttpGet]
@@ -56,9 +54,8 @@ namespace API.Controllers
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
-                    ZipFile.ExtractToDirectory(filePath, unzipPath);
-
                 }
+                ZipFile.ExtractToDirectory(filePath, unzipPath);
 
                 return Ok($"File '{file.FileName}' uploaded successfully. Saved as '{fileName}'");
             }
