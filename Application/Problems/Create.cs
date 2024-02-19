@@ -41,6 +41,12 @@ namespace Application.Problems
                 _context.Problems.Add(request.Problem);
 
                 await _context.SaveChangesAsync();
+
+                foreach (var testCase in request.Problem.TestCases)
+                {
+                    _context.TestCases.Add(testCase);
+                }
+                await _context.SaveChangesAsync();
             }
 
         }
