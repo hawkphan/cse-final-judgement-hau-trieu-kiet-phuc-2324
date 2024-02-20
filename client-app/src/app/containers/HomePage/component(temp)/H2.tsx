@@ -10,7 +10,6 @@ export default function Header2() {
       <div
         style={{
           alignContent: "center",
-          margin: "auto",
           textAlign: "start",
           border: "1px solid black",
           borderRadius: "10px",
@@ -18,10 +17,10 @@ export default function Header2() {
           width: "600px",
           paddingLeft: "15px",
           paddingRight: "15px",
-          paddingBottom: '15px'
+          paddingBottom: '20px'
         }}
       >
-        <p style={{ color: "#00A9F5", fontSize: "18px", fontWeight: "bold" }}>
+        <p style={{ color: "#00A9F5", fontSize: 24 }}>
           contenentenent
         </p>
         <p>
@@ -36,7 +35,6 @@ export default function Header2() {
       <div
         style={{
           alignContent: "center",
-          margin: "auto",
           textAlign: "start",
           border: "1px solid black",
           borderRadius: "10px",
@@ -44,10 +42,10 @@ export default function Header2() {
           width: "600px",
           paddingLeft: "15px",
           paddingRight: "15px",
-          paddingBottom: '15px'
+          paddingBottom: '20px'
         }}
       >
-        <p style={{ color: "#00A9F5", fontSize: "18px", fontWeight: "bold" }}>
+        <p style={{ color: "#00A9F5", fontSize: 24 }}>
           contenentenent
         </p>
         <p>
