@@ -5,7 +5,7 @@ type LayoutProps = {
 };
 
 export default function Carousel({ children }: LayoutProps) {
-/*   let slideIndex = 1;
+  /*   let slideIndex = 1;
   showSlides(slideIndex);
 
   // Next/previous controls
@@ -38,7 +38,11 @@ export default function Carousel({ children }: LayoutProps) {
     dots[slideIndex - 1].className += " active";
   } */
   return (
-    <div style={{ width: "100%", height: "400px", backgroundColor: "red" }}>
+    <div style={{ 
+      width: "100%", 
+      height: "400px", 
+      //backgroundColor: "red" 
+    }}>
       <div
         style={{
           maxWidth: "1000px",
@@ -49,7 +53,8 @@ export default function Carousel({ children }: LayoutProps) {
           backgroundColor: "blue",
         }}
       >
-        <div className="mySlides"
+        <div
+          className="mySlides"
           style={
             {
               // display: "none"
@@ -67,7 +72,7 @@ export default function Carousel({ children }: LayoutProps) {
           >
             1 / 3
           </div>
-          <div>
+          <div >
             <img src="src\assets\folder-icon.png" alt="Girl in a jacket" />
           </div>
           <div

@@ -17,8 +17,7 @@ export default function Header({ children }: LayoutProps) {
     >
       <div style={{ maxWidth: "100%", width: '50%', margin: 'auto' }}>
         <img
-          src="src\assets\folder-icon.png"
-          alt="Girl in a jacket"
+          src="src\assets\images\study-4522028_1280.png"
           width="100%"
         />
       </div>
