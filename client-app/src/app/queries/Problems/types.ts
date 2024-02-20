@@ -5,7 +5,7 @@ export interface Problem {
   id?: string;
   code?: string;
   title?: string;
-  difficulty?: string;
+  difficulty?: number;
   description?: string;
   date?: string;
   userId?: string;

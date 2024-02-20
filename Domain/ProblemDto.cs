@@ -10,7 +10,7 @@ namespace Domain
 
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
-        public Profile UserProfile { get; set; }
+        public AppUser User { get; set; }
         public string Code { get; set; }
         public string Title { get; set; }
         public double Difficulty { get; set; }

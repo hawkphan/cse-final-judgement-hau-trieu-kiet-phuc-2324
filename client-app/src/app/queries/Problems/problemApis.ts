@@ -8,4 +8,10 @@ const getProblems = (params: GetPropertiesParams) => {
   return axios.get<Problem[]>(`${API_URL}/api/problems?${queryString}`, {});
 };
 
-export { getProblems };
+const getProblemById = (params: { id: string }) => {
+  return axios.get<Problem>(`${API_URL}/api/problems/${params.id}`,
+    {}
+  );
+};
+
+export { getProblems, getProblemById };

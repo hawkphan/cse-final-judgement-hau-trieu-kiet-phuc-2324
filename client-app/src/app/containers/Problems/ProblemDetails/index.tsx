@@ -10,27 +10,37 @@ import {
 } from "@mui/material";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   AnimatedTabPanel,
   Button,
   COLOR_CODE,
   Grid,
+  LoadingCommon,
   MuiSelect,
   TabsBar,
   formatDateOrNull,
 } from "../../../shared";
 import { PATHS } from "../../Navbar/helpers";
-import { problemDetails } from "./data.mock";
 import { useRef, useState } from "react";
 import { languageOptions, renderDifficultyTag } from "./helpers";
 import { Editor } from "@monaco-editor/react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
+import { useGetProblemById } from "../../../queries/Problems/useGetProblemById";
+import { API_QUERIES } from "../../../queries/common/constants";
 
 const ProblemDetail = () => {
   const [tab, setTab] = useState("tab1");
+  const { id } = useParams<{ id: string }>();
+
+  const { problem, isFetching } = useGetProblemById({
+    id,
+    queryKey: [API_QUERIES.GET_PROBLEM_BY_ID, {id: id}]
+  });
+
+  console.log('problem', problem);
 
   const files = {
     "script.js": {
@@ -98,6 +108,10 @@ const ProblemDetail = () => {
     },
   };
 
+  if(isFetching) {
+    return <LoadingCommon />;
+  }
+
   return (
     <Container maxWidth="xl" style={{ padding: "10px" }}>
       <Stack sx={{ marginBottom: "10px" }}>
@@ -110,7 +124,7 @@ const ProblemDetail = () => {
               Problems
             </Typography>
           </Link>
-          <Typography color="text.primary">{problemDetails.code}</Typography>
+          <Typography color="text.primary">{problem.code}</Typography>
         </Breadcrumbs>
       </Stack>
       <Stack>
@@ -143,17 +157,19 @@ const ProblemDetail = () => {
                     {tab === "tab1" && (
                       <CardContent>
                         <Typography variant="h4" mb={2}>
-                          {problemDetails.code} - {problemDetails.title}
+                          {problem.code} - {problem.title}
                         </Typography>
-                        {renderDifficultyTag(problemDetails.difficulty)}
-                        <span style={{marginLeft: '5px', fontSize: '14px'}}>Published on {formatDateOrNull(problemDetails.date)}</span>
+                        {renderDifficultyTag(problem.difficulty)}
+                        <span style={{ marginLeft: "5px", fontSize: "14px" }}>
+                          Published on {formatDateOrNull(problem.date)}
+                        </span>
                         <Box>
                           <ReactMarkdown
                             remarkPlugins={[
                               [remarkGfm, { singleTilde: false }],
                             ]}
                           >
-                            {problemDetails.description}
+                            {problem.description}
                           </ReactMarkdown>
                         </Box>
                       </CardContent>
@@ -181,7 +197,7 @@ const ProblemDetail = () => {
                   onChange={(_, data) => {
                     console.log(data);
                   }}
-                  style={{width: '220px'}}
+                  style={{ width: "220px" }}
                 />
                 <Button
                   onClick={() => toggleDarkOrLightTheme()}
@@ -192,7 +208,11 @@ const ProblemDetail = () => {
                       <LightbulbOutlinedIcon />
                     )
                   }
-                  style={{ borderRadius: "0px", backgroundColor: "gray", marginTop: '5px' }}
+                  style={{
+                    borderRadius: "0px",
+                    backgroundColor: "gray",
+                    marginTop: "5px",
+                  }}
                 />
               </Stack>
               <Editor
