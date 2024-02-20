@@ -9,6 +9,7 @@ import {
 } from "react-icons/io5";
 import { MdOutlineErrorOutline } from "react-icons/md";
 import { ToastOptions, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
 import { COLOR_CODE } from "..";
 
 const error = (

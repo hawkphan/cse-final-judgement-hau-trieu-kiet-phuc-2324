@@ -4,6 +4,7 @@ import Navbar from "../containers/Navbar";
 import "react-material-symbols/rounded";
 import "react-material-symbols/outlined";
 import "react-material-symbols/sharp";
+import { ToastContainer } from "react-toastify";
 
 const ConditionalNavbar = () => {
   const location = useLocation();
@@ -19,6 +20,7 @@ function App() {
   return (
     <Fragment>
       <ConditionalNavbar />
+      <ToastContainer theme="colored" />
       <Outlet />
     </Fragment>
   );
