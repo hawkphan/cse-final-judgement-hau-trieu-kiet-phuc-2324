@@ -21,7 +21,7 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<ActionResult<Problem>> GetProblem(Guid id)
+        public async Task<ActionResult<ProblemDto>> GetProblem(Guid id)
         {
             return await Mediator.Send(new Details.Query { Id = id });
         }
