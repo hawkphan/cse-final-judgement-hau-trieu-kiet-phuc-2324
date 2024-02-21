@@ -62,7 +62,6 @@ namespace API.Controllers
 
                 // Create TestCase Object From 
                 var files = Directory.GetFiles(unzipPath, "*.in");
-                List<TestCase> testCases = new List<TestCase>();
                 foreach (var inputPath in files)
                 {
                     var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
@@ -76,10 +75,6 @@ namespace API.Controllers
 
                 return Ok($"File '{file.FileName}' uploaded successfully. Saved as '{fileName}'");
             }
-
-
-
-
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");

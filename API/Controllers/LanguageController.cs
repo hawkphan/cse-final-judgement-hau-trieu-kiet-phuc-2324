@@ -11,12 +11,12 @@ namespace API.Controllers
 {
     public class LanguagesController : BaseApiController
     {
-        [AllowAnonymous]
-        [HttpGet] //api/languages
-        public async Task<IActionResult> GetLanguages([FromQuery] PagingParams param)
-        {
-            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param }));
-        }
+        // [AllowAnonymous]
+        // [HttpGet] //api/languages
+        // public async Task<ActionResult<LanguageDto>> GetLanguages(CancellationToken ct)
+        // {
+        //     return await Mediator.Send(new List.Query(), ct);
+        // }
         [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<LanguageDto>> GetLanguage(Guid id)
