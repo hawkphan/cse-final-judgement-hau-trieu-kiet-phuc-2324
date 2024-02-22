@@ -1,7 +1,9 @@
 using System.Security.Claims;
 using API.DTOS;
 using API.Services;
+using Application.Profiles;
 using Domain;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +22,7 @@ namespace API.Controllers
             _tokenServices = tokenServices;
             _userManager = userManager;
         }
+
 
         [AllowAnonymous]
         [HttpPost("login")]

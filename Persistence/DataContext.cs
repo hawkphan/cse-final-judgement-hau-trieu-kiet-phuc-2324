@@ -81,6 +81,12 @@ namespace Persistence
                 .HasOne(p => p.User)
                 .WithMany(u => u.Problems)
                 .HasForeignKey(p => p.UserId);
+            builder.Entity<Problem>()
+                .HasMany(t => t.TestCases)
+                .WithOne(u => u.Problem)
+                .HasForeignKey(p => p.ProblemId);
+
+
             base.OnModelCreating(builder);
         }
     }

@@ -13,10 +13,11 @@ namespace API.Controllers
     {
         [AllowAnonymous]
         [HttpGet] //api/languages
-        public async Task<IActionResult> GetLanguages([FromQuery] PagingParams param)
+        public async Task<IActionResult> GetLanguages()
         {
-            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param }));
+            return HandlePagedResult(await Mediator.Send(new List.Query {}));
         }
+
         [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<LanguageDto>> GetLanguage(Guid id)

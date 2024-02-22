@@ -3,7 +3,7 @@ namespace Domain
 {
     public class LanguageDto
     {
-        public Guid Id;
+        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }

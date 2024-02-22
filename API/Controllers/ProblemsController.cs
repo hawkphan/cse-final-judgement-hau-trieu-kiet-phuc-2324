@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System.Text;
 
 namespace API.Controllers
 {
@@ -20,7 +21,7 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<ActionResult<Problem>> GetProblem(Guid id)
+        public async Task<ActionResult<ProblemDto>> GetProblem(Guid id)
         {
             return await Mediator.Send(new Details.Query { Id = id });
         }
@@ -28,14 +29,12 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateProblem([FromForm] Problem newProblem, [FromForm] IFormFile file)
         {
-            await Mediator.Send(new Create.Command { Problem = newProblem });
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("File is null or empty");
+            }
             try
             {
-                if (file == null || file.Length == 0)
-                {
-                    return BadRequest("File is null or empty");
-                }
-
                 // Ensure the file is a ZIP file
                 if (!file.ContentType.Equals("application/zip", StringComparison.OrdinalIgnoreCase))
                 {
@@ -48,9 +47,7 @@ namespace API.Controllers
                 {
                     Directory.CreateDirectory(uploadsFolder);
                 }
-
-                // var fileName = $"{Guid.NewGuid()}.zip";
-                var fileName = file.FileName;
+                var fileName = $"{newProblem.Code}.zip";
 
                 // Combine the directory path with the file name
                 var filePath = Path.Combine(uploadsFolder, fileName);
@@ -63,6 +60,19 @@ namespace API.Controllers
                 }
                 ZipFile.ExtractToDirectory(filePath, unzipPath);
 
+                // Create TestCase Object From 
+                var files = Directory.GetFiles(unzipPath, "*.in");
+                foreach (var inputPath in files)
+                {
+                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
+                    var outputPath = Path.Combine(unzipPath, $"{fileNameWithoutExtension}.out");
+                    TestCase testCase = new TestCase();
+                    testCase.Input = inputPath;
+                    testCase.Output = outputPath;
+                    newProblem.TestCases.Add(testCase);
+                }
+                await Mediator.Send(new Create.Command { Problem = newProblem});
+
                 return Ok($"File '{file.FileName}' uploaded successfully. Saved as '{fileName}'");
             }
             catch (Exception ex)
@@ -70,6 +80,8 @@ namespace API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
         }
+
+
         [AllowAnonymous]
         [HttpPut("{id}")]
         public async Task<ActionResult> Edit(Guid id, Problem problem)
