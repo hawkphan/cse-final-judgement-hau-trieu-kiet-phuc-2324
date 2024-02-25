@@ -8,6 +8,7 @@ namespace Application.Core
         public MappingProfiles()
         {
             CreateMap<Activity, Activity>();
+            CreateMap<Problem, Problem>();
 
             CreateMap<Problem, ProblemDto>()
             .ForMember(dest => dest.Languages, opt => opt.MapFrom(src => src.ProblemLanguages.Select(pl => pl.Language)));
