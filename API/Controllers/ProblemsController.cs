@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System.Text;
-
+using System.IO;
+using Microsoft.VisualBasic.FileIO;
 namespace API.Controllers
 {
     public class ProblemsController : BaseApiController
@@ -35,7 +36,6 @@ namespace API.Controllers
             }
             try
             {
-                // Ensure the file is a ZIP file
                 if (!file.ContentType.Equals("application/zip", StringComparison.OrdinalIgnoreCase))
                 {
                     return BadRequest("Unsupported file format. Only ZIP files are allowed.");
@@ -71,9 +71,8 @@ namespace API.Controllers
                     testCase.Output = outputPath;
                     newProblem.TestCases.Add(testCase);
                 }
-                await Mediator.Send(new Create.Command { Problem = newProblem});
 
-                return Ok($"File '{file.FileName}' uploaded successfully. Saved as '{fileName}'");
+                return HandleResult(await Mediator.Send(new Create.Command { Problem = newProblem }));
             }
             catch (Exception ex)
             {
@@ -84,12 +83,65 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpPut("{id}")]
-        public async Task<ActionResult> Edit(Guid id, Problem problem)
+        public async Task<ActionResult> Edit([FromRoute] Guid id, [FromForm] Problem Problem, [FromForm] IFormFile file)
         {
-            problem.Id = id;
-            await Mediator.Send(new Edit.Command { Problem = problem });
+            Problem.Id = id;
+            if (file != null && file.Length != 0)
+            {
+                try
+                {
+                    if (!file.ContentType.Equals("application/zip", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return BadRequest("Unsupported file format. Only ZIP files are allowed.");
+                    }
 
-            return Ok();
+                    // Define the directory where the file will be saved
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+                    var fileName = $"{Problem.Code}.zip";
+
+                    // Combine the directory path with the file name
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+                    var unzipPath = Path.Combine(uploadsFolder, Problem.Code);
+                    if (Directory.Exists(unzipPath))
+                    {
+                        // Directory.Delete(Path.Combine(uploadsFolder, Problem.Code));
+                        string[] filePaths = Directory.GetFiles(unzipPath);
+                        for (int i = 0; i < filePaths.Length; i++)
+                        {
+                            System.IO.File.Delete(filePaths[i]);
+                        }
+                    }
+                    // Save the file to the server
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                    Directory.CreateDirectory(unzipPath);
+                    ZipFile.ExtractToDirectory(filePath, unzipPath);
+
+                    // Create TestCase Object From 
+                    var files = Directory.GetFiles(unzipPath, "*.in");
+                    foreach (var inputPath in files)
+                    {
+                        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
+                        var outputPath = Path.Combine(unzipPath, $"{fileNameWithoutExtension}.out");
+                        TestCase testCase = new TestCase();
+                        testCase.Input = inputPath;
+                        testCase.Output = outputPath;
+                        Problem.TestCases.Add(testCase);
+                    }
+                    return HandleResult(await Mediator.Send(new Edit.Command { Problem = Problem }));
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+                }
+            }
+            return HandleResult(await Mediator.Send(new Edit.Command { Problem = Problem }));
         }
         [AllowAnonymous]
         [HttpDelete("{id}")]

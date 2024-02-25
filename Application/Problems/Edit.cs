@@ -1,17 +1,19 @@
+using Application.Core;
 using AutoMapper;
 using Domain;
+using FluentValidation;
 using MediatR;
 using Persistence;
-using FluentValidation;
 
 namespace Application.Problems
 {
     public class Edit
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             public Problem Problem { get; set; }
         }
+
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
@@ -20,7 +22,7 @@ namespace Application.Problems
             }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -31,13 +33,25 @@ namespace Application.Problems
                 _context = context;
             }
 
-            public async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var Problem = await _context.Problems.FindAsync(request.Problem.Id);
+                var problem = await _context.Problems.FindAsync(request.Problem.Id);
 
-                _mapper.Map(request.Problem, Problem);
+                if (problem == null) return null;
+                if (request.Problem.TestCases.Count == 0 || request.Problem.TestCases == null)
+                {
+                    request.Problem.TestCases = problem.TestCases;
+                }
+                _mapper.Map(request.Problem, problem);
 
-                await _context.SaveChangesAsync();
+                var result = await _context.SaveChangesAsync() > 0;
+
+                if (!result)
+                {
+                    return Result<Unit>.Failure(new string[] { "Failed to Edit" });
+                }
+
+                return Result<Unit>.Success(Unit.Value);
             }
         }
     }

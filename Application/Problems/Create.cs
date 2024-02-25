@@ -1,3 +1,4 @@
+using Application.Core;
 using Application.Interfaces;
 using Domain;
 using FluentValidation;
@@ -11,7 +12,7 @@ namespace Application.Problems
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             public Problem Problem { get; set; }
         }
@@ -22,7 +23,7 @@ namespace Application.Problems
                 RuleFor(x => x.Problem).SetValidator(new ProblemValidator());
             }
         }
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
             private readonly IUserAccessor _userAccessor;
@@ -31,7 +32,7 @@ namespace Application.Problems
                 _context = context;
                 _userAccessor = userAccessor;
             }
-            public async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUserName());
 
@@ -40,7 +41,14 @@ namespace Application.Problems
                 request.Problem.Date = DateTime.UtcNow;
                 _context.Problems.Add(request.Problem);
 
-                await _context.SaveChangesAsync();
+                var result = await _context.SaveChangesAsync() > 0;
+
+                if (!result)
+                {
+                    return Result<Unit>.Failure(new string[] { "Failed to Edit" });
+                }
+
+                return Result<Unit>.Success(Unit.Value);
             }
 
         }
