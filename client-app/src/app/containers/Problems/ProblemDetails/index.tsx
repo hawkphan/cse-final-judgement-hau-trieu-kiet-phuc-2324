@@ -19,17 +19,19 @@ import {
   LoadingCommon,
   MuiSelect,
   TabsBar,
+  Tag,
   formatDateOrNull,
 } from "../../../shared";
 import { PATHS } from "../../Navbar/helpers";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { languageOptions, renderDifficultyTag } from "./helpers";
 import { Editor } from "@monaco-editor/react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
-import { useGetProblemById } from "../../../queries/Problems/useGetProblemById";
 import { API_QUERIES } from "../../../queries/common/constants";
+import { LanguageOption, useGetLanguages } from "../../../queries/Languages";
+import { useGetProblemById } from "../../../queries/Problems";
 
 const ProblemDetail = () => {
   const [tab, setTab] = useState("tab1");
@@ -37,10 +39,15 @@ const ProblemDetail = () => {
 
   const { problem, isFetching } = useGetProblemById({
     id,
-    queryKey: [API_QUERIES.GET_PROBLEM_BY_ID, {id: id}]
+    queryKey: [API_QUERIES.GET_PROBLEM_BY_ID, { id: id }],
   });
 
-  console.log('problem', problem);
+  const { languages } = useGetLanguages();
+
+  const languageOptions: LanguageOption[] = useMemo(
+    () => languages.map((item) => ({ label: item.name, value: item.id })),
+    [languages]
+  );
 
   const files = {
     "script.js": {
@@ -108,7 +115,7 @@ const ProblemDetail = () => {
     },
   };
 
-  if(isFetching) {
+  if (isFetching) {
     return <LoadingCommon />;
   }
 
@@ -162,6 +169,21 @@ const ProblemDetail = () => {
                         {renderDifficultyTag(problem.difficulty)}
                         <span style={{ marginLeft: "5px", fontSize: "14px" }}>
                           Published on {formatDateOrNull(problem.date)}
+                        </span>
+                        <span
+                          style={{
+                            marginLeft: "5px",
+                            fontSize: "14px",
+                            fontStyle: "italic",
+                          }}
+                        >
+                          by{" "}
+                          <Tag
+                            style={{ marginLeft: "10px" }}
+                            variant="is-customize"
+                          >
+                            {problem.user.displayName}
+                          </Tag>
                         </span>
                         <Box>
                           <ReactMarkdown

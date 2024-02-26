@@ -9,16 +9,16 @@ import {
   Slide,
   Stack,
 } from "@mui/material";
-import { Button, CustomTableSearch, EmptyTable, MuiSwitch, Table2 } from "../../shared";
+import { Button, CustomTableSearch, EmptyTable, MuiSwitch, Table2, Toastify } from "../../shared";
 import { allColumns } from "./allColumns";
 import { GetPropertiesParams, Problem } from "../../queries/Problems/types";
 import { useNavigate } from "react-router-dom";
-import { useGetProblems } from "../../queries/Problems/useGetProblems";
 import PostAddRoundedIcon from "@mui/icons-material/PostAddRounded";
 import { PATHS } from "../../configs/paths";
 import { forwardRef, useCallback, useMemo, useState } from "react";
 import { TransitionProps } from "@mui/material/transitions";
 import { useStore } from "../../shared/common/stores/store";
+import { useDeleteProblem, useGetProblems } from "../../queries/Problems";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -34,9 +34,21 @@ const Problems = () => {
   const navigate = useNavigate();
   const user = userStore.user;
 
-  const { problems, totalRecords, setParams, isFetching, params } = useGetProblems();
+  const { problems, totalRecords, setParams, isFetching, params, handleInvalidateProblems } = useGetProblems();
+
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [isOnlyDedication, setIsOnlyDedication] = useState(false);
+  const [deleteId, setDeleteId] = useState('');
+
+  const { onDeleteProblem } = useDeleteProblem({
+    onSuccess: () => {
+      Toastify.success('Successfully');
+      handleInvalidateProblems();
+    },
+    onError: (error) => {
+      Toastify.error(error.toString());
+    },
+  });
 
   const handleClickOpenDeleteDialog = () => {
     setOpenDeleteDialog(true);
@@ -60,6 +72,10 @@ const Problems = () => {
     navigate(id);
   };
 
+  const handleSetDeleteId = (id: string) => {
+    setDeleteId(id);
+  };
+
   const handleEditProblem = useCallback((id: string) => {
     navigate(`/problems/${id}/edit`);
   }, [navigate]);
@@ -67,6 +83,7 @@ const Problems = () => {
   const columns = useMemo(() => allColumns({
     handleEditProblem,
     handleClickOpenDeleteDialog,
+    handleSetDeleteId,
     userId: user?.id,
   }), [handleEditProblem, user?.id]);
 
@@ -156,7 +173,10 @@ const Problems = () => {
             Cancel
           </Button>
           <Button
-            onClick={handleCloseDeleteDialog}
+            onClick={() => {
+              onDeleteProblem(deleteId);
+              handleCloseDeleteDialog();
+            }}
             style={{ backgroundColor: "red" }}
           >
             Delete

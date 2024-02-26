@@ -8,13 +8,15 @@ import { renderDifficultyTag } from "./helpers";
 interface Props {
   handleEditProblem: (id: string) => void;
   handleClickOpenDeleteDialog: () => void;
+  handleSetDeleteId: (id: string) => void;
   userId: string;
 }
 
 export const allColumns = ({
   handleEditProblem,
   handleClickOpenDeleteDialog,
-  userId
+  handleSetDeleteId,
+  userId,
 }: Props): MRT_ColumnDef<Problem>[] => {
   return [
     {
@@ -65,14 +67,18 @@ export const allColumns = ({
       enableSorting: false,
       size: 96,
 
-      Cell: ({ row }) => userId === row.original.userId && (
-        <RowActions
-          hideEdit={false}
-          hideDelete={false}
-          DeleteFunction={() => handleClickOpenDeleteDialog()}
-          EditFunction={() => handleEditProblem(row.original.id)}
-        />
-      ),
+      Cell: ({ row }) =>
+        userId === row.original.userId && (
+          <RowActions
+            hideEdit={false}
+            hideDelete={false}
+            DeleteFunction={() => {
+              handleSetDeleteId(row.original.id);
+              handleClickOpenDeleteDialog();
+            }}
+            EditFunction={() => handleEditProblem(row.original.id)}
+          />
+        ),
     },
   ];
 };

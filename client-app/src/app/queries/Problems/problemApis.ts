@@ -1,7 +1,11 @@
 import axios from "axios";
 import { API_URL } from "../common/constants";
 import { stringify } from "../../shared";
-import { GetPropertiesParams, Problem } from "./types";
+import { CreateProblemBody, GetPropertiesParams, Problem } from "./types";
+
+const createProblem = (body: CreateProblemBody) => {
+  return axios.post(`${API_URL}/api/problems`, body, {});
+};
 
 const getProblems = (params: GetPropertiesParams) => {
   const queryString = stringify(params);
@@ -14,4 +18,8 @@ const getProblemById = (params: { id: string }) => {
   );
 };
 
-export { getProblems, getProblemById };
+const deleteProblem = (id: string) => {
+  return axios.delete(`${API_URL}/api/problems/${id}`, {});
+};
+
+export { getProblems, getProblemById, createProblem, deleteProblem };
