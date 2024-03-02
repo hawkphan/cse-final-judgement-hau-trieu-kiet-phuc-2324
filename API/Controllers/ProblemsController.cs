@@ -10,7 +10,6 @@ using Persistence;
 using System.Text;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
-using SharpCompress.Common;
 using Microsoft.IdentityModel.Tokens;
 namespace API.Controllers
 {

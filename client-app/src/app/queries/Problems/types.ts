@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Table2Params } from "../common/types";
-
 export interface Problem {
   id?: string;
   code?: string;
@@ -14,6 +12,17 @@ export interface Problem {
 }
 
 export interface CreateProblemBody {
+  code?: string;
+  title?: string;
+  userId?: string;
+  file?: any;
+  date?: string;
+  description?: string;
+  timeLimit?: number;
+}
+
+export interface EditProblemBody {
+  id?: string;
   code?: string;
   title?: string;
   userId?: string;
@@ -45,7 +54,3 @@ export interface User {
   lockoutEnabled: boolean;
   accessFailedCount: number;
 }
-
-export type GetPropertiesParams = Table2Params & {
-  [key: string]: string | number | string[];
-};

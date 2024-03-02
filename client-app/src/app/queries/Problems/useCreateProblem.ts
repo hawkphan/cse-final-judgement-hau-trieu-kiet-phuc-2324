@@ -5,13 +5,13 @@ import { CreateProblemBody } from './types';
 import { responseWrapper } from '../../shared';
 import { createProblem } from './problemApis';
 
-export function useCreateProblem(options?: UseMutationOptions<any, Error, CreateProblemBody>) {
+export function useCreateProblem(options?: UseMutationOptions<any, Error, any>) {
   const {
     mutate: onCreateProblem,
     isSuccess,
     isError,
     error,
-  } = useMutation<any, Error, CreateProblemBody>({
+  } = useMutation<any, Error, any>({
     mutationFn: (payload: CreateProblemBody) => responseWrapper(createProblem, [payload]),
     ...options,
   });

@@ -1,30 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  Box,
-  Breadcrumbs,
-  Card,
-  CardContent,
-  Container,
-  Stack,
-  Typography,
-} from "@mui/material";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Link, useParams } from "react-router-dom";
+import { Box, Card, Container, Stack } from "@mui/material";
+import { useParams } from "react-router-dom";
 import {
   AnimatedTabPanel,
   Button,
-  COLOR_CODE,
   Grid,
   LoadingCommon,
   MuiSelect,
   TabsBar,
-  Tag,
-  formatDateOrNull,
 } from "../../../shared";
-import { PATHS } from "../../Navbar/helpers";
 import { useMemo, useRef, useState } from "react";
-import { languageOptions, renderDifficultyTag } from "./helpers";
 import { Editor } from "@monaco-editor/react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
@@ -32,6 +17,9 @@ import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import { API_QUERIES } from "../../../queries/common/constants";
 import { LanguageOption, useGetLanguages } from "../../../queries/Languages";
 import { useGetProblemById } from "../../../queries/Problems";
+import DescriptionTab from "./DescriptionTab";
+import SubmissionTab from "./SubmissionTab";
+import { ProblemBreadcrumbs, tabsList } from "./helpers";
 
 const ProblemDetail = () => {
   const [tab, setTab] = useState("tab1");
@@ -115,6 +103,19 @@ const ProblemDetail = () => {
     },
   };
 
+  const renderTab = () => {
+    switch (tab) {
+      case "tab1":
+        return <DescriptionTab problem={problem} />;
+      case "tab2":
+        return <SubmissionTab />;
+      case "tab3":
+        return <></>;
+      default:
+        <LoadingCommon />;
+    }
+  };
+
   if (isFetching) {
     return <LoadingCommon />;
   }
@@ -122,17 +123,7 @@ const ProblemDetail = () => {
   return (
     <Container maxWidth="xl" style={{ padding: "10px" }}>
       <Stack sx={{ marginBottom: "10px" }}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link
-            to={PATHS.problems}
-            style={{ textDecoration: "none", color: COLOR_CODE.PRIMARY_300 }}
-          >
-            <Typography textAlign="center" style={{ textDecoration: "none" }}>
-              Problems
-            </Typography>
-          </Link>
-          <Typography color="text.primary">{problem.code}</Typography>
-        </Breadcrumbs>
+        <ProblemBreadcrumbs problem={problem} />
       </Stack>
       <Stack>
         <Grid.Wrap>
@@ -141,62 +132,17 @@ const ProblemDetail = () => {
               <Box>
                 <Stack>
                   <TabsBar
-                    tabsList={[
-                      {
-                        label: "Description",
-                        value: "tab1",
-                      },
-                      {
-                        label: "Submission",
-                        value: "tab2",
-                      },
-                    ]}
+                    tabsList={tabsList}
                     value={tab}
                     onChange={(_, value) => {
                       setTab(value);
                     }}
                   />
-
                   <AnimatedTabPanel
                     uniqKey={`userType-${tab}`}
                     transitionTime={0.2}
                   >
-                    {tab === "tab1" && (
-                      <CardContent>
-                        <Typography variant="h4" mb={2}>
-                          {problem.code} - {problem.title}
-                        </Typography>
-                        {renderDifficultyTag(problem.difficulty)}
-                        <span style={{ marginLeft: "5px", fontSize: "14px" }}>
-                          Published on {formatDateOrNull(problem.date)}
-                        </span>
-                        <span
-                          style={{
-                            marginLeft: "5px",
-                            fontSize: "14px",
-                            fontStyle: "italic",
-                          }}
-                        >
-                          by{" "}
-                          <Tag
-                            style={{ marginLeft: "10px" }}
-                            variant="is-customize"
-                          >
-                            {problem.user.displayName}
-                          </Tag>
-                        </span>
-                        <Box>
-                          <ReactMarkdown
-                            remarkPlugins={[
-                              [remarkGfm, { singleTilde: false }],
-                            ]}
-                          >
-                            {problem.description}
-                          </ReactMarkdown>
-                        </Box>
-                      </CardContent>
-                    )}
-                    {tab === "tab2" && <CardContent>Submission</CardContent>}
+                    {renderTab()}
                   </AnimatedTabPanel>
                 </Stack>
               </Box>

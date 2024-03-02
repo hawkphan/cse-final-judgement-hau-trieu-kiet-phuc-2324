@@ -1,41 +1,32 @@
-import { Tag } from "../../../shared";
+/* eslint-disable react-refresh/only-export-components */
+import { Breadcrumbs, Typography } from "@mui/material";
+import { COLOR_CODE } from "../../../shared";
+import { PATHS } from "../../Navbar/helpers";
+import { Link } from "react-router-dom";
 
-export const renderDifficultyTag = (value: number) => {
-  switch (value) {
-    case 1:
-      return (
-        <Tag variant="is-customize" backgroundColor="#D1F5D3" color="#4CAF50">
-          Easy
-        </Tag>
-      );
-    case 2:
-      return (
-        <Tag variant="is-customize" backgroundColor="#FFE082" color="#FF9800">
-          Medium
-        </Tag>
-      );
-    case 3:
-      return (
-        <Tag variant="is-customize" backgroundColor="#FFCDD2" color="#F44336">
-          Hard
-        </Tag>
-      );
-    default:
-      return "--";
-  }
+export const tabsList = [
+  {
+    label: "Description",
+    value: "tab1",
+  },
+  {
+    label: "Submission",
+    value: "tab2",
+  },
+];
+
+export const ProblemBreadcrumbs = ({ problem }) => {
+  return (
+    <Breadcrumbs aria-label="breadcrumb">
+      <Link
+        to={PATHS.problems}
+        style={{ textDecoration: "none", color: COLOR_CODE.PRIMARY_300 }}
+      >
+        <Typography textAlign="center" style={{ textDecoration: "none" }}>
+          Problems
+        </Typography>
+      </Link>
+      <Typography color="text.primary">{problem.code}</Typography>
+    </Breadcrumbs>
+  );
 };
-
-export const languageOptions = [
-    {
-      label: 'JavaScript',
-      value: 1,
-    },
-    {
-      label: 'Java',
-      value: 2,
-    },
-    {
-      label: 'Python',
-      value: 3,
-    },
-  ];

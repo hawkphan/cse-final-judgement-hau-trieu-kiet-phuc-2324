@@ -1,53 +1,103 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Breadcrumbs,
-  Card,
-  Container,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Breadcrumbs, Card, Container, Stack, Typography } from "@mui/material";
 import {
   Button,
   COLOR_CODE,
   Form,
   Grid,
+  LoadingCommon,
   MuiInput,
   TextArea,
+  Toastify,
 } from "../../../shared";
-import { MuiFileInput } from "mui-file-input";
 import { Controller, useForm } from "react-hook-form";
-import { Problem } from "../../../queries/Problems/types";
-import { Link, useParams } from "react-router-dom";
+import { CreateProblemBody } from "../../../queries/Problems/types";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { PATHS } from "../../../configs/paths";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
-import { useState } from "react";
-import { acceptedFileType } from "./helpers";
-import BasicFileUpload from "../../../shared/components/common/BasicFileUpload";
+import { useEffect, useState } from "react";
+import { yupResolver } from '@hookform/resolvers/yup';
+import {
+  useCreateProblem,
+  useEditProblem,
+  useGetProblemById,
+  useGetProblems,
+} from "../../../queries/Problems";
+import { useStore } from "../../../shared/common/stores/store";
+import { CreateProblemFormSchema, EditProblemFormSchema, ProblemProperties, mapFormData } from "./helpers";
+import { API_QUERIES } from "../../../queries/common/constants";
 
 const ProblemForm = () => {
   const { id } = useParams();
 
-  const isEdit = !id && id !== "";
+  const { userStore } = useStore();
 
-  const [file, setFile] = useState<File | null>(null)
+  const isEdit = id && id !== "";
+  const navigate = useNavigate();
 
-  const handleChange = (newValue: File | null) => {
-    setFile(newValue);
-  }
-
-  const onSubmit = (data: Problem) => {
-    setValue("testCasesFiles", file);
-
-    console.log("formSubmit", JSON.stringify(data));
-  };
-
-  const { control, setValue, handleSubmit } = useForm<Problem>({
-    defaultValues: {},
-    mode: "onChange",
+  const { problem, isFetching, handleInvalidateProblem } = useGetProblemById({
+    id,
+    queryKey: [API_QUERIES.GET_PROBLEM_BY_ID, { id: id }],
   });
 
+  const { handleInvalidateProblems } = useGetProblems();
+
+  const [fileSelected, setFileSelected] = useState();
   const [description, setDescription] = useState("");
+
+  const { onCreateProblem } = useCreateProblem({
+    onSuccess() {
+      Toastify.success("Successful!");
+      handleInvalidateProblems();
+      handleInvalidateProblem();
+      navigate(PATHS.problems);
+    },
+    onError(error) {
+      console.log("Error", error);
+    },
+  });
+
+  const { onEditProblem } = useEditProblem({
+    onSuccess() {
+      Toastify.success("Successful!");
+      handleInvalidateProblems();
+      navigate(PATHS.problems);
+    },
+    onError(error) {
+      console.log("Error", error);
+    },
+  });
+
+  const saveFileSelected = (e: any) => {
+    setFileSelected(e.target.files[0]);
+  };
+
+  const onSubmit = async (data: CreateProblemBody) => {
+    const formData = mapFormData(data, fileSelected, userStore.user.id, isEdit);
+    if (!isEdit) {
+      onCreateProblem(formData);
+    } else {
+      onEditProblem(formData);
+    }
+  };
+
+  const { control, handleSubmit, reset } = useForm<CreateProblemBody>({
+    defaultValues: isEdit? { ...problem } : {[ProblemProperties.TIME_LIMIT]: 1},
+    mode: "onChange",
+    shouldFocusError: true,
+    reValidateMode: 'onChange',
+    resolver: yupResolver<any>(isEdit ? EditProblemFormSchema : CreateProblemFormSchema),
+  });
+
+  useEffect(() => {
+    reset({ ...problem });
+    setDescription(problem?.description);
+  }, [problem, reset])
+
+  if (isFetching) {
+    return <LoadingCommon />;
+  }
 
   return (
     <Container maxWidth="xl" style={{ padding: "10px" }}>
@@ -60,23 +110,20 @@ const ProblemForm = () => {
             Problems
           </Typography>
         </Link>
-        {!isEdit ? (
-          <Typography color="text.primary">Edit</Typography>
-        ) : (
-          <Typography color="text.primary">Create</Typography>
-        )}
-
-        {!isEdit ? <Typography color="text.primary">{id}</Typography> : ""}
+        <Typography color="text.primary">
+          {isEdit ? "Edit" : "Create"}
+        </Typography>
+        {isEdit ? <Typography color="text.primary">{id}</Typography> : ""}
       </Breadcrumbs>
       <Card sx={{ padding: "10px", marginTop: "10px" }}>
         <Typography variant="h4" mb={5} mt={2}>
-          {isEdit ? "Create New Problem" : "Edit Problem"}
+          {isEdit ? "Edit Problem" : "Create New Problem"}
         </Typography>
         <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
           <Grid.Wrap>
             <Grid.Item xs={4}>
               <Controller
-                name={"code"}
+                name={ProblemProperties.CODE}
                 control={control}
                 render={({
                   field: { value, onChange, ...props },
@@ -98,7 +145,7 @@ const ProblemForm = () => {
             </Grid.Item>
             <Grid.Item xs={8}>
               <Controller
-                name={"title"}
+                name={ProblemProperties.TITLE}
                 control={control}
                 render={({
                   field: { value, onChange, ...props },
@@ -118,31 +165,9 @@ const ProblemForm = () => {
                 )}
               />
             </Grid.Item>
-            <Grid.Item xs={12}>
-              <Controller
-                name={"userId"}
-                control={control}
-                render={({
-                  field: { onChange, value, ...props },
-                  fieldState: { error },
-                }) => (
-                  <MuiInput
-                    label="Author"
-                    placeholder="Author"
-                    onChange={(data) => {
-                      onChange(data);
-                    }}
-                    value={value}
-                    errorMessage={error?.message}
-                    {...props}
-                    required
-                  />
-                )}
-              />
-            </Grid.Item>
             <Grid.Item xs={6}>
               <Controller
-                name={"description"}
+                name={ProblemProperties.DESCRIPTION}
                 control={control}
                 render={({
                   field: { onChange, value, ...props },
@@ -156,7 +181,7 @@ const ProblemForm = () => {
                       setDescription((e.target as HTMLTextAreaElement).value);
                     }}
                     errorMessage={error?.message}
-                    style={{ maxWidth: "95%", overflow: "hidden" }}
+                    style={{ maxWidth: "96%", overflow: "hidden" }}
                     {...props}
                   />
                 )}
@@ -164,7 +189,14 @@ const ProblemForm = () => {
             </Grid.Item>
             <Grid.Item xs={6}>
               <Typography fontSize={14}>Preview</Typography>
-              <Card sx={{ padding: "10px" }}>
+              <Card
+                sx={{
+                  padding: "10px",
+                  marginTop: "8px",
+                  minHeight: "65px",
+                  border: "initial",
+                }}
+              >
                 <ReactMarkdown
                   remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
                 >
@@ -174,39 +206,40 @@ const ProblemForm = () => {
             </Grid.Item>
           </Grid.Wrap>
           <Grid.Wrap>
+            <Grid.Item xs={6}>
+              <Controller
+                name={ProblemProperties.TIME_LIMIT}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <MuiInput
+                    label="Time Limit (s)"
+                    type="number"
+                    placeholder="Time Limit (s)"
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      if (Number(newValue) >= 0) {
+                        field.onChange(newValue);
+                      }
+                    }}
+                    value={field.value}
+                    errorMessage={fieldState.error?.message}
+                    required
+                  />
+                )}
+              />
+            </Grid.Item>
             <Grid.Item xs={12}>
-              <BasicFileUpload />
-              {/* <MuiFileInput
-                value={file}
-                onChange={handleChange}
-                size="small"
-                variant="outlined"
-                
-                InputProps={{
-                  inputProps: {
-                    accept: "application/zip",
-                  },
-       
-                }}
-              /> */}
-              {/* <FileUpload
-                onChange={(value: any) => setFiles([...value])}
-                numberAllow={1}
-                acceptFileType={acceptedFileType}
-                message="Upload your test cases"
-                errorMessage={""}
-              /> */}
+              <Typography fontSize={14}>Import Test Case File</Typography>
+              <input
+                type="file"
+                accept=".zip"
+                onChange={saveFileSelected}
+                style={{ marginTop: "8px" }}
+              />
             </Grid.Item>
           </Grid.Wrap>
           <Stack direction="row" justifyContent="flex-end" mt={4}>
-            <Button
-              label="Cancel"
-              type="button"
-              variant="grey"
-              className="mr-16"
-              onClick={() => {}}
-            />
-            <Button type="submit" label={"Create"} isLoading={false} />
+            <Button type="submit" label={"Save"} isLoading={false} />
           </Stack>
         </Form>
       </Card>

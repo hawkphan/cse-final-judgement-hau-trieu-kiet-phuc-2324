@@ -1,4 +1,4 @@
-﻿using Application.Solutions;
+﻿// using Application.Solutions;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +28,9 @@ namespace API.Controllers
         {
             
 
-            return HandleApiResult(await Mediator.Send(new Create.Command { Solution = newSolution }));
+            // return HandleApiResult(await Mediator.Send(new Create.Command { Solution = newSolution }));
+            return Ok();
+
         }
 
         [HttpDelete("{id}")]

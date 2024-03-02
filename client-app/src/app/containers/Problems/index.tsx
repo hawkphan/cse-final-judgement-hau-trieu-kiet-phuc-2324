@@ -11,14 +11,14 @@ import {
 } from "@mui/material";
 import { Button, CustomTableSearch, EmptyTable, MuiSwitch, Table2, Toastify } from "../../shared";
 import { allColumns } from "./allColumns";
-import { GetPropertiesParams, Problem } from "../../queries/Problems/types";
 import { useNavigate } from "react-router-dom";
 import PostAddRoundedIcon from "@mui/icons-material/PostAddRounded";
 import { PATHS } from "../../configs/paths";
 import { forwardRef, useCallback, useMemo, useState } from "react";
 import { TransitionProps } from "@mui/material/transitions";
 import { useStore } from "../../shared/common/stores/store";
-import { useDeleteProblem, useGetProblems } from "../../queries/Problems";
+import { Problem, useDeleteProblem, useGetProblems } from "../../queries/Problems";
+import { GetPropertiesParams } from "../../queries";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
