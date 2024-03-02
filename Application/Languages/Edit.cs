@@ -1,3 +1,4 @@
+using Application.Core;
 using AutoMapper;
 using Domain;
 using MediatR;
@@ -7,12 +8,12 @@ namespace Application.Languages
 {
     public class Edit
     {
-        public class Command : IRequest
+        public class Command : IRequest<ApiResult<Unit>>
         {
             public Language Language { get; set; }
         }
 
-       public class Handler : IRequestHandler<Command>
+       public class Handler : IRequestHandler<Command, ApiResult<Unit>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -23,13 +24,21 @@ namespace Application.Languages
                 _context = context;
             }
 
-            public async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task<ApiResult<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var Language = await _context.Languages.FindAsync(request.Language.Id);
                 
                 _mapper.Map(request.Language, Language);
 
-                await _context.SaveChangesAsync();
+                var result  = await _context.SaveChangesAsync()>0;
+                if (result)
+                {
+                    return ApiResult<Unit>.Success(Unit.Value);
+                }
+                else
+                {
+                    return ApiResult<Unit>.Failure(new string[] {"Failed to Add"});
+                }
             }
         }
     }
