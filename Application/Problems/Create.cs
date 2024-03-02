@@ -1,5 +1,6 @@
 using Application.Core;
 using Application.Interfaces;
+using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
@@ -12,7 +13,7 @@ namespace Application.Problems
 {
     public class Create
     {
-        public class Command : IRequest<Result<Unit>>
+        public class Command : IRequest<ApiResult<ProblemDto>>
         {
             public Problem Problem { get; set; }
         }
@@ -23,16 +24,19 @@ namespace Application.Problems
                 RuleFor(x => x.Problem).SetValidator(new ProblemValidator());
             }
         }
-        public class Handler : IRequestHandler<Command, Result<Unit>>
+        public class Handler : IRequestHandler<Command, ApiResult<ProblemDto>>
         {
             private readonly DataContext _context;
             private readonly IUserAccessor _userAccessor;
-            public Handler(DataContext context, IUserAccessor userAccessor)
+            private readonly IMapper _mapper;
+
+            public Handler(DataContext context, IUserAccessor userAccessor, IMapper mapper)
             {
-                _context = context;
                 _userAccessor = userAccessor;
+                _context = context;
+                _mapper = mapper;
             }
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<ApiResult<ProblemDto>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUserName());
 
@@ -42,13 +46,14 @@ namespace Application.Problems
                 _context.Problems.Add(request.Problem);
 
                 var result = await _context.SaveChangesAsync() > 0;
-
                 if (!result)
                 {
-                    return Result<Unit>.Failure(new string[] { "Failed to Edit" });
+                    return ApiResult<ProblemDto>.Failure(new string[] { "Failed to Create" });
                 }
+                // Instead of creating problemsQuery, you can directly use request.Problem here
+                var newProblemDto = _mapper.Map<ProblemDto>(request.Problem);
 
-                return Result<Unit>.Success(Unit.Value);
+                return ApiResult<ProblemDto>.Success(newProblemDto);
             }
 
         }

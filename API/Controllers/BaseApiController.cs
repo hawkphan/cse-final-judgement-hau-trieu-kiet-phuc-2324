@@ -1,5 +1,6 @@
 ﻿using API.Extensions;
 using Application.Core;
+using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -20,13 +21,25 @@ namespace API.Controllers
             if (result == null) return NotFound();
 
             if (result.Succeeded && result.Data != null)
-                return Ok(result.Data);
+                return Ok(result);
 
             if (result.Succeeded && result.Data == null)
                 return NotFound();
 
             return BadRequest(result.Errors);
         }
+
+        protected ActionResult HandleApiResult<T>(ApiResult<T> apiResult)
+        {
+            if (apiResult == null) return NotFound();
+            if (apiResult.Succeeded && apiResult.Data != null)
+                return Ok(apiResult);
+            if (apiResult.Succeeded && apiResult.Data == null)
+                return NotFound();
+
+            return BadRequest(apiResult.Errors);
+        }
+
 
         protected ActionResult HandlePagedResult<T>(Result<PagedList<T>> result)
         {

@@ -9,7 +9,7 @@ namespace Application.Problems
 {
     public class Edit
     {
-        public class Command : IRequest<Result<Unit>>
+        public class Command : IRequest<ApiResult<Unit>>
         {
             public Problem Problem { get; set; }
         }
@@ -22,7 +22,7 @@ namespace Application.Problems
             }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Unit>>
+        public class Handler : IRequestHandler<Command, ApiResult<Unit>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -33,25 +33,38 @@ namespace Application.Problems
                 _context = context;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<ApiResult<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var problem = await _context.Problems.FindAsync(request.Problem.Id);
 
                 if (problem == null) return null;
-                if (request.Problem.TestCases.Count == 0 || request.Problem.TestCases == null)
+                if (request.Problem.TestCases.Count == 0)
                 {
                     request.Problem.TestCases = problem.TestCases;
                 }
-                _mapper.Map(request.Problem, problem);
-
-                var result = await _context.SaveChangesAsync() > 0;
-
-                if (!result)
+                else
                 {
-                    return Result<Unit>.Failure(new string[] { "Failed to Edit" });
+                    var testCasesToRemove = _context.TestCases
+                    .Where(tc => tc.ProblemId == request.Problem.Id)
+                    .ToList();
+
+                    // Remove the retrieved test cases
+                    _context.TestCases.RemoveRange(testCasesToRemove);
+
+                    // Save changes to the database
+                    await _context.SaveChangesAsync();
                 }
 
-                return Result<Unit>.Success(Unit.Value);
+                _mapper.Map(request.Problem, problem);
+
+                var ApiResult = await _context.SaveChangesAsync() > 0;
+
+                if (!ApiResult)
+                {
+                    return ApiResult<Unit>.Failure(new string[] { "Failed to Edit" });
+                }
+
+                return ApiResult<Unit>.Success(Unit.Value);
             }
         }
     }

@@ -51,10 +51,11 @@ namespace Application.Problems
 
                 var query = await problems.ProjectTo<ProblemDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken: cancellationToken);
-
+                int PageNumber = (request.Params.PageNumber == -1) ? 1 : request.Params.PageNumber;
+                int PageSize = (request.Params.PageNumber == -1) ? query.Count : request.Params.PageSize;
                 return Result<PagedList<ProblemDto>>
                     .Success(PagedList<ProblemDto>.CreateAsyncUsingList(query,
-                        request.Params.PageNumber, request.Params.PageSize));
+                        PageNumber, PageSize));
             }
         }
     }

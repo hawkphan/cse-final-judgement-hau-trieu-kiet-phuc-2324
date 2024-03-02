@@ -10,6 +10,8 @@ using Persistence;
 using System.Text;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
+using SharpCompress.Common;
+using Microsoft.IdentityModel.Tokens;
 namespace API.Controllers
 {
     public class ProblemsController : BaseApiController
@@ -32,55 +34,28 @@ namespace API.Controllers
         {
             if (file == null || file.Length == 0)
             {
-                return BadRequest("File is null or empty");
+                return HandleApiResult(ApiResult<Problem>.Failure(new string[] { "File is Empty" }));
             }
             try
             {
-                if (!file.ContentType.Equals("application/zip", StringComparison.OrdinalIgnoreCase))
+                if (IsZipMimeType(file.ContentType))
                 {
-                    return BadRequest("Unsupported file format. Only ZIP files are allowed.");
+                    newProblem = await MapTestCasesAsync(newProblem, file);
                 }
-
-                // Define the directory where the file will be saved
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
-                if (!Directory.Exists(uploadsFolder))
+                if (!newProblem.TestCases.IsNullOrEmpty())
+                { 
+                    return HandleApiResult(await Mediator.Send(new Create.Command { Problem = newProblem }));
+                }
+                else
                 {
-                    Directory.CreateDirectory(uploadsFolder);
+                    return HandleApiResult(ApiResult<Problem>.Failure(new string[] { "Something Wrong" }));
                 }
-                var fileName = $"{newProblem.Code}.zip";
-
-                // Combine the directory path with the file name
-                var filePath = Path.Combine(uploadsFolder, fileName);
-                var unzipPath = Path.Combine(uploadsFolder, fileName.Substring(0, fileName.Length - 4));
-
-                // Save the file to the server
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-                ZipFile.ExtractToDirectory(filePath, unzipPath);
-
-                // Create TestCase Object From 
-                var files = Directory.GetFiles(unzipPath, "*.in");
-                foreach (var inputPath in files)
-                {
-                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
-                    var outputPath = Path.Combine(unzipPath, $"{fileNameWithoutExtension}.out");
-                    TestCase testCase = new TestCase();
-                    testCase.Input = inputPath;
-                    testCase.Output = outputPath;
-                    newProblem.TestCases.Add(testCase);
-                }
-
-                return HandleResult(await Mediator.Send(new Create.Command { Problem = newProblem }));
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
         }
-
-
         [AllowAnonymous]
         [HttpPut("{id}")]
         public async Task<ActionResult> Edit([FromRoute] Guid id, [FromForm] Problem Problem, [FromForm] IFormFile file)
@@ -88,60 +63,9 @@ namespace API.Controllers
             Problem.Id = id;
             if (file != null && file.Length != 0)
             {
-                try
-                {
-                    if (!file.ContentType.Equals("application/zip", StringComparison.OrdinalIgnoreCase))
-                    {
-                        return BadRequest("Unsupported file format. Only ZIP files are allowed.");
-                    }
-
-                    // Define the directory where the file will be saved
-                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-                    var fileName = $"{Problem.Code}.zip";
-
-                    // Combine the directory path with the file name
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-                    var unzipPath = Path.Combine(uploadsFolder, Problem.Code);
-                    if (Directory.Exists(unzipPath))
-                    {
-                        // Directory.Delete(Path.Combine(uploadsFolder, Problem.Code));
-                        string[] filePaths = Directory.GetFiles(unzipPath);
-                        for (int i = 0; i < filePaths.Length; i++)
-                        {
-                            System.IO.File.Delete(filePaths[i]);
-                        }
-                    }
-                    // Save the file to the server
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-                    Directory.CreateDirectory(unzipPath);
-                    ZipFile.ExtractToDirectory(filePath, unzipPath);
-
-                    // Create TestCase Object From 
-                    var files = Directory.GetFiles(unzipPath, "*.in");
-                    foreach (var inputPath in files)
-                    {
-                        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
-                        var outputPath = Path.Combine(unzipPath, $"{fileNameWithoutExtension}.out");
-                        TestCase testCase = new TestCase();
-                        testCase.Input = inputPath;
-                        testCase.Output = outputPath;
-                        Problem.TestCases.Add(testCase);
-                    }
-                    return HandleResult(await Mediator.Send(new Edit.Command { Problem = Problem }));
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-                }
+                Problem = await MapTestCasesAsync(Problem, file);
             }
-            return HandleResult(await Mediator.Send(new Edit.Command { Problem = Problem }));
+            return HandleApiResult(await Mediator.Send(new Edit.Command { Problem = Problem }));
         }
         [AllowAnonymous]
         [HttpDelete("{id}")]
@@ -149,6 +73,75 @@ namespace API.Controllers
         {
             await Mediator.Send(new Delete.Command { Id = id });
             return Ok();
+        }
+        private static bool IsZipMimeType(string mimeType)
+        {
+            List<string> zipMimeTypes = new List<string>
+        {
+            "application/octet-stream",
+            "multipart/x-zip",
+            "application/zip",
+            "application/zip-compressed",
+            "application/x-zip-compressed",
+        };
+
+            return zipMimeTypes.Contains(mimeType);
+        }
+
+
+        public static async Task<Problem> MapTestCasesAsync(Problem Problem, IFormFile file)
+        {
+            try
+            {
+                // Define the directory where the file will be saved
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+                var fileName = $"{Problem.Code}.zip";
+
+                // Combine the directory path with the file name
+                var filePath = Path.Combine(uploadsFolder, fileName);
+                var unzipPath = Path.Combine(uploadsFolder, Problem.Code);
+                if (Directory.Exists(unzipPath))
+                {
+                    string[] filePaths = Directory.GetFiles(unzipPath);
+                    for (int i = 0; i < filePaths.Length; i++)
+                    {
+                        System.IO.File.Delete(filePaths[i]);
+                    }
+                }
+                await SaveFile(filePath, file);
+                Directory.CreateDirectory(unzipPath);
+                ZipFile.ExtractToDirectory(filePath, unzipPath);
+
+                // Create TestCase Object From 
+                var files = Directory.GetFiles(unzipPath, "*.in");
+                foreach (var inputPath in files)
+                {
+                    var relativePath = Path.Combine("Uploads", Problem.Code);
+                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
+                    TestCase testCase = new TestCase();
+                    testCase.Input = Path.Combine(relativePath, $"{fileNameWithoutExtension}.in");
+                    testCase.Output = Path.Combine(relativePath, $"{fileNameWithoutExtension}.out");
+                    Problem.TestCases.Add(testCase);
+                }
+                return Problem;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return Problem;
+        }
+        private static async Task SaveFile(string filePath, IFormFile file)
+        {
+            // Save the file to the server
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
         }
     }
 }

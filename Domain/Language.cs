@@ -13,13 +13,7 @@ namespace Domain
         [Key]
         public Guid Id { get; set; }
         public ICollection<ProblemLanguage> ProblemLanguages { get; set; }
-
-
-        // public Guid? UserId { get; set; }
-        // public AppUser User { get; set; }//Author
-        public string Name { get; set; } = "null";
-
-        [NotMapped]
-        public List<String> RunCommands { get; set; } = new List<string>();
+        public string Name { get; set; }
+        public string RunCommand { get; set; }
     }
 }

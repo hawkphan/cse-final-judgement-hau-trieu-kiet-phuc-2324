@@ -37,9 +37,9 @@ namespace API.Controllers
         public async Task<ActionResult> Edit(Guid id, Language Language)
         {
             Language.Id = id;
-            await Mediator.Send(new Edit.Command { Language = Language });
+            
 
-            return Ok();
+            return HandleApiResult(await Mediator.Send(new Edit.Command { Language = Language }));
         }
         [AllowAnonymous]
         [HttpDelete("{id}")]
