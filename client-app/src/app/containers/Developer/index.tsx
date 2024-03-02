@@ -3,7 +3,7 @@
 import { Box, Divider } from "@mui/material";
 import { FC, Suspense, lazy, useCallback, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { AnimatedTabPanel, TabsBar } from "../../shared";
+import { AnimatedTabPanel, LoadingCommon, TabsBar } from "../../shared";
 
 export enum DevContainerParams {
   TAB = "tab",
@@ -104,7 +104,7 @@ const Developer: FC = () => {
 
   return (
     <Box px={3} py={"2px"}>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingCommon />}>
         <TabsBar tabsList={TAB_LIST} onChange={handleChangeTab} value={tab} />
         <Divider sx={{ mb: 1 }} />
         <AnimatedTabPanel uniqKey={`multi-lang-${tab}`} transitionTime={0.2}>
