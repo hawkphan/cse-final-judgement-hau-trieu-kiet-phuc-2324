@@ -16,6 +16,9 @@ namespace Application.Problems
             public PagingParams Params { get; set; }
             public bool? IsOnly { get; set; }
             public Guid? UserId { get; set; }
+            public DateTime? FromDate { get; set; }
+            public DateTime? ToDate { get; set; }
+            public ICollection<double> Difficulties { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, Result<PagedList<ProblemDto>>>
@@ -33,6 +36,10 @@ namespace Application.Problems
                 string key = request.Params.Keywords;
                 bool? isOnly = request.IsOnly;
                 Guid? userId = request.UserId;
+                DateTime? fromDate = request.FromDate;
+                DateTime? toDate = request.ToDate;
+                ICollection<double> difficulties = request.Difficulties;
+
                 var problems = _context.Problems.AsQueryable();
 
                 if ((bool)isOnly && userId != null)
@@ -45,8 +52,21 @@ namespace Application.Problems
                 {
                     problems = _context.Problems.
                     Where(problem =>
-                    problem.Title.Contains(request.Params.Keywords) || problem.Code.Contains(request.Params.Keywords));
+                    problem.Title.Contains(key) || problem.Code.Contains(key));
+                }
 
+                if (fromDate != null && fromDate != DateTime.MinValue)
+                {
+                    problems = problems.Where(problem => problem.Date > fromDate);
+                }
+
+                if (toDate != null && toDate != DateTime.MinValue)
+                {
+                    problems = problems.Where(problem => problem.Date <= toDate);
+                }
+
+                if(difficulties != null && difficulties.Any()) {
+                    problems = problems.Where(problem => difficulties.Contains(problem.Difficulty));
                 }
 
                 var query = await problems.ProjectTo<ProblemDto>(_mapper.ConfigurationProvider)

@@ -19,6 +19,9 @@ namespace Application.Core
             
             var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
+            if(pageSize == -1) {
+                items = source.Skip(0).Take(Int32.MaxValue).ToList();
+            }
 
             return new PagedList<T>(items, count, pageNumber, pageSize);
         }

@@ -18,9 +18,9 @@ namespace API.Controllers
     {
         [AllowAnonymous]
         [HttpGet] //api/problems
-        public async Task<IActionResult> GetProblems([FromQuery] PagingParams param, [FromQuery] bool isOnly, [FromQuery] Guid userId)
+        public async Task<IActionResult> GetProblems([FromQuery] PagingParams param, [FromQuery] bool isOnly, [FromQuery] Guid userId, [FromQuery] List<double> difficulty, [FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
         {
-            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param, IsOnly = isOnly, UserId = userId }));
+            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param, IsOnly = isOnly, UserId = userId, Difficulties = difficulty, FromDate = fromDate, ToDate = toDate }));
         }
         [AllowAnonymous]
         [HttpGet("{id}")]
@@ -39,7 +39,7 @@ namespace API.Controllers
         public async Task<ActionResult> Edit([FromRoute] Guid id, [FromForm] Problem Problem, [FromForm] IFormFile file)
         {
             Problem.Id = id;
-            return HandleApiResult(await Mediator.Send(new Edit.Command { Problem = Problem, TestCaseZip= file }));
+            return HandleApiResult(await Mediator.Send(new Edit.Command { Problem = Problem, TestCaseZip = file }));
         }
         [AllowAnonymous]
         [HttpDelete("{id}")]

@@ -12,12 +12,15 @@ import {
   Toastify,
 } from "../../../shared";
 import { Controller, useForm } from "react-hook-form";
-import { CreateProblemBody } from "../../../queries/Problems/types";
+import {
+  CreateProblemBody,
+  EditProblemBody,
+} from "../../../queries/Problems/types";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { PATHS } from "../../../configs/paths";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   useCreateProblem,
@@ -30,6 +33,7 @@ import {
   CreateProblemFormSchema,
   EditProblemFormSchema,
   ProblemProperties,
+  ValidationMessage,
   mapFormData,
 } from "./helpers";
 import { API_QUERIES } from "../../../queries/common/constants";
@@ -42,6 +46,8 @@ const ProblemForm = () => {
   const isEdit = id && id !== "";
   const navigate = useNavigate();
 
+  const { problems, setParams } = useGetProblems();
+
   const { problem, isFetching, handleInvalidateProblem } = useGetProblemById({
     id,
     queryKey: [API_QUERIES.GET_PROBLEM_BY_ID, { id: id }],
@@ -53,7 +59,7 @@ const ProblemForm = () => {
   const [description, setDescription] = useState("");
   const [previewMarkdown, setPreviewMarkdown] = useState<boolean>();
 
-  const { onCreateProblem } = useCreateProblem({
+  const { onCreateProblem, isPending: isCreatePending } = useCreateProblem({
     onSuccess: () => {
       Toastify.success("Successful!");
       handleInvalidateProblems();
@@ -66,7 +72,7 @@ const ProblemForm = () => {
     },
   });
 
-  const { onEditProblem } = useEditProblem({
+  const { onEditProblem, isPending: isEditPending } = useEditProblem({
     onSuccess: () => {
       Toastify.success("Successful!");
       handleInvalidateProblems();
@@ -83,31 +89,60 @@ const ProblemForm = () => {
     setFileSelected(e.target.files[0]);
   };
 
-  const onSubmit = async (data: CreateProblemBody) => {
+  const allProblemNames = useMemo(() => {
+    return problems?.map((item) => {
+      if (item.code != problem?.code) {
+        return item.code;
+      }
+    });
+  }, [problem?.code, problems]);
+
+  const { control, handleSubmit, reset, setError } = useForm<CreateProblemBody>(
+    {
+      defaultValues: isEdit
+        ? { ...problem }
+        : { [ProblemProperties.TIME_LIMIT]: 1 },
+      mode: "onChange",
+      shouldFocusError: true,
+      reValidateMode: "onChange",
+      resolver: yupResolver<any>(
+        isEdit ? EditProblemFormSchema : CreateProblemFormSchema
+      ),
+    }
+  );
+
+  const onSubmit = async (data: CreateProblemBody | EditProblemBody) => {
+    if (
+      allProblemNames.includes(data?.code) &&
+      (data as EditProblemBody)?.code
+    ) {
+      Toastify.error(ValidationMessage.EXISTING_CODE);
+      setError(ProblemProperties.CODE, {
+        message: ValidationMessage.EXISTING_CODE,
+      });
+      return;
+    }
+
     const formData = mapFormData(data, fileSelected, userStore.user.id, isEdit);
     if (!isEdit) {
+      if (!fileSelected) {
+        Toastify.error(ValidationMessage.LACK_OF_FILE);
+        return;
+      }
       onCreateProblem(formData);
     } else {
       onEditProblem(formData);
     }
   };
 
-  const { control, handleSubmit, reset } = useForm<CreateProblemBody>({
-    defaultValues: isEdit
-      ? { ...problem }
-      : { [ProblemProperties.TIME_LIMIT]: 1 },
-    mode: "onChange",
-    shouldFocusError: true,
-    reValidateMode: "onChange",
-    resolver: yupResolver<any>(
-      isEdit ? EditProblemFormSchema : CreateProblemFormSchema
-    ),
-  });
-
   useEffect(() => {
     reset({ ...problem });
     setDescription(problem?.description);
   }, [problem, reset]);
+
+  useEffect(() => {
+    setParams({ pageSize: -1 });
+  }, [setParams]);
 
   if (isFetching) {
     return <LoadingCommon />;
@@ -265,7 +300,11 @@ const ProblemForm = () => {
             </Grid.Item>
           </Grid.Wrap>
           <Stack direction="row" justifyContent="flex-end" mt={4}>
-            <Button type="submit" label={"Save"} isLoading={false} />
+            <Button
+              type="submit"
+              label={"Save"}
+              isLoading={isCreatePending || isEditPending}
+            />
           </Stack>
         </Form>
       </Card>

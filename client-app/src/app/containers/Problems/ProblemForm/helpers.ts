@@ -18,6 +18,11 @@ export enum ProblemProperties {
   TEST_CASES_FILE = "file",
 }
 
+export enum ValidationMessage {
+  EXISTING_CODE = "This problem code has been existed!",
+  LACK_OF_FILE = "Please provide a file for test cases!",
+}
+
 export const mapFormData = (
   data: CreateProblemBody | EditProblemBody,
   fileSelected: any,

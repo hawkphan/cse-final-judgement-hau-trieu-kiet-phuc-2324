@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Card,
   Divider,
   List,
@@ -11,7 +10,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { VscAccount } from "react-icons/vsc";
 import { FaEye, FaCheckCircle, FaStar } from "react-icons/fa";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { TbPointFilled } from "react-icons/tb";
@@ -19,12 +17,8 @@ import { TbPointFilled } from "react-icons/tb";
 //Test data
 import { User } from "../TestData/userProfileModel";
 import { profileInfo } from "../TestData/dataUserProfile.mock";
+import { Button } from "../../../../shared";
 
-//User Detail Information box contain the user basic information, includes:
-//Basic info:           Avatar, username, id, rank, option to edit profile
-//Activity tracking:    Views, Solution, Disscuss, Reputation
-//Languages used:       java, c, c+, c++, c#,...
-//Skill: ?
 export default function UserDetailInformation() {
   const user = profileInfo.user as User;
 
@@ -39,9 +33,8 @@ export default function UserDetailInformation() {
       elevation={4}
     >
       <Stack direction="row" spacing={2} style={{ paddingBottom: "20px" }}>
-        <Avatar sx={{ width: 80, height: 80 }}>
-          <VscAccount />
-        </Avatar>
+        <Avatar sx={{ width: 80, height: 80 }} />
+
 
         <Stack direction="column" spacing={0.5}>
           <h4>{user.displayName}</h4>
@@ -50,8 +43,6 @@ export default function UserDetailInformation() {
         </Stack>
       </Stack>
       <Button
-        variant="outlined"
-        color="success"
         style={{
           width: "100%",
           maxWidth: "500px",

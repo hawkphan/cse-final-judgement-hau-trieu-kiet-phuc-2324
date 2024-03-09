@@ -9,16 +9,27 @@ import {
   Slide,
   Stack,
 } from "@mui/material";
-import { Button, CustomTableSearch, EmptyTable, MuiSwitch, Table2, Toastify } from "../../shared";
+import {
+  Button,
+  CustomTableSearch,
+  EmptyTable,
+  MuiSwitch,
+  Table2,
+  Toastify,
+} from "../../shared";
 import { allColumns } from "./allColumns";
 import { useNavigate } from "react-router-dom";
-import PostAddRoundedIcon from "@mui/icons-material/PostAddRounded";
-import { PATHS } from "../../configs/paths";
 import { forwardRef, useCallback, useMemo, useState } from "react";
 import { TransitionProps } from "@mui/material/transitions";
 import { useStore } from "../../shared/common/stores/store";
-import { Problem, useDeleteProblem, useGetProblems } from "../../queries/Problems";
+import {
+  Problem,
+  useDeleteProblem,
+  useGetProblems,
+} from "../../queries/Problems";
 import { GetPropertiesParams } from "../../queries";
+import { ProblemFilterQueryKey } from "./helpers";
+import ProblemToolbar from "./ProblemToolbar";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -34,15 +45,22 @@ const Problems = () => {
   const navigate = useNavigate();
   const user = userStore.user;
 
-  const { problems, totalRecords, setParams, isFetching, params, handleInvalidateProblems } = useGetProblems();
+  const {
+    problems,
+    totalRecords,
+    setParams,
+    isFetching,
+    params,
+    handleInvalidateProblems,
+  } = useGetProblems();
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [isOnlyDedication, setIsOnlyDedication] = useState(false);
-  const [deleteId, setDeleteId] = useState('');
+  const [deleteId, setDeleteId] = useState("");
 
   const { onDeleteProblem } = useDeleteProblem({
     onSuccess: () => {
-      Toastify.success('Successfully');
+      Toastify.success("Successfully");
       handleInvalidateProblems();
     },
     onError: (error) => {
@@ -59,14 +77,16 @@ const Problems = () => {
   };
 
   const handleChangeIsOnlyDedication = useCallback(() => {
-    
-    setParams({...params, isOnly: !isOnlyDedication, userId: user?.id});
+    setParams({ ...params, isOnly: !isOnlyDedication, userId: user?.id });
     setIsOnlyDedication(!isOnlyDedication);
   }, [isOnlyDedication, params, setParams, user?.id]);
 
-  const handleGetProblems = useCallback((params: GetPropertiesParams) => {
-    setParams({...params, isOnly: isOnlyDedication, userId: user?.id});
-  }, [isOnlyDedication, setParams, user?.id]);
+  const handleGetProblems = useCallback(
+    (params: GetPropertiesParams) => {
+      setParams({ ...params, isOnly: isOnlyDedication, userId: user?.id });
+    },
+    [isOnlyDedication, setParams, user?.id]
+  );
 
   const handleNavigateToDetail = (id: string) => {
     navigate(id);
@@ -76,16 +96,23 @@ const Problems = () => {
     setDeleteId(id);
   };
 
-  const handleEditProblem = useCallback((id: string) => {
-    navigate(`/problems/${id}/edit`);
-  }, [navigate]);
+  const handleEditProblem = useCallback(
+    (id: string) => {
+      navigate(`/problems/${id}/edit`);
+    },
+    [navigate]
+  );
 
-  const columns = useMemo(() => allColumns({
-    handleEditProblem,
-    handleClickOpenDeleteDialog,
-    handleSetDeleteId,
-    userId: user?.id,
-  }), [handleEditProblem, user?.id]);
+  const columns = useMemo(
+    () =>
+      allColumns({
+        handleEditProblem,
+        handleClickOpenDeleteDialog,
+        handleSetDeleteId,
+        userId: user?.id,
+      }),
+    [handleEditProblem, user?.id]
+  );
 
   return (
     <Container maxWidth="xl">
@@ -102,11 +129,16 @@ const Problems = () => {
         enableRowActions
         paginationDisplayMode="pages"
         isColumnPinning={false}
-        additionalFilterParams={["keywords"]}
         nameColumnPinning="actions"
         state={{
           isLoading: isFetching,
         }}
+        additionalFilterParams={[
+          ProblemFilterQueryKey.FROM_DATE,
+          ProblemFilterQueryKey.TO_DATE,
+          ProblemFilterQueryKey.DIFFICULTY,
+          ProblemFilterQueryKey.KEYWORDS,
+        ]}
         muiTableBodyRowProps={({ row }) => ({
           onClick: () => {
             handleNavigateToDetail(row.original.id);
@@ -120,23 +152,16 @@ const Problems = () => {
                 searchKey="keywords"
               />
             </Stack>
-            <MuiSwitch label='Only your dedication' isShowDescription={false} onChange={handleChangeIsOnlyDedication} checked={isOnlyDedication} />
+            <MuiSwitch
+              label="Only your posts"
+              isShowDescription={false}
+              onChange={handleChangeIsOnlyDedication}
+              checked={isOnlyDedication}
+            />
           </Stack>
-          
         )}
-        renderToolbarInternalActions={() => {
-          return (
-            <Stack>
-              <Button
-                className="btn btn-primary"
-                icon={<PostAddRoundedIcon fontSize="medium" />}
-                style={{ fontFamily: "Roboto", marginTop: "6px" }}
-                onClick={() => navigate(PATHS.createProblem)}
-              >
-                New
-              </Button>
-            </Stack>
-          );
+        renderToolbarInternalActions={({ table }) => {
+          return <ProblemToolbar table={table} />;
         }}
         renderFallbackValue={<EmptyTable />}
         muiTopToolbarProps={{

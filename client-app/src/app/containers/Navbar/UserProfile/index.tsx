@@ -6,11 +6,8 @@ import UserSubmission from "./UserSubmission";
 import UserAnnualReport from "./UserAnnualSubmissionReport";
 import { Box, Grid } from "@mui/material";
 import UserAchievement from "./UserAchievements";
-import { profileInfo } from "./TestData/dataUserProfile.mock";
-import { User } from "./TestData/userProfileModel";
 
 export default function UserProfile() {
-  const userProfile = profileInfo.user as User
   return (
     <Grid container spacing={2} style={{ padding: "10px", fontFamily: 'Roboto' }} wrap='wrap'>
       <Grid item xs={3}>

@@ -12,6 +12,7 @@ export function useEditProblem(
     mutate: onEditProblem,
     isSuccess,
     isError,
+    isPending,
     error,
   } = useMutation<any, Error, EditProblemBody>({
     mutationFn: (payload: EditProblemBody) =>
@@ -22,6 +23,7 @@ export function useEditProblem(
   return {
     onEditProblem,
     isSuccess,
+    isPending,
     isError,
     error,
   };

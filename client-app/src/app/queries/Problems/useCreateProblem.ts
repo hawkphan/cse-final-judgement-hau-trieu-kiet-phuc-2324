@@ -10,6 +10,7 @@ export function useCreateProblem(options?: UseMutationOptions<any, Error, any>) 
     mutate: onCreateProblem,
     isSuccess,
     isError,
+    isPending,
     error,
   } = useMutation<any, Error, any>({
     mutationFn: (payload: CreateProblemBody) => responseWrapper(createProblem, [payload]),
@@ -19,6 +20,7 @@ export function useCreateProblem(options?: UseMutationOptions<any, Error, any>) 
   return {
     onCreateProblem,
     isSuccess,
+    isPending,
     isError,
     error,
   };

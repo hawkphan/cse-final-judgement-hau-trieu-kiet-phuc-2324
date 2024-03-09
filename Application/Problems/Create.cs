@@ -49,7 +49,7 @@ namespace Application.Problems
 
                 request.Problem.User = user;
                 request.Problem.Date = DateTime.UtcNow;
-
+                request.Problem.Difficulty = 0;
 
 
                 FileManager fileManager = new FileManager();
@@ -64,7 +64,6 @@ namespace Application.Problems
                     testCase.Output = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.out");
                     request.Problem.TestCases.Add(testCase);
                 }
-
 
                 _context.Problems.Add(request.Problem);
                 var result = await _context.SaveChangesAsync() > 0;

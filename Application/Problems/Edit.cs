@@ -38,56 +38,59 @@ namespace Application.Problems
 
             public async Task<ApiResult<ProblemDto>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var problem = await _context.Problems.FindAsync(request.Problem.Id);
-
-                if (problem == null) return null;
-                if (request.TestCaseZip != null && request.TestCaseZip.Length > 0)
+                try
                 {
-                    FileManager fileManager = new FileManager();
-                    await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);
-                    var testCaseLocation = Path.Combine("TestCases", request.Problem.Code);
-                    String[] files = fileManager.getFileNameInFolder(testCaseLocation, "*.in");
-                    foreach (var inputPath in files)
+                    var problem = await _context.Problems.FindAsync(request.Problem.Id);
+
+                    if (problem == null) return null;
+                    if (request.TestCaseZip != null && request.TestCaseZip.Length > 0)
                     {
-                        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
-                        TestCase testCase = new TestCase();
-                        testCase.Input = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.in");
-                        testCase.Output = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.out");
-                        request.Problem.TestCases.Add(testCase);
+                        FileManager fileManager = new FileManager();
+                        await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);
+                        var testCaseLocation = Path.Combine("TestCases", request.Problem.Code);
+                        String[] files = fileManager.getFileNameInFolder(testCaseLocation, "*.in");
+                        foreach (var inputPath in files)
+                        {
+                            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
+                            TestCase testCase = new TestCase();
+                            testCase.Input = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.in");
+                            testCase.Output = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.out");
+                            request.Problem.TestCases.Add(testCase);
+                        }
                     }
-                }
-                if (request.Problem.TestCases.Count == 0)
-                {
-                    request.Problem.TestCases = problem.TestCases;
-                }
-                else
-                {
-                    var testCasesToRemove = _context.TestCases
-                    .Where(tc => tc.ProblemId == request.Problem.Id)
-                    .ToList();
+                    if (request.Problem.TestCases.Count == 0)
+                    {
+                        request.Problem.TestCases = problem.TestCases;
+                    }
+                    else
+                    {
+                        var testCasesToRemove = _context.TestCases
+                        .Where(tc => tc.ProblemId == request.Problem.Id)
+                        .ToList();
 
-                    // Remove the retrieved test cases
-                    _context.TestCases.RemoveRange(testCasesToRemove);
+                        // Remove the retrieved test cases
+                        _context.TestCases.RemoveRange(testCasesToRemove);
 
-                    // Save changes to the database
+                        // Save changes to the database
+                        await _context.SaveChangesAsync();
+                    }
+
+                    request.Problem.Date = problem.Date;
+                    request.Problem.Difficulty = problem.Difficulty;
+
+                    _mapper.Map(request.Problem, problem);
+
                     await _context.SaveChangesAsync();
+
+
+                    var newProblemDto = _mapper.Map<ProblemDto>(request.Problem);
+
+                    return ApiResult<ProblemDto>.Success(newProblemDto);
                 }
-
-                request.Problem.Date = problem.Date;
-                request.Problem.Difficulty = problem.Difficulty;
-
-                _mapper.Map(request.Problem, problem);
-
-                var ApiResult = await _context.SaveChangesAsync() > 0;
-
-                if (!ApiResult)
+                catch
                 {
                     return ApiResult<ProblemDto>.Failure(new string[] { "Failed to Edit" });
                 }
-                
-                var newProblemDto = _mapper.Map<ProblemDto>(request.Problem);
-
-                return ApiResult<ProblemDto>.Success(newProblemDto);
             }
         }
     }
