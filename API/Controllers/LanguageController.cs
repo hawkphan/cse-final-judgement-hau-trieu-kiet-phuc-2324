@@ -13,9 +13,9 @@ namespace API.Controllers
     {
         [AllowAnonymous]
         [HttpGet] //api/languages
-        public async Task<IActionResult> GetLanguages()
+        public async Task<IActionResult> GetLanguages([FromQuery] PagingParams param)
         {
-            return HandlePagedResult(await Mediator.Send(new List.Query {}));
+            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param }));
         }
 
         [AllowAnonymous]
@@ -37,7 +37,7 @@ namespace API.Controllers
         public async Task<ActionResult> Edit(Guid id, Language Language)
         {
             Language.Id = id;
-            
+
 
             return HandleApiResult(await Mediator.Send(new Edit.Command { Language = Language }));
         }

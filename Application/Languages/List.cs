@@ -13,6 +13,7 @@ namespace Application.Languages
     {
         public class Query : IRequest<Result<PagedList<LanguageDto>>>
         {
+            public PagingParams Params { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, Result<PagedList<LanguageDto>>>
@@ -30,9 +31,11 @@ namespace Application.Languages
                 var query = await _context.Languages
                     .ProjectTo<LanguageDto>(_mapper.ConfigurationProvider)
                     .ToListAsync();
+                int PageNumber = (request.Params.PageSize == -1) ? 1 : request.Params.PageNumber;
+                int PageSize = (request.Params.PageSize == -1) ? query.Count : request.Params.PageSize;
                 return Result<PagedList<LanguageDto>>
                     .Success(PagedList<LanguageDto>.CreateAsyncUsingList(query,
-                        1, query.Count));
+                        PageNumber, PageSize));
             }
         }
     }
