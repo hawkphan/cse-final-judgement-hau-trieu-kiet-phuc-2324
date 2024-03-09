@@ -41,7 +41,7 @@ namespace Application.Problems
                 var problem = await _context.Problems.FindAsync(request.Problem.Id);
 
                 if (problem == null) return null;
-                if (request.TestCaseZip != null)
+                if (request.TestCaseZip != null || request.TestCaseZip.Length > 0)
                 {
                     FileManager fileManager = new FileManager();
                     await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);
@@ -56,9 +56,6 @@ namespace Application.Problems
                         request.Problem.TestCases.Add(testCase);
                     }
                 }
-
-
-
                 if (request.Problem.TestCases.Count == 0)
                 {
                     request.Problem.TestCases = problem.TestCases;
@@ -75,6 +72,7 @@ namespace Application.Problems
                     // Save changes to the database
                     await _context.SaveChangesAsync();
                 }
+                request.Problem.Date = problem.Date;
 
                 _mapper.Map(request.Problem, problem);
 
@@ -84,6 +82,7 @@ namespace Application.Problems
                 {
                     return ApiResult<ProblemDto>.Failure(new string[] { "Failed to Edit" });
                 }
+                
                 var newProblemDto = _mapper.Map<ProblemDto>(request.Problem);
 
                 return ApiResult<ProblemDto>.Success(newProblemDto);

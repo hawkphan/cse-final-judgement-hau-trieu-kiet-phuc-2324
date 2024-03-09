@@ -42,13 +42,19 @@ namespace Application.Problems
             {
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUserName());
 
+                if (request.TestCaseZip.Length == 0 || request.TestCaseZip == null)
+                {
+                    return ApiResult<ProblemDto>.Failure(new string[] { "Failed to Create" });
+                }
 
                 request.Problem.User = user;
                 request.Problem.Date = DateTime.UtcNow;
 
+
+
                 FileManager fileManager = new FileManager();
                 await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);
-                var testCaseLocation = Path.Combine("TestCases",request.Problem.Code);
+                var testCaseLocation = Path.Combine("TestCases", request.Problem.Code);
                 String[] files = fileManager.getFileNameInFolder(testCaseLocation, "*.in");
                 foreach (var inputPath in files)
                 {
