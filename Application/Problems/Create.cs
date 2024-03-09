@@ -1,5 +1,6 @@
 using Application.Core;
 using Application.Interfaces;
+using Application.Solutions;
 using AutoMapper;
 using Domain;
 using FluentValidation;
@@ -16,6 +17,7 @@ namespace Application.Problems
         public class Command : IRequest<ApiResult<ProblemDto>>
         {
             public Problem Problem { get; set; }
+            public IFormFile TestCaseZip { get; set; }
         }
         public class CommandValidator : AbstractValidator<Command>
         {
@@ -40,11 +42,31 @@ namespace Application.Problems
             {
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUserName());
 
+                if (request.TestCaseZip.Length == 0 || request.TestCaseZip == null)
+                {
+                    return ApiResult<ProblemDto>.Failure(new string[] { "Failed to Create" });
+                }
 
                 request.Problem.User = user;
                 request.Problem.Date = DateTime.UtcNow;
-                _context.Problems.Add(request.Problem);
 
+
+
+                FileManager fileManager = new FileManager();
+                await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);
+                var testCaseLocation = Path.Combine("TestCases", request.Problem.Code);
+                String[] files = fileManager.getFileNameInFolder(testCaseLocation, "*.in");
+                foreach (var inputPath in files)
+                {
+                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
+                    TestCase testCase = new TestCase();
+                    testCase.Input = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.in");
+                    testCase.Output = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.out");
+                    request.Problem.TestCases.Add(testCase);
+                }
+
+
+                _context.Problems.Add(request.Problem);
                 var result = await _context.SaveChangesAsync() > 0;
                 if (!result)
                 {

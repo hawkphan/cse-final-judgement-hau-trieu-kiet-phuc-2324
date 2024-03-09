@@ -1,17 +1,20 @@
 using Application.Core;
+using Application.Solutions;
 using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Persistence;
 
 namespace Application.Problems
 {
     public class Edit
     {
-        public class Command : IRequest<ApiResult<Unit>>
+        public class Command : IRequest<ApiResult<ProblemDto>>
         {
             public Problem Problem { get; set; }
+            public IFormFile TestCaseZip { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -22,7 +25,7 @@ namespace Application.Problems
             }
         }
 
-        public class Handler : IRequestHandler<Command, ApiResult<Unit>>
+        public class Handler : IRequestHandler<Command, ApiResult<ProblemDto>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -33,11 +36,26 @@ namespace Application.Problems
                 _context = context;
             }
 
-            public async Task<ApiResult<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<ApiResult<ProblemDto>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var problem = await _context.Problems.FindAsync(request.Problem.Id);
 
                 if (problem == null) return null;
+                if (request.TestCaseZip != null || request.TestCaseZip.Length > 0)
+                {
+                    FileManager fileManager = new FileManager();
+                    await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);
+                    var testCaseLocation = Path.Combine("TestCases", request.Problem.Code);
+                    String[] files = fileManager.getFileNameInFolder(testCaseLocation, "*.in");
+                    foreach (var inputPath in files)
+                    {
+                        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
+                        TestCase testCase = new TestCase();
+                        testCase.Input = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.in");
+                        testCase.Output = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.out");
+                        request.Problem.TestCases.Add(testCase);
+                    }
+                }
                 if (request.Problem.TestCases.Count == 0)
                 {
                     request.Problem.TestCases = problem.TestCases;
@@ -54,6 +72,7 @@ namespace Application.Problems
                     // Save changes to the database
                     await _context.SaveChangesAsync();
                 }
+                request.Problem.Date = problem.Date;
 
                 _mapper.Map(request.Problem, problem);
 
@@ -61,10 +80,12 @@ namespace Application.Problems
 
                 if (!ApiResult)
                 {
-                    return ApiResult<Unit>.Failure(new string[] { "Failed to Edit" });
+                    return ApiResult<ProblemDto>.Failure(new string[] { "Failed to Edit" });
                 }
+                
+                var newProblemDto = _mapper.Map<ProblemDto>(request.Problem);
 
-                return ApiResult<Unit>.Success(Unit.Value);
+                return ApiResult<ProblemDto>.Success(newProblemDto);
             }
         }
     }
