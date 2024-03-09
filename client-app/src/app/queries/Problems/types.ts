@@ -22,6 +22,7 @@ export interface CreateProblemBody {
 }
 
 export interface EditProblemBody {
+  get: any;
   id?: string;
   code?: string;
   title?: string;

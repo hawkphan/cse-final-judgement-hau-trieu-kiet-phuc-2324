@@ -1,20 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { EditProblemBody } from './types';
-import { responseWrapper } from '../common/helpers';
-import { editProblem } from './problemApis';
-
+import { UseMutationOptions, useMutation } from "@tanstack/react-query";
+import { EditProblemBody } from "./types";
+import { responseWrapper } from "../common/helpers";
+import { editProblem } from "./problemApis";
 
 export function useEditProblem(
-  options?: UseMutationOptions<any, Error, any>,
+  options?: UseMutationOptions<any, Error, EditProblemBody>
 ) {
   const {
     mutate: onEditProblem,
     isSuccess,
     isError,
     error,
-  } = useMutation<any, Error, any>({
+  } = useMutation<any, Error, EditProblemBody>({
     mutationFn: (payload: EditProblemBody) =>
       responseWrapper(editProblem, [payload]),
     ...options,

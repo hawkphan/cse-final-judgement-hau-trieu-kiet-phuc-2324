@@ -7,6 +7,7 @@ import {
   Grid,
   LoadingCommon,
   MuiInput,
+  MuiSwitch,
   TextArea,
   Toastify,
 } from "../../../shared";
@@ -17,7 +18,7 @@ import { PATHS } from "../../../configs/paths";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import { useEffect, useState } from "react";
-import { yupResolver } from '@hookform/resolvers/yup';
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   useCreateProblem,
   useEditProblem,
@@ -25,7 +26,12 @@ import {
   useGetProblems,
 } from "../../../queries/Problems";
 import { useStore } from "../../../shared/common/stores/store";
-import { CreateProblemFormSchema, EditProblemFormSchema, ProblemProperties, mapFormData } from "./helpers";
+import {
+  CreateProblemFormSchema,
+  EditProblemFormSchema,
+  ProblemProperties,
+  mapFormData,
+} from "./helpers";
 import { API_QUERIES } from "../../../queries/common/constants";
 
 const ProblemForm = () => {
@@ -45,26 +51,30 @@ const ProblemForm = () => {
 
   const [fileSelected, setFileSelected] = useState();
   const [description, setDescription] = useState("");
+  const [previewMarkdown, setPreviewMarkdown] = useState<boolean>();
 
   const { onCreateProblem } = useCreateProblem({
-    onSuccess() {
+    onSuccess: () => {
       Toastify.success("Successful!");
       handleInvalidateProblems();
       handleInvalidateProblem();
       navigate(PATHS.problems);
     },
-    onError(error) {
+    onError: (error) => {
+      Toastify.error(error.message);
       console.log("Error", error);
     },
   });
 
   const { onEditProblem } = useEditProblem({
-    onSuccess() {
+    onSuccess: () => {
       Toastify.success("Successful!");
       handleInvalidateProblems();
+      handleInvalidateProblem();
       navigate(PATHS.problems);
     },
-    onError(error) {
+    onError: (error) => {
+      Toastify.error(error.message);
       console.log("Error", error);
     },
   });
@@ -83,17 +93,21 @@ const ProblemForm = () => {
   };
 
   const { control, handleSubmit, reset } = useForm<CreateProblemBody>({
-    defaultValues: isEdit? { ...problem } : {[ProblemProperties.TIME_LIMIT]: 1},
+    defaultValues: isEdit
+      ? { ...problem }
+      : { [ProblemProperties.TIME_LIMIT]: 1 },
     mode: "onChange",
     shouldFocusError: true,
-    reValidateMode: 'onChange',
-    resolver: yupResolver<any>(isEdit ? EditProblemFormSchema : CreateProblemFormSchema),
+    reValidateMode: "onChange",
+    resolver: yupResolver<any>(
+      isEdit ? EditProblemFormSchema : CreateProblemFormSchema
+    ),
   });
 
   useEffect(() => {
     reset({ ...problem });
     setDescription(problem?.description);
-  }, [problem, reset])
+  }, [problem, reset]);
 
   if (isFetching) {
     return <LoadingCommon />;
@@ -166,44 +180,56 @@ const ProblemForm = () => {
               />
             </Grid.Item>
             <Grid.Item xs={6}>
-              <Controller
-                name={ProblemProperties.DESCRIPTION}
-                control={control}
-                render={({
-                  field: { onChange, value, ...props },
-                  fieldState: { error },
-                }) => (
-                  <TextArea
-                    label="Description"
-                    value={value}
-                    onChange={(e) => {
-                      onChange(e);
-                      setDescription((e.target as HTMLTextAreaElement).value);
-                    }}
-                    errorMessage={error?.message}
-                    style={{ maxWidth: "96%", overflow: "hidden" }}
-                    {...props}
-                  />
-                )}
+              <MuiSwitch
+                label="Preview Markdown"
+                isShowDescription={false}
+                onChange={() => setPreviewMarkdown(!previewMarkdown)}
+                checked={previewMarkdown}
               />
+              {!previewMarkdown && (
+                <Controller
+                  name={ProblemProperties.DESCRIPTION}
+                  control={control}
+                  render={({
+                    field: { onChange, value, ...props },
+                    fieldState: { error },
+                  }) => (
+                    <TextArea
+                      label="Description"
+                      value={value}
+                      onChange={(e) => {
+                        onChange(e);
+                        setDescription((e.target as HTMLTextAreaElement).value);
+                      }}
+                      errorMessage={error?.message}
+                      style={{ maxWidth: "96%", overflow: "hidden" }}
+                      {...props}
+                    />
+                  )}
+                />
+              )}
+
+              {previewMarkdown && (
+                <div>
+                  <Typography fontSize={14}>Description</Typography>
+                  <Card
+                    sx={{
+                      padding: "10px",
+                      marginTop: "8px",
+                      minHeight: "65px",
+                      border: "initial",
+                    }}
+                  >
+                    <ReactMarkdown
+                      remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
+                    >
+                      {description}
+                    </ReactMarkdown>
+                  </Card>
+                </div>
+              )}
             </Grid.Item>
-            <Grid.Item xs={6}>
-              <Typography fontSize={14}>Preview</Typography>
-              <Card
-                sx={{
-                  padding: "10px",
-                  marginTop: "8px",
-                  minHeight: "65px",
-                  border: "initial",
-                }}
-              >
-                <ReactMarkdown
-                  remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
-                >
-                  {description}
-                </ReactMarkdown>
-              </Card>
-            </Grid.Item>
+            <Grid.Item xs={6}></Grid.Item>
           </Grid.Wrap>
           <Grid.Wrap>
             <Grid.Item xs={6}>

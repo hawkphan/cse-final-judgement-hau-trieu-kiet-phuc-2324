@@ -6,7 +6,7 @@ namespace Application.Core
         public T Data { get; set; }
         public string[] Errors { get; set; }
 
-        public static ApiResult<T> Success(T value) => new ApiResult<T> { Succeeded = true, Data = value, Errors = new string[0] };
+        public static ApiResult<T> Success(T value) => new ApiResult<T> { Succeeded = true, Data = value, Errors = new string[]{} };
         public static ApiResult<T> Failure(string[] error) => new ApiResult<T> { Succeeded = false, Errors = error };
     }
 }

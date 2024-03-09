@@ -1,14 +1,16 @@
 import axios from "axios";
 import { API_URL } from "../common/constants";
 import { stringify } from "../../shared";
-import { CreateProblemBody, EditProblemBody, GetPropertiesParams, Problem } from "./types";
+import { CreateProblemBody, EditProblemBody, Problem } from "./types";
+import { GetPropertiesParams } from "..";
 
 const createProblem = (body: CreateProblemBody) => {
   return axios.post(`${API_URL}/api/problems`, body, {});
 };
 
 const editProblem = (body: EditProblemBody) => {
-  return axios.put(`${API_URL}/api/problems`, body, {});
+  const id = body.get('id');
+  return axios.put(`${API_URL}/api/problems/${id}`, body, {});
 };
 
 const getProblems = (params: GetPropertiesParams) => {

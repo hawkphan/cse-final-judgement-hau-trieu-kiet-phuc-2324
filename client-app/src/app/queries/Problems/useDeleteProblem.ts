@@ -16,7 +16,7 @@ export function useDeleteProblem(options?: UseMutationOptions<any, Error, string
     });
   
     return {
-        onDeleteProblem,
+      onDeleteProblem,
       isSuccess,
       isError,
       error,
