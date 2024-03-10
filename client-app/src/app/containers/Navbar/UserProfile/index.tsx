@@ -34,9 +34,6 @@ export default function UserProfile() {
           <Box sx={{ width: "100%", minWidth: '180px' }}>
             <UserAnnualReport />
           </Box>
-          <Box sx={{ width: "100%", minWidth: '180px'}} >
-            <UserSubmission/>
-          </Box>
         </Box>
       </Grid>
     </Grid>
