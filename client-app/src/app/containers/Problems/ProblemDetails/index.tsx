@@ -9,7 +9,7 @@ import {
   MuiSelect,
   TabsBar,
 } from "../../../shared";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Editor } from "@monaco-editor/react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
@@ -30,7 +30,7 @@ const ProblemDetail = () => {
     queryKey: [API_QUERIES.GET_PROBLEM_BY_ID, { id: id }],
   });
 
-  const { languages } = useGetLanguages();
+  const { languages, setParams } = useGetLanguages();
 
   const languageOptions: LanguageOption[] = useMemo(
     () => languages.map((item) => ({ label: item.name, value: item.id })),
@@ -102,6 +102,10 @@ const ProblemDetail = () => {
       top: 4,
     },
   };
+
+  useEffect(() => {
+    setParams({pageSize: -1});
+  }, [setParams])
 
   const renderTab = () => {
     switch (tab) {

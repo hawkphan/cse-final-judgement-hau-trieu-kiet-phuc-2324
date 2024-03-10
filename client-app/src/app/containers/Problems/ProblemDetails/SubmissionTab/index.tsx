@@ -1,5 +1,5 @@
-import { Box, CardContent, Stack } from "@mui/material";
-import { CustomTableSearch, EmptyTable, Table2 } from "../../../../shared";
+import { Box, CardContent } from "@mui/material";
+import { EmptyTable, Table2 } from "../../../../shared";
 import { Solution } from "../../../../queries";
 import { useMemo } from "react";
 import { allColumns } from "./allColumns";
@@ -37,16 +37,6 @@ const SubmissionTab = () => {
             isLoading: false,
           }}
           renderFallbackValue={<EmptyTable />}
-          renderTopToolbarCustomActions={() => (
-            <Stack direction="row" spacing={1} my={0.5}>
-              <Stack width="328px">
-                <CustomTableSearch
-                  placeholder="Search by Name"
-                  searchKey="keywords"
-                />
-              </Stack>
-            </Stack>
-          )}
           renderToolbarInternalActions={() => {
             return <></>;
           }}

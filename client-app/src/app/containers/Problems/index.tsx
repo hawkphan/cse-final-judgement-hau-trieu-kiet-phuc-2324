@@ -180,20 +180,19 @@ const Problems = () => {
         onClose={handleCloseDeleteDialog}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle style={{ color: "red" }}>
-          {"Are you sure to delete this problem?"}
+        <DialogTitle fontWeight={'bold'}>
+          Are you sure to delete this problem?
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Other people will be notified about this problem deletion status
-            before it will be completely removed in the next 15 days. The action
+            All related records of test cases and submission in the system will be removed after this deletion. The action
             can not be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
             onClick={handleCloseDeleteDialog}
-            style={{ backgroundColor: "gray" }}
+            variant="grey"
           >
             Cancel
           </Button>
@@ -202,7 +201,7 @@ const Problems = () => {
               onDeleteProblem(deleteId);
               handleCloseDeleteDialog();
             }}
-            style={{ backgroundColor: "red" }}
+            variant="danger"
           >
             Delete
           </Button>
