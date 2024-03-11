@@ -1,16 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Container, Stack } from "@mui/material";
 import {
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Slide,
-  Stack,
-} from "@mui/material";
-import {
-  Button,
   CustomTableSearch,
   EmptyTable,
   MuiSwitch,
@@ -19,8 +9,6 @@ import {
 } from "../../shared";
 import { allColumns } from "./allColumns";
 import { useNavigate } from "react-router-dom";
-import { forwardRef, useCallback, useMemo, useState } from "react";
-import { TransitionProps } from "@mui/material/transitions";
 import { useStore } from "../../shared/common/stores/store";
 import {
   Problem,
@@ -30,15 +18,8 @@ import {
 import { GetPropertiesParams } from "../../queries";
 import { ProblemFilterQueryKey } from "./helpers";
 import ProblemToolbar from "./ProblemToolbar";
-
-const Transition = forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<any, any>;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import ProblemDeleteConfirmDialog from "./ProblemDeleteConfirmDialog";
+import { useCallback, useMemo, useState } from "react";
 
 const Problems = () => {
   const { userStore } = useStore();
@@ -173,40 +154,12 @@ const Problems = () => {
           },
         }}
       />
-      <Dialog
-        open={openDeleteDialog}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleCloseDeleteDialog}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle fontWeight={'bold'}>
-          Are you sure to delete this problem?
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            All related records of test cases and submission in the system will be removed after this deletion. The action
-            can not be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCloseDeleteDialog}
-            variant="grey"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              onDeleteProblem(deleteId);
-              handleCloseDeleteDialog();
-            }}
-            variant="danger"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ProblemDeleteConfirmDialog
+        openDeleteDialog={openDeleteDialog}
+        deleteId={deleteId}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        onDeleteProblem={onDeleteProblem}
+      />
     </Container>
   );
 };
