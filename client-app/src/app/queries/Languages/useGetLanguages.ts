@@ -13,7 +13,7 @@ import {
 
   import { Table2Params } from "../common/types";
 import { Language } from ".";
-import { getLanguages } from "./languageApis";
+import { getLanguages } from "./apis";
   
   export function useGetLanguages(
     options?: UseQueryOptions<PaginationResponseNetType<Language>, Error> & {

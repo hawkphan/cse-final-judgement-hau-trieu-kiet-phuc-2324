@@ -1,16 +1,18 @@
 import { Box, CardContent } from "@mui/material";
 import { EmptyTable, Table2 } from "../../../../shared";
-import { Solution } from "../../../../queries";
+import { Solution, allSolutions } from "../../../../queries";
 import { useMemo } from "react";
 import { allColumns } from "./allColumns";
 
 const SubmissionTab = () => {
   const columns = useMemo(() => allColumns(), []);
 
+  // const {solutions, totalRecords, isFetching} = useGetSolutions();
+
   return (
     <CardContent>
       <Box
-        component="div" // Add this line
+        component="div"
         sx={{
           backgroundColor: "transparent",
           mx: "-8px",
@@ -19,9 +21,9 @@ const SubmissionTab = () => {
         }}
       >
         <Table2<Solution>
-          rowCount={0}
+          rowCount={allSolutions.data.length}
           columns={columns}
-          data={[]}
+          data={allSolutions.data}
           onAction={() => {}}
           enableTopToolbar={true}
           recordName="items"
@@ -44,7 +46,7 @@ const SubmissionTab = () => {
             sx: {
               backgroundColor: "transparent",
               mx: "-8px",
-              my: "4px",
+              my: "-30px",
               fontFamily: "Roboto",
             },
           }}

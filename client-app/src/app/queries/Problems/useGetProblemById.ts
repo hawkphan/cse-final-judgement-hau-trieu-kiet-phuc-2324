@@ -4,7 +4,7 @@ import { UseQueryOptions, useQuery, useQueryClient } from "@tanstack/react-query
 import { ApiResponseType, responseWrapper } from "../../shared";
 import { Problem } from "./types";
 import { API_QUERIES } from "../common/constants";
-import { getProblemById } from "./problemApis";
+import { getProblemById } from "./apis";
 
 export function useGetProblemById(
   options?: UseQueryOptions<ApiResponseType<Problem>, Error, Problem> & {

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { responseWrapper } from "../../shared";
-import { deleteProblem } from './problemApis';
+import { deleteProblem } from './apis';
 
 export function useDeleteProblem(options?: UseMutationOptions<any, Error, string>) {
     const {

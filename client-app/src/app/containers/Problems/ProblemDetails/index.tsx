@@ -3,6 +3,7 @@ import { Box, Card, Container, Stack } from "@mui/material";
 import { useParams } from "react-router-dom";
 import {
   AnimatedTabPanel,
+  Breadcrumbs,
   Button,
   Grid,
   LoadingCommon,
@@ -19,7 +20,7 @@ import { LanguageOption, useGetLanguages } from "../../../queries/Languages";
 import { useGetProblemById } from "../../../queries/Problems";
 import DescriptionTab from "./DescriptionTab";
 import SubmissionTab from "./SubmissionTab";
-import { ProblemBreadcrumbs, tabsList } from "./helpers";
+import { tabsList, toBreadcrumbs } from "./helpers";
 
 const ProblemDetail = () => {
   const [tab, setTab] = useState("tab1");
@@ -41,7 +42,7 @@ const ProblemDetail = () => {
     "script.js": {
       name: "script.js",
       language: "javascript",
-      value: "console.log('Hello World!');",
+      value: "",
     },
   };
 
@@ -126,13 +127,11 @@ const ProblemDetail = () => {
 
   return (
     <Container maxWidth="xl" style={{ padding: "10px" }}>
-      <Stack sx={{ marginBottom: "10px" }}>
-        <ProblemBreadcrumbs problem={problem} />
-      </Stack>
+      <Breadcrumbs items={toBreadcrumbs({problem})} />
       <Stack>
         <Grid.Wrap>
           <Grid.Item xs={6}>
-            <Card sx={{ height: "800px" }}>
+            <Card sx={{ height: "550px" }}>
               <Box>
                 <Stack>
                   <TabsBar
@@ -153,7 +152,7 @@ const ProblemDetail = () => {
             </Card>
           </Grid.Item>
           <Grid.Item xs={6}>
-            <Card sx={{ height: "800px" }}>
+            <Card sx={{ height: "550px" }}>
               <Stack
                 justifyContent="flex-start"
                 direction="row"
@@ -188,7 +187,7 @@ const ProblemDetail = () => {
                 />
               </Stack>
               <Editor
-                height="708px"
+                height="458px"
                 width="100%"
                 theme={darkOrLight}
                 onMount={handleComponentDidMount}

@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
 })
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       {/* <LabLocalizationProvider dateAdapter={AdapterDayjs}> */}
       <QueryClientProvider client={queryClient}>
@@ -23,5 +23,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       </QueryClientProvider>
       {/* </LabLocalizationProvider> */}
     </LocalizationProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

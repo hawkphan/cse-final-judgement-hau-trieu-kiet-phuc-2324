@@ -3,6 +3,7 @@ import { MRT_ColumnDef } from "material-react-table";
 import "material-symbols";
 import { Solution } from "../../../../queries";
 import { formatValueOrNull } from "../../../../shared";
+import { renderStatusTag } from "./helpers";
 
 export const allColumns = (): MRT_ColumnDef<Solution>[] => {
   return [
@@ -20,7 +21,7 @@ export const allColumns = (): MRT_ColumnDef<Solution>[] => {
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 20,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => renderStatusTag(cell.getValue<number>()),
     },
     {
       accessorKey: "runTime",
@@ -45,19 +46,6 @@ export const allColumns = (): MRT_ColumnDef<Solution>[] => {
       enableSorting: false,
       size: 20,
       Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
-    },
-    {
-      accessorKey: "actions",
-      header: "Action",
-      muiTableHeadCellProps: {
-        align: "center",
-      },
-      enableColumnFilterModes: false,
-      enableSorting: false,
-      size: 20,
-
-      Cell: ({ row }) =>
-        <></>
     },
   ];
 };

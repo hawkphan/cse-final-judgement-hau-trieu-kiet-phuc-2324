@@ -6,16 +6,15 @@ import {
 import { useState } from "react";
 import {
   PaginationResponseNetType,
-  isEmpty,
   responseWrapper,
 } from "../../shared";
-import { Problem } from "./types";
 import { API_QUERIES } from "../common/constants";
-import { getProblems } from "./apis";
 import { Table2Params } from "../common/types";
+import { Solution } from ".";
+import { getSolutions } from "./apis";
 
-export function useGetProblems(
-  options?: UseQueryOptions<PaginationResponseNetType<Problem>, Error> & {
+export function useGetSolutions(
+  options?: UseQueryOptions<PaginationResponseNetType<Solution>, Error> & {
     [key: string]: string | number | string[] | boolean;
   }
 ) {
@@ -24,39 +23,40 @@ export function useGetProblems(
     error,
     data,
     isFetching,
-    refetch: onGetProblems,
-  } = useQuery<PaginationResponseNetType<Problem>, Error>({
+    refetch: onGetSolutions,
+  } = useQuery<PaginationResponseNetType<Solution>, Error>({
     queryKey: [API_QUERIES.GET_PROBLEMS, params],
     queryFn: (query) => {
       const [, ...params] = query.queryKey;
-      return responseWrapper<PaginationResponseNetType<Problem>>(
-        getProblems,
+      return responseWrapper<PaginationResponseNetType<Solution>>(
+        getSolutions,
         params
       );
     },
 
     notifyOnChangeProps: ["data", "isFetching"],
-    enabled: !isEmpty(params),
+    // enabled: !isEmpty(params),
+    enabled: true,
     ...options,
   });
 
   const queryClient = useQueryClient();
 
-  const handleInvalidateProblems = () =>
-    queryClient.invalidateQueries({ queryKey: [API_QUERIES.GET_PROBLEMS] });
+  const handleInvalidateSolutions = () =>
+    queryClient.invalidateQueries({ queryKey: [API_QUERIES.GET_SOLUTIONS] });
 
-  const { data: problems = [], pageSize, totalCount, succeeded } = data || {};
+  const { data: solutions = [], pageSize, totalCount, succeeded } = data || {};
 
   return {
-    problems,
+    solutions,
     payloadSize: pageSize,
     totalRecords: totalCount,
     error,
     isFetching,
     succeeded,
     params,
-    onGetProblems,
+    onGetSolutions,
     setParams,
-    handleInvalidateProblems,
+    handleInvalidateSolutions,
   };
 }

@@ -1,4 +1,4 @@
-export * as ProgramApis from "./problemApis";
+export * as ProblemApis from "./apis";
 export * from "./useGetProblemById";
 export * from "./useGetProblems";
 export * from "./useCreateProblem";

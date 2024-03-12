@@ -1,9 +1,9 @@
 import { Avatar, Box, CardContent, Typography } from "@mui/material";
 import { formatDateOrNull } from "../../../../shared";
 import { Problem } from "../../../../queries";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import parse from 'html-react-parser';
 import { renderDifficultyTag } from "../../helpers";
+import './styles.scss';
 
 const DescriptionTab = ({ problem }: Props) => {
   return (
@@ -15,7 +15,7 @@ const DescriptionTab = ({ problem }: Props) => {
       <Typography style={{ marginLeft: "5px", fontSize: "14px", display:"inline" }}>
         Published on {formatDateOrNull(problem.date)}
       </Typography>
-      <span
+      <div
         style={{
           marginLeft: "5px",
           fontSize: "14px",
@@ -31,11 +31,9 @@ const DescriptionTab = ({ problem }: Props) => {
             {problem.user.displayName}
           </Typography>
         </Box>
-      </span>
-      <Box>
-        <ReactMarkdown remarkPlugins={[[remarkGfm, { singleTilde: false }]]}>
-          {problem.description}
-        </ReactMarkdown>
+      </div>
+      <Box overflow={"auto"}>
+        <div className="description">{parse(problem.description)}</div>
       </Box>
     </CardContent>
   );

@@ -7,4 +7,7 @@ export enum API_QUERIES {
 
   // Languages
   GET_LANGUAGES = "/get-languages",
+
+  // Solutions
+  GET_SOLUTIONS = "/get-solutions",
 }

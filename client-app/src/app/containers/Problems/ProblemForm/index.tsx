@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Breadcrumbs, Card, Container, Stack, Typography } from "@mui/material";
+import { Card, Container, Stack, Typography } from "@mui/material";
+import { stripHtml } from "string-strip-html";
 import {
+  Breadcrumbs,
   Button,
-  COLOR_CODE,
   Form,
   Grid,
   LoadingCommon,
   MuiInput,
-  MuiSwitch,
-  TextArea,
   Toastify,
 } from "../../../shared";
 import { Controller, useForm } from "react-hook-form";
@@ -16,10 +15,8 @@ import {
   CreateProblemBody,
   EditProblemBody,
 } from "../../../queries/Problems/types";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { PATHS } from "../../../configs/paths";
-import remarkGfm from "remark-gfm";
-import ReactMarkdown from "react-markdown";
 import { useEffect, useMemo, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -35,29 +32,22 @@ import {
   ProblemProperties,
   ValidationMessage,
   mapFormData,
+  toBreadCrumbs,
 } from "./helpers";
 import { API_QUERIES } from "../../../queries/common/constants";
+import WYSIWYGEditor from "../../../shared/components/common/RichTextEditor";
 
 const ProblemForm = () => {
+  const [fileSelected, setFileSelected] = useState();
+
   const { id } = useParams();
-
   const { userStore } = useStore();
-
-  const isEdit = id && id !== "";
   const navigate = useNavigate();
-
-  const { problems, setParams } = useGetProblems();
-
+  const { problems, setParams, handleInvalidateProblems } = useGetProblems();
   const { problem, isFetching, handleInvalidateProblem } = useGetProblemById({
     id,
     queryKey: [API_QUERIES.GET_PROBLEM_BY_ID, { id: id }],
   });
-
-  const { handleInvalidateProblems } = useGetProblems();
-
-  const [fileSelected, setFileSelected] = useState();
-  const [description, setDescription] = useState("");
-  const [previewMarkdown, setPreviewMarkdown] = useState<boolean>();
 
   const { onCreateProblem, isPending: isCreatePending } = useCreateProblem({
     onSuccess: () => {
@@ -85,9 +75,16 @@ const ProblemForm = () => {
     },
   });
 
+  const isEdit = id && id !== "";
+
   const saveFileSelected = (e: any) => {
     setFileSelected(e.target.files[0]);
   };
+
+  const breadCrumbsItems = useMemo(
+    () => toBreadCrumbs(isEdit, id),
+    [id, isEdit]
+  );
 
   const allProblemNames = useMemo(() => {
     return problems?.map((item) => {
@@ -137,7 +134,6 @@ const ProblemForm = () => {
 
   useEffect(() => {
     reset({ ...problem });
-    setDescription(problem?.description);
   }, [problem, reset]);
 
   useEffect(() => {
@@ -150,20 +146,7 @@ const ProblemForm = () => {
 
   return (
     <Container maxWidth="xl" style={{ padding: "10px" }}>
-      <Breadcrumbs aria-label="breadcrumb">
-        <Link
-          to={PATHS.problems}
-          style={{ textDecoration: "none", color: COLOR_CODE.PRIMARY_300 }}
-        >
-          <Typography textAlign="center" style={{ textDecoration: "none" }}>
-            Problems
-          </Typography>
-        </Link>
-        <Typography color="text.primary">
-          {isEdit ? "Edit" : "Create"}
-        </Typography>
-        {isEdit ? <Typography color="text.primary">{id}</Typography> : ""}
-      </Breadcrumbs>
+      <Breadcrumbs items={breadCrumbsItems} />
       <Card sx={{ padding: "10px", marginTop: "10px" }}>
         <Typography variant="h4" mb={5} mt={2}>
           {isEdit ? "Edit Problem" : "Create New Problem"}
@@ -215,54 +198,26 @@ const ProblemForm = () => {
               />
             </Grid.Item>
             <Grid.Item xs={6}>
-              <MuiSwitch
-                label="Preview Markdown"
-                isShowDescription={false}
-                onChange={() => setPreviewMarkdown(!previewMarkdown)}
-                checked={previewMarkdown}
+              <Controller
+                name={ProblemProperties.DESCRIPTION}
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <Typography fontSize={14}>Description</Typography>
+                    <WYSIWYGEditor {...field} />
+                  </div>
+                )}
+                rules={{
+                  validate: {
+                    required: (v) =>
+                      (v && stripHtml(v).result.length > 0) ||
+                      "Description is required",
+                    maxLength: (v) =>
+                      (v && stripHtml(v).result.length <= 2000) ||
+                      "Maximum character limit is 2000",
+                  },
+                }}
               />
-              {!previewMarkdown && (
-                <Controller
-                  name={ProblemProperties.DESCRIPTION}
-                  control={control}
-                  render={({
-                    field: { onChange, value, ...props },
-                    fieldState: { error },
-                  }) => (
-                    <TextArea
-                      label="Description"
-                      value={value}
-                      onChange={(e) => {
-                        onChange(e);
-                        setDescription((e.target as HTMLTextAreaElement).value);
-                      }}
-                      errorMessage={error?.message}
-                      style={{ maxWidth: "96%", overflow: "hidden" }}
-                      {...props}
-                    />
-                  )}
-                />
-              )}
-
-              {previewMarkdown && (
-                <div>
-                  <Typography fontSize={14}>Description</Typography>
-                  <Card
-                    sx={{
-                      padding: "10px",
-                      marginTop: "8px",
-                      minHeight: "65px",
-                      border: "initial",
-                    }}
-                  >
-                    <ReactMarkdown
-                      remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
-                    >
-                      {description}
-                    </ReactMarkdown>
-                  </Card>
-                </div>
-              )}
             </Grid.Item>
             <Grid.Item xs={6}></Grid.Item>
           </Grid.Wrap>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Accept } from "react-dropzone";
 import {
@@ -5,6 +6,7 @@ import {
   EditProblemBody,
 } from "../../../queries/Problems/types";
 import { Yup } from "../../../shared";
+import { PATHS } from "../../../configs/paths";
 
 export const acceptedFileType: Accept = { "application/zip": [".zip"] };
 
@@ -43,6 +45,20 @@ export const mapFormData = (
   formData.append(ProblemProperties.USER_ID, userId);
 
   return formData;
+};
+
+export const toBreadCrumbs = (isEdit: boolean, id?: string) => {
+  return [
+    {
+      id: 0,
+      label: 'Problems',
+      href: `${PATHS.problems}`,
+    },
+    {
+      id: 1,
+      label: isEdit ? 'Edit ' + id : 'Create',
+    },
+  ];
 };
 
 export const CreateProblemFormSchema = Yup.object().shape({

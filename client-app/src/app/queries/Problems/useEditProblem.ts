@@ -3,7 +3,7 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { EditProblemBody } from "./types";
 import { responseWrapper } from "../common/helpers";
-import { editProblem } from "./problemApis";
+import { editProblem } from "./apis";
 
 export function useEditProblem(
   options?: UseMutationOptions<any, Error, EditProblemBody>

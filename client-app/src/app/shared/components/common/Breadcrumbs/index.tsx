@@ -7,11 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../Button';
 import './styles.scss';
 import { COLOR_CODE } from '../../..';
+import { Callback } from '../../../../queries';
 
 type BreadcrumbItem = {
   id: number | string;
   label: string;
-  onClick?: (..._args: any[]) => void;
+  onClick?: Callback;
   href?: string;
 };
 
