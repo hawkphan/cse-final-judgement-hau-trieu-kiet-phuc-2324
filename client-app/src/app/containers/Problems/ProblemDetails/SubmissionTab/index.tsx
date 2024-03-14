@@ -1,13 +1,20 @@
 import { Box, CardContent } from "@mui/material";
 import { EmptyTable, Table2 } from "../../../../shared";
-import { Solution, allSolutions } from "../../../../queries";
-import { useMemo } from "react";
+import { Result, Solution, allSolutions } from "../../../../queries";
+import { useCallback, useMemo, useState } from "react";
 import { allColumns } from "./allColumns";
+import SubmissionResultDialog from "./SubmissionResultDialog";
 
 const SubmissionTab = () => {
   const columns = useMemo(() => allColumns(), []);
+  const [isOpen, setIsOpen] = useState(false);
+  const [resultData, setResultData] = useState<Result[]>();
 
   // const {solutions, totalRecords, isFetching} = useGetSolutions();
+
+  const handleCloseResult = () => {
+    setIsOpen(false);
+  };
 
   return (
     <CardContent>
@@ -38,6 +45,12 @@ const SubmissionTab = () => {
           state={{
             isLoading: false,
           }}
+          muiTableBodyRowProps={({ row }) => ({
+            onClick: () => {
+              setIsOpen(true);
+              setResultData(row.original.results);
+            },
+          })}
           renderFallbackValue={<EmptyTable />}
           renderToolbarInternalActions={() => {
             return <></>;
@@ -52,6 +65,11 @@ const SubmissionTab = () => {
           }}
         />
       </Box>
+      <SubmissionResultDialog
+        isOpen={isOpen}
+        handleCloseDeleteDialog={handleCloseResult}
+        data={resultData}
+      />
     </CardContent>
   );
 };

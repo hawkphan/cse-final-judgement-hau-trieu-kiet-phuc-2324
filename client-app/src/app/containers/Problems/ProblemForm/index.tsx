@@ -8,6 +8,7 @@ import {
   Grid,
   LoadingCommon,
   MuiInput,
+  MuiSelect,
   Toastify,
 } from "../../../shared";
 import { Controller, useForm } from "react-hook-form";
@@ -98,7 +99,10 @@ const ProblemForm = () => {
     {
       defaultValues: isEdit
         ? { ...problem }
-        : { [ProblemProperties.TIME_LIMIT]: 1 },
+        : {
+            [ProblemProperties.TIME_LIMIT]: 1000,
+            [ProblemProperties.MEMORY_LIMIT]: 500,
+          },
       mode: "onChange",
       shouldFocusError: true,
       reValidateMode: "onChange",
@@ -148,7 +152,7 @@ const ProblemForm = () => {
     <Container maxWidth="xl" style={{ padding: "10px" }}>
       <Breadcrumbs items={breadCrumbsItems} />
       <Card sx={{ padding: "10px", marginTop: "10px" }}>
-        <Typography variant="h4" mb={5} mt={2}>
+        <Typography variant="h5" mb={5} mt={2}>
           {isEdit ? "Edit Problem" : "Create New Problem"}
         </Typography>
         <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -197,7 +201,7 @@ const ProblemForm = () => {
                 )}
               />
             </Grid.Item>
-            <Grid.Item xs={6}>
+            <Grid.Item xs={12}>
               <Controller
                 name={ProblemProperties.DESCRIPTION}
                 control={control}
@@ -228,9 +232,9 @@ const ProblemForm = () => {
                 control={control}
                 render={({ field, fieldState }) => (
                   <MuiInput
-                    label="Time Limit (s)"
+                    label="Time Limit (ms)"
                     type="number"
-                    placeholder="Time Limit (s)"
+                    placeholder="Time Limit (ms)"
                     onChange={(e) => {
                       const newValue = e.target.value;
                       if (Number(newValue) >= 0) {
@@ -240,6 +244,78 @@ const ProblemForm = () => {
                     value={field.value}
                     errorMessage={fieldState.error?.message}
                     required
+                  />
+                )}
+              />
+            </Grid.Item>
+            <Grid.Item xs={6}>
+              <Controller
+                name={ProblemProperties.MEMORY_LIMIT}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <MuiInput
+                    label="Memory Limit (MB)"
+                    type="number"
+                    placeholder="Memory Limit (s)"
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      if (Number(newValue) >= 0) {
+                        field.onChange(newValue);
+                      }
+                    }}
+                    value={field.value}
+                    errorMessage={fieldState.error?.message}
+                    required
+                  />
+                )}
+              />
+            </Grid.Item>
+            <Grid.Item xs={6}>
+              <Controller
+                name={ProblemProperties.COMPARE_MODE}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <MuiSelect
+                    label="Compare Mode"
+                    options={[
+                      { label: "Approximate", value: "0" },
+                      { label: "Absolute", value: "1" },
+                      { label: "Without Space", value: "2" },
+                    ]}
+                    value={field.value}
+                    onChange={(_, value) => {
+                      field.onChange(value);
+                    }}
+                    required
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
+              />
+            </Grid.Item>
+            <Grid.Item xs={6}>
+              <Controller
+                name={ProblemProperties.APPROXIMATE_VALUE}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <MuiSelect
+                    label="Approximate Value"
+                    options={[
+                      { label: "10^(-1)", value: "0" },
+                      { label: "10^(-2)", value: "1" },
+                      { label: "10^(-3)", value: "2" },
+                      { label: "10^(-4)", value: "3" },
+                      { label: "10^(-5)", value: "4" },
+                      { label: "10^(-6)", value: "5" },
+                      { label: "10^(-7)", value: "6" },
+                      { label: "10^(-8)", value: "7" },
+                      { label: "10^(-9)", value: "8" },
+                    ]}
+                    value={field.value}
+                    onChange={(_, value) => {
+                      field.onChange(value);
+                    }}
+                    required
+                    errorMessage={fieldState.error?.message}
                   />
                 )}
               />

@@ -8,7 +8,7 @@ import './styles.scss';
 const DescriptionTab = ({ problem }: Props) => {
   return (
     <CardContent>
-      <Typography variant="h4" mb={2}>
+      <Typography variant="h5" mb={2}>
         {problem.code} - {problem.title}
       </Typography>
       {renderDifficultyTag(problem.difficulty)}

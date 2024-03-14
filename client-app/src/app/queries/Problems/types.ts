@@ -19,6 +19,9 @@ export interface CreateProblemBody {
   date?: string;
   description?: string;
   timeLimit?: number;
+  memory?: number;
+  compareMode?: number;
+  approximateValue?: number;
 }
 
 export interface EditProblemBody {

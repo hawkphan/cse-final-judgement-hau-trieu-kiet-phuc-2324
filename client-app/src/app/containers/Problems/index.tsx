@@ -134,7 +134,7 @@ const Problems = () => {
               />
             </Stack>
             <MuiSwitch
-              label="Only your posts"
+              label="Only own posts"
               isShowDescription={false}
               onChange={handleChangeIsOnlyDedication}
               checked={isOnlyDedication}
