@@ -11,8 +11,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240201205107_UpdateLanguage")]
-    partial class UpdateLanguage
+    [Migration("20240311135252_UpdateAttribute")]
+    partial class UpdateAttribute
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,8 +78,8 @@ namespace Persistence.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsFemale")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("Gender")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("LastName")
                         .HasColumnType("TEXT");
@@ -135,12 +135,18 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("AppUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileExtension")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Languages");
                 });
@@ -203,20 +209,23 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Error")
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("ExecutionTime")
                         .HasColumnType("REAL");
 
                     b.Property<string>("Output")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Passed")
-                        .HasColumnType("INTEGER");
-
                     b.Property<Guid?>("ProblemId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("SolutionId")
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("Status")
+                        .HasColumnType("REAL");
 
                     b.Property<Guid>("TestCaseId")
                         .HasColumnType("TEXT");
@@ -241,7 +250,7 @@ namespace Persistence.Migrations
                     b.Property<string>("FileName")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Language")
+                    b.Property<Guid>("LanguageId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ProblemId")
@@ -257,6 +266,8 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
 
                     b.HasIndex("ProblemId");
 
@@ -415,13 +426,9 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Language", b =>
                 {
-                    b.HasOne("Domain.AppUser", "User")
+                    b.HasOne("Domain.AppUser", null)
                         .WithMany("Languages")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                        .HasForeignKey("AppUserId");
                 });
 
             modelBuilder.Entity("Domain.Problem", b =>
@@ -479,6 +486,12 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Solution", b =>
                 {
+                    b.HasOne("Domain.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Problem", "Problem")
                         .WithMany("Solutions")
                         .HasForeignKey("ProblemId")
@@ -490,6 +503,8 @@ namespace Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Language");
 
                     b.Navigation("Problem");
 

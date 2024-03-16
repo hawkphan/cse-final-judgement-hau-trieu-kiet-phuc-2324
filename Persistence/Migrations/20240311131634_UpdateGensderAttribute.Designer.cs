@@ -11,8 +11,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240221134002_UpdateLanguage3")]
-    partial class UpdateLanguage3
+    [Migration("20240311131634_UpdateGensderAttribute")]
+    partial class UpdateGensderAttribute
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,8 +78,8 @@ namespace Persistence.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsFemale")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("Gender")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("LastName")
                         .HasColumnType("TEXT");
@@ -136,6 +136,9 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("AppUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileExtension")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -206,6 +209,9 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Error")
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("ExecutionTime")
                         .HasColumnType("REAL");
 
@@ -244,7 +250,7 @@ namespace Persistence.Migrations
                     b.Property<string>("FileName")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Language")
+                    b.Property<Guid>("LanguageId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ProblemId")
@@ -260,6 +266,8 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
 
                     b.HasIndex("ProblemId");
 
@@ -478,6 +486,12 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Solution", b =>
                 {
+                    b.HasOne("Domain.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Problem", "Problem")
                         .WithMany("Solutions")
                         .HasForeignKey("ProblemId")
@@ -489,6 +503,8 @@ namespace Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Language");
 
                     b.Navigation("Problem");
 

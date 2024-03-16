@@ -1,6 +1,9 @@
 ﻿// using Application.Solutions;
+using API.DTOS;
+using Application.Solutions;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -15,22 +18,19 @@ namespace API.Controllers
             //return await Mediator.Send(new List.Query(),ct);
             return Ok();
         }
-
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<Solution>> GetSolutions(Guid id)
         {
             //return await Mediator.Send(new Details.Query { Id = id });
             return Ok();
         }
-
+        
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> CreateSolutions(Solution newSolution)
+        public async Task<ActionResult> SubmitSolution(SolutionDto newSolution)
         {
-            
-
-            // return HandleApiResult(await Mediator.Send(new Create.Command { Solution = newSolution }));
-            return Ok();
-
+            return HandleApiResult(await Mediator.Send(new Create.Command { SolutionDto = newSolution }));
         }
 
         [HttpDelete("{id}")]

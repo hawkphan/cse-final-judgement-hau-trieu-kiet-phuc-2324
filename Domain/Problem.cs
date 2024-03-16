@@ -14,7 +14,7 @@ public class Problem
     public double Difficulty { get; set; }
     public string Description { get; set; }
     public DateTime Date { get; set; }
-    public double TimeLimit { get; set; }
+    public int TimeLimit { get; set; }
     public ICollection<TestCase> TestCases { get; set; } = new List<TestCase>();
     public ICollection<Result> Results { get; set; } = new List<Result>();
     public ICollection<Solution> Solutions { get; set; } = new List<Solution>();

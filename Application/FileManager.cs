@@ -10,8 +10,30 @@ namespace Application.Solutions
 {
     public class FileManager
     {
+        public readonly String CurrentDirectory = Directory.GetCurrentDirectory();
+        public readonly String UploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
         public readonly String TestCasesPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\TestCases");
         public readonly String SolutionsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Solutions");
+        public string WriteAndSaveSolutions(String solution, String SolutionId, String fileExtension)
+        {
+            string SolutionFileName = $"main.{fileExtension}";
+            string SolutionFolderName = Path.Combine(SolutionsPath, SolutionId);
+            String path = Path.Combine(SolutionFolderName, SolutionFileName);
+            Directory.CreateDirectory(SolutionFolderName);
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(path))
+                {
+                    writer.WriteLine(solution);
+                }
+                Console.WriteLine("Data written to file successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            return path;
+        }
         public async void SaveFile(IFormFile file, String FolderPath)
         {
             using (var stream = new FileStream(FolderPath, FileMode.Create))
@@ -53,8 +75,8 @@ namespace Application.Solutions
         }
         public string[] getFileNameInFolder(String FolderPath, String Pattern)
         {
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
-            var targetFolder = Path.Combine(uploadsFolder, FolderPath);
+            // var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+            var targetFolder = Path.Combine(Directory.GetCurrentDirectory(), FolderPath);
 
             var InputFiles = Directory.GetFiles(targetFolder, Pattern);
 

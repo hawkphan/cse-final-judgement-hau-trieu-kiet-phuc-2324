@@ -75,8 +75,8 @@ namespace Persistence.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsFemale")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("Gender")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("LastName")
                         .HasColumnType("TEXT");
@@ -135,10 +135,10 @@ namespace Persistence.Migrations
                     b.Property<Guid?>("AppUserId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("FileExtension")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("RunCommand")
+                    b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -166,8 +166,8 @@ namespace Persistence.Migrations
                     b.Property<double>("Difficulty")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("TimeLimit")
-                        .HasColumnType("REAL");
+                    b.Property<int>("TimeLimit")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
@@ -206,20 +206,26 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("Error")
+                        .HasColumnType("REAL");
+
                     b.Property<double>("ExecutionTime")
                         .HasColumnType("REAL");
 
+                    b.Property<long>("MemoryUsage")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Output")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("Passed")
-                        .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("ProblemId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("SolutionId")
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("Status")
+                        .HasColumnType("REAL");
 
                     b.Property<Guid>("TestCaseId")
                         .HasColumnType("TEXT");
@@ -241,11 +247,17 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("ExecutionTime")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("FileName")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Language")
+                    b.Property<Guid>("LanguageId")
                         .HasColumnType("TEXT");
+
+                    b.Property<long>("MemoryUsage")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("ProblemId")
                         .HasColumnType("TEXT");
@@ -253,13 +265,15 @@ namespace Persistence.Migrations
                     b.Property<double>("Score")
                         .HasColumnType("REAL");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Status")
+                        .HasColumnType("REAL");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
 
                     b.HasIndex("ProblemId");
 
@@ -478,6 +492,12 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Solution", b =>
                 {
+                    b.HasOne("Domain.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Problem", "Problem")
                         .WithMany("Solutions")
                         .HasForeignKey("ProblemId")
@@ -489,6 +509,8 @@ namespace Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Language");
 
                     b.Navigation("Problem");
 
