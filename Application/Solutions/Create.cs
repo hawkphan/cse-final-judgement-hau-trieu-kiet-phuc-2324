@@ -40,7 +40,7 @@ namespace Application.Solutions
                 solution.Id = solutionId;
 
 
-                var fileExtension = solution.Language.FileExtension;
+                var fileExtension = _context.Languages.Find(request.SolutionDto.languageId).FileExtension;
                 _fileManager = new FileManager();
                 var path = _fileManager.WriteAndSaveSolutions(content, solution.Id.ToString(), fileExtension);
                 List<Result> solutionResult;

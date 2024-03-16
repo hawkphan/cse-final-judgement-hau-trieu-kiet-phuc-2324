@@ -59,7 +59,7 @@ namespace Application.Compiler
                 }
                 string output = process.StandardOutput.ReadToEnd();
                 output = output.Substring(0, output.Length - 0);
-                // string error = process.StandardError.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
                 if (!process.WaitForExit(1500))
                 {
                     process.Kill();
@@ -78,16 +78,16 @@ namespace Application.Compiler
                     result.Output = output;
                     result.ExecutionTime = executionTime;
                     result.MemoryUsage = memoryUsage;
+
                     result.Status = 0;
                     result.TestCase = testCase;
-                    result.Status = 0;
                 }
                 else
                 {
                     result.ExecutionTime = executionTime;
                     result.MemoryUsage = memoryUsage;
+                    result.Status = 8;
 
-                    result.Status = 1;
                 }
 
             }

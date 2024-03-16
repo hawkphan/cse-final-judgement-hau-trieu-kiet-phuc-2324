@@ -11,6 +11,18 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
         {
+            String UploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+            String TestCasesPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\TestCases");
+            String SolutionsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Solutions");
+            string[] paths = { UploadsPath, TestCasesPath, SolutionsPath };
+            foreach (String p in paths)
+            {
+                if (!Path.Exists(p))
+                {
+                    Directory.CreateDirectory(p);
+                }
+            }
+
             if (!context.Users.Any())
             {
                 var users = new List<AppUser>{
