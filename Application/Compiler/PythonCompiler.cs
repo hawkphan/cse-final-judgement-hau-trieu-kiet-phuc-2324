@@ -50,44 +50,52 @@ namespace Application.Compiler
                     // Get the private memory usage of the process
                     memoryUsage = process.PrivateMemorySize64;
 
-                    if (memoryUsage > 524288000) // 500 MB i 524288000 bytes
+                    if (memoryUsage > 524288000) // 500 MB is 524288000 bytes
                     {
-                        result.Status = 3; // Out of memory
+                        result.Status = 3; // Catch Out of memory
                         process.Kill();
                         return result;
                     }
                 }
+
                 string output = process.StandardOutput.ReadToEnd();
-                output = output.Substring(0, output.Length - 0);
                 string error = process.StandardError.ReadToEnd();
-                if (!process.WaitForExit(1500))
+
+
+                if (!process.WaitForExit(problem.TimeLimit))
                 {
                     process.Kill();
-                    result.Status = 2; // Time Limit
-                    result.MemoryUsage = memoryUsage;
-
+                    result.Status = 2; // Catch Time Limit
                     return result;
                 }
 
-
-                // Process the output and determine if the test passed
-                bool passed = ProcessTestOutput(output, testCase.Output);
                 double executionTime = process.TotalProcessorTime.TotalMilliseconds - inputWritingTime;
+                result.MemoryUsage = memoryUsage;
+                result.ExecutionTime = executionTime;
+
+                bool passed = ProcessTestOutput(output, testCase.Output);
                 if (passed)
                 {
                     result.Output = output;
-                    result.ExecutionTime = executionTime;
-                    result.MemoryUsage = memoryUsage;
-
                     result.Status = 0;
                     result.TestCase = testCase;
+                    //Things goes well
                 }
                 else
                 {
-                    result.ExecutionTime = executionTime;
-                    result.MemoryUsage = memoryUsage;
-                    result.Status = 8;
+                    switch (error.Length > 0)
+                    {
+                        case (true):
+                            result.Output = error;
+                            result.Status = 8;
+                            //error happened
+                            break;
+                        case (false):
+                            result.Status = 1;
+                            break;
+                            //Wrong answer
 
+                    }
                 }
 
             }
