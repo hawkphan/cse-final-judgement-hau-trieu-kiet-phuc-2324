@@ -27,11 +27,18 @@ namespace Application.Solutions
             public async Task<ApiResult<Solution>> Handle(Command request, CancellationToken cancellationToken)
             {
                 ICompiler _compiler;
-                FileManager _fileManager;
+                FileManager _fileManager = new FileManager();
                 var solution = _mapper.Map<Solution>(request.SolutionDto);
-                var testCases = _context.TestCases
+                List<TestCase> testCases = _context.TestCases
                 .Where(tc => tc.ProblemId == request.SolutionDto.problemId)
                 .ToList();
+                foreach (TestCase testCase in testCases)
+                {
+                    if (!File.Exists(Path.Combine(_fileManager.CurrentDirectory, testCase.Input)))
+                    {
+                        return ApiResult<Solution>.Failure(new string[] { "Test case not exist in server" });
+                    }
+                }
                 var content = request.SolutionDto.solution;
                 solution.FileName = "none";
 
@@ -41,9 +48,8 @@ namespace Application.Solutions
 
 
                 var fileExtension = _context.Languages.Find(request.SolutionDto.languageId).FileExtension;
-                _fileManager = new FileManager();
                 var path = _fileManager.WriteAndSaveSolutions(content, solution.Id.ToString(), fileExtension);
-                List<Result> solutionResult;
+                List<Result> solutionResult = new List<Result>();
 
                 var problem = _context.Problems.Find(request.SolutionDto.problemId);
                 switch (fileExtension)
@@ -53,14 +59,16 @@ namespace Application.Solutions
                     case "py":
                         _compiler = new PythonCompiler();
                         solutionResult = _compiler.Compile(path, testCases, problem);
-                        foreach (Result result in solutionResult)
-                        {
-                            solution.MemoryUsage += result.MemoryUsage;
-                            solution.ExecutionTime += result.ExecutionTime;
-                        }
-                        solution.Results = solutionResult;
                         break;
                 }
+
+                foreach (Result result in solutionResult)
+                {
+                    solution.MemoryUsage += result.MemoryUsage;
+                    solution.ExecutionTime += result.ExecutionTime;
+                }
+
+                solution.Results = solutionResult;
                 _context.Solutions.Add(solution);
                 await _context.SaveChangesAsync();
 
