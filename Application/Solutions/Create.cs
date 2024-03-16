@@ -28,7 +28,6 @@ namespace Application.Solutions
             {
                 ICompiler _compiler;
                 FileManager _fileManager;
-                // var solution = new Solution();
                 var solution = _mapper.Map<Solution>(request.SolutionDto);
                 var testCases = _context.TestCases
                 .Where(tc => tc.ProblemId == request.SolutionDto.problemId)
