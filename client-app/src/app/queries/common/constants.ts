@@ -8,6 +8,9 @@ export enum API_QUERIES {
   // Languages
   GET_LANGUAGES = "/get-languages",
 
+  // User profile
+  GET_PROFILE_BY_ID = "/get-profile-by-id",
+
   // Solutions
   GET_SOLUTIONS = "/get-solutions",
 }

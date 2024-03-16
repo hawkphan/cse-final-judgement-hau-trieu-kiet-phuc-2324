@@ -2,61 +2,26 @@ export default function Header2() {
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
+        textAlign: "center",
+        margin: "auto",
+        marginBottom: 28,
+        marginTop: 30,
+
+        alignContent: "center",
+        minWidth: "200px",
+        width: "600px",
+        paddingLeft: "15px",
+        paddingRight: "15px",
+        paddingBottom: "20px",
       }}
     >
-      <div
-        style={{
-          alignContent: "center",
-          textAlign: "start",
-          border: "1px solid black",
-          borderRadius: "10px",
-          minWidth: "200px",
-          width: "600px",
-          paddingLeft: "15px",
-          paddingRight: "15px",
-          paddingBottom: '20px'
-        }}
-      >
-        <p style={{ color: "#00A9F5", fontSize: 24 }}>
-          contenentenent
-        </p>
-        <p>
-          Computer science is the study of computation, information, and
-          automation.[1][2][3] Computer science spans theoretical disciplines
-          (such as algorithms, theory of computation, and information theory) to
-          applied disciplines (including the design and implementation of
-          hardware and software).
-        </p>
-        <a href="" style={{color: '#48D600', fontSize: "20px",}}>Link</a>
-      </div>
-      <div
-        style={{
-          alignContent: "center",
-          textAlign: "start",
-          border: "1px solid black",
-          borderRadius: "10px",
-          minWidth: "200px",
-          width: "600px",
-          paddingLeft: "15px",
-          paddingRight: "15px",
-          paddingBottom: '20px'
-        }}
-      >
-        <p style={{ color: "#00A9F5", fontSize: 24 }}>
-          contenentenent
-        </p>
-        <p>
-          Computer science is the study of computation, information, and
-          automation.[1][2][3] Computer science spans theoretical disciplines
-          (such as algorithms, theory of computation, and information theory) to
-          applied disciplines (including the design and implementation of
-          hardware and software).
-        </p>
-        <a href="" style={{color: '#48D600', fontSize: "20px",}}>Link</a>
-      </div>
+      <p style={{ color: "#00A9F5", fontSize: 24, fontWeight: 'bolder' }}>DEVELOPING YOUR SKILL</p>
+      <p>
+        Practice and training your coding skill with our library of programming problems. CodeCrafter is the promise land for programer to improve, and develop themselves.
+      </p>
+      <a href="" style={{ color: "#48D600", fontSize: "20px" }}>
+        Start your training?
+      </a>
     </div>
   );
 }

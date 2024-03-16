@@ -15,19 +15,42 @@ import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { TbPointFilled } from "react-icons/tb";
 
 //Test data
-import { User } from "../TestData/userProfileModel";
 import { profileInfo } from "../TestData/dataUserProfile.mock";
-import { Button } from "../../../../shared";
+import {  Button, formatDate, formatDateOrNull } from "../../../../shared";
+import { useGetProfileById } from "../../../../queries/Profiles";
+import { useStore } from "../../../../shared/common/stores/store";
+import { useMemo } from "react";
+import { API_QUERIES } from "../../../../queries";
+export interface Profile{
+  userName?: string;
+  firstName?: string;
+  lastName?:string;
+  email?: string;
+  birthday?: string;
+  isFemale?: boolean;
+  displayName?: string;
+}
 
 export default function UserDetailInformation() {
-  const user = profileInfo.user as User;
+  const { userStore } = useStore();
+  const id = useMemo(()=>{return userStore?.user?.id},[userStore?.user]);
+  console.log("Id " + id);
+  formatDateOrNull
+  const {
+    profile
+  } = useGetProfileById(
+    {
+        id,
+        queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: id }],
+      }
+  );
 
   return (
     <Card
       style={{
         marginTop: "20px",
         padding: "20px",
-        minHeight: "200px",
+        minHeight: "800px",
         minWidth: "180px",
       }}
       elevation={4}
@@ -37,9 +60,9 @@ export default function UserDetailInformation() {
 
 
         <Stack direction="column" spacing={0.5}>
-          <h4>{user.displayName}</h4>
-          <h5>{user.userName}</h5>
-          <h5>{user.userProfile.rank}</h5>
+          <h4>{profile?.data.userName}</h4>
+          <h5>{profile?.data.email}</h5>
+          <h5>{formatDate( profile?.data.birthday)}</h5>
         </Stack>
       </Stack>
       <Button
@@ -71,7 +94,7 @@ export default function UserDetailInformation() {
             <FaEye style={{ color: "blue" }} />
           </ListItemIcon>
           <ListItemText
-            primary={`Views ${user.userProfile.views}`}
+            primary={`Views ${profileInfo.user.userProfile.views}`}
             secondary="Last week 0"
           />
         </ListItem>
@@ -81,7 +104,7 @@ export default function UserDetailInformation() {
             <FaCheckCircle style={{ color: "#8AFF72" }} />
           </ListItemIcon>
           <ListItemText
-            primary={`Solutions ${user.userProfile.solutions}`}
+            primary={`Solutions ${profileInfo.user.userProfile.solutions}`}
             secondary="Last week 0"
           />
         </ListItem>
@@ -98,7 +121,7 @@ export default function UserDetailInformation() {
             <FaStar style={{ color: "#EBF068" }} />
           </ListItemIcon>
           <ListItemText
-            primary={`Reputation ${user.userProfile.reputation}`}
+            primary={`Reputation ${profileInfo.user.userProfile.reputation}`}
             secondary="Last week 0"
           />
         </ListItem>
@@ -117,10 +140,19 @@ export default function UserDetailInformation() {
           Languages
         </Typography>
         <Box display="flex" flexDirection="column">
-          {user.userProfile.languages === null ? (
+          {profileInfo.user.userProfile.languagesUsage === null ? (
             <ListItemText secondary="Not enough data" />
           ) : (
-            user.userProfile.languages.map((language) => (
+  
+            // profileInfo.user.userProfile.languagesUsage.map((language) => (
+            //   <ListItem>
+            //     <ListItemIcon>
+            //       <TbPointFilled />
+            //     </ListItemIcon>
+            //     <ListItemText primary={language[0]} />
+            //   </ListItem>
+            // ))
+            profileInfo.user.userProfile.languages.map((language) => (
               <ListItem>
                 <ListItemIcon>
                   <TbPointFilled />
@@ -129,7 +161,7 @@ export default function UserDetailInformation() {
               </ListItem>
             ))
           )}
-        </Box>
+        </Box> 
       </List>
       <Divider style={{ marginTop: "20px", marginBottom: "5px" }} />
       <List

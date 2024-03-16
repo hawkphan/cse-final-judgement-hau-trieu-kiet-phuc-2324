@@ -1,5 +1,8 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
+import ReactApexChart from "react-apexcharts";
 import { ImNotification } from "react-icons/im";
+import { schema } from "../TestData/schema";
+import { profileInfo } from "../TestData/dataUserProfile.mock";
 
 export default function UserAnnualReport() {
   return (
@@ -8,7 +11,7 @@ export default function UserAnnualReport() {
         marginTop: "15px",
         paddingLeft: "20px",
         paddingRight: "20px",
-        minHeight: "300px",
+        minHeight: "500px",
         minWidth: "180px",
       }}
       elevation={4}
@@ -25,69 +28,25 @@ export default function UserAnnualReport() {
             flexDirection="row"
             justifyContent="space-between"
           >
-            <Typography
-              sx={{ mb: 1.5, paddingRight: "5px" }}
-              color="text.primary"
-            >
-              0
-            </Typography>
-            <Typography
-              sx={{ mb: 1.5, paddingRight: "5px" }}
-              color="text.secondary"
-            >
-              submissions in last year
-            </Typography>
-            <ImNotification style={{ marginTop: "6px" }} />
+
           </Box>
           <Box
             display="flex"
             flexDirection="row"
             justifyContent="space-between"
           >
-            <Box
-              display="flex"
-              flexDirection="row"
-              justifyContent="space-between"
-            >
-              <Typography
-                sx={{ mb: 1.5, paddingRight: "10px" }}
-                color="text.secondary"
-              >
-                Total active days:
-              </Typography>
-              <Typography
-                sx={{ mb: 1.5, paddingRight: "20px" }}
-                color="text.primary"
-              >
-                0
-              </Typography>
-            </Box>
-            <Box
-              display="flex"
-              flexDirection="row"
-              justifyContent="space-between"
-            >
-              <Typography
-                sx={{ mb: 1.5, paddingRight: "10px" }}
-                color="text.secondary"
-              >
-                Max streak:
-              </Typography>
-              <Typography
-                sx={{ mb: 1.5 }}
-                color="text.primary"
-              >
-                0
-              </Typography>
-            </Box>
           </Box>
         </Box>
 
         <Box display="flex" flexDirection="row">
-          <Box flexDirection="column" sx={{ width: "80%" }}>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              not enough data
-            </Typography>
+          <Box flexDirection="column" sx={{ width: "80%", margin: 'auto'}}>
+            <ReactApexChart
+              series={schema.series}
+              type="line"
+              options={schema.options}
+              height={400}
+              width="100%"
+            />
           </Box>
         </Box>
       </CardContent>

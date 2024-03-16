@@ -40,24 +40,24 @@ function CircularProgressWithLabel(
 }
 
 export default function UserActivityReport() {
-  const user = profileInfo.user as User;
-  const totalSubmit = parseInt(user.userProfile.easyProblemSubmitted) + parseInt(user.userProfile.mediumProblemSubmitted) +parseInt(user.userProfile.hardProblemSubmitted);
-  const totalSolved = parseInt(user.userProfile.easyProblemSolved) + parseInt(user.userProfile.mediumProblemSolved) +parseInt(user.userProfile.hardProblemSolved);
+  const record = profileInfo.user.activityRecord;
+  const totalSubmit = parseInt(record.easyProblemSubmitted) + parseInt(record.mediumProblemSubmitted) +parseInt(record.hardProblemSubmitted);
+  const totalSolved = parseInt(record.easyProblemSolved) + parseInt(record.mediumProblemSolved) +parseInt(record.hardProblemSolved);
 
   function calculateTotalProblemSolvedPercent(){    
     return (totalSolved / totalSubmit)*100;
   }
 
   function calculateEasyProblemSolvedPercent(){    
-    return (parseInt(user.userProfile.easyProblemSolved) / parseInt(user.userProfile.easyProblemSubmitted))*100;
+    return (parseInt(record.easyProblemSolved) / parseInt(record.easyProblemSubmitted))*100;
   }
 
   function calculateMediumProblemSolvedPercent(){    
-    return( parseInt(user.userProfile.mediumProblemSolved) / parseInt(user.userProfile.mediumProblemSubmitted))*100;
+    return( parseInt(record.mediumProblemSolved) / parseInt(record.mediumProblemSubmitted))*100;
   }
 
   function calculateHardProblemSolvedPercent(){    
-    return (parseInt(user.userProfile.hardProblemSolved) / parseInt(user.userProfile.hardProblemSubmitted))*100;
+    return (parseInt(record.hardProblemSolved) / parseInt(record.hardProblemSubmitted))*100;
   }
 
   return (
@@ -66,7 +66,7 @@ export default function UserActivityReport() {
         marginTop: "20px",
         padding: "20px",
         paddingTop: "10px",
-        minHeight: "270px",
+        minHeight: "290px",
         minWidth: "180px",
       }}
       elevation={4}
@@ -106,7 +106,7 @@ export default function UserActivityReport() {
               >
                 <Typography color="text.secondary">easy</Typography>
                 <Box display="flex" flexDirection="row" justifyContent="space-between">
-                  <Typography color="text.primary">{user.userProfile.easyProblemSolved} /{user.userProfile.easyProblemSubmitted}  </Typography>
+                  <Typography color="text.primary">{record.easyProblemSolved} /{record.easyProblemSubmitted}  </Typography>
                 </Box>
 
               </Box>
@@ -131,7 +131,7 @@ export default function UserActivityReport() {
               >
                 <Typography color="text.secondary">medium</Typography>
                 <Box display="flex" flexDirection="row" justifyContent="space-between">
-                  <Typography color="text.primary">{user.userProfile.mediumProblemSolved} /{user.userProfile.mediumProblemSubmitted}</Typography>
+                  <Typography color="text.primary">{record.mediumProblemSolved} /{record.mediumProblemSubmitted}</Typography>
                 </Box>
 
               </Box>
@@ -160,7 +160,7 @@ export default function UserActivityReport() {
               >
                 <Typography color="text.secondary">hard</Typography>
                 <Box display="flex" flexDirection="row" justifyContent="space-between" >
-                  <Typography color="text.primary">{user.userProfile.hardProblemSolved} /{user.userProfile.hardProblemSubmitted}</Typography>
+                  <Typography color="text.primary">{record.hardProblemSolved} /{record.hardProblemSubmitted}</Typography>
                 </Box>
 
               </Box>

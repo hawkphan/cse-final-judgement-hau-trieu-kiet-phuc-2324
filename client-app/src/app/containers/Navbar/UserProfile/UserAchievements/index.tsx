@@ -1,13 +1,19 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
+
+import {  Card, CardContent, Typography } from "@mui/material";
+//import Chart from "../../../Developer/Chart";
+import { Suspense} from "react";
+import { LoadingCommon } from "../../../../shared";
+import ReactApexChart from "react-apexcharts";
+import { state } from "../TestData/schema";
 
 export default function UserAchievements() {
   return (
     <Card
       style={{
         marginTop: "20px",
-        padding: '20px',
-        paddingTop: '10px',
-        minHeight: "270px",
+        padding: "20px",
+        paddingTop: "10px",
+        minHeight: "290px",
         minWidth: "180px",
       }}
       elevation={4}
@@ -18,20 +24,12 @@ export default function UserAchievements() {
           color="text.secondary"
           gutterBottom
         >
-          Badges
+          Languages Usage
         </Typography>
-        <Box display="flex" flexDirection="row">
-          <Box flexDirection="column" sx={{ width: "80%" }}>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              0
-            </Typography>
-          </Box>
-          <Box>
-            <Typography sx={{ mb: 1.5 }} color="text.primary">
-              adjective
-            </Typography>
-          </Box>
-        </Box>
+        <Suspense fallback={<LoadingCommon />}>
+        <ReactApexChart series={state.series} type="pie" options={state.options} width={350} />
+      </Suspense>
+      
       </CardContent>
     </Card>
   );

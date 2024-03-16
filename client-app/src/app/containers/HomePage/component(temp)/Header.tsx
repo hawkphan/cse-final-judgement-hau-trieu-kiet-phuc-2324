@@ -23,15 +23,15 @@ export default function Header({ children }: LayoutProps) {
       >
         <img src="src\assets\images\study-4522028_1280.png" width="80%" />
       </div>
-      <div style={{ maxWidth: "50%", wordWrap: "break-word", margin: "auto" }}>
-        <div style={{width: '80%'}}>
-          <p style={{ fontSize: 24, fontWeight: "bold", color: "red" }}>
-            Title Content
+      <div style={{ maxWidth: "50%", wordWrap: "break-word", margin: "auto", marginTop:'60px' }}>
+        <div style={{ width: "80%" }}>
+          <p style={{ fontSize: 50, fontWeight: "bolder", color: "white" }}>
+            First step to your dream
           </p>
-          <p>
-            This is some text in a paragraph. ContentContentContentCont
-            entContentContentContent
-            {children}
+          <p style={{ fontSize: 18, color: 'white' }}>
+            Are you ready to start a new journey? Do you want to learn about
+            programming and want to become a profesional coder in future? Let's
+            start with registering your account.
           </p>
           <Button
             variant="contained"
