@@ -11,7 +11,7 @@ namespace Domain
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime Birthday { get; set; }
-        public bool IsFemale { get; set; }
+        public double Gender { get; set; }
 
         public string DisplayName { get; set; }
         public ICollection<Problem> Problems { get; set; }

@@ -5,24 +5,25 @@
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateLanguageCommand : Migration
+    public partial class UpdateMemory : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "RunCommand",
-                table: "Languages",
-                type: "TEXT",
-                nullable: true);
+            migrationBuilder.AddColumn<long>(
+                name: "MemoryUsage",
+                table: "Results",
+                type: "INTEGER",
+                nullable: false,
+                defaultValue: 0L);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "RunCommand",
-                table: "Languages");
+                name: "MemoryUsage",
+                table: "Results");
         }
     }
 }

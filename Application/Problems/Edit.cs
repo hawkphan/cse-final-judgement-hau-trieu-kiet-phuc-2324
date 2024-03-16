@@ -47,14 +47,16 @@ namespace Application.Problems
                     {
                         FileManager fileManager = new FileManager();
                         await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);
-                        var testCaseLocation = Path.Combine("TestCases", request.Problem.Code);
+                        var testCaseLocation = Path.Combine("Uploads\\TestCases", request.Problem.Code);
                         String[] files = fileManager.getFileNameInFolder(testCaseLocation, "*.in");
                         foreach (var inputPath in files)
                         {
                             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
-                            TestCase testCase = new TestCase();
-                            testCase.Input = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.in");
-                            testCase.Output = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.out");
+                            TestCase testCase = new TestCase
+                            {
+                                Input = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.in"),
+                                Output = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.out")
+                            };
                             request.Problem.TestCases.Add(testCase);
                         }
                     }

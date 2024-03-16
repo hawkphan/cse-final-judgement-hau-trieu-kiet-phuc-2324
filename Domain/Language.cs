@@ -14,6 +14,6 @@ namespace Domain
         public Guid Id { get; set; }
         public ICollection<ProblemLanguage> ProblemLanguages { get; set; }
         public string Name { get; set; }
-        public string RunCommand { get; set; }
+        public string FileExtension { get; set; }
     }
 }

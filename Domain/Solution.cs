@@ -16,10 +16,14 @@ namespace Domain
         public Guid ProblemId { get; set; }
         public Problem Problem { get; set; }
         public string FileName { get; set; }
-        public string Language { get; set; }
-        public string Status { get; set; }
+        public Guid LanguageId { get; set; }
+        public Language Language { get; set; }
+        public double Status { get; set; }
+        public long MemoryUsage { get; set; } = 0;
+        public double ExecutionTime { get; set; } = 0;
+        
         public ICollection<Result> Results { get; set; }
         public double Score { get; set; }
     }
-    
+
 }

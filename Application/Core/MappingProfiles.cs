@@ -9,7 +9,12 @@ namespace Application.Core
         {
             CreateMap<Activity, Activity>();
             CreateMap<Problem, Problem>();
-
+            CreateMap<Solution, Solution>();
+            // CreateMap<SolutionDto, Solution>()
+            //     .ForMember(d => d.LanguageId, o => o.MapFrom(s => s.languageId))
+            //     .ForMember(d => d.ProblemId, o => o.MapFrom(s => s.problemId))
+            //     .ForMember(d => d.LanguageId, o => o.MapFrom(s => s.languageId))
+            // ;
             CreateMap<Problem, ProblemDto>()
             .ForMember(dest => dest.Languages, opt => opt.MapFrom(src => src.ProblemLanguages.Select(pl => pl.Language)));
             CreateMap<Language, LanguageDto>()
@@ -21,7 +26,7 @@ namespace Application.Core
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.DisplayName))
                 .ForMember(d => d.FirstName, o => o.MapFrom(s => s.FirstName))
                 .ForMember(d => d.LastName, o => o.MapFrom(s => s.LastName))
-                .ForMember(d => d.IsFemale, o => o.MapFrom(s => s.IsFemale))
+                .ForMember(d => d.Gender, o => o.MapFrom(s => s.Gender))
                 .ForMember(d => d.Birthday, o => o.MapFrom(s => s.Birthday))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.Email))
             ;

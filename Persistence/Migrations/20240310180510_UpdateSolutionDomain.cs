@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class IniMigration : Migration
+    public partial class UpdateSolutionDomain : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -183,17 +183,18 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    FileExtension = table.Column<string>(type: "TEXT", nullable: true),
+                    AppUserId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Languages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Languages_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Languages_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -252,7 +253,7 @@ namespace Persistence.Migrations
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ProblemId = table.Column<Guid>(type: "TEXT", nullable: false),
                     FileName = table.Column<string>(type: "TEXT", nullable: true),
-                    Language = table.Column<string>(type: "TEXT", nullable: true),
+                    LanguageId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Status = table.Column<string>(type: "TEXT", nullable: true),
                     Score = table.Column<double>(type: "REAL", nullable: false)
                 },
@@ -263,6 +264,12 @@ namespace Persistence.Migrations
                         name: "FK_Solutions_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Solutions_Languages_LanguageId",
+                        column: x => x.LanguageId,
+                        principalTable: "Languages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -302,6 +309,7 @@ namespace Persistence.Migrations
                     TestCaseId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Output = table.Column<string>(type: "TEXT", nullable: true),
                     ExecutionTime = table.Column<double>(type: "REAL", nullable: false),
+                    Error = table.Column<string>(type: "TEXT", nullable: true),
                     Passed = table.Column<bool>(type: "INTEGER", nullable: false),
                     ProblemId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
@@ -365,9 +373,9 @@ namespace Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Languages_UserId",
+                name: "IX_Languages_AppUserId",
                 table: "Languages",
-                column: "UserId");
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProblemLanguages_LanguageId",
@@ -399,6 +407,11 @@ namespace Persistence.Migrations
                 name: "IX_Results_TestCaseId",
                 table: "Results",
                 column: "TestCaseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Solutions_LanguageId",
+                table: "Solutions",
+                column: "LanguageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Solutions_ProblemId",
@@ -447,13 +460,13 @@ namespace Persistence.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Languages");
-
-            migrationBuilder.DropTable(
                 name: "Solutions");
 
             migrationBuilder.DropTable(
                 name: "TestCases");
+
+            migrationBuilder.DropTable(
+                name: "Languages");
 
             migrationBuilder.DropTable(
                 name: "Problems");

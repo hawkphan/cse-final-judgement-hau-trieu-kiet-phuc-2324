@@ -62,7 +62,7 @@ namespace Persistence
                         Title = "Hello World",
                         Difficulty = 1.0,
                         Description = "Prints 'Hello, World!' to the console.",
-                        TimeLimit = 2.0,
+                        TimeLimit = 2,
                     },
                     new
                     {
@@ -71,7 +71,7 @@ namespace Persistence
                         Title = "Addition",
                         Difficulty = 1.0,
                         Description = "Adds two numbers and returns the result.",
-                        TimeLimit = 1.5,
+                        TimeLimit = 1,
                     }
                 };
 
@@ -86,7 +86,7 @@ namespace Persistence
                         Difficulty = data.Difficulty,
                         Description = data.Description,
                         Date = DateTime.Now,
-                        TimeLimit = data.TimeLimit,
+                        TimeLimit = (int)data.TimeLimit,
                         // Add other properties as needed
                     };
 
