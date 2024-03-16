@@ -29,7 +29,6 @@ namespace API.Controllers
         public async Task<ActionResult> CreateLanguage(Language newLanguage)
         {
             await Mediator.Send(new Create.Command { Language = newLanguage });
-
             return Ok();
         }
         [AllowAnonymous]

@@ -19,13 +19,14 @@ namespace API.Controllers
             return Ok();
         }
         [AllowAnonymous]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Solution>> GetSolutions(Guid id)
+        [HttpGet("{userId}/{problemId}")]
+        public async Task<ActionResult<Solution>> GetSolutions(Guid userId, Guid problemId)
         {
-            //return await Mediator.Send(new Details.Query { Id = id });
-            return Ok();
+
+            return HandlePagedResult(await Mediator.Send(new List.Query { UserId = userId, ProblemId = problemId }));
         }
-        
+
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> SubmitSolution(SolutionDto newSolution)
