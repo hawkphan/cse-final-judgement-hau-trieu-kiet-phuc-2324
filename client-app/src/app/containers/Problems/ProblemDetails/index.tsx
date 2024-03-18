@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, Card, Container, Stack } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   AnimatedTabPanel,
   Breadcrumbs,
   Button,
+  Form,
   Grid,
   LoadingCommon,
   MuiSelect,
   TabsBar,
+  Toastify,
+  isEmpty,
 } from "../../../shared";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Editor } from "@monaco-editor/react";
@@ -21,10 +24,22 @@ import { useGetProblemById } from "../../../queries/Problems";
 import DescriptionTab from "./DescriptionTab";
 import SubmissionTab from "./SubmissionTab";
 import { tabsList, toBreadcrumbs } from "./helpers";
+import {
+  CreateSolutionBody,
+  useGetSolutions,
+  useSubmitSolution,
+} from "../../../queries";
+import { Controller, useForm } from "react-hook-form";
+import { useStore } from "../../../shared/common/stores/store";
 
 const ProblemDetail = () => {
   const [tab, setTab] = useState("tab1");
+  const [currentLanguageId, setCurrentLanguageId] = useState();
   const { id } = useParams<{ id: string }>();
+
+  const { userStore } = useStore();
+  const navigate = useNavigate();
+  const user = userStore.user;
 
   const { problem, isFetching } = useGetProblemById({
     id,
@@ -61,21 +76,16 @@ const ProblemDetail = () => {
     console.log(monaco);
   };
 
+  const getUserId = useMemo(() => {
+    return user?.id;
+  }, [user?.id]);
+
   const toggleDarkOrLightTheme = () => {
     setDarkOrLight(darkOrLight === "vs-dark" ? "light" : "vs-dark");
   };
 
   const getEditorValue = () => {
-    // const blob = new Blob([editorRef.current.getValue()], {
-    //   type: "text/plain",
-    // });
-    // const url = URL.createObjectURL(blob);
-
-    // const link = document.createElement("a");
-    // link.download = file.name;
-    // link.href = url;
-    // link.click();
-    alert(editorRef.current.getValue());
+    return editorRef.current.getValue();
   };
 
   const options: monaco.editor.IStandaloneEditorConstructionOptions = {
@@ -104,16 +114,47 @@ const ProblemDetail = () => {
     },
   };
 
+  const { handleSubmit } = useForm<CreateSolutionBody>({
+    defaultValues: {},
+    mode: "onChange",
+    shouldFocusError: true,
+    reValidateMode: "onChange",
+  });
+
+  const { handleInvalidateSolutions } = useGetSolutions();
+
+  const { onSubmitSolution, isPending } = useSubmitSolution({
+    onSuccess: () => {
+      Toastify.success("Successful!");
+      handleInvalidateSolutions();
+      setTab("tab2");
+    },
+    onError: (error) => {
+      Toastify.error(error.message);
+      handleInvalidateSolutions();
+      setTab("tab2");
+      console.log("Error", error);
+    },
+  });
+
+  const onSubmit = async (data: CreateSolutionBody) => {
+    data.userId = getUserId;
+    data.problemId = problem.id;
+    data.solution = getEditorValue();
+    data.languageId = currentLanguageId;
+    onSubmitSolution(data);
+  };
+
   useEffect(() => {
-    setParams({pageSize: -1});
-  }, [setParams])
+    setParams({ pageSize: -1 });
+  }, [setParams]);
 
   const renderTab = () => {
     switch (tab) {
       case "tab1":
         return <DescriptionTab problem={problem} />;
       case "tab2":
-        return <SubmissionTab />;
+        return <SubmissionTab userId={getUserId} problemId={problem?.id} />;
       case "tab3":
         return <></>;
       default:
@@ -127,93 +168,102 @@ const ProblemDetail = () => {
 
   return (
     <Container maxWidth="xl" style={{ padding: "10px" }}>
-      <Breadcrumbs items={toBreadcrumbs({problem})} />
-      <Stack>
-        <Grid.Wrap>
-          <Grid.Item xs={6}>
-            <Card sx={{ height: "550px" }}>
-              <Box>
-                <Stack>
-                  <TabsBar
-                    tabsList={tabsList}
-                    value={tab}
-                    onChange={(_, value) => {
-                      setTab(value);
+      <Breadcrumbs items={toBreadcrumbs({ problem })} />
+      <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+        <Stack>
+          <Grid.Wrap>
+            <Grid.Item xs={6}>
+              <Card sx={{ height: "550px" }}>
+                <Box>
+                  <Stack>
+                    <TabsBar
+                      tabsList={tabsList}
+                      value={tab}
+                      onChange={(_, value) => {
+                        setTab(value);
+                      }}
+                    />
+                    <AnimatedTabPanel
+                      uniqKey={`userType-${tab}`}
+                      transitionTime={0.2}
+                    >
+                      {renderTab()}
+                    </AnimatedTabPanel>
+                  </Stack>
+                </Box>
+              </Card>
+            </Grid.Item>
+            <Grid.Item xs={6}>
+              <Card sx={{ height: "550px" }}>
+                <Stack
+                  justifyContent="flex-start"
+                  direction="row"
+                  flexGrow={1}
+                  alignItems="center"
+                >
+                  <MuiSelect
+                    name="language"
+                    options={languageOptions}
+                    size="small"
+                    value={currentLanguageId}
+                    placeholder="Select Language"
+                    onChange={(_, data) => {
+                      setCurrentLanguageId(data);
+                    }}
+                    style={{ width: "220px" }}
+                  />
+
+                  <Button
+                    onClick={() => toggleDarkOrLightTheme()}
+                    icon={
+                      darkOrLight === "vs-dark" ? (
+                        <LightbulbIcon />
+                      ) : (
+                        <LightbulbOutlinedIcon />
+                      )
+                    }
+                    style={{
+                      borderRadius: "0px",
+                      backgroundColor: "gray",
+                      marginTop: "5px",
                     }}
                   />
-                  <AnimatedTabPanel
-                    uniqKey={`userType-${tab}`}
-                    transitionTime={0.2}
-                  >
-                    {renderTab()}
-                  </AnimatedTabPanel>
                 </Stack>
-              </Box>
-            </Card>
-          </Grid.Item>
-          <Grid.Item xs={6}>
-            <Card sx={{ height: "550px" }}>
-              <Stack
-                justifyContent="flex-start"
-                direction="row"
-                flexGrow={1}
-                alignItems="center"
-              >
-                <MuiSelect
-                  name="language"
-                  options={languageOptions}
-                  size="small"
-                  value={1}
-                  placeholder="Select Language"
-                  onChange={(_, data) => {
-                    console.log(data);
-                  }}
-                  style={{ width: "220px" }}
+                <Editor
+                  height="458px"
+                  width="100%"
+                  theme={darkOrLight}
+                  onMount={handleComponentDidMount}
+                  defaultLanguage={file.language}
+                  defaultValue={file.value}
+                  path={file.name}
+                  options={options}
                 />
-                <Button
-                  onClick={() => toggleDarkOrLightTheme()}
-                  icon={
-                    darkOrLight === "vs-dark" ? (
-                      <LightbulbIcon />
-                    ) : (
-                      <LightbulbOutlinedIcon />
-                    )
-                  }
-                  style={{
-                    borderRadius: "0px",
-                    backgroundColor: "gray",
-                    marginTop: "5px",
-                  }}
-                />
-              </Stack>
-              <Editor
-                height="458px"
-                width="100%"
-                theme={darkOrLight}
-                onMount={handleComponentDidMount}
-                defaultLanguage={file.language}
-                defaultValue={file.value}
-                path={file.name}
-                options={options}
-              />
-              <Stack
-                justifyContent="flex-end"
-                direction="row"
-                flexGrow={1}
-                alignItems="center"
-                sx={{ marginTop: "-1px" }}
-              >
-                <Button
-                  style={{ borderRadius: "0px", backgroundColor: "green" }}
-                  onClick={() => getEditorValue()}
+                <Stack
+                  justifyContent="flex-end"
+                  direction="row"
+                  flexGrow={1}
+                  alignItems="center"
+                  sx={{ marginTop: "-1px" }}
                 >
-                  Submit
-                </Button>
-              </Stack>
-            </Card>
-          </Grid.Item>
-        </Grid.Wrap>
-      </Stack>
+                  <Button
+                    style={{
+                      borderRadius: "0px",
+                      backgroundColor: "green",
+                      width: "100%",
+                    }}
+                    type="submit"
+                    disabled={isEmpty(currentLanguageId)}
+                    isLoading={isPending}
+                  >
+                    Submit
+                  </Button>
+                </Stack>
+              </Card>
+            </Grid.Item>
+          </Grid.Wrap>
+        </Stack>
+      </Form>
     </Container>
   );
 };

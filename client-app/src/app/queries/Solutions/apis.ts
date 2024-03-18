@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL, GetPropertiesParams, Solution } from "..";
+import { API_URL, CreateSolutionBody, GetPropertiesParams, Solution } from "..";
 import { stringify } from "../../shared";
 
 const getSolutions = (params: GetPropertiesParams) => {
@@ -7,4 +7,9 @@ const getSolutions = (params: GetPropertiesParams) => {
   return axios.get<Solution[]>(`${API_URL}/api/solutions?${queryString}`, {});
 };
 
-export { getSolutions };
+const submitSolution = (body: CreateSolutionBody) => {
+  return axios.post(`${API_URL}/api/solutions`, body, {});
+};
+
+
+export { getSolutions, submitSolution };

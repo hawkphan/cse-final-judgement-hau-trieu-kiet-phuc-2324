@@ -69,6 +69,7 @@ namespace Application.Solutions
                 }
 
                 solution.Results = solutionResult;
+                solution.CreatedDate = DateTime.Now;
                 _context.Solutions.Add(solution);
                 await _context.SaveChangesAsync();
 

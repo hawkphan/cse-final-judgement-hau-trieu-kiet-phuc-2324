@@ -11,7 +11,6 @@ using System.Text;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.IdentityModel.Tokens;
-// using Application.Problems;
 namespace API.Controllers
 {
     public class ProblemsController : BaseApiController
@@ -30,9 +29,9 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> CreateProblem([FromForm] Problem newProblem, [FromForm] IFormFile file)
+    public async Task<ActionResult> CreateProblem([FromForm] Problem newProblem, [FromForm] IFormFile file)
         {
-            return HandleApiResult(await Mediator.Send(new Application.Problems.Create.Command { Problem = newProblem, TestCaseZip = file }));
+            return HandleApiResult(await Mediator.Send(new Create.Command { Problem = newProblem, TestCaseZip = file }));
         }
         [AllowAnonymous]
         [HttpPut("{id}")]

@@ -1,10 +1,6 @@
 import { Button } from "@mui/material";
 
-type LayoutProps = {
-  children: React.ReactNode | undefined;
-};
-
-export default function Header({ children }: LayoutProps) {
+export default function Header() {
   return (
     <div
       style={{
@@ -30,7 +26,7 @@ export default function Header({ children }: LayoutProps) {
           </p>
           <p style={{ fontSize: 18, color: 'white' }}>
             Are you ready to start a new journey? Do you want to learn about
-            programming and want to become a profesional coder in future? Let's
+            programming and want to become a professional coder in future? Let's
             start with registering your account.
           </p>
           <Button
@@ -38,7 +34,7 @@ export default function Header({ children }: LayoutProps) {
             color="success"
             style={{ borderRadius: 20 }}
           >
-            Create Account
+            Register Your Account
           </Button>
         </div>
       </div>

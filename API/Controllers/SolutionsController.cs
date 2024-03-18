@@ -1,29 +1,26 @@
 ﻿// using Application.Solutions;
 using API.DTOS;
 using Application.Solutions;
+using Application.Core;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Microsoft.OpenApi.Models;
 
 namespace API.Controllers
 {
     public class SolutionsController : BaseApiController
     {
-        [HttpGet] //api/Solutions
-        public async Task<ActionResult<List<Solution>>> GetSolutions(CancellationToken ct)
-        {
-            //return await Mediator.Send(new List.Query(),ct);
-            return Ok();
-        }
+
         [AllowAnonymous]
-        [HttpGet("{userId}/{problemId}")]
-        public async Task<ActionResult<Solution>> GetSolutions(Guid userId, Guid problemId)
+        [HttpGet]
+        public async Task<ActionResult<Solution>> GetSolutions([FromQuery] Guid userId, [FromQuery] Guid problemId, [FromQuery] PagingParams param)
         {
 
-            return HandlePagedResult(await Mediator.Send(new List.Query { UserId = userId, ProblemId = problemId }));
+            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param, UserId = userId, ProblemId = problemId }));
         }
 
 

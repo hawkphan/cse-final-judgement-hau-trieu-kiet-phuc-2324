@@ -1,20 +1,31 @@
 import { Box, CardContent } from "@mui/material";
 import { EmptyTable, Table2 } from "../../../../shared";
-import { Result, Solution, allSolutions } from "../../../../queries";
-import { useCallback, useMemo, useState } from "react";
+import { GetPropertiesParams, Result, Solution, useGetSolutions } from "../../../../queries";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { allColumns } from "./allColumns";
 import SubmissionResultDialog from "./SubmissionResultDialog";
 
-const SubmissionTab = () => {
+const SubmissionTab = ({ userId, problemId }: Props) => {
   const columns = useMemo(() => allColumns(), []);
   const [isOpen, setIsOpen] = useState(false);
   const [resultData, setResultData] = useState<Result[]>();
 
-  // const {solutions, totalRecords, isFetching} = useGetSolutions();
+  const { solutions, totalRecords, isFetching, setParams } = useGetSolutions();
 
   const handleCloseResult = () => {
     setIsOpen(false);
   };
+
+  const handleGetSolutions = useCallback(
+    (params: GetPropertiesParams) => {
+      setParams({ ...params, userId: userId, problemId: problemId });
+    },
+    [problemId, setParams, userId]
+  );
+
+  useEffect(() => {
+    setParams({ userId: userId, problemId: problemId });
+  }, [problemId, setParams, userId]);
 
   return (
     <CardContent>
@@ -25,13 +36,15 @@ const SubmissionTab = () => {
           mx: "-8px",
           my: "4px",
           fontFamily: "Roboto",
+          height: "470px",
+          overflow: "auto",
         }}
       >
         <Table2<Solution>
-          rowCount={allSolutions.data.length}
+          rowCount={totalRecords}
           columns={columns}
-          data={allSolutions.data}
-          onAction={() => {}}
+          data={solutions}
+          onAction={handleGetSolutions}
           enableTopToolbar={true}
           recordName="items"
           singularRecordName="item"
@@ -43,7 +56,7 @@ const SubmissionTab = () => {
           additionalFilterParams={["keywords"]}
           nameColumnPinning="actions"
           state={{
-            isLoading: false,
+            isLoading: isFetching,
           }}
           muiTableBodyRowProps={({ row }) => ({
             onClick: () => {
@@ -59,7 +72,7 @@ const SubmissionTab = () => {
             sx: {
               backgroundColor: "transparent",
               mx: "-8px",
-              my: "-30px",
+              my: "-10px",
               fontFamily: "Roboto",
             },
           }}
@@ -73,5 +86,10 @@ const SubmissionTab = () => {
     </CardContent>
   );
 };
+
+interface Props {
+  userId: string;
+  problemId: string;
+}
 
 export default SubmissionTab;

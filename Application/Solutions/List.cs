@@ -33,16 +33,26 @@ namespace Application.Solutions
                 Guid? problemId = request.ProblemId;
                 Guid? userId = request.UserId;
 
-                var query = await _context.Solutions.
-                Where(s => s.UserId == userId).
-                Where(s => s.ProblemId == problemId)
-                    .ToListAsync();
+                var solutions = _context.Solutions.Include(s => s.Language).Include(s => s.Results).ThenInclude(r => r.TestCase).AsQueryable();
+                
+                if (userId != null)
+                {
+                    solutions = solutions.Where(s => s.UserId == userId);
+                }
+
+                if (problemId != null)
+                {
+                    solutions = solutions.Where(s => s.ProblemId == problemId);
+                }
+
+                var queryList = await solutions.OrderByDescending(s => s.CreatedDate).ToListAsync();
+
 
                 int PageNumber = (request.Params.PageSize == -1) ? 1 : request.Params.PageNumber;
-                int PageSize = (request.Params.PageSize == -1) ? query.Count : request.Params.PageSize;
+                int PageSize = (request.Params.PageSize == -1) ? queryList.Count : request.Params.PageSize;
 
                 return Result<PagedList<Solution>>
-                    .Success(PagedList<Solution>.CreateAsyncUsingList(query,
+                    .Success(PagedList<Solution>.CreateAsyncUsingList(queryList,
                         PageNumber, PageSize));
             }
         }

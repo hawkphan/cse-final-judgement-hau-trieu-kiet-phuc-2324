@@ -18,3 +18,10 @@ export interface Result {
     executionTime: number;
     status: number;
 }
+
+export interface CreateSolutionBody {
+    userId: string;
+    problemId: string;
+    languageId: string;
+    solution: string;
+}

@@ -62,7 +62,8 @@ namespace Application.Problems
                     TestCase testCase = new TestCase
                     {
                         Input = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.in"),
-                        Output = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.out")
+                        Output = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.out"),
+                        Name = fileNameWithoutExtension
                     };
                     request.Problem.TestCases.Add(testCase);
                 }

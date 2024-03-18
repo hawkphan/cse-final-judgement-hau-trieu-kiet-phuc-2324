@@ -21,7 +21,7 @@ namespace Domain
         public double Status { get; set; }
         public long MemoryUsage { get; set; } = 0;
         public double ExecutionTime { get; set; } = 0;
-        
+        public DateTime CreatedDate { get; set; }
         public ICollection<Result> Results { get; set; }
         public double Score { get; set; }
     }

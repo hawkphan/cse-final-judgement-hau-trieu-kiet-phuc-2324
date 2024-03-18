@@ -4,10 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useState } from "react";
-import {
-  PaginationResponseNetType,
-  responseWrapper,
-} from "../../shared";
+import { PaginationResponseNetType, isEmpty, responseWrapper } from "../../shared";
 import { API_QUERIES } from "../common/constants";
 import { Table2Params } from "../common/types";
 import { Solution } from ".";
@@ -45,7 +42,19 @@ export function useGetSolutions(
   const handleInvalidateSolutions = () =>
     queryClient.invalidateQueries({ queryKey: [API_QUERIES.GET_SOLUTIONS] });
 
+  const getMaxStatus = (dataArray: { status: number }[]) => {
+    if (isEmpty(dataArray)) return null;
+
+    return dataArray.reduce((maxStatus, currentItem) => {
+      return currentItem.status > maxStatus ? currentItem.status : maxStatus;
+    }, dataArray[0].status);
+  };
+
   const { data: solutions = [], pageSize, totalCount, succeeded } = data || {};
+
+  solutions.forEach((item) => {
+    item.status = getMaxStatus(item.results);
+  });
 
   return {
     solutions,

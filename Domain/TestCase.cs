@@ -12,6 +12,7 @@ namespace Domain
         public Problem Problem { get; set; }
         public String Input { get; set; }
         public String Output { get; set; }
+        public String Name { get; set; }
         public List<Result> Results { get; set; }
     }
 }

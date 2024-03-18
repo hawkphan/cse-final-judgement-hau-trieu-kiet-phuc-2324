@@ -61,6 +61,7 @@ export interface PaginationResponseType<T> {
 }
 
 export interface PaginationResponseNetType<T> {
+  forEach(arg0: (item: any) => void): unknown;
   data: T[];
   pageSize?: number;
   pageNo?: number;
