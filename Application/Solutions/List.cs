@@ -34,15 +34,20 @@ namespace Application.Solutions
                 Guid? userId = request.UserId;
 
                 var solutions = _context.Solutions.Include(s => s.Language).Include(s => s.Results).ThenInclude(r => r.TestCase).AsQueryable();
-                
+
+                foreach (var solution in solutions)
+                {
+                    solution.Results = solution.Results.OrderBy(r => r.TestCase.Name).ToList();
+                }
+
                 if (userId != null)
                 {
-                    solutions = solutions.Where(s => s.UserId == userId);
+                    solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);
                 }
 
                 if (problemId != null)
                 {
-                    solutions = solutions.Where(s => s.ProblemId == problemId);
+                    solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.ProblemId == problemId);
                 }
 
                 var queryList = await solutions.OrderByDescending(s => s.CreatedDate).ToListAsync();
