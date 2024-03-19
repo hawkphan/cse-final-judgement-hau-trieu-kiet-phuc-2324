@@ -18,6 +18,7 @@ namespace Domain
         public ICollection<Solution> Solutions { get; set; }
         [JsonIgnore]
         public ICollection<Language> Languages { get; set; }
+        public ICollection<ContestMember> MemberContests { get; set;}
     }
 
 }
