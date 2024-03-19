@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, Card, Container, Stack } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   AnimatedTabPanel,
   Breadcrumbs,
@@ -23,22 +23,21 @@ import { LanguageOption, useGetLanguages } from "../../../queries/Languages";
 import { useGetProblemById } from "../../../queries/Problems";
 import DescriptionTab from "./DescriptionTab";
 import SubmissionTab from "./SubmissionTab";
-import { tabsList, toBreadcrumbs } from "./helpers";
+import { CompilerEnv, Tab, ThemeMode, tabsList, toBreadcrumbs } from "./helpers";
 import {
   CreateSolutionBody,
   useGetSolutions,
   useSubmitSolution,
 } from "../../../queries";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useStore } from "../../../shared/common/stores/store";
 
 const ProblemDetail = () => {
-  const [tab, setTab] = useState("tab1");
+  const [tab, setTab] = useState(Tab.DESCRIPTION);
   const [currentLanguageId, setCurrentLanguageId] = useState();
   const { id } = useParams<{ id: string }>();
 
   const { userStore } = useStore();
-  const navigate = useNavigate();
   const user = userStore.user;
 
   const { problem, isFetching } = useGetProblemById({
@@ -53,20 +52,11 @@ const ProblemDetail = () => {
     [languages]
   );
 
-  const files = {
-    "script.js": {
-      name: "script.js",
-      language: "javascript",
-      value: "",
-    },
-  };
-
   type Monaco = typeof monaco;
 
-  const [filename, setFilename] = useState("script.js");
-  const file = files[filename];
+  const file = CompilerEnv['Python'];
   const editorRef = useRef(null);
-  const [darkOrLight, setDarkOrLight] = useState("vs-dark");
+  const [darkOrLight, setDarkOrLight] = useState(ThemeMode.DARK);
 
   const handleComponentDidMount = (
     editor: monaco.editor.IStandaloneCodeEditor,
@@ -81,7 +71,7 @@ const ProblemDetail = () => {
   }, [user?.id]);
 
   const toggleDarkOrLightTheme = () => {
-    setDarkOrLight(darkOrLight === "vs-dark" ? "light" : "vs-dark");
+    setDarkOrLight(darkOrLight === ThemeMode.DARK ? ThemeMode.LIGHT : ThemeMode.DARK);
   };
 
   const getEditorValue = () => {
@@ -127,12 +117,12 @@ const ProblemDetail = () => {
     onSuccess: () => {
       Toastify.success("Successful!");
       handleInvalidateSolutions();
-      setTab("tab2");
+      setTab(Tab.SUBMISSION);
     },
     onError: (error) => {
       Toastify.error(error.message);
       handleInvalidateSolutions();
-      setTab("tab2");
+      setTab(Tab.SUBMISSION);
       console.log("Error", error);
     },
   });
@@ -151,11 +141,11 @@ const ProblemDetail = () => {
 
   const renderTab = () => {
     switch (tab) {
-      case "tab1":
+      case Tab.DESCRIPTION:
         return <DescriptionTab problem={problem} />;
-      case "tab2":
+      case Tab.SUBMISSION:
         return <SubmissionTab userId={getUserId} problemId={problem?.id} />;
-      case "tab3":
+      case Tab.OTHER:
         return <></>;
       default:
         <LoadingCommon />;
@@ -216,7 +206,7 @@ const ProblemDetail = () => {
                   <Button
                     onClick={() => toggleDarkOrLightTheme()}
                     icon={
-                      darkOrLight === "vs-dark" ? (
+                      darkOrLight === ThemeMode.DARK ? (
                         <LightbulbIcon />
                       ) : (
                         <LightbulbOutlinedIcon />

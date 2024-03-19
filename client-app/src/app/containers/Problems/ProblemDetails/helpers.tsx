@@ -16,7 +16,7 @@ export const toBreadcrumbs = ({ problem }) => {
   return [
     {
       id: 0,
-      label: 'Problems',
+      label: "Problems",
       href: PATHS.problems,
     },
     {
@@ -24,4 +24,33 @@ export const toBreadcrumbs = ({ problem }) => {
       label: problem.code,
     },
   ];
+};
+
+export enum ThemeMode {
+  LIGHT = "light",
+  DARK = "vs-dark",
 }
+
+export enum Tab {
+  DESCRIPTION = "tab1",
+  SUBMISSION = "tab2",
+  OTHER = "tab3",
+}
+
+export const CompilerEnv = {
+  JavaScript: {
+    name: "script.js",
+    language: "javascript",
+    value: "",
+  },
+  Python: {
+    name: "main.py",
+    language: "python",
+    value: "",
+  },
+  Java: {
+    name: "Main.java",
+    language: "java",
+    value: "",
+  },
+};
