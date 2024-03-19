@@ -7,7 +7,7 @@ export const PATHS = {
   login: '/login',
   logout: '/logout',
   profile: '/profile',
-
+  editProfile: '/profile/edit',
   problems: "/problems",
   problemDetails : '/problems/:id',
   createProblem: '/problems/create',

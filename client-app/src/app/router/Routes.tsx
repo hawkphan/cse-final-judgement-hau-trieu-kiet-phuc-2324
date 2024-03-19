@@ -9,6 +9,7 @@ import { PATHS } from "../configs/paths";
 import SignUp from "../containers/User/SignUpForm";
 import ProblemDetail from "../containers/Problems/ProblemDetails";
 import ProblemForm from "../containers/Problems/ProblemForm";
+import EditProfile from "../containers/Navbar/UserProfile/EditProfile";
 
 export const routes: RouteObject[] = [
   {
@@ -31,6 +32,10 @@ export const routes: RouteObject[] = [
       {
         path: PATHS.profile,
         element: <UserProfile />,
+      },
+      {
+        path: PATHS.editProfile,
+        element: <EditProfile />,
       },
       {
         path: PATHS.login,

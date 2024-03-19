@@ -38,7 +38,7 @@ import EditorToolbar from './EditorToolbar';
 export default function MyProfile() {
   return (
     <Box sx={{ flex: 1, width: '100%' }}>
-      <Box
+      {/* <Box
         sx={{
           position: 'sticky',
           top: { sm: -100, md: -110 },
@@ -119,7 +119,7 @@ export default function MyProfile() {
             </Tab>
           </TabList>
         </Tabs>
-      </Box>
+      </Box> */}
       <Stack
         spacing={4}
         sx={{
@@ -335,6 +335,7 @@ export default function MyProfile() {
             </CardActions>
           </CardOverflow>
         </Card>
+
         <Card>
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">Bio</Typography>
@@ -366,7 +367,8 @@ export default function MyProfile() {
             </CardActions>
           </CardOverflow>
         </Card>
-        <Card>
+
+        {/* <Card>
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">Portfolio projects</Typography>
             <Typography level="body-sm">
@@ -399,7 +401,7 @@ export default function MyProfile() {
               </Button>
             </CardActions>
           </CardOverflow>
-        </Card>
+        </Card> */}
       </Stack>
     </Box>
   );
