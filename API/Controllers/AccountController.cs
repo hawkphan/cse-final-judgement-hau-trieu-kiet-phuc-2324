@@ -2,15 +2,12 @@ using System.Security.Claims;
 using API.DTOS;
 using API.Services;
 using Application.Profiles;
-using Application.Solutions;
-using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 namespace API.Controllers
 {
     [ApiController]
@@ -18,7 +15,6 @@ namespace API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly IMapper _mapper;
         private readonly TokenService _tokenServices;
 
         public AccountController(UserManager<AppUser> userManager, TokenService tokenServices)
@@ -70,25 +66,10 @@ namespace API.Controllers
             {
                 return CreateNewUserDto(user);
             }
+
+
+
             return BadRequest(result.Errors);
-        }
-
-        [AllowAnonymous]
-        [HttpPut("EditProfile")]
-        public async Task<ActionResult<UserDto>> Update([FromForm] UpdateDto UpdateDto)
-        {
-            var user = await _userManager.FindByEmailAsync(UpdateDto.Email);
-            user.DisplayName = UpdateDto.UserName;
-            user.FirstName = UpdateDto.FirstName;
-            user.LastName = UpdateDto.LastName;
-            user.FirstName = UpdateDto.FirstName;
-            
-            FileManager fileManager = new FileManager();
-            fileManager.SaveFile(UpdateDto.Image, fileManager.ProfilePicturePath,user.Id);
-
-
-            await _userManager.UpdateAsync(user);
-            return Ok();
         }
         private UserDto CreateNewUserDto(AppUser user)
         {
