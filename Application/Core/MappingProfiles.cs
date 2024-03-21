@@ -1,5 +1,6 @@
 using AutoMapper;
 using Domain;
+using Domain.Dtos;
 
 namespace Application.Core
 {
@@ -30,6 +31,14 @@ namespace Application.Core
                 .ForMember(d => d.Birthday, o => o.MapFrom(s => s.Birthday))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.Email))
             ;
+            CreateMap<Domain.Contest, ContestDto>()
+              .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
+              .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
+              .ForMember(d => d.StartTime, o => o.MapFrom(s => s.StartTime))
+              .ForMember(d => d.EndTime, o => o.MapFrom(s => s.EndTime))
+              .ForMember(d => d.Members, o => o.MapFrom(s => s.Members))
+              .ForMember(d => d.Description, o => o.MapFrom(s => s.Description))
+              .ForMember(d => d.Problems, o => o.MapFrom(s => s.Problems));
         }
     }
 }

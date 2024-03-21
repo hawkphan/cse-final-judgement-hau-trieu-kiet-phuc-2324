@@ -68,9 +68,13 @@ export const CreateProblemFormSchema = Yup.object().shape({
   [ProblemProperties.CODE]: Yup.string().required(),
   [ProblemProperties.TITLE]: Yup.string().required(),
   [ProblemProperties.TIME_LIMIT]: Yup.string().required(),
+  [ProblemProperties.MEMORY_LIMIT]: Yup.string().required(),
+  [ProblemProperties.COMPARE_MODE]: Yup.string().required(),
 });
 export const EditProblemFormSchema = Yup.object().shape({
   [ProblemProperties.CODE]: Yup.string().required(),
   [ProblemProperties.TITLE]: Yup.string().required(),
   [ProblemProperties.TIME_LIMIT]: Yup.string().required(),
+  [ProblemProperties.MEMORY_LIMIT]: Yup.string().required(),
+  [ProblemProperties.COMPARE_MODE]: Yup.string().required(),
 });

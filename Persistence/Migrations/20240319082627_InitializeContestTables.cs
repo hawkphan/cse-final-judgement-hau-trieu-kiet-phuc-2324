@@ -12,7 +12,7 @@ namespace Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Contest",
+                name: "Contests",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -23,11 +23,11 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Contest", x => x.Id);
+                    table.PrimaryKey("PK_Contests", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ContestMember",
+                name: "ContestMembers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -37,7 +37,7 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContestMember", x => x.Id);
+                    table.PrimaryKey("PK_ContestMembers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ContestMember_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -45,15 +45,15 @@ namespace Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ContestMember_Contest_ContestId",
+                        name: "FK_ContestMembers_Contests_ContestId",
                         column: x => x.ContestId,
-                        principalTable: "Contest",
+                        principalTable: "Contests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ContestProblem",
+                name: "ContestProblems",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -62,15 +62,15 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContestProblem", x => x.Id);
+                    table.PrimaryKey("PK_ContestProblems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ContestProblem_Contest_ContestId",
+                        name: "FK_ContestProblems_Contests_ContestId",
                         column: x => x.ContestId,
                         principalTable: "Contest",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ContestProblem_Problems_ProblemId",
+                        name: "FK_ContestProblems_Problems_ProblemId",
                         column: x => x.ProblemId,
                         principalTable: "Problems",
                         principalColumn: "Id",
@@ -78,23 +78,23 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContestMember_ContestId",
-                table: "ContestMember",
+                name: "IX_ContestMembers_ContestId",
+                table: "ContestMembers",
                 column: "ContestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContestMember_UserId",
-                table: "ContestMember",
+                name: "IX_ContestMembers_UserId",
+                table: "ContestMembers",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContestProblem_ContestId",
-                table: "ContestProblem",
+                name: "IX_ContestProblems_ContestId",
+                table: "ContestProblems",
                 column: "ContestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContestProblem_ProblemId",
-                table: "ContestProblem",
+                name: "IX_ContestProblems_ProblemId",
+                table: "ContestProblems",
                 column: "ProblemId");
         }
 
@@ -102,13 +102,13 @@ namespace Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ContestMember");
+                name: "ContestMembers");
 
             migrationBuilder.DropTable(
-                name: "ContestProblem");
+                name: "ContestProblems");
 
             migrationBuilder.DropTable(
-                name: "Contest");
+                name: "Contests");
         }
     }
 }

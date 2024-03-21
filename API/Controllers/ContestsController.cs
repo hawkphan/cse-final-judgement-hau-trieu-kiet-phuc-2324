@@ -10,10 +10,16 @@ namespace API.Controllers
     public class ContestsController : BaseApiController
     {
         [AllowAnonymous]
-        [HttpGet] //api/problems
-        public async Task<IActionResult> GetContests([FromQuery] PagingParams pagingParams, [FromQuery] Guid userId)
+        [HttpGet("unregistered")] //api/Contests
+        public async Task<IActionResult> GetUnregisteredContests([FromQuery] PagingParams pagingParams, [FromQuery] Guid userId)
         {
-            return HandlePagedResult(await Mediator.Send(new List.Query { Params = pagingParams, UserId = userId }));
+            return HandlePagedResult(await Mediator.Send(new UnregisteredList.Query { Params = pagingParams, UserId = userId }));
+        }
+        [AllowAnonymous]
+        [HttpGet("registered")] //api/Contests
+        public async Task<IActionResult> GetRegisteredContests([FromQuery] PagingParams pagingParams, [FromQuery] Guid userId)
+        {
+            return HandlePagedResult(await Mediator.Send(new RegisteredList.Query { Params = pagingParams, UserId = userId }));
         }
         [AllowAnonymous]
         [HttpGet("{id}")]
