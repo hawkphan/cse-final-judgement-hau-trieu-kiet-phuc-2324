@@ -9,6 +9,7 @@ namespace Application.Core
         {
             CreateMap<Activity, Activity>();
             CreateMap<Problem, Problem>();
+            CreateMap<Domain.AppUser,AppUser>();
             CreateMap<Solution, Solution>();
             CreateMap<SolutionDto, Solution>()
                 .ForMember(d => d.LanguageId, o => o.MapFrom(s => s.languageId))
