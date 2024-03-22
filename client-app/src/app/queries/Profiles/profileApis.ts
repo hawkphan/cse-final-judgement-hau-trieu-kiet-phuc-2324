@@ -1,13 +1,12 @@
 import axios from "axios";
-import { Profile } from "./types";
+import { EditProfileBody, Profile } from "./types";
 import { API_URL } from "../common/constants";
 
-/*
-const editProfile = (body: EditProblemBody) => {
-  const id = body.get('id');
-  return axios.put(`${API_URL}/api/problems/${id}`, body, {});
+
+const editProfile = (body: EditProfileBody) => {
+  return axios.put(`${API_URL}/api/account/EditProfile`, body, {});
 };
-*/
+
 
 const getProfileById = (params: { id: string }) => {
   console.log("getProfileById " + params.id)

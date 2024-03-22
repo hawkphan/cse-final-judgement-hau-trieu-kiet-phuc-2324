@@ -82,14 +82,15 @@ namespace API.Controllers
             user.FirstName = UpdateDto.FirstName;
             user.LastName = UpdateDto.LastName;
             user.FirstName = UpdateDto.FirstName;
-            
+
             FileManager fileManager = new FileManager();
-            fileManager.SaveFile(UpdateDto.Image, fileManager.ProfilePicturePath,user.Id);
+            fileManager.SaveFile(UpdateDto.Image, fileManager.ProfilePicturePath, user.Id);
 
 
             await _userManager.UpdateAsync(user);
             return Ok();
         }
+        
         private UserDto CreateNewUserDto(AppUser user)
         {
             return new UserDto
