@@ -81,7 +81,9 @@ namespace API.Controllers
             user.DisplayName = UpdateDto.UserName;
             user.FirstName = UpdateDto.FirstName;
             user.LastName = UpdateDto.LastName;
-            user.FirstName = UpdateDto.FirstName;
+            user.Email = UpdateDto.Email;
+            user.Birthday = UpdateDto.Birthday;
+            user.DisplayName = UpdateDto.UserName;
             
             FileManager fileManager = new FileManager();
             fileManager.SaveFile(UpdateDto.Image, fileManager.ProfilePicturePath,user.Id);
