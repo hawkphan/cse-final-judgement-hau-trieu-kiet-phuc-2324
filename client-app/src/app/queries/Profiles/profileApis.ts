@@ -1,13 +1,13 @@
 import axios from "axios";
-import { Profile } from "./types";
+import { EditProfileBody, Profile } from "./types";
 import { API_URL } from "../common/constants";
 
-/*
-const editProfile = (body: EditProblemBody) => {
+
+const editProfile = (body: EditProfileBody) => {
   const id = body.get('id');
   return axios.put(`${API_URL}/api/problems/${id}`, body, {});
 };
-*/
+
 
 const getProfileById = (params: { id: string }) => {
   console.log("getProfileById " + params.id)
@@ -17,4 +17,4 @@ const getProfileById = (params: { id: string }) => {
 };
 
 
-export {  getProfileById  };
+export {  getProfileById, editProfile  };

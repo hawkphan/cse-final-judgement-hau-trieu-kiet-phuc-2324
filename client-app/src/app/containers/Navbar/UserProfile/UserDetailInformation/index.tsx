@@ -37,17 +37,18 @@ export default function UserDetailInformation() {
   const navigate = useNavigate();
   const { userStore } = useStore();
   const id = useMemo(()=>{return userStore?.user?.id},[userStore?.user]);
-  console.log("Id " + id);
-  formatDateOrNull
+  sessionStorage.setItem('myId', id);
+  
+
   const {
-    profile
+    data, isFetching 
   } = useGetProfileById(
     {
         id,
         queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: id }],
       }
   );
-
+  const profile :Profile = useMemo(()=>{return data?.data}, [id])
   const handleEditProfile= useCallback(
     () => {
       navigate(`/profile/edit`);
@@ -69,9 +70,9 @@ export default function UserDetailInformation() {
 
 
         <Stack direction="column" spacing={0.5}>
-          <h4>{profile?.data.userName}</h4>
-          <h5>{profile?.data.email}</h5>
-          <h5>{formatDate( profile?.data.birthday)}</h5>
+          <h4>{profile?.userName}</h4>
+          <h5>{profile?.email}</h5>
+          <h5>{formatDate( profile?.birthday)}</h5>
         </Stack>
       </Stack>
 
