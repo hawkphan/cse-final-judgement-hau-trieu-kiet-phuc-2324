@@ -8,7 +8,7 @@ export enum ProfileProperties {
   ID = "id",
   FIRSTNAME = "firstName",
   LASTNAME = "lastName",
-  USERNAME = "userName",
+  USERNAME = "username",
   EMAIL = "email",
   AVATAR = "image",
   // DESCRIPTION = "description",
@@ -54,9 +54,9 @@ export const toBreadCrumbs = (isEdit: boolean, id?: string) => {
 };
 
 export const EditProfileFormSchema = Yup.object().shape({
-  // [ProfileProperties.ID]: Yup.string().required(),
+  [ProfileProperties.ID]: Yup.string().required(),
   [ProfileProperties.FIRSTNAME]: Yup.string().required(),
   [ProfileProperties.LASTNAME]: Yup.string().required(),
   [ProfileProperties.USERNAME]: Yup.string().required(),
-  [ProfileProperties.EMAIL]: Yup.string().required(),
+  // [ProfileProperties.EMAIL]: Yup.string().required(),
 });

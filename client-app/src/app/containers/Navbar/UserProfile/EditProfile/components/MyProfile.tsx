@@ -23,9 +23,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PATHS } from "../../../../../configs/paths";
-// import { useEditProfile } from "../../../../../queries/Profiles";
+import { useEditProfile } from "../../../../../queries/Profiles/useEditProfile";
+import { EditProfileFormSchema, mapFormData } from "../helpers";
 import { useGetProfileById } from "../../../../../queries/Profiles";
 import { API_QUERIES } from "../../../../../queries";
+import { LoadingCommon, Toastify } from "../../../../../shared";
 import { LoadingCommon, MuiDatePicker, Toastify } from "../../../../../shared";
 import { EditProfileFormSchema, mapFormData } from "../helpers";
 import { useEditProfile } from "../../../../../queries/Profiles/useEditProfile";
@@ -37,7 +39,7 @@ export interface Profile {
   laastName?: string;
   email?: string;
   birthday?: string;
-  gender?: number;
+  isFemale?: boolean;
   displayName?: string;
   code?: string;
 }
@@ -48,15 +50,20 @@ export default function MyProfile() {
     return userStore?.user?.id;
   }, [userStore.user]);
   const navigate = useNavigate();
+  // const id = useMemo(() => {
+  //   return sessionStorage.getItem('myId');
+  // }, [userStore.user]);
+
+  // const id = sessionStorage.getItem('myId');
+  // console.log("ID storage: " + id)
 
   // const isEdit = id && id !== "";
-  const [fileSelected, setFileSelected] = useState<File | null>(null);
+  const [fileSelected, setFileSelected] = useState<File | undefined>();
 
   const { data, isFetching, handleInvalidateProfile } = useGetProfileById({
     id,
     queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: id }],
   });
-
   const profile: Profile = useMemo(() => {
     return data?.data;
   }, [id]);
@@ -88,12 +95,14 @@ export default function MyProfile() {
   }, [profile, reset]);
 
   const onSubmit = async (data: EditProfileBody) => {
+    alert("Submit successful");
     alert(
-      `Submit successful: \n${data.birthday}\n${data.email}\n${data.firstName}\n${data.lastName}\n${data.userName}`
+      // `Submit successful: \n${data.birthday}\n${data.email}\n${data.firstName}\n${data.lastName}\n${data.userName}`
     );
 
     const formData = mapFormData(data,fileSelected);
 
+    onEditProfile(formData);
     // if (!fileSelected) {
     //   alert("!fileSelected");
     //   // Toastify.error(ValidationMessage.LACK_OF_FILE);
@@ -198,63 +207,6 @@ export default function MyProfile() {
                 >
                   <EditRoundedIcon />
                 </IconButton> 
-
-                {/* <Controller
-                  name="image"
-                  control={control}
-                  render={({
-                    field: { onChange, onBlur, value, ref },
-                    fieldState: { error },
-                  }) => (
-                    <>
-                      <AspectRatio
-                        ratio="1"
-                        maxHeight={200}
-                        sx={{ flex: 1, minWidth: 120, borderRadius: "100%" }}
-                      >
-                        <img
-                          src={value || avatarSrc}
-                          loading="lazy"
-                          alt="Avatar"
-                        />
-                      </AspectRatio>
-
-                      <input
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        ref={ref}
-                        type="file"
-                        onChange={(e) => {
-                          // Gọi hàm onChange từ 'field' và xử lý file tại đây
-                          onChange(e.target.files[0]);
-                          handleFileChange(e); // Nếu bạn muốn giữ hàm xử lý file riêng của mình
-                        }}
-                        onBlur={onBlur} // Đảm bảo onBlur được gọi để quản lý focus
-                      />
-
-                      <IconButton
-                        aria-label="upload new picture"
-                        size="sm"
-                        variant="outlined"
-                        color="neutral"
-                        onClick={() => inputRef.current.click()} // Gọi click event trên input file
-                        sx={{
-                          bgcolor: "background.body",
-                          position: "absolute",
-                          zIndex: 2,
-                          borderRadius: "50%",
-                          left: 100,
-                          top: 170,
-                          boxShadow: "sm",
-                        }}
-                      >
-                        <EditRoundedIcon />
-                      </IconButton>
-
-                      {error && <p style={{ color: "red" }}>{error.message}</p>}
-                    </>
-                  )}
-                /> */}
               </Stack>
 
               {/*Form  */}
@@ -277,22 +229,17 @@ export default function MyProfile() {
                         field: { value, onChange, ...props },
                         fieldState: { error },
                       }) => (
-                        <>
-                          <Input
-                            size="sm"
-                            placeholder="First name"
-                            value={value}
-                            onChange={(data) => {
-                              onChange(data);
-                            }}
-                            required
-                            // errorMessage={error?.message}
-                            {...props}
-                          />
-                          {error && (
-                            <p style={{ color: "red" }}>{error.message}</p>
-                          )}
-                        </>
+                        <Input
+                          size="sm"
+                          placeholder="First name"
+                          value={value}
+                          onChange={(data) => {
+                            onChange(data);
+                          }}
+                          required
+                          // errorMessage={error?.message}
+                          {...props}
+                        />
                       )}
                     />
                     <Controller
@@ -305,23 +252,18 @@ export default function MyProfile() {
                         field: { value, onChange, ...props },
                         fieldState: { error },
                       }) => (
-                        <>
-                          <Input
-                            size="sm"
-                            placeholder="Last name"
-                            sx={{ flexGrow: 1 }}
-                            value={value}
-                            onChange={(data) => {
-                              onChange(data);
-                            }}
-                            required
-                            // errorMessage={error?.message}
-                            {...props}
-                          />
-                          {error && (
-                            <p style={{ color: "red" }}>{error.message}</p>
-                          )}
-                        </>
+                        <Input
+                          size="sm"
+                          placeholder="Last name"
+                          sx={{ flexGrow: 1 }}
+                          value={value}
+                          onChange={(data) => {
+                            onChange(data);
+                          }}
+                          required
+                          // errorMessage={error?.message}
+                          {...props}
+                        />
                       )}
                     />
                     <Controller
@@ -334,23 +276,18 @@ export default function MyProfile() {
                         field: { value, onChange, ...props },
                         fieldState: { error },
                       }) => (
-                        <>
-                          <Input
-                            size="sm"
-                            placeholder="User name"
-                            sx={{ flexGrow: 1 }}
-                            value={value}
-                            onChange={(data) => {
-                              onChange(data);
-                            }}
-                            required
-                            // errorMessage={error?.message}
-                            {...props}
-                          />
-                          {error && (
-                            <p style={{ color: "red" }}>{error.message}</p>
-                          )}
-                        </>
+                        <Input
+                          size="sm"
+                          placeholder="User name"
+                          sx={{ flexGrow: 1 }}
+                          value={value}
+                          onChange={(data) => {
+                            onChange(data);
+                          }}
+                          required
+                          // errorMessage={error?.message}
+                          {...props}
+                        />
                       )}
                     />
                   </FormControl>
@@ -369,9 +306,6 @@ export default function MyProfile() {
                     <Controller
                       name="gender"
                       control={control}
-                      rules={{
-                        required: true,
-                      }}
                       render={({
                         field: { value, onChange, ...props },
                         fieldState: { error },
@@ -389,8 +323,8 @@ export default function MyProfile() {
                               type="radio"
                               id="female"
                               name="gender"
-                              value={1}
-                              checked={value === 1}
+                              value="female"
+                              checked={value === "female"}
                               onChange={onChange}
                               {...props}
                             />
@@ -401,8 +335,8 @@ export default function MyProfile() {
                               type="radio"
                               id="male"
                               name="gender"
-                              value={0}
-                              checked={value === 0}
+                              value="male"
+                              checked={value === "male"}
                               onChange={onChange}
                               {...props}
                             />
@@ -413,8 +347,8 @@ export default function MyProfile() {
                               type="radio"
                               id="other"
                               name="gender"
-                              value={2}
-                              checked={value === 2}
+                              value="other"
+                              checked={value === "other"}
                               onChange={onChange}
                               {...props}
                             />
@@ -425,7 +359,6 @@ export default function MyProfile() {
                       )}
                     />
                     <Divider />
-
                     <FormLabel>Date of Birth</FormLabel>
                     <Controller
                       name="birthday"
@@ -436,8 +369,21 @@ export default function MyProfile() {
                       render={({
                         field: { value, onChange, ...props },
                         fieldState: { error },
+                      }) => (
+                        <Input
+                          size="sm"
+                          type="date"
+                          sx={{ flexGrow: 1 }}
+                          onChange={(data) => {
+                            onChange(data);
+                          }}
+                          required
+                          // errorMessage={error?.message}
+                          {...props}
+                        />
+                      )}
+                    />
                       }) => {
-                        // Chuyển đổi giá trị ngày tháng từ chuỗi ISO sang định dạng "YYYY-MM-DD"
                         const formattedDate = value ? value.split("T")[0] : "";
                         console.log("dob " + formattedDate);
                         return (
@@ -445,9 +391,8 @@ export default function MyProfile() {
                             size="sm"
                             type="date"
                             sx={{ flexGrow: 1 }}
-                            value={formattedDate} // Sử dụng giá trị đã format ở đây
+                            value={formattedDate} 
                             onChange={(e) => {
-                              // Chuyển đổi giá trị ngày tháng trở lại định dạng ISO khi có sự thay đổi
                               const newDate = e.target.value
                                 ? `${e.target.value}T00:00:00`
                                 : "";
@@ -459,36 +404,7 @@ export default function MyProfile() {
                         );
                       }}
                     />
-                    {/* <Controller
-                      name="birthday"
-                      control={control}
-                      rules={{
-                        required: true,
-                      }}
-                      render={({
-                        field: {value, onChange, ...props },
-                        fieldState: { error },
-                      }) => {
-                        // Chuyển đổi giá trị ngày tháng từ chuỗi ISO sang định dạng "YYYY-MM-DD"
-                        const formattedDate = value ? value.split("T")[0] : "";
-                        console.log("dob " + formattedDate)
-                        return (
-                          <MuiDatePicker
-                          sx={{ flexGrow: 1 }}
-                          value={dayjs(formattedDate)} // Sử dụng giá trị đã format ở đây
-                          onChange={(e) => {
-                            // Chuyển đổi giá trị ngày tháng trở lại định dạng ISO khi có sự thay đổi
-                            const newDate = e.target.value
-                              ? `${e.target.value}T00:00:00`
-                              : "";
-                            onChange(newDate);
-                          }}
-                          required
-                          {...props}
-                          />
-                        );
-                      }}
-                    />  */}
+                    
                   </FormControl>
                 </Stack>
 
@@ -520,7 +436,6 @@ export default function MyProfile() {
                               onChange(data);
                             }}
                             required
-                            // errorMessage={error?.message}
                             {...props}
                           />
                           {error && (
@@ -549,41 +464,6 @@ export default function MyProfile() {
           </Card>
         </Form>
 
-        {/* <Form>
-          <Card>
-            <Box sx={{ mb: 1 }}>
-              <Typography level="title-md">Bio</Typography>
-              <Typography level="body-sm">
-                Write a short introduction to be displayed on your profile
-              </Typography>
-            </Box>
-            <Divider />
-            <Stack spacing={2} sx={{ my: 1 }}>
-              <EditorToolbar />
-              <Textarea
-                size="sm"
-                minRows={4}
-                sx={{ mt: 1.5 }}
-                defaultValue="I'm a software developer based in Bangkok, Thailand. My goal is to solve UI problems with neat CSS without using too much JavaScript."
-              />
-              <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
-                275 characters left
-              </FormHelperText>
-            </Stack>
-            <CardOverflow
-              sx={{ borderTop: "1px solid", borderColor: "divider" }}
-            >
-              <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-                <Button size="sm" variant="outlined" color="neutral">
-                  Cancel
-                </Button>
-                <Button size="sm" variant="solid">
-                  Save
-                </Button>
-              </CardActions>
-            </CardOverflow>
-          </Card>
-        </Form> */}
       </Stack>
     </Box>
   );
