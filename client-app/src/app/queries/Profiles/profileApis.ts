@@ -16,4 +16,4 @@ const getProfileById = (params: { id: string }) => {
 };
 
 
-export {  getProfileById  };
+export {  getProfileById, editProfile  };

@@ -23,11 +23,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PATHS } from "../../../../../configs/paths";
-import { useEditProfile } from "../../../../../queries/Profiles/useEditProfile";
-import { EditProfileFormSchema, mapFormData } from "../helpers";
+// import { useEditProfile } from "../../../../../queries/Profiles";
 import { useGetProfileById } from "../../../../../queries/Profiles";
 import { API_QUERIES } from "../../../../../queries";
 import { LoadingCommon, Toastify } from "../../../../../shared";
+import { EditProfileFormSchema, mapFormData } from "../helpers";
+import { useEditProfile } from "../../../../../queries/Profiles/useEditProfile";
 
 export interface Profile {
   userName?: string;
