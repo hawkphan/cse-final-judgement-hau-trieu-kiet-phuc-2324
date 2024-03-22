@@ -1,19 +1,37 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, Card, Stack } from "@mui/material";
-import { Accordion, CustomTableSearch, EmptyTable, Table2, Text } from "../../../shared";
+import {
+  Accordion,
+  CustomTableSearch,
+  EmptyTable,
+  Table2,
+  Text,
+} from "../../../shared";
+import { Contest, GetPropertiesParams, useGetRegisteredContest, useGetUnregisteredContest } from "../../../queries";
+import { useCallback, useMemo } from "react";
+import { allColumns } from "./allColumns";
 
 const RegisteredListView = () => {
+  const { registeredContests, isFetching, setParams, totalRecords } = useGetRegisteredContest();
+
+  const columns = useMemo(() => allColumns(), []);
+  const handleGetUnregisteredContests = useCallback(
+    (params: GetPropertiesParams) => {
+      setParams({ ...params});
+    },
+    [setParams]
+  );
   return (
     <Stack marginTop={2}>
       <Accordion title={<Text>Registered Contests</Text>} isExpanded>
         <Box padding={2}>
           <Card sx={{ paddingLeft: 2, paddingRight: 2, paddingTop: 0 }}>
-            <Table2
-              rowCount={0}
-              columns={[]}
-              data={[]}
+            <Table2<Contest>
+              rowCount={totalRecords}
+              columns={columns}
+              data={registeredContests}
               recordName="items"
-              onAction={() => {}}
+              onAction={handleGetUnregisteredContests}
               enableDensityToggle={false}
               enableColumnOrdering={false}
               enableRowActions
@@ -27,7 +45,7 @@ const RegisteredListView = () => {
               }}
               additionalFilterParams={["keywords"]}
               state={{
-                isLoading: false,
+                isLoading: isFetching,
               }}
               renderTopToolbarCustomActions={() => (
                 <Stack direction="row" spacing={1} my={0.5}>

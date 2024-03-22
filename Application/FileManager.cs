@@ -11,6 +11,7 @@ namespace Application.Solutions
     public class FileManager
     {
         public readonly String CurrentDirectory = Directory.GetCurrentDirectory();
+        public readonly String ProfilePicturePath = Path.Combine(Directory.GetCurrentDirectory(), "ProfilePicturePath");
         public readonly String UploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
         public readonly String TestCasesPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\TestCases");
         public readonly String SolutionsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Solutions");
@@ -34,9 +35,10 @@ namespace Application.Solutions
             }
             return path;
         }
-        public async void SaveFile(IFormFile file, String FolderPath)
+        public async void SaveFile(IFormFile file, String FolderPath, Guid id)
         {
-            using (var stream = new FileStream(FolderPath, FileMode.Create))
+            string location = Path.Combine(FolderPath, $"{id}.jpg");
+            using (var stream = new FileStream(location, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
