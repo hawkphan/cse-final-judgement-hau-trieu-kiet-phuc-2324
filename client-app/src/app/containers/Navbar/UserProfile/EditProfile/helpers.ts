@@ -24,10 +24,10 @@ export enum ValidationMessage {
 
 export const mapFormData = (
   data:  EditProfileBody,
-  // fileSelected: any,
+  fileSelected: any,
 ) => {
   const formData = new FormData();
-  // formData.append(ProfileProperties.AVATAR, fileSelected);
+  formData.append(ProfileProperties.AVATAR, fileSelected);
   formData.append(ProfileProperties.FIRSTNAME, data.firstName);
   formData.append(ProfileProperties.LASTNAME, data.lastName);
   formData.append(ProfileProperties.USERNAME, data.userName);

@@ -52,7 +52,7 @@ export default function MyProfile() {
   // const isEdit = id && id !== "";
   const [fileSelected, setFileSelected] = useState<File | null>(null);
 
-  const { data, isFetching } = useGetProfileById({
+  const { data, isFetching, handleInvalidateProfile } = useGetProfileById({
     id,
     queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: id }],
   });
@@ -64,9 +64,8 @@ export default function MyProfile() {
   //React hook form
   const { onEditProfile, isPending: isEditPending } = useEditProfile({
     onSuccess: () => {
-      // Toastify.success("Successful!");
-      // handleInvalidateProblems();
-      // handleInvalidateProblem();
+      Toastify.success("Successful!");
+      handleInvalidateProfile();
       navigate(PATHS.profile);
     },
     onError: (error) => {
@@ -93,7 +92,7 @@ export default function MyProfile() {
       `Submit successful: \n${data.birthday}\n${data.email}\n${data.firstName}\n${data.lastName}\n${data.userName}`
     );
 
-    const formData = mapFormData(data);
+    const formData = mapFormData(data,fileSelected);
 
     // if (!fileSelected) {
     //   alert("!fileSelected");
@@ -121,16 +120,16 @@ export default function MyProfile() {
       setAvatarSrc(newAvatarSrc);
     }
   };
-  // const handleFileChangeAndSave = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.files && event.target.files[0]) {
-  //     const file = event.target.files[0];
-  //     // Cập nhật state với file được chọn
-  //     setFileSelected( file); // Sửa ở đây
-  //     // Tạo URL và cập nhật state để hiển thị trước hình ảnh
-  //     const filePreviewUrl = URL.createObjectURL(file);
-  //     setAvatarSrc(filePreviewUrl); // Và ở đây
-  //   }
-  // };
+  const handleFileChangeAndSave = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      // Cập nhật state với file được chọn
+      setFileSelected( file); // Sửa ở đây
+      // Tạo URL và cập nhật state để hiển thị trước hình ảnh
+      const filePreviewUrl = URL.createObjectURL(file);
+      setAvatarSrc(filePreviewUrl); // Và ở đây
+    }
+  };
 
   if (isFetching) {
     return <LoadingCommon />;
@@ -165,7 +164,7 @@ export default function MyProfile() {
             >
               {/* Avatar */}
               <Stack direction="column" spacing={1}>
-                {/* <AspectRatio
+                 <AspectRatio
                   ratio="1"
                   maxHeight={200}
                   sx={{ flex: 1, minWidth: 120, borderRadius: "100%" }}
@@ -178,7 +177,7 @@ export default function MyProfile() {
                   style={{ display: "none" }}
                   ref={inputRef}
                   type="file"
-                  onChange={handleFileChange}
+                  onChange={handleFileChangeAndSave}
                 /> 
 
                 <IconButton
@@ -198,9 +197,9 @@ export default function MyProfile() {
                   }}
                 >
                   <EditRoundedIcon />
-                </IconButton> */}
+                </IconButton> 
 
-                <Controller
+                {/* <Controller
                   name="image"
                   control={control}
                   render={({
@@ -255,7 +254,7 @@ export default function MyProfile() {
                       {error && <p style={{ color: "red" }}>{error.message}</p>}
                     </>
                   )}
-                />
+                /> */}
               </Stack>
 
               {/*Form  */}
