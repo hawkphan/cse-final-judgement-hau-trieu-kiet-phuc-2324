@@ -1,14 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Accept } from "react-dropzone";
-
-// import { Yup } from "../../../shared";
-// import { PATHS } from "../../../configs/paths";
 import { EditProfileBody } from "../../../../queries/Profiles/types";
 import { PATHS } from "../../../../configs/paths";
 import { Yup } from "../../../../shared";
-
-export const acceptedFileType: Accept = { "application/zip": [".zip"] };
 
 export enum ProfileProperties {
   ID = "id",
@@ -16,10 +10,11 @@ export enum ProfileProperties {
   LASTNAME = "lastName",
   USERNAME = "userName",
   EMAIL = "email",
+  AVATAR = "image",
   // DESCRIPTION = "description",
   USER_ID = "userId",
   GENDER = "gender",
-  DATEOFBIRTH = "dateOfBirth",
+  DATEOFBIRTH = "birthday",
 }
 
 export enum ValidationMessage {
@@ -29,23 +24,17 @@ export enum ValidationMessage {
 
 export const mapFormData = (
   data:  EditProfileBody,
-  fileSelected?: any,
-  userId: string,
+  // fileSelected: any,
 ) => {
   const formData = new FormData();
-
-  if (ProfileProperties.ID in data) {
-    formData.append(ProfileProperties.ID, data.id);
-  }
+  // formData.append(ProfileProperties.AVATAR, fileSelected);
   formData.append(ProfileProperties.FIRSTNAME, data.firstName);
   formData.append(ProfileProperties.LASTNAME, data.lastName);
   formData.append(ProfileProperties.USERNAME, data.userName);
   formData.append(ProfileProperties.EMAIL, data.email);
 
-  formData.append(ProfileProperties.DATEOFBIRTH, data.dateOfBirth);
-  formData.append(ProfileProperties.GENDER, data.gender);
-  // formData.append(ProfileProperties.DESCRIPTION, data.description);
-  // formData.append(ProfileProperties.USER_ID, userId);
+  formData.append(ProfileProperties.DATEOFBIRTH, data.birthday);
+  formData.append(ProfileProperties.GENDER, data.gender.toString());
 
   return formData;
 };

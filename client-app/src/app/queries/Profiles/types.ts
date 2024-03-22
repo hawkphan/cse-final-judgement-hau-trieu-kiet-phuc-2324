@@ -13,12 +13,13 @@
     get: any;
     id?: string;
     userId?: string;
-    description?: string;
+    image?:any;
+    // description?: string;
     firstName?: string;
     lastName?: string;
     userName?:string;
     email?:string;
-    dateOfBirth?: string;
+    birthday?: string;
     gender?: number;
   }
   export interface User {

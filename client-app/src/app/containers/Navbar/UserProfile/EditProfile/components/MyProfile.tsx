@@ -26,14 +26,15 @@ import { PATHS } from "../../../../../configs/paths";
 // import { useEditProfile } from "../../../../../queries/Profiles";
 import { useGetProfileById } from "../../../../../queries/Profiles";
 import { API_QUERIES } from "../../../../../queries";
-import { LoadingCommon, Toastify } from "../../../../../shared";
+import { LoadingCommon, MuiDatePicker, Toastify } from "../../../../../shared";
 import { EditProfileFormSchema, mapFormData } from "../helpers";
 import { useEditProfile } from "../../../../../queries/Profiles/useEditProfile";
+import dayjs from "dayjs";
 
 export interface Profile {
   userName?: string;
   firstName?: string;
-  lastName?: string;
+  laastName?: string;
   email?: string;
   birthday?: string;
   gender?: number;
@@ -88,16 +89,18 @@ export default function MyProfile() {
   }, [profile, reset]);
 
   const onSubmit = async (data: EditProfileBody) => {
-    alert("Submit successful: ");
+    alert(
+      `Submit successful: \n${data.birthday}\n${data.email}\n${data.firstName}\n${data.lastName}\n${data.userName}`
+    );
 
-    // const formData = mapFormData(data, fileSelected, id);
+    const formData = mapFormData(data);
 
     // if (!fileSelected) {
     //   alert("!fileSelected");
     //   // Toastify.error(ValidationMessage.LACK_OF_FILE);
     //   return;
     // }
-    // onEditProfile(formData);
+    onEditProfile(formData);
   };
 
   // Upload img avatar from client pc
@@ -162,7 +165,7 @@ export default function MyProfile() {
             >
               {/* Avatar */}
               <Stack direction="column" spacing={1}>
-                <AspectRatio
+                {/* <AspectRatio
                   ratio="1"
                   maxHeight={200}
                   sx={{ flex: 1, minWidth: 120, borderRadius: "100%" }}
@@ -170,13 +173,14 @@ export default function MyProfile() {
                   <img src={avatarSrc} loading="lazy" alt="Avatar" />
                 </AspectRatio>
 
-                <input
+                 <input
                   accept="image/*"
                   style={{ display: "none" }}
                   ref={inputRef}
                   type="file"
                   onChange={handleFileChange}
-                />
+                /> 
+
                 <IconButton
                   aria-label="upload new picture"
                   size="sm"
@@ -194,7 +198,64 @@ export default function MyProfile() {
                   }}
                 >
                   <EditRoundedIcon />
-                </IconButton>
+                </IconButton> */}
+
+                <Controller
+                  name="image"
+                  control={control}
+                  render={({
+                    field: { onChange, onBlur, value, ref },
+                    fieldState: { error },
+                  }) => (
+                    <>
+                      <AspectRatio
+                        ratio="1"
+                        maxHeight={200}
+                        sx={{ flex: 1, minWidth: 120, borderRadius: "100%" }}
+                      >
+                        <img
+                          src={value || avatarSrc}
+                          loading="lazy"
+                          alt="Avatar"
+                        />
+                      </AspectRatio>
+
+                      <input
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        ref={ref}
+                        type="file"
+                        onChange={(e) => {
+                          // Gọi hàm onChange từ 'field' và xử lý file tại đây
+                          onChange(e.target.files[0]);
+                          handleFileChange(e); // Nếu bạn muốn giữ hàm xử lý file riêng của mình
+                        }}
+                        onBlur={onBlur} // Đảm bảo onBlur được gọi để quản lý focus
+                      />
+
+                      <IconButton
+                        aria-label="upload new picture"
+                        size="sm"
+                        variant="outlined"
+                        color="neutral"
+                        onClick={() => inputRef.current.click()} // Gọi click event trên input file
+                        sx={{
+                          bgcolor: "background.body",
+                          position: "absolute",
+                          zIndex: 2,
+                          borderRadius: "50%",
+                          left: 100,
+                          top: 170,
+                          boxShadow: "sm",
+                        }}
+                      >
+                        <EditRoundedIcon />
+                      </IconButton>
+
+                      {error && <p style={{ color: "red" }}>{error.message}</p>}
+                    </>
+                  )}
+                />
               </Stack>
 
               {/*Form  */}
@@ -348,7 +409,7 @@ export default function MyProfile() {
                             />
                             <label htmlFor="male">Male</label>
                           </div>
-                          <div>
+                          {/* <div>
                             <input
                               type="radio"
                               id="other"
@@ -359,7 +420,7 @@ export default function MyProfile() {
                               {...props}
                             />
                             <label htmlFor="other">Other</label>
-                          </div>
+                          </div> */}
                           {error && <p>{error.message}</p>}
                         </div>
                       )}
@@ -368,7 +429,7 @@ export default function MyProfile() {
 
                     <FormLabel>Date of Birth</FormLabel>
                     <Controller
-                      name="dateOfBirth"
+                      name="birthday"
                       control={control}
                       rules={{
                         required: true,
@@ -376,33 +437,10 @@ export default function MyProfile() {
                       render={({
                         field: { value, onChange, ...props },
                         fieldState: { error },
-                      }) => (
-                        <Input
-                          size="sm"
-                          type="date"
-                          sx={{ flexGrow: 1 }}
-                          onChange={(data) => {
-                            onChange(data);
-                          }}
-                          required
-                          // errorMessage={error?.message}
-                          {...props}
-                        />
-                      )}
-                    />
-                    {/* <Controller
-                      name="dateOfBirth"
-                      control={control}
-                      rules={{
-                        required: true,
-                      }}
-                      render={({
-                        field: {value, onChange, ...props },
-                        fieldState: { error },
                       }) => {
                         // Chuyển đổi giá trị ngày tháng từ chuỗi ISO sang định dạng "YYYY-MM-DD"
                         const formattedDate = value ? value.split("T")[0] : "";
-
+                        console.log("dob " + formattedDate);
                         return (
                           <Input
                             size="sm"
@@ -421,7 +459,37 @@ export default function MyProfile() {
                           />
                         );
                       }}
-                    /> */}
+                    />
+                    {/* <Controller
+                      name="birthday"
+                      control={control}
+                      rules={{
+                        required: true,
+                      }}
+                      render={({
+                        field: {value, onChange, ...props },
+                        fieldState: { error },
+                      }) => {
+                        // Chuyển đổi giá trị ngày tháng từ chuỗi ISO sang định dạng "YYYY-MM-DD"
+                        const formattedDate = value ? value.split("T")[0] : "";
+                        console.log("dob " + formattedDate)
+                        return (
+                          <MuiDatePicker
+                          sx={{ flexGrow: 1 }}
+                          value={dayjs(formattedDate)} // Sử dụng giá trị đã format ở đây
+                          onChange={(e) => {
+                            // Chuyển đổi giá trị ngày tháng trở lại định dạng ISO khi có sự thay đổi
+                            const newDate = e.target.value
+                              ? `${e.target.value}T00:00:00`
+                              : "";
+                            onChange(newDate);
+                          }}
+                          required
+                          {...props}
+                          />
+                        );
+                      }}
+                    />  */}
                   </FormControl>
                 </Stack>
 
