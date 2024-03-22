@@ -15,7 +15,7 @@ export function useGetProfileById(
 ) {
   console.log("optop "+options?.id)
   const {
-    data: profile,
+    data: data,
     error,
     isError,
     isFetching,
@@ -41,7 +41,7 @@ export function useGetProfileById(
     queryClient.invalidateQueries({queryKey: [API_QUERIES.GET_PROFILE_BY_ID]});
 
   return {
-    profile,
+    data,
     error,
     isError,
     isFetching,

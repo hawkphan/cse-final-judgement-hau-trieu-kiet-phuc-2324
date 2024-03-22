@@ -19,8 +19,10 @@ import { profileInfo } from "../TestData/dataUserProfile.mock";
 import {  Button, formatDate, formatDateOrNull } from "../../../../shared";
 import { useGetProfileById } from "../../../../queries/Profiles";
 import { useStore } from "../../../../shared/common/stores/store";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { API_QUERIES } from "../../../../queries";
+import { PATHS } from "../../../../configs/paths";
+import { useNavigate } from "react-router-dom";
 export interface Profile{
   userName?: string;
   firstName?: string;
@@ -32,19 +34,26 @@ export interface Profile{
 }
 
 export default function UserDetailInformation() {
+  const navigate = useNavigate();
   const { userStore } = useStore();
   const id = useMemo(()=>{return userStore?.user?.id},[userStore?.user]);
-  console.log("Id " + id);
-  formatDateOrNull
+  sessionStorage.setItem('myId', id);
+
   const {
-    profile
+    data, isFetching 
   } = useGetProfileById(
     {
         id,
         queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: id }],
       }
   );
-
+  const profile :Profile = useMemo(()=>{return data?.data}, [id])
+  const handleEditProfile= useCallback(
+    () => {
+      navigate(`/profile/edit`);
+    },
+    [navigate]
+  );
   return (
     <Card
       style={{
@@ -60,12 +69,19 @@ export default function UserDetailInformation() {
 
 
         <Stack direction="column" spacing={0.5}>
-          <h4>{profile?.data.userName}</h4>
-          <h5>{profile?.data.email}</h5>
-          <h5>{formatDate( profile?.data.birthday)}</h5>
+          <h4>{profile?.userName}</h4>
+          <h5>{profile?.email}</h5>
+          <h5>{formatDate( profile?.birthday)}</h5>
         </Stack>
       </Stack>
+
+      {/* <MuiMenuItem
+              itemKey={KEYS.problems}
+              label={LABELS.problems}
+              path={PATHS.problems}
+            /> */}
       <Button
+        onClick={handleEditProfile}
         style={{
           width: "100%",
           maxWidth: "500px",
