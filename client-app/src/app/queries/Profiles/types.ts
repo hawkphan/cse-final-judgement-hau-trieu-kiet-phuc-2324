@@ -9,7 +9,18 @@
     isFemale?: boolean;
     displayName?: string;
   }
-  
+  export interface EditProfileBody {
+    get: any;
+    id?: string;
+    userId?: string;
+    description?: string;
+    firstName?: string;
+    lastName?: string;
+    userName?:string;
+    email?:string;
+    dateOfBirth: string;
+    gender: string;
+  }
   export interface User {
     firstName: string;
     lastName: string;
