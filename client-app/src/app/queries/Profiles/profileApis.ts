@@ -5,7 +5,7 @@ import { API_URL } from "../common/constants";
 
 const editProfile = (body: EditProfileBody) => {
   const id = body.get('id');
-  return axios.put(`${API_URL}/api/problems/${id}`, body, {});
+  return axios.put(`${API_URL}/api/account/EditProfile/${id}`, body, {});
 };
 
 

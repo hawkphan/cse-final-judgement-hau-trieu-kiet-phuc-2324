@@ -3,7 +3,6 @@ import { CssVarsProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 // import Sidebar from './components/Sidebar';
-import Header from './components/Header';
 import MyProfile from './components/MyProfile';
 
 export default function EditProfile() {

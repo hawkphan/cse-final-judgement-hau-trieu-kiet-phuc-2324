@@ -6,18 +6,16 @@ using System.Threading.Tasks;
 
 namespace API.DTOS
 {
-    public class RegisterDto
+    public class UpdateDto
     {
         [Required]
         public string Email { get; set; }
         [Required]
-        public string Password { get; set; }
-        [Required]
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-        [Required]
         public IFormFile Image { get; set; }
         public string UserName { get; set; }
+        public DateTime Birthday { get; set; }
     }
 }

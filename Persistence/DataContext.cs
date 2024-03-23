@@ -17,6 +17,9 @@ namespace Persistence
         public DbSet<Result> Results { get; set; }
         public DbSet<Solution> Solutions { get; set; }
         public DbSet<TestCase> TestCases { get; set; }
+        public DbSet<Contest> Contests { get; set; }
+        public DbSet<ContestMember> ContestMembers { get; set; }
+        public DbSet<ContestProblem> ContestProblems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -86,6 +89,38 @@ namespace Persistence
                 .WithOne(u => u.Problem)
                 .HasForeignKey(p => p.ProblemId);
 
+            // Configure Contest Member foreign key
+            builder.Entity<ContestMember>()
+                .HasOne(cm => cm.User)
+                .WithMany(u => u.MemberContests)
+                .HasForeignKey(cm => cm.UserId);
+
+            builder.Entity<ContestMember>()
+                .HasOne(cm => cm.Contest)
+                .WithMany(c => c.Members)
+                .HasForeignKey(cm => cm.ContestId);
+
+            // Configure Contest Problem foreign key
+            builder.Entity<ContestProblem>()
+                .HasOne(cm => cm.Problem)
+                .WithMany(u => u.ProblemContests)
+                .HasForeignKey(cm => cm.ProblemId);
+
+            builder.Entity<ContestProblem>()
+                .HasOne(cm => cm.Contest)
+                .WithMany(c => c.Problems)
+                .HasForeignKey(cm => cm.ContestId);
+
+            // Configure Contest keys
+
+            builder.Entity<Contest>()
+                .HasKey(p => p.Id);
+
+            builder.Entity<ContestMember>()
+            .HasKey(p => p.Id);
+
+            builder.Entity<ContestProblem>()
+            .HasKey(p => p.Id);
 
             base.OnModelCreating(builder);
         }

@@ -9,6 +9,8 @@ import { PATHS } from "../configs/paths";
 import SignUp from "../containers/User/SignUpForm";
 import ProblemDetail from "../containers/Problems/ProblemDetails";
 import ProblemForm from "../containers/Problems/ProblemForm";
+import Contests from "../containers/Contests";
+import ContestForm from "../containers/Contests/UnregisteredListView/ContestForm";
 import EditProfile from "../containers/Navbar/UserProfile/EditProfile";
 
 export const routes: RouteObject[] = [
@@ -24,7 +26,6 @@ export const routes: RouteObject[] = [
         path: PATHS.problems,
         element: <Problems />,
       },
-
       {
         path: PATHS.dev,
         element: <Developer />,
@@ -55,6 +56,18 @@ export const routes: RouteObject[] = [
       {
         path: PATHS.editProblem,
         element: <ProblemForm />,
+      },
+      {
+        path: PATHS.contests,
+        element: <Contests />,
+      },
+      {
+        path: PATHS.createContest,
+        element: <ContestForm />,
+      },
+      {
+        path: PATHS.editContest,
+        element: <ContestForm />,
       },
     ],
   },

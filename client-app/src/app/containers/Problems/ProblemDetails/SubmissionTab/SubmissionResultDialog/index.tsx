@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   Slide,
@@ -9,8 +8,9 @@ import {
 import { TransitionProps } from "@mui/material/transitions";
 import { forwardRef, useMemo } from "react";
 import { Callback, Result } from "../../../../../queries";
-import { Button, EmptyTable, Table2 } from "../../../../../shared";
+import { EmptyTable, Table2 } from "../../../../../shared";
 import { allColumns } from "./allColumns";
+import ModalClose from '@mui/joy/ModalClose';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -37,6 +37,7 @@ const SubmissionResultDialog: React.FC<Props> = ({
       onClose={handleCloseDeleteDialog}
       aria-describedby="alert-dialog-slide-description"
     >
+      <ModalClose variant="plain" sx={{ m: 1 }} onClick={handleCloseDeleteDialog} />
       <DialogTitle fontWeight={"bold"}>
         Solution Result
       </DialogTitle>
@@ -73,11 +74,11 @@ const SubmissionResultDialog: React.FC<Props> = ({
           }}
         />
       </DialogContent>
-      <DialogActions>
+      {/* <DialogActions>
         <Button onClick={handleCloseDeleteDialog} variant="grey">
           Cancel
         </Button>
-      </DialogActions>
+      </DialogActions> */}
     </Dialog>
   );
 };

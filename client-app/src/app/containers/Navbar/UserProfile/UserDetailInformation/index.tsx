@@ -38,7 +38,6 @@ export default function UserDetailInformation() {
   const { userStore } = useStore();
   const id = useMemo(()=>{return userStore?.user?.id},[userStore?.user]);
   sessionStorage.setItem('myId', id);
-  
 
   const {
     data, isFetching 
