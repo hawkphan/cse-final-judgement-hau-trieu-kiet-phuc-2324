@@ -14,6 +14,8 @@ export const PATHS = {
   editProblem: "/problems/:id/edit",
 
   contests: "/contests",
+  createContest: "/contests/create",
+  editContest: "/contests/:id/edit",
 };
 
 export const HIDE_NAV_PATHS: string | string[] = [];

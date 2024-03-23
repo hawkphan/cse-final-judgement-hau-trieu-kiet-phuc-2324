@@ -1,34 +1,33 @@
-using Application.Core;
 using Application.Interfaces;
-using AutoMapper;
-using Domain.Dtos;
 using Domain;
+using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Contests
 {
     public class Create
     {
-        public class Command : IRequest<ApiResult<ContestDto>>
+        public class Command : IRequest
         {
             public Domain.Contest Contest { get; set; }
         }
-        public class Handler : IRequestHandler<Command, ApiResult<ContestDto>>
+
+        public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
             private readonly IUserAccessor _userAccessor;
-            private readonly IMapper _mapper;
-
-            public Handler(DataContext context, IUserAccessor userAccessor, IMapper mapper)
+            public Handler(DataContext context, IUserAccessor userAccessor)
             {
-                _userAccessor = userAccessor;
                 _context = context;
-                _mapper = mapper;
+                _userAccessor = userAccessor;
             }
-            public async Task<ApiResult<ContestDto>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task Handle(Command request, CancellationToken cancellationToken)
             {
-                throw new NotImplementedException();
+                _context.Contests.Add(request.Contest);
+
+                await _context.SaveChangesAsync();
             }
 
         }

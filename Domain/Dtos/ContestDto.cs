@@ -14,5 +14,6 @@ namespace Domain.Dtos
         public DateTime EndTime { get; set; }
         public ICollection<ContestMember> Members { get; set; }
         public ICollection<ContestProblem> Problems { get; set; }
+        public ICollection<Guid> ProblemIds { get; set; }
     }
 }

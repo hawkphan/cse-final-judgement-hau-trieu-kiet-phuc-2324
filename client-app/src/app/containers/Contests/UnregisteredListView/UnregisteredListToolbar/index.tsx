@@ -1,28 +1,19 @@
 import { MRT_TableInstance } from "material-react-table";
-import { Problem, useGetProblems } from "../../../queries";
 import { IconButton, Stack, Tooltip } from "@mui/material";
-import {
-  Button,
-  COLOR_CODE,
-  CustomTableColumnOptions,
-  CustomTableColumnOptionsModal,
-  CustomTableFilterContainer,
-} from "../../../shared";
-import { ProblemFilterQueryKey } from "../helpers";
 import { IoMdRefresh } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import PostAddRoundedIcon from "@mui/icons-material/PostAddRounded";
-import { PATHS } from "../../../configs/paths";
-import ProblemFilter from "./ProblemFilter";
+import { Button, COLOR_CODE, CustomTableColumnOptions, CustomTableColumnOptionsModal } from "../../../../shared";
+import { Contest, useGetUnregisteredContest } from "../../../../queries";
+import { PATHS } from "../../../../configs/paths";
 
 type Props = {
-  table: MRT_TableInstance<Problem>;
-  isExternal?: boolean;
+  table: MRT_TableInstance<Contest>;
 };
 
-const ProblemToolbar = ({ table, isExternal = false }: Props) => {
+const UnregisteredListToolbar = ({ table }: Props) => {
   const navigate = useNavigate();
-  const { handleInvalidateProblems } = useGetProblems();
+  const { handleInvalidateUnregisteredContest } = useGetUnregisteredContest();
 
   return (
     <Stack direction="column" mb={1}>
@@ -39,38 +30,28 @@ const ProblemToolbar = ({ table, isExternal = false }: Props) => {
                   backgroundColor: COLOR_CODE.BG_SURFACE_HOVER,
                 },
               }}
-              onClick={handleInvalidateProblems}
+              onClick={handleInvalidateUnregisteredContest}
             >
               <IoMdRefresh size={20} color={COLOR_CODE.GREY_800} />
             </IconButton>
           </Tooltip>
-          <CustomTableFilterContainer
-            filterParamsKeys={[
-              ProblemFilterQueryKey.FROM_DATE,
-              ProblemFilterQueryKey.TO_DATE,
-              ProblemFilterQueryKey.DIFFICULTY,
-              ProblemFilterQueryKey.KEYWORDS,
-            ]}
-          >
-            <ProblemFilter />
-          </CustomTableFilterContainer>
           <CustomTableColumnOptions>
             <Tooltip title="Column Options" arrow placement="top">
               <CustomTableColumnOptionsModal table={table} />
             </Tooltip>
           </CustomTableColumnOptions>
-          {!isExternal && <Button
+          <Button
             className="btn btn-primary"
             icon={<PostAddRoundedIcon fontSize="medium" />}
             style={{ fontFamily: "Roboto", marginTop: "6px" }}
-            onClick={() => navigate(PATHS.createProblem)}
+            onClick={() => navigate(PATHS.createContest)}
           >
             New
-          </Button>}
+          </Button>
         </Stack>
       </Stack>
     </Stack>
   );
 };
 
-export default ProblemToolbar;
+export default UnregisteredListToolbar;

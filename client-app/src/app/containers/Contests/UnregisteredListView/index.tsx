@@ -10,6 +10,7 @@ import {
 import { Contest, GetPropertiesParams, useGetUnregisteredContest } from "../../../queries";
 import { useCallback, useMemo } from "react";
 import { allColumns } from "./allColumns";
+import UnregisteredListToolbar from "./UnregisteredListToolbar";
 
 const UnregisteredListView = () => {
   const { unregisteredContests, isFetching, setParams, totalRecords } = useGetUnregisteredContest();
@@ -58,14 +59,7 @@ const UnregisteredListView = () => {
                 </Stack>
               )}
               renderToolbarInternalActions={({ table }) => {
-                return (
-                  //   <NonFrequencyTableToolBar
-                  //     table={table}
-                  //     onRefreshTable={onRefreshTable}
-                  //     handleAddNonFrequency={handleAddNonFrequency}
-                  //   />
-                  <></>
-                );
+                return <UnregisteredListToolbar table={table} />;
               }}
               renderFallbackValue={<EmptyTable />}
               muiTopToolbarProps={{
@@ -73,6 +67,7 @@ const UnregisteredListView = () => {
                   backgroundColor: "transparent",
                   mx: "-8px",
                   my: "4px",
+                  fontFamily: "Roboto",
                 },
               }}
             />

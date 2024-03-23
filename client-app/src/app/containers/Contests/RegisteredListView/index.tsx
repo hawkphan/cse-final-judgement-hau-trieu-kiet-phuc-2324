@@ -10,6 +10,7 @@ import {
 import { Contest, GetPropertiesParams, useGetRegisteredContest, useGetUnregisteredContest } from "../../../queries";
 import { useCallback, useMemo } from "react";
 import { allColumns } from "./allColumns";
+import RegisteredListToolbar from "./RegisteredListToolbar";
 
 const RegisteredListView = () => {
   const { registeredContests, isFetching, setParams, totalRecords } = useGetRegisteredContest();
@@ -47,25 +48,8 @@ const RegisteredListView = () => {
               state={{
                 isLoading: isFetching,
               }}
-              renderTopToolbarCustomActions={() => (
-                <Stack direction="row" spacing={1} my={0.5}>
-                  <Stack width="240px">
-                    <CustomTableSearch
-                      placeholder="Search by Name"
-                      searchKey="keywords"
-                    />
-                  </Stack>
-                </Stack>
-              )}
               renderToolbarInternalActions={({ table }) => {
-                return (
-                  //   <NonFrequencyTableToolBar
-                  //     table={table}
-                  //     onRefreshTable={onRefreshTable}
-                  //     handleAddNonFrequency={handleAddNonFrequency}
-                  //   />
-                  <></>
-                );
+                return <RegisteredListToolbar table={table} />;
               }}
               renderFallbackValue={<EmptyTable />}
               muiTopToolbarProps={{

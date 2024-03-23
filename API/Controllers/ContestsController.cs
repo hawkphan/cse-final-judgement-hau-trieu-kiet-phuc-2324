@@ -29,10 +29,10 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-    public async Task<ActionResult> CreateContest([FromForm] Contest newContest )
+        public async Task<ActionResult> CreateContest(Contest newContest)
         {
-            // return HandleApiResult(await Mediator.Send(new Create.Command { Problem = newProblem, TestCaseZip = file }));
-            throw new NotImplementedException();
+            await Mediator.Send(new Create.Command { Contest = newContest });
+            return Ok();
         }
         [AllowAnonymous]
         [HttpPut("{id}")]

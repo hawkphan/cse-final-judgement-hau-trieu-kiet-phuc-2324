@@ -12,6 +12,11 @@ namespace Application.Contests
 {
     public class List
     {
+        public static implicit operator List<object>(List v)
+        {
+            throw new NotImplementedException();
+        }
+
         public class Query : IRequest<Result<PagedList<ContestDto>>>
         {
             public PagingParams Params { get; set; }
