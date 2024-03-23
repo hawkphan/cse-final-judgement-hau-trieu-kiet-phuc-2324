@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from "react";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Box from "@mui/joy/Box";
@@ -9,25 +11,26 @@ import Input from "@mui/joy/Input";
 import IconButton from "@mui/joy/IconButton";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
-import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
 import CardActions from "@mui/joy/CardActions";
 import CardOverflow from "@mui/joy/CardOverflow";
 
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { Form } from "react-router-dom";
-import { EditProfileBody } from "../../../../../queries/Profiles/types";
 import { useEffect, useMemo, useState } from "react";
-import { useStore } from "../../../../../shared/common/stores/store";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { PATHS } from "../../../../../configs/paths";
-import { useEditProfile } from "../../../../../queries/Profiles/useEditProfile";
-import { EditProfileFormSchema, mapFormData } from "../helpers";
-import { useGetProfileById } from "../../../../../queries/Profiles";
-import { API_QUERIES } from "../../../../../queries";
-import { LoadingCommon, Toastify } from "../../../../../shared";
+import { useStore } from "../../../../../../shared/common/stores/store";
+import {
+  EditProfileBody,
+  useGetProfileById,
+} from "../../../../../../queries/Profiles";
+import { API_QUERIES } from "../../../../../../queries";
+import { EditProfileFormSchema, mapFormData } from "../../helpers";
+import { LoadingCommon, Toastify } from "../../../../../../shared";
+import { PATHS } from "../../../../../../configs/paths";
+import { useEditProfile } from "../../../../../../queries/Profiles/useEditProfile";
 
 export interface Profile {
   userName?: string;
@@ -64,7 +67,6 @@ export default function MyProfile() {
     return data?.data;
   }, [id]);
 
-  //React hook form
   const { onEditProfile, isPending: isEditPending } = useEditProfile({
     onSuccess: () => {
       // Toastify.success("Successful!");
@@ -96,6 +98,7 @@ export default function MyProfile() {
 
     const formData = mapFormData(data, fileSelected, id);
 
+    // TODO: fix error
     onEditProfile(formData);
   };
 
@@ -111,9 +114,7 @@ export default function MyProfile() {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      // Tạo URL từ file được chọn
       const newAvatarSrc = URL.createObjectURL(event.target.files[0]);
-      // Cập nhật state với URL mới
       setAvatarSrc(newAvatarSrc);
     }
   };
@@ -379,42 +380,6 @@ export default function MyProfile() {
             </CardOverflow>
           </Card>
         </Form>
-
-        {/* <Form>
-          <Card>
-            <Box sx={{ mb: 1 }}>
-              <Typography level="title-md">Bio</Typography>
-              <Typography level="body-sm">
-                Write a short introduction to be displayed on your profile
-              </Typography>
-            </Box>
-            <Divider />
-            <Stack spacing={2} sx={{ my: 1 }}>
-              <EditorToolbar />
-              <Textarea
-                size="sm"
-                minRows={4}
-                sx={{ mt: 1.5 }}
-                defaultValue="I'm a software developer based in Bangkok, Thailand. My goal is to solve UI problems with neat CSS without using too much JavaScript."
-              />
-              <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
-                275 characters left
-              </FormHelperText>
-            </Stack>
-            <CardOverflow
-              sx={{ borderTop: "1px solid", borderColor: "divider" }}
-            >
-              <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-                <Button size="sm" variant="outlined" color="neutral">
-                  Cancel
-                </Button>
-                <Button size="sm" variant="solid">
-                  Save
-                </Button>
-              </CardActions>
-            </CardOverflow>
-          </Card>
-        </Form> */}
       </Stack>
     </Box>
   );

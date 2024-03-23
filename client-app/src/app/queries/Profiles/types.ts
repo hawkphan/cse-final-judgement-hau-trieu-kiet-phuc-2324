@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 
   export interface Profile{
@@ -10,7 +11,6 @@
     displayName?: string;
   }
   export interface EditProfileBody {
-    get: any;
     id?: string;
     userId?: string;
     description?: string;

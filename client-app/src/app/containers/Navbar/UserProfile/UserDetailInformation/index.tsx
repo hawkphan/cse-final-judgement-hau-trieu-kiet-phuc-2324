@@ -15,7 +15,7 @@ import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { TbPointFilled } from "react-icons/tb";
 
 //Test data
-import { profileInfo } from "../TestData/dataUserProfile.mock";
+import { profileInfo } from "../TestData/data.mock";
 import { Button, formatDate } from "../../../../shared";
 import { useGetProfileById } from "../../../../queries/Profiles";
 import { useStore } from "../../../../shared/common/stores/store";

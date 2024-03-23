@@ -1,8 +1,6 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import { Box, Card, CardContent } from "@mui/material";
 import ReactApexChart from "react-apexcharts";
-import { ImNotification } from "react-icons/im";
-import { schema } from "../TestData/schema";
-import { profileInfo } from "../TestData/dataUserProfile.mock";
+import { schema } from "../TestData";
 
 export default function UserAnnualReport() {
   return (
@@ -27,19 +25,16 @@ export default function UserAnnualReport() {
             display="flex"
             flexDirection="row"
             justifyContent="space-between"
-          >
-
-          </Box>
+          ></Box>
           <Box
             display="flex"
             flexDirection="row"
             justifyContent="space-between"
-          >
-          </Box>
+          ></Box>
         </Box>
 
         <Box display="flex" flexDirection="row">
-          <Box flexDirection="column" sx={{ width: "80%", margin: 'auto'}}>
+          <Box flexDirection="column" sx={{ width: "80%", margin: "auto" }}>
             <ReactApexChart
               series={schema.series}
               type="line"

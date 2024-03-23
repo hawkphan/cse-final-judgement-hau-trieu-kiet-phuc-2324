@@ -11,7 +11,6 @@ const getUnregisteredContests = () => {
 };
 
 const createContest = (body: CreateContestBody) => {
-  console.log('body1', body);
   return axios.post(`${API_URL}/api/contests`, body, {});
 };
 

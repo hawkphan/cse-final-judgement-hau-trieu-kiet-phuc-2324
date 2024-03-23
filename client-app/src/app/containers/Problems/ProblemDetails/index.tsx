@@ -63,7 +63,6 @@ const ProblemDetail = () => {
     monaco: Monaco
   ) => {
     editorRef.current = editor;
-    console.log(monaco);
   };
 
   const getUserId = useMemo(() => {

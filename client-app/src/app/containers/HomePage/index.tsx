@@ -1,32 +1,87 @@
-import { Box } from "@mui/material";
-import { useStore } from "../../shared/common/stores/store";
-import Header from "./component(temp)/Header";
-import Header2 from "./component(temp)/H2";
-import Carousel from "./component(temp)/Carousel";
+import { Box, Button } from "@mui/material";
 import bg from "../../../assets/images/Untitled.png";
-
-const printUser = () => {
-  const { userStore } = useStore();
-  console.log(userStore.getUser);
-};
 
 const HomePage = () => {
   return (
     <div
       style={{
-        //backgroundImage: "linear-gradient(to bottom right, #1976D2, #4880EC, #FFF)",
         backgroundImage: `url(${bg})`,
         backgroundRepeat: "no-repeat",
       }}
     >
       <Box display="flex" flexDirection="column" justifyContent="center">
-        {/*         <>
-          {printUser}
-        </> */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            minHeight: "500px",
+          }}
+        >
+          <div
+            style={{
+              maxWidth: "100%",
+              width: "50%",
+              margin: "auto",
+              textAlign: "center",
+            }}
+          >
+            <img src="src\assets\images\study-4522028_1280.png" width="80%" />
+          </div>
+          <div
+            style={{
+              maxWidth: "50%",
+              wordWrap: "break-word",
+              margin: "auto",
+              marginTop: "60px",
+            }}
+          >
+            <div style={{ width: "80%" }}>
+              <p style={{ fontSize: 50, fontWeight: "bolder", color: "white" }}>
+                First step to your dream
+              </p>
+              <p style={{ fontSize: 18, color: "white" }}>
+                Are you ready to start a new journey? Do you want to learn about
+                programming and want to become a professional coder in future?
+                Let's start with registering your account.
+              </p>
+              <Button
+                variant="contained"
+                color="success"
+                style={{ borderRadius: 20 }}
+              >
+                Register Your Account
+              </Button>
+            </div>
+          </div>
+        </div>
 
-        <Header children={undefined} />
- 
-        <Header2 />
+        <div
+          style={{
+            textAlign: "center",
+            margin: "auto",
+            marginBottom: 28,
+            marginTop: 30,
+
+            alignContent: "center",
+            minWidth: "200px",
+            width: "600px",
+            paddingLeft: "15px",
+            paddingRight: "15px",
+            paddingBottom: "20px",
+          }}
+        >
+          <p style={{ color: "#00A9F5", fontSize: 24, fontWeight: "bolder" }}>
+            DEVELOPING YOUR SKILL
+          </p>
+          <p>
+            Practice and training your coding skill with our library of
+            programming problems. CodeCrafter is the promise land for programer
+            to improve, and develop themselves.
+          </p>
+          <a href="" style={{ color: "#48D600", fontSize: "20px" }}>
+            Start your training?
+          </a>
+        </div>
         <div
           style={{
             textAlign: "center",
@@ -42,7 +97,7 @@ const HomePage = () => {
           </p>
           <p style={{ color: "#00A9F5", fontSize: 16 }}>
             <a
-              href=""
+              href="#"
               style={{ color: "#00A9F5", fontSize: 16, fontWeight: "bold" }}
             >
               Join with us

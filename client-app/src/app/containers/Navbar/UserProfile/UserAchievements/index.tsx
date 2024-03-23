@@ -1,10 +1,9 @@
 
 import {  Card, CardContent, Typography } from "@mui/material";
-//import Chart from "../../../Developer/Chart";
 import { Suspense} from "react";
 import { LoadingCommon } from "../../../../shared";
 import ReactApexChart from "react-apexcharts";
-import { state } from "../TestData/schema";
+import { state } from "../TestData";
 
 export default function UserAchievements() {
   return (

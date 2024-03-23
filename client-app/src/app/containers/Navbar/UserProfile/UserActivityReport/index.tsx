@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, Card, CardContent, CircularProgress, CircularProgressProps, LinearProgress, Typography } from "@mui/material";
 //Test data
-import { profileInfo } from "../TestData/dataUserProfile.mock";
-import { User } from "../TestData/userProfileModel";
+import { User } from "../TestData/types";
+import { profileInfo } from "../TestData";
 
 function CircularProgressWithLabel(
   props: CircularProgressProps & { value: number }

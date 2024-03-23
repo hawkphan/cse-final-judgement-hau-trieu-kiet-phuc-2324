@@ -10,7 +10,6 @@ const editProfile = (body: EditProfileBody) => {
 
 
 const getProfileById = (params: { id: string }) => {
-  console.log("getProfileById " + params.id)
   return axios.get<Profile>(`${API_URL}/api/profile/${params.id}`,
     {}
   );
