@@ -15,7 +15,7 @@ namespace API.Controllers
         [HttpGet("{id}")] //api/profile
         public async Task<IActionResult> GetUserProfile(string id)
         {
-            return HandleResult(await Mediator.Send(new Detail.Query { UserId = id }));
+            return HandleApiResult(await Mediator.Send(new Detail.Query { UserId = id }));
         }
     }
 }

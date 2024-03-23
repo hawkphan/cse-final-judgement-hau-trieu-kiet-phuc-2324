@@ -16,17 +16,16 @@ import { TbPointFilled } from "react-icons/tb";
 
 //Test data
 import { profileInfo } from "../TestData/dataUserProfile.mock";
-import {  Button, formatDate, formatDateOrNull } from "../../../../shared";
+import { Button, formatDate } from "../../../../shared";
 import { useGetProfileById } from "../../../../queries/Profiles";
 import { useStore } from "../../../../shared/common/stores/store";
 import { useCallback, useMemo } from "react";
 import { API_QUERIES } from "../../../../queries";
-import { PATHS } from "../../../../configs/paths";
 import { useNavigate } from "react-router-dom";
-export interface Profile{
+export interface Profile {
   userName?: string;
   firstName?: string;
-  lastName?:string;
+  lastName?: string;
   email?: string;
   birthday?: string;
   isFemale?: boolean;
@@ -36,24 +35,18 @@ export interface Profile{
 export default function UserDetailInformation() {
   const navigate = useNavigate();
   const { userStore } = useStore();
-  const id = useMemo(()=>{return userStore?.user?.id},[userStore?.user]);
-  sessionStorage.setItem('myId', id);
+  const id = useMemo(() => {
+    return userStore?.user?.id;
+  }, [userStore?.user]);
 
-  const {
-    data, isFetching 
-  } = useGetProfileById(
-    {
-        id,
-        queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: id }],
-      }
-  );
-  const profile :Profile = useMemo(()=>{return data?.data}, [id])
-  const handleEditProfile= useCallback(
-    () => {
-      navigate(`/profile/edit`);
-    },
-    [navigate]
-  );
+  const { profile } = useGetProfileById({
+    id,
+    queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: id }],
+  });
+
+  const handleEditProfile = useCallback(() => {
+    navigate(`/profile/edit`);
+  }, [navigate]);
   return (
     <Card
       style={{
@@ -67,11 +60,10 @@ export default function UserDetailInformation() {
       <Stack direction="row" spacing={2} style={{ paddingBottom: "20px" }}>
         <Avatar sx={{ width: 80, height: 80 }} />
 
-
         <Stack direction="column" spacing={0.5}>
           <h4>{profile?.userName}</h4>
           <h5>{profile?.email}</h5>
-          <h5>{formatDate( profile?.birthday)}</h5>
+          <h5>{formatDate(profile?.birthday)}</h5>
         </Stack>
       </Stack>
 
@@ -159,7 +151,6 @@ export default function UserDetailInformation() {
           {profileInfo.user.userProfile.languagesUsage === null ? (
             <ListItemText secondary="Not enough data" />
           ) : (
-  
             // profileInfo.user.userProfile.languagesUsage.map((language) => (
             //   <ListItem>
             //     <ListItemIcon>
@@ -177,7 +168,7 @@ export default function UserDetailInformation() {
               </ListItem>
             ))
           )}
-        </Box> 
+        </Box>
       </List>
       <Divider style={{ marginTop: "20px", marginBottom: "5px" }} />
       <List

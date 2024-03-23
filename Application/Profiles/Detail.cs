@@ -14,12 +14,12 @@ namespace Application.Profiles
 {
     public class Detail
     {
-        public class Query : IRequest<Result<Domain.Profile>>
+        public class Query : IRequest<ApiResult<Domain.Profile>>
         {
             public string UserId { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Result<Domain.Profile>>
+        public class Handler : IRequestHandler<Query, ApiResult<Domain.Profile>>
         {
             // private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -31,14 +31,14 @@ namespace Application.Profiles
                 _mapper = mapper;
                 // _context = context;
             }
-            public async Task<Result<Domain.Profile>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<ApiResult<Domain.Profile>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.FindByIdAsync(request.UserId);
                 var profile = _mapper.Map<Domain.Profile>(user);
 
                 if (user == null) return null;
 
-                return Result<Domain.Profile>.Success(profile);
+                return ApiResult<Domain.Profile>.Success(profile);
             }
         }
     }
