@@ -14,7 +14,6 @@ namespace API.DTOS
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-        [Required]
         public IFormFile Image { get; set; }
         public string UserName { get; set; }
     }

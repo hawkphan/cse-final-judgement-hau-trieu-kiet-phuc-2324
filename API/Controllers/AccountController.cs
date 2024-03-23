@@ -77,18 +77,27 @@ namespace API.Controllers
         [HttpPut("EditProfile")]
         public async Task<ActionResult<UserDto>> Update([FromForm] UpdateDto UpdateDto)
         {
+            FileManager fileManager = new FileManager();
             var user = await _userManager.FindByEmailAsync(UpdateDto.Email);
             user.DisplayName = UpdateDto.UserName;
             user.FirstName = UpdateDto.FirstName;
             user.LastName = UpdateDto.LastName;
             user.FirstName = UpdateDto.FirstName;
-            
-            FileManager fileManager = new FileManager();
-            fileManager.SaveFile(UpdateDto.Image, fileManager.ProfilePicturePath,user.Id);
+
+            if (UpdateDto.Image != null && UpdateDto.Image.Length > 0)
+            {
+                fileManager.SaveFile(UpdateDto.Image, fileManager.ProfilePicturePath, user.Id);
+            }
 
 
-            await _userManager.UpdateAsync(user);
-            return Ok();
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return CreateNewUserDto(user);
+            }
+            return BadRequest(result.Errors);
+
         }
         private UserDto CreateNewUserDto(AppUser user)
         {
