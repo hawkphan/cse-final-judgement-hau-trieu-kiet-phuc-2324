@@ -19,4 +19,5 @@ public class Problem
     public ICollection<Result> Results { get; set; } = new List<Result>();
     public ICollection<Solution> Solutions { get; set; } = new List<Solution>();
     public ICollection<ProblemLanguage> ProblemLanguages { get; set; } = new List<ProblemLanguage>();
+    public ICollection<ContestProblem> ProblemContests { get; set; }
 }

@@ -101,6 +101,11 @@ function Navbar() {
               path={PATHS.problems}
             />
             <MuiMenuItem
+              itemKey={KEYS.contests}
+              label={LABELS.contests}
+              path={PATHS.contests}
+            />
+            <MuiMenuItem
               itemKey={KEYS.developer}
               label={LABELS.developer}
               path={PATHS.developer}

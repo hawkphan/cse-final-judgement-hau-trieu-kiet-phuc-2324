@@ -8,8 +8,8 @@ import { renderStatusTag } from "../helpers";
 export const allColumns = (): MRT_ColumnDef<Result>[] => {
   return [
     {
-      accessorKey: "executionTime",
-      header: "Execution Time",
+      accessorKey: "testCase.name",
+      header: "Test Case",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 20,
@@ -24,28 +24,20 @@ export const allColumns = (): MRT_ColumnDef<Result>[] => {
       Cell: ({ cell }) => renderStatusTag(cell.getValue<number>()),
     },
     {
-      accessorKey: "runTime",
+      accessorKey: "executionTime",
       header: "Run Time",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 20,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => cell.getValue<string>() + " ms",
     },
     {
-      accessorKey: "memory",
+      accessorKey: "memoryUsage",
       header: "Memory",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 20,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
-    },
-    {
-      accessorKey: "languageName",
-      header: "Language",
-      enableColumnFilterModes: false,
-      enableSorting: false,
-      size: 20,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => cell.getValue<string>() + " MB",
     },
   ];
 };

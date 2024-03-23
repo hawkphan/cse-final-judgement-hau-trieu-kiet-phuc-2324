@@ -97,7 +97,6 @@ namespace API.Controllers
                 return CreateNewUserDto(user);
             }
             return BadRequest(result.Errors);
-
         }
         private UserDto CreateNewUserDto(AppUser user)
         {

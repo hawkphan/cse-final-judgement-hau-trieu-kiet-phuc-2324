@@ -2,18 +2,20 @@
 import { MRT_ColumnDef } from "material-react-table";
 import "material-symbols";
 import { Solution } from "../../../../queries";
-import { formatValueOrNull } from "../../../../shared";
+import { formatDateOrNull, formatValueOrNull } from "../../../../shared";
 import { renderStatusTag } from "./helpers";
+import dayjs from "dayjs";
 
 export const allColumns = (): MRT_ColumnDef<Solution>[] => {
   return [
     {
-      accessorKey: "timeSubmitted",
+      accessorKey: "createdDate",
       header: "Time Submitted",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 20,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) =>
+        dayjs(cell.getValue<string>()).format("YYYY/MM/DD HH:mm:ss"),
     },
     {
       accessorKey: "status",
@@ -24,23 +26,23 @@ export const allColumns = (): MRT_ColumnDef<Solution>[] => {
       Cell: ({ cell }) => renderStatusTag(cell.getValue<number>()),
     },
     {
-      accessorKey: "runTime",
+      accessorKey: "executionTime",
       header: "Run Time",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 20,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => cell.getValue<string>() + " ms",
     },
     {
-      accessorKey: "memory",
+      accessorKey: "memoryUsage",
       header: "Memory",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 20,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => cell.getValue<string>() + " MB",
     },
     {
-      accessorKey: "languageName",
+      accessorKey: "language.name",
       header: "Language",
       enableColumnFilterModes: false,
       enableSorting: false,

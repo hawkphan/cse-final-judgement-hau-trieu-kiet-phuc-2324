@@ -1,5 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, Container, Stack, Typography } from "@mui/material";
+import {
+  Card,
+  Container,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { stripHtml } from "string-strip-html";
 import {
   Breadcrumbs,
@@ -10,6 +18,7 @@ import {
   MuiInput,
   MuiSelect,
   Toastify,
+  View,
 } from "../../../shared";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -40,6 +49,7 @@ import WYSIWYGEditor from "../../../shared/components/common/RichTextEditor";
 
 const ProblemForm = () => {
   const [fileSelected, setFileSelected] = useState();
+  const [compareValue, setCompareValue] = useState("");
 
   const { id } = useParams();
   const { userStore } = useStore();
@@ -102,6 +112,7 @@ const ProblemForm = () => {
         : {
             [ProblemProperties.TIME_LIMIT]: 1000,
             [ProblemProperties.MEMORY_LIMIT]: 500,
+            [ProblemProperties.APPROXIMATE_VALUE]: 0,
           },
       mode: "onChange",
       shouldFocusError: true,
@@ -225,8 +236,8 @@ const ProblemForm = () => {
             </Grid.Item>
             <Grid.Item xs={6}></Grid.Item>
           </Grid.Wrap>
-          <Grid.Wrap>
-            <Grid.Item xs={6}>
+          <Grid.Wrap style={{marginBottom: '10px'}}>
+            <Grid.Item xs={3}>
               <Controller
                 name={ProblemProperties.TIME_LIMIT}
                 control={control}
@@ -248,7 +259,7 @@ const ProblemForm = () => {
                 )}
               />
             </Grid.Item>
-            <Grid.Item xs={6}>
+            <Grid.Item xs={3}>
               <Controller
                 name={ProblemProperties.MEMORY_LIMIT}
                 control={control}
@@ -270,7 +281,9 @@ const ProblemForm = () => {
                 )}
               />
             </Grid.Item>
-            <Grid.Item xs={6}>
+          </Grid.Wrap>
+          <Grid.Wrap style={{marginBottom: '10px'}}>
+            <Grid.Item xs={3}>
               <Controller
                 name={ProblemProperties.COMPARE_MODE}
                 control={control}
@@ -285,6 +298,7 @@ const ProblemForm = () => {
                     value={field.value}
                     onChange={(_, value) => {
                       field.onChange(value);
+                      setCompareValue(value);
                     }}
                     required
                     errorMessage={fieldState.error?.message}
@@ -292,36 +306,60 @@ const ProblemForm = () => {
                 )}
               />
             </Grid.Item>
-            <Grid.Item xs={6}>
-              <Controller
-                name={ProblemProperties.APPROXIMATE_VALUE}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <MuiSelect
-                    label="Approximate Value"
-                    options={[
-                      { label: "10^(-1)", value: "0" },
-                      { label: "10^(-2)", value: "1" },
-                      { label: "10^(-3)", value: "2" },
-                      { label: "10^(-4)", value: "3" },
-                      { label: "10^(-5)", value: "4" },
-                      { label: "10^(-6)", value: "5" },
-                      { label: "10^(-7)", value: "6" },
-                      { label: "10^(-8)", value: "7" },
-                      { label: "10^(-9)", value: "8" },
-                    ]}
-                    value={field.value}
-                    onChange={(_, value) => {
-                      field.onChange(value);
-                    }}
-                    required
-                    errorMessage={fieldState.error?.message}
-                  />
-                )}
-              />
+            <Grid.Item xs={3}>
+              <View renderIf={compareValue === "0"}>
+                <InputLabel sx={{ fontSize: "14px" }}>
+                  Approximate Value
+                </InputLabel>
+                <Controller
+                  name={ProblemProperties.APPROXIMATE_VALUE}
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={field.value}
+                      label=""
+                      onChange={field.onChange}
+                    >
+                      <MenuItem value={"0"}>
+                        10<sup>-1</sup>
+                      </MenuItem>
+                      <MenuItem value={"1"}>
+                        10<sup>-2</sup>
+                      </MenuItem>
+                      <MenuItem value={"2"}>
+                        10<sup>-3</sup>
+                      </MenuItem>
+                      <MenuItem value={"3"}>
+                        10<sup>-4</sup>
+                      </MenuItem>
+                      <MenuItem value={"4"}>
+                        10<sup>-5</sup>
+                      </MenuItem>
+                      <MenuItem value={"5"}>
+                        10<sup>-6</sup>
+                      </MenuItem>
+                      <MenuItem value={"6"}>
+                        10<sup>-7</sup>
+                      </MenuItem>
+                      <MenuItem value={"7"}>
+                        10<sup>-8</sup>
+                      </MenuItem>
+                      <MenuItem value={"8"}>
+                        10<sup>-9</sup>
+                      </MenuItem>
+                    </Select>
+                  )}
+                />
+              </View>
             </Grid.Item>
+          </Grid.Wrap>
+          <Grid.Wrap>
             <Grid.Item xs={12}>
-              <Typography fontSize={14}>Import Test Case File</Typography>
+              <InputLabel sx={{ fontSize: "14px" }}>
+                Import Test Case File
+              </InputLabel>
               <input
                 type="file"
                 accept=".zip"
