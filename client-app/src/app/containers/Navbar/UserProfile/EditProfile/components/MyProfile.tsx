@@ -324,7 +324,7 @@ export default function MyProfile() {
                               id="female"
                               name="gender"
                               value="female"
-                              checked={value === "female"}
+                              checked={value === 1}
                               onChange={onChange}
                               {...props}
                             />
@@ -336,7 +336,7 @@ export default function MyProfile() {
                               id="male"
                               name="gender"
                               value="male"
-                              checked={value === "male"}
+                              checked={value === 0}
                               onChange={onChange}
                               {...props}
                             />
@@ -383,7 +383,7 @@ export default function MyProfile() {
                         />
                       )}
                     />
-                      }) => {
+                      {/* }) => {
                         const formattedDate = value ? value.split("T")[0] : "";
                         console.log("dob " + formattedDate);
                         return (
@@ -403,7 +403,7 @@ export default function MyProfile() {
                           />
                         );
                       }}
-                    />
+                    /> */}
                     
                   </FormControl>
                 </Stack>
