@@ -28,9 +28,9 @@ const RegisteredListView = () => {
         <Box padding={2}>
           <Card sx={{ paddingLeft: 2, paddingRight: 2, paddingTop: 0 }}>
             <Table2<Contest>
-              rowCount={totalRecords}
+              rowCount={0}
               columns={columns}
-              data={registeredContests}
+              data={[]}
               recordName="items"
               onAction={handleGetUnregisteredContests}
               enableDensityToggle={false}

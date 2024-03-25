@@ -40,14 +40,6 @@ export const allColumns = (): MRT_ColumnDef<Contest>[] => {
       Cell: ({ cell }) => formatDateOrNull(cell.getValue<string>()),
     },
     {
-      accessorKey: "date",
-      header: "Date Published",
-      enableColumnFilterModes: false,
-      enableSorting: false,
-      size: 114,
-      Cell: ({ cell }) => formatDateOrNull(cell.getValue<string>()),
-    },
-    {
       accessorKey: "actions",
       header: "Action",
       muiTableHeadCellProps: {
@@ -55,7 +47,7 @@ export const allColumns = (): MRT_ColumnDef<Contest>[] => {
       },
       enableColumnFilterModes: false,
       enableSorting: false,
-      size: 96,
+      size: 0,
 
       Cell: ({ row }) =>
           <RowActions
