@@ -1,4 +1,5 @@
 import {
+  Breadcrumbs,
   Button,
   CustomTableSearch,
   EmptyTable,
@@ -28,6 +29,7 @@ import { ProblemFilterQueryKey } from "../../../Problems/helpers";
 import ProblemToolbar from "../../../Problems/ProblemToolbar";
 import { PATHS } from "../../../../configs/paths";
 import { MRT_RowSelectionState } from "material-react-table";
+import { toBreadCrumbs } from "./helpers";
 
 const ContestForm = () => {
   const { id } = useParams();
@@ -66,6 +68,8 @@ const ContestForm = () => {
     [onCreateContest, rowSelection]
   );
 
+  
+
   const handleGetProblems = useCallback(
     (params: GetPropertiesParams) => {
       setParams({ ...params });
@@ -77,6 +81,11 @@ const ContestForm = () => {
     navigate(`${PATHS.problems}/${id}`);
   };
 
+  const breadCrumbsItems = useMemo(
+    () => toBreadCrumbs(isEdit, id),
+    [id, isEdit]
+  );
+
   const columns = useMemo(() => allColumns(), []);
 
     // if (isFetching) {
@@ -85,7 +94,7 @@ const ContestForm = () => {
 
   return (
     <Container maxWidth="xl" style={{ padding: "10px" }}>
-      {/* <Breadcrumbs items={breadCrumbsItems} /> */}
+      <Breadcrumbs items={breadCrumbsItems} />
       <Card sx={{ padding: "10px", marginTop: "10px" }}>
         <Typography variant="h5" mb={5} mt={2}>
           {isEdit ? "Edit Contest" : "Create New Contest"}
