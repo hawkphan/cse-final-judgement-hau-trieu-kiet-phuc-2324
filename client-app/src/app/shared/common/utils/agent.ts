@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
-import {User, UserFormValues } from '../../../models/user';
 import { router } from '../../../router/Routes';
 import { store } from '../stores/store';
+import { User, UserFormValues } from '../stores/types';
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
