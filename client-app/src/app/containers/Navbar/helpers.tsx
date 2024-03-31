@@ -15,4 +15,5 @@ export const PATHS = {
     problems: '/problems',
     developer: '/developer',
     contests: '/contests',
+    profile: '/profile'
 }

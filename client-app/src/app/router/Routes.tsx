@@ -37,6 +37,7 @@ export const routes: RouteObject[] = [
       {
         path: PATHS.editProfile,
         element: <EditProfile />,
+        // element: <TempEdit />,
       },
       {
         path: PATHS.login,

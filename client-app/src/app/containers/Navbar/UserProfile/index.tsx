@@ -3,9 +3,19 @@ import UserActivityReport from "./UserActivityReport";
 import UserAnnualReport from "./UserAnnualSubmissionReport";
 import { Box, Grid } from "@mui/material";
 import UserAchievement from "./UserAchievements";
+import { useStore } from "../../../shared/common/stores/store";
+import { useMemo } from "react";
 
 export default function UserProfile() {
+  const { userStore } = useStore();
+  const id: string = useMemo(() => {
+    return userStore?.user?.id;
+  }, [userStore?.user]);
+
+
+
   return (
+   
     <Grid
       container
       spacing={2}
@@ -39,5 +49,7 @@ export default function UserProfile() {
         </Box>
       </Grid>
     </Grid>
+
+   
   );
 }

@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Accept } from "react-dropzone";
-
-// import { Yup } from "../../../shared";
-// import { PATHS } from "../../../configs/paths";
 import { EditProfileBody } from "../../../../queries/Profiles/types";
 import { PATHS } from "../../../../configs/paths";
 import { Yup } from "../../../../shared";
@@ -14,7 +11,7 @@ export enum ProfileProperties {
   ID = "id",
   FIRSTNAME = "firstName",
   LASTNAME = "lastName",
-  USERNAME = "username",
+  USERNAME = "userName",
   EMAIL = "email",
   DESCRIPTION = "description",
   USER_ID = "userId",
@@ -39,24 +36,22 @@ export const mapFormData = (
   }
   formData.append(ProfileProperties.FIRSTNAME, data.firstName);
   formData.append(ProfileProperties.LASTNAME, data.lastName);
-  formData.append(ProfileProperties.USERNAME, data.userName);
-  // formData.append(ProfileProperties.EMAIL, data.email);
+  formData.append(ProfileProperties.USERNAME, data.displayName);
+  formData.append(ProfileProperties.EMAIL, data.email);
   // formData.append(ProfileProperties.DESCRIPTION, data.description);
-  // formData.append(ProfileProperties.USER_ID, userId);
-
   return formData;
 };
 
-export const toBreadCrumbs = (isEdit: boolean, id?: string) => {
+export const toBreadCrumbs = (id: string) => {
   return [
     {
       id: 0,
-      label: 'Problems',
-      href: `${PATHS.problems}`,
+      label: 'Profile: ' + id,
+      href: `${PATHS.profile}`,
     },
     {
       id: 1,
-      label: isEdit ? 'Edit ' + id : 'Create',
+      label:  'Edit ',
     },
   ];
 };
@@ -66,5 +61,5 @@ export const EditProfileFormSchema = Yup.object().shape({
   [ProfileProperties.FIRSTNAME]: Yup.string().required(),
   [ProfileProperties.LASTNAME]: Yup.string().required(),
   [ProfileProperties.USERNAME]: Yup.string().required(),
-  // [ProfileProperties.EMAIL]: Yup.string().required(),
+  [ProfileProperties.EMAIL]: Yup.string().required(),
 });

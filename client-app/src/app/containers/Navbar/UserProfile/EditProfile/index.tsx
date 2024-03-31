@@ -3,11 +3,12 @@ import { CssVarsProvider } from "@mui/joy/styles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
 import MyProfile from "./components/MyProfile";
-
+import { Breadcrumbs } from "../../../../shared";
+import {toBreadCrumbs} from "./helpers"
 export default function EditProfile() {
   return (
-    <CssVarsProvider disableTransitionOnChange>
-      <CssBaseline />
+    <>
+      
       <Box sx={{ display: "flex", minHeight: "100dvh" }}>
         <Box
           component="main"
@@ -24,9 +25,10 @@ export default function EditProfile() {
             overflow: "auto",
           }}
         >
+          
           <MyProfile />
         </Box>
       </Box>
-    </CssVarsProvider>
+    </>
   );
 }
