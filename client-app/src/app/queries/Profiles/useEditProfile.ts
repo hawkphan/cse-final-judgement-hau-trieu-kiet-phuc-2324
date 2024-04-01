@@ -8,6 +8,7 @@ import { editProfile } from "./profileApis";
 export function useEditProfile(
   options?: UseMutationOptions<any, Error, EditProfileBody>
 ) {
+
   const {
     mutate: onEditProfile,
     isSuccess,
@@ -15,8 +16,8 @@ export function useEditProfile(
     isPending,
     error,
   } = useMutation<any, Error, EditProfileBody>({
-    mutationFn: (payload: EditProfileBody) =>
-      responseWrapper(editProfile, [payload]),
+    mutationFn: (payload: EditProfileBody) =>{
+      return responseWrapper(editProfile, [payload])},
     ...options,
   });
 

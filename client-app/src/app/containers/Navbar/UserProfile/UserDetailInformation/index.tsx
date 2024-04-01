@@ -16,7 +16,7 @@ import { TbPointFilled } from "react-icons/tb";
 
 //Test data
 import { profileInfo } from "../TestData/data.mock";
-import { Button, formatDate } from "../../../../shared";
+import { Button, LoadingCommon, MuiDatePicker, formatDate } from "../../../../shared";
 import { useGetProfileById } from "../../../../queries/Profiles";
 import { useStore } from "../../../../shared/common/stores/store";
 import { useCallback, useMemo } from "react";
@@ -28,25 +28,33 @@ export interface Profile {
   lastName?: string;
   email?: string;
   birthday?: string;
-  isFemale?: boolean;
+  gender?: number;
   displayName?: string;
 }
 
 export default function UserDetailInformation() {
   const navigate = useNavigate();
   const { userStore } = useStore();
+
   const id = useMemo(() => {
     return userStore?.user?.id;
   }, [userStore?.user]);
 
-  const { profile } = useGetProfileById({
+
+  const { profile, isFetching } = useGetProfileById({
     id,
     queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: id }],
   });
 
+
   const handleEditProfile = useCallback(() => {
     navigate(`/profile/edit`);
   }, [navigate]);
+
+  if (isFetching) {
+    return <LoadingCommon />;
+  }
+
   return (
     <Card
       style={{
@@ -57,16 +65,16 @@ export default function UserDetailInformation() {
       }}
       elevation={4}
     >
+
       <Stack direction="row" spacing={2} style={{ paddingBottom: "20px" }}>
         <Avatar sx={{ width: 80, height: 80 }} />
 
         <Stack direction="column" spacing={0.5}>
-          <h4>{profile?.userName}</h4>
+          <h4>{profile?.displayName}</h4>
           <h5>{profile?.email}</h5>
           <h5>{formatDate(profile?.birthday)}</h5>
         </Stack>
       </Stack>
-
       {/* <MuiMenuItem
               itemKey={KEYS.problems}
               label={LABELS.problems}
@@ -204,5 +212,6 @@ export default function UserDetailInformation() {
         </ListItem>
       </List>
     </Card>
+
   );
 }

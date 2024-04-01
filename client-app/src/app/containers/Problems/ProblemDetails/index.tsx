@@ -23,7 +23,13 @@ import { LanguageOption, useGetLanguages } from "../../../queries/Languages";
 import { useGetProblemById } from "../../../queries/Problems";
 import DescriptionTab from "./DescriptionTab";
 import SubmissionTab from "./SubmissionTab";
-import { CompilerEnv, Tab, ThemeMode, tabsList, toBreadcrumbs } from "./helpers";
+import {
+  CompilerEnv,
+  Tab,
+  ThemeMode,
+  tabsList,
+  toBreadcrumbs,
+} from "./helpers";
 import {
   CreateSolutionBody,
   useGetSolutions,
@@ -54,7 +60,7 @@ const ProblemDetail = () => {
 
   type Monaco = typeof monaco;
 
-  const file = CompilerEnv['Python'];
+  const file = CompilerEnv["Python"];
   const editorRef = useRef(null);
   const [darkOrLight, setDarkOrLight] = useState(ThemeMode.DARK);
 
@@ -70,7 +76,9 @@ const ProblemDetail = () => {
   }, [user?.id]);
 
   const toggleDarkOrLightTheme = () => {
-    setDarkOrLight(darkOrLight === ThemeMode.DARK ? ThemeMode.LIGHT : ThemeMode.DARK);
+    setDarkOrLight(
+      darkOrLight === ThemeMode.DARK ? ThemeMode.LIGHT : ThemeMode.DARK
+    );
   };
 
   const getEditorValue = () => {
