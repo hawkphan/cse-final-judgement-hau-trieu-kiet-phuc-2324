@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 
 const ConditionalNavbar = () => {
   const location = useLocation();
-  const unusedPaths = ["/login", "/signup"];
+  const unusedPaths = ["/login", "/signup", "/"];
 
   if (unusedPaths.includes(location.pathname)) {
     return <></>;

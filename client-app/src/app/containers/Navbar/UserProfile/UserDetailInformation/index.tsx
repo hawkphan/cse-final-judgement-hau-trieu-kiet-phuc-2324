@@ -13,10 +13,8 @@ import {
 import { FaEye, FaCheckCircle, FaStar } from "react-icons/fa";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { TbPointFilled } from "react-icons/tb";
-
-//Test data
 import { profileInfo } from "../TestData/data.mock";
-import { Button, LoadingCommon, MuiDatePicker, formatDate } from "../../../../shared";
+import { Button, LoadingCommon, formatDate, isEmpty } from "../../../../shared";
 import { useGetProfileById } from "../../../../queries/Profiles";
 import { useStore } from "../../../../shared/common/stores/store";
 import { useCallback, useMemo } from "react";
@@ -40,18 +38,16 @@ export default function UserDetailInformation() {
     return userStore?.user?.id;
   }, [userStore?.user]);
 
-
   const { profile, isFetching } = useGetProfileById({
     id,
     queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: id }],
   });
 
-
   const handleEditProfile = useCallback(() => {
     navigate(`/profile/edit`);
   }, [navigate]);
 
-  if (isFetching) {
+  if (isFetching && isEmpty(id)) {
     return <LoadingCommon />;
   }
 
@@ -65,7 +61,6 @@ export default function UserDetailInformation() {
       }}
       elevation={4}
     >
-
       <Stack direction="row" spacing={2} style={{ paddingBottom: "20px" }}>
         <Avatar sx={{ width: 80, height: 80 }} />
 
@@ -75,11 +70,6 @@ export default function UserDetailInformation() {
           <h5>{formatDate(profile?.birthday)}</h5>
         </Stack>
       </Stack>
-      {/* <MuiMenuItem
-              itemKey={KEYS.problems}
-              label={LABELS.problems}
-              path={PATHS.problems}
-            /> */}
       <Button
         onClick={handleEditProfile}
         style={{
@@ -92,7 +82,6 @@ export default function UserDetailInformation() {
       >
         Edit Profile
       </Button>
-
       <Divider style={{ marginTop: "20px", marginBottom: "5px" }} />
       <List
         sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
@@ -114,7 +103,6 @@ export default function UserDetailInformation() {
             secondary="Last week 0"
           />
         </ListItem>
-
         <ListItem>
           <ListItemIcon>
             <FaCheckCircle style={{ color: "#8AFF72" }} />
@@ -124,7 +112,6 @@ export default function UserDetailInformation() {
             secondary="Last week 0"
           />
         </ListItem>
-
         <ListItem>
           <ListItemIcon>
             <IoChatboxEllipsesOutline style={{ color: "#61B350" }} />
@@ -159,16 +146,8 @@ export default function UserDetailInformation() {
           {profileInfo.user.userProfile.languagesUsage === null ? (
             <ListItemText secondary="Not enough data" />
           ) : (
-            // profileInfo.user.userProfile.languagesUsage.map((language) => (
-            //   <ListItem>
-            //     <ListItemIcon>
-            //       <TbPointFilled />
-            //     </ListItemIcon>
-            //     <ListItemText primary={language[0]} />
-            //   </ListItem>
-            // ))
             profileInfo.user.userProfile.languages.map((language) => (
-              <ListItem>
+              <ListItem key={language}>
                 <ListItemIcon>
                   <TbPointFilled />
                 </ListItemIcon>
@@ -196,14 +175,12 @@ export default function UserDetailInformation() {
           </ListItemIcon>
           <ListItemText primary="Advanced" />
         </ListItem>
-
         <ListItem>
           <ListItemIcon>
             <TbPointFilled style={{ color: "orange" }} />
           </ListItemIcon>
           <ListItemText primary="Intermediate" />
         </ListItem>
-
         <ListItem>
           <ListItemIcon>
             <TbPointFilled style={{ color: "green" }} />
@@ -212,6 +189,5 @@ export default function UserDetailInformation() {
         </ListItem>
       </List>
     </Card>
-
   );
 }
