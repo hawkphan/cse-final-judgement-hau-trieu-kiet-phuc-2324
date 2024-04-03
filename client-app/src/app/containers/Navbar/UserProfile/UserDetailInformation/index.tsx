@@ -16,10 +16,10 @@ import { TbPointFilled } from "react-icons/tb";
 import { profileInfo } from "../TestData/data.mock";
 import { Button, LoadingCommon, formatDate, isEmpty } from "../../../../shared";
 import { useGetProfileById } from "../../../../queries/Profiles";
-import { useStore } from "../../../../shared/common/stores/store";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { API_QUERIES } from "../../../../queries";
 import { useNavigate } from "react-router-dom";
+import { useStore } from "../../../../shared/common/stores/store";
 export interface Profile {
   userName?: string;
   firstName?: string;
@@ -30,13 +30,13 @@ export interface Profile {
   displayName?: string;
 }
 
-export default function UserDetailInformation() {
+interface Props {
+  id: string;
+}
+
+export const UserDetailInformation = ({ id }: Props) => {
   const navigate = useNavigate();
   const { userStore } = useStore();
-
-  const id = useMemo(() => {
-    return userStore?.user?.id;
-  }, [userStore?.user]);
 
   const { profile, isFetching } = useGetProfileById({
     id,
@@ -70,18 +70,20 @@ export default function UserDetailInformation() {
           <h5>{formatDate(profile?.birthday)}</h5>
         </Stack>
       </Stack>
-      <Button
-        onClick={handleEditProfile}
-        style={{
-          width: "100%",
-          maxWidth: "500px",
-          maxHeight: "30px",
-          minWidth: "100px",
-          minHeight: "30px",
-        }}
-      >
-        Edit Profile
-      </Button>
+      {id == userStore?.user?.id && (
+        <Button
+          onClick={handleEditProfile}
+          style={{
+            width: "100%",
+            maxWidth: "500px",
+            maxHeight: "30px",
+            minWidth: "100px",
+            minHeight: "30px",
+          }}
+        >
+          Edit Profile
+        </Button>
+      )}
       <Divider style={{ marginTop: "20px", marginBottom: "5px" }} />
       <List
         sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
@@ -190,4 +192,6 @@ export default function UserDetailInformation() {
       </List>
     </Card>
   );
-}
+};
+
+export default UserDetailInformation;

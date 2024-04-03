@@ -10,9 +10,10 @@ const HomePage = () => {
     navigate(PATHS.problems);
   };
 
-  const handleNavigateToSignUp = () => {
-    navigate(PATHS.signup);
+  const handleNavigateToLogin = () => {
+    navigate(PATHS.login);
   };
+  
   const handleNavigateToContests = () => {
     navigate(PATHS.contests);
   };
@@ -63,10 +64,11 @@ const HomePage = () => {
                 variant="contained"
                 color="success"
                 style={{ borderRadius: 20 }}
-                onClick={handleNavigateToSignUp}
+                onClick={handleNavigateToLogin}
               >
-                Register Your Account
+                Login Your Account
               </Button>
+              
             </div>
           </div>
         </div>

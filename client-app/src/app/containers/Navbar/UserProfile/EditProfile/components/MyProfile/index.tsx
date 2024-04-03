@@ -71,7 +71,7 @@ export default function MyProfile() {
     onSuccess: () => {
       Toastify.success("Successful!");
       handleInvalidateProfile();
-      navigate(PATHS.profile);
+      navigate(PATHS.profile.replace(":id", id));
     },
     onError: (error) => {
       Toastify.error(error.message);

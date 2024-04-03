@@ -13,9 +13,10 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { KEYS, LABELS, PATHS } from "./helpers";
+import { KEYS, LABELS } from "./helpers";
 import { MuiMenuItem } from "./MuiMenuItem";
 import { useStore } from "../../shared/common/stores/store";
+import { PATHS } from "../../configs/paths";
 
 function Navbar() {
   const { userStore } = useStore();
@@ -106,9 +107,9 @@ function Navbar() {
               path={PATHS.contests}
             />
             <MuiMenuItem
-              itemKey={KEYS.developer}
-              label={LABELS.developer}
-              path={PATHS.developer}
+              itemKey={KEYS.dev}
+              label={LABELS.dev}
+              path={PATHS.dev}
             />
           </Box>
 
@@ -135,7 +136,7 @@ function Navbar() {
             >
               <MenuItem key="menu-profile" onClick={handleCloseUserMenu}>
                 <Link
-                  to="/profile"
+                  to={PATHS.profile.replace(":id", userStore?.user?.id)}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <Typography

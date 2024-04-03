@@ -47,7 +47,7 @@ export const toBreadCrumbs = (id: string) => {
     {
       id: 0,
       label: 'Profile: ' + id,
-      href: `${PATHS.profile}`,
+      href: `${PATHS.profile.replace(":id", id)}`,
     },
     {
       id: 1,

@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import { PATHS } from "../../Navbar/helpers";
+
+import { PATHS } from "../../../configs/paths";
 
 export const tabsList = [
   {

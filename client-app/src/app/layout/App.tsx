@@ -5,6 +5,7 @@ import "react-material-symbols/rounded";
 import "react-material-symbols/outlined";
 import "react-material-symbols/sharp";
 import { ToastContainer } from "react-toastify";
+import ProtectedRoute from "../containers/ProtectedRoute";
 
 const ConditionalNavbar = () => {
   const location = useLocation();
@@ -13,7 +14,11 @@ const ConditionalNavbar = () => {
   if (unusedPaths.includes(location.pathname)) {
     return <></>;
   }
-  return <Navbar />;
+  return (
+    <ProtectedRoute>
+      <Navbar />
+    </ProtectedRoute>
+  );
 };
 
 function App() {
