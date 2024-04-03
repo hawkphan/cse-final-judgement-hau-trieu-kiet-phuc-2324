@@ -14,7 +14,7 @@ import { useStore } from "../../../shared/common/stores/store";
 import { useNavigate } from "react-router-dom";
 import { PATHS } from "../../../configs/paths";
 import { Link } from "@mui/material";
-import { SignUpFormKey, SignUpLabel } from "./helpers";
+import { SignUpFormKey, SignUpLabel } from "./types";
 
 function Copyright(props: any) {
   return (
