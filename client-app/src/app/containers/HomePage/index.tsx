@@ -4,12 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { PATHS } from "../../configs/paths";
 
 const HomePage = () => {
-
   const navigate = useNavigate();
 
   const handleNavigateToProblems = () => {
     navigate(PATHS.problems);
-  }
+  };
+
+  const handleNavigateToSignUp = () => {
+    navigate(PATHS.signup);
+  };
+  const handleNavigateToContests = () => {
+    navigate(PATHS.contests);
+  };
 
   return (
     <div
@@ -57,6 +63,7 @@ const HomePage = () => {
                 variant="contained"
                 color="success"
                 style={{ borderRadius: 20 }}
+                onClick={handleNavigateToSignUp}
               >
                 Register Your Account
               </Button>
@@ -94,7 +101,7 @@ const HomePage = () => {
             style={{ borderRadius: 20 }}
             onClick={handleNavigateToProblems}
           >
-             Start your training
+            Start your training
           </Button>
         </div>
         <div
@@ -102,23 +109,24 @@ const HomePage = () => {
             textAlign: "center",
             margin: "auto",
             marginBottom: 30,
-            marginTop: 30,
+            marginTop: 0,
             maxWidth: "500px",
           }}
         >
           <p>
-            If you are passionate about tackling some of the most interesting
-            problems around, we would love to hear from you.  
+            Programming Contest is the ultimate solution for businesses and organizations looking to
+            host seamless and engaging programming competitions. With our
+            comprehensive software tool, you can effortlessly manage every
+            aspect of your contest.
           </p>
-          <p style={{ color: "#00A9F5", fontSize: 16 }}>
-            <a
-              href="#"
-              style={{ color: "#00A9F5", fontSize: 16, fontWeight: "bold" }}
-            >
-              Join with us
-            </a>{" "}
-            &#11166;
-          </p>
+          <Button
+            variant="contained"
+            color="success"
+            style={{ borderRadius: 20 }}
+            onClick={handleNavigateToContests}
+          >
+            View Contests
+          </Button>
         </div>
       </Box>
     </div>

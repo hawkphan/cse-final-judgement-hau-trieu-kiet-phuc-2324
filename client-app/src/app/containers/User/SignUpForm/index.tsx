@@ -1,11 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -13,6 +11,10 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useStore } from "../../../shared/common/stores/store";
+import { useNavigate } from "react-router-dom";
+import { PATHS } from "../../../configs/paths";
+import { Link } from "@mui/material";
+import { SignUpFormKey, SignUpLabel } from "./helpers";
 
 function Copyright(props: any) {
   return (
@@ -24,7 +26,7 @@ function Copyright(props: any) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        CodeCrafter
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -36,24 +38,33 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const [error, setError] = React.useState<string | null>(null);
   const { userStore } = useStore();
+
+  const navigate = useNavigate();
+
+  const handleNavigateToLogin = () => {
+    navigate(PATHS.login);
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const email = data.get("email") as string;
-    const password = data.get("password") as string;
-    const lastName = data.get("lastName") as string;
-    const firstName = data.get("firstName") as string;
-    const userName = data.get("username") as string;
-
+    const email = data.get(SignUpFormKey.EMAIL) as string;
+    const password = data.get(SignUpFormKey.PASSWORD) as string;
+    const lastName = data.get(SignUpFormKey.LAST_NAME) as string;
+    const firstName = data.get(SignUpFormKey.FIRST_NAME) as string;
+    const userName = data.get(SignUpFormKey.USER_NAME) as string;
+    
     try {
-      await userStore.register({ email, password, firstName, lastName,userName });
-      // Reset any previous errors
-      setError("");
+      await userStore.register({
+        email,
+        password,
+        firstName,
+        lastName,
+        userName,
+      });
     } catch (error) {
-      setError("Something wrong pls try again <3");
+      console.log(error);
     }
   };
 
@@ -84,12 +95,12 @@ export default function SignUp() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  autoComplete="given-name"
-                  name="firstName"
+                  autoComplete={SignUpFormKey.FIRST_NAME}
+                  name={SignUpFormKey.FIRST_NAME}
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  id={SignUpFormKey.FIRST_NAME}
+                  label={SignUpLabel[SignUpFormKey.FIRST_NAME]}
                   autoFocus
                 />
               </Grid>
@@ -97,51 +108,52 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
+                  id={SignUpFormKey.LAST_NAME}
+                  label={SignUpLabel[SignUpFormKey.LAST_NAME]}
+                  name={SignUpFormKey.LAST_NAME}
+                  autoComplete={SignUpFormKey.LAST_NAME}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
+                  id={SignUpFormKey.EMAIL}
+                  label={SignUpLabel[SignUpFormKey.EMAIL]}
+                  name={SignUpFormKey.EMAIL}
+                  autoComplete={SignUpFormKey.EMAIL}
                 />
               </Grid>{" "}
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="username"
-                  label="Username"
-                  name="username"
-                  autoComplete="email"
+                  id={SignUpFormKey.USER_NAME}
+                  label={SignUpLabel[SignUpFormKey.USER_NAME]}
+                  name={SignUpFormKey.USER_NAME}
+                  autoComplete={SignUpFormKey.USER_NAME}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
+                  name={SignUpFormKey.PASSWORD}
+                  label={SignUpLabel[SignUpFormKey.PASSWORD]}
+                  type={SignUpFormKey.PASSWORD}
+                  id={SignUpFormKey.PASSWORD}
+                  autoComplete={SignUpFormKey.PASSWORD}
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/* Unimplemented Function */}
+              {/* <Grid item xs={12}>
                 <FormControlLabel
                   control={
                     <Checkbox value="allowExtraEmails" color="primary" />
                   }
                   label="I want to receive inspiration, marketing promotions and updates via email."
                 />
-              </Grid>
+              </Grid> */}
             </Grid>
             <Button
               type="submit"
@@ -153,7 +165,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/login" variant="body2">
+                <Link onClick={handleNavigateToLogin} variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

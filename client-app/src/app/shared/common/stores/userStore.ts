@@ -21,7 +21,7 @@ export default class UserStore {
     store.commonStore.setToken(user.token);
     runInAction(() => (this.user = user));
     console.log(user);
-    router.navigate(PATHS.root);
+    router.navigate(PATHS.problems);
     store.modalStore.closeModal();
   };
 
