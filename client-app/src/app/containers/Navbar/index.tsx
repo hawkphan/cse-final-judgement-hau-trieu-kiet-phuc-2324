@@ -17,6 +17,7 @@ import { KEYS, LABELS } from "./helpers";
 import { MuiMenuItem } from "./MuiMenuItem";
 import { useStore } from "../../shared/common/stores/store";
 import { PATHS } from "../../configs/paths";
+import { Logout } from "@mui/icons-material";
 
 function Navbar() {
   const { userStore } = useStore();
@@ -26,7 +27,7 @@ function Navbar() {
 
   useEffect(() => {
     if (!localStorage.getItem("jwt")) {
-      navigate("/login");
+      navigate(PATHS.login);
     }
   }, [navigate]);
 
@@ -40,6 +41,10 @@ function Navbar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleNavigateToProfile = () => {
+    navigate(PATHS.profile.replace(":id", userStore?.user?.id));
   };
 
   return (
@@ -134,21 +139,17 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem key="menu-profile" onClick={handleCloseUserMenu}>
-                <Link
-                  to={PATHS.profile.replace(":id", userStore?.user?.id)}
-                  style={{ textDecoration: "none", color: "black" }}
+              <MenuItem key="menu-profile" onClick={handleNavigateToProfile}>
+                <Avatar />
+                <Typography
+                  textAlign="center"
+                  component={Box}
+                  style={{ textDecoration: "none", marginLeft: "10px" }}
                 >
-                  <Typography
-                    textAlign="center"
-                    component={Box}
-                    style={{ textDecoration: "none" }}
-                  >
-                    Profile
-                  </Typography>
-                </Link>
+                  Profile
+                </Typography>
               </MenuItem>
-              <MenuItem key="menu-profile" onClick={userStore.logout}>
+              {/* <MenuItem key="menu-profile" onClick={userStore.logout}>
                 <Link
                   style={{ textDecoration: "none", color: "black" }}
                   to={""}
@@ -161,6 +162,16 @@ function Navbar() {
                     Logout
                   </Typography>
                 </Link>
+              </MenuItem> */}
+              <MenuItem key="menu-logout" onClick={userStore.logout}>
+                <Logout fontSize="small" />
+                <Typography
+                  textAlign="center"
+                  component={Box}
+                  style={{ textDecoration: "none", marginLeft: "10px" }}
+                >
+                  Logout
+                </Typography>
               </MenuItem>
             </Menu>
           </Box>
