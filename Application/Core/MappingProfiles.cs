@@ -23,7 +23,7 @@ namespace Application.Core
               .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
               .ForMember(d => d.Id, o => o.MapFrom(s => s.Id));
 
-            CreateMap<AppUser, Domain.Profile>()
+            CreateMap<AppUser, ProfileDto>()
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.UserName))
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.DisplayName))
                 .ForMember(d => d.FirstName, o => o.MapFrom(s => s.FirstName))

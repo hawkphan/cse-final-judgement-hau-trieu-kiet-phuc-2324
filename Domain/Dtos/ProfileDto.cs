@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public class Profile
+    public class ProfileDto
     {
         public string UserName { get; set; }
         public string FirstName { get; set; }
@@ -14,5 +14,6 @@ namespace Domain
         public DateTime Birthday { get; set; }
         public double Gender { get; set; }
         public string DisplayName { get; set; }
+        public string Avatar { get; set; }
     }
 }

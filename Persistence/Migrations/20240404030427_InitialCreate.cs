@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateSolutionDomain : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,8 +50,9 @@ namespace Persistence.Migrations
                     FirstName = table.Column<string>(type: "TEXT", nullable: true),
                     LastName = table.Column<string>(type: "TEXT", nullable: true),
                     Birthday = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    IsFemale = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Gender = table.Column<double>(type: "REAL", nullable: false),
                     DisplayName = table.Column<string>(type: "TEXT", nullable: true),
+                    AvatarUrl = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -70,6 +71,21 @@ namespace Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Contests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: true),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    StartTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Contests", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -208,7 +224,7 @@ namespace Persistence.Migrations
                     Difficulty = table.Column<double>(type: "REAL", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    TimeLimit = table.Column<double>(type: "REAL", nullable: false)
+                    TimeLimit = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -217,6 +233,57 @@ namespace Persistence.Migrations
                         name: "FK_Problems_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ContestMembers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Role = table.Column<double>(type: "REAL", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ContestId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContestMembers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ContestMembers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ContestMembers_Contests_ContestId",
+                        column: x => x.ContestId,
+                        principalTable: "Contests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ContestProblems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ContestId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProblemId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContestProblems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ContestProblems_Contests_ContestId",
+                        column: x => x.ContestId,
+                        principalTable: "Contests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ContestProblems_Problems_ProblemId",
+                        column: x => x.ProblemId,
+                        principalTable: "Problems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -254,7 +321,10 @@ namespace Persistence.Migrations
                     ProblemId = table.Column<Guid>(type: "TEXT", nullable: false),
                     FileName = table.Column<string>(type: "TEXT", nullable: true),
                     LanguageId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Status = table.Column<string>(type: "TEXT", nullable: true),
+                    Status = table.Column<double>(type: "REAL", nullable: false),
+                    MemoryUsage = table.Column<long>(type: "INTEGER", nullable: false),
+                    ExecutionTime = table.Column<double>(type: "REAL", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Score = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
@@ -287,7 +357,8 @@ namespace Persistence.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     ProblemId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Input = table.Column<string>(type: "TEXT", nullable: true),
-                    Output = table.Column<string>(type: "TEXT", nullable: true)
+                    Output = table.Column<string>(type: "TEXT", nullable: true),
+                    Name = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -309,8 +380,9 @@ namespace Persistence.Migrations
                     TestCaseId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Output = table.Column<string>(type: "TEXT", nullable: true),
                     ExecutionTime = table.Column<double>(type: "REAL", nullable: false),
-                    Error = table.Column<string>(type: "TEXT", nullable: true),
-                    Passed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    MemoryUsage = table.Column<long>(type: "INTEGER", nullable: false),
+                    Error = table.Column<double>(type: "REAL", nullable: false),
+                    Status = table.Column<double>(type: "REAL", nullable: false),
                     ProblemId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -371,6 +443,26 @@ namespace Persistence.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContestMembers_ContestId",
+                table: "ContestMembers",
+                column: "ContestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContestMembers_UserId",
+                table: "ContestMembers",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContestProblems_ContestId",
+                table: "ContestProblems",
+                column: "ContestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContestProblems_ProblemId",
+                table: "ContestProblems",
+                column: "ProblemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Languages_AppUserId",
@@ -451,6 +543,12 @@ namespace Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ContestMembers");
+
+            migrationBuilder.DropTable(
+                name: "ContestProblems");
+
+            migrationBuilder.DropTable(
                 name: "ProblemLanguages");
 
             migrationBuilder.DropTable(
@@ -458,6 +556,9 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Contests");
 
             migrationBuilder.DropTable(
                 name: "Solutions");

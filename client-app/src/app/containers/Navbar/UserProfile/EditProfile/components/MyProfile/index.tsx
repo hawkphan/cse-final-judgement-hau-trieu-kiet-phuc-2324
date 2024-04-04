@@ -3,7 +3,6 @@
 import * as React from "react";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
 import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
@@ -28,18 +27,23 @@ import {
 import { API_QUERIES } from "../../../../../../queries";
 import {
   EditProfileFormSchema,
+  ProfileProperties,
   mapFormData,
   toBreadCrumbs,
 } from "../../helpers";
 import {
   Breadcrumbs,
+  Button,
   LoadingCommon,
   MuiDatePicker,
+  MuiInput,
   Toastify,
+  isEmpty,
 } from "../../../../../../shared";
 import { PATHS } from "../../../../../../configs/paths";
 import { useEditProfile } from "../../../../../../queries/Profiles/useEditProfile";
 import dayjs from "dayjs";
+import { IMAGES } from "../../../../../../configs/images";
 
 export interface Profile {
   id?: string;
@@ -80,7 +84,7 @@ export default function MyProfile() {
   });
 
   const { control, handleSubmit, reset } = useForm<EditProfileBody>({
-    defaultValues: { ...profile, id: id },
+    defaultValues: { ...profile },
 
     mode: "onChange",
     shouldFocusError: true,
@@ -90,17 +94,23 @@ export default function MyProfile() {
 
   useEffect(() => {
     reset({ ...profile });
+
+    if (!isEmpty(profile.avatar)) {
+      const file = new File([profile.avatar], "avatar.jpg", { type: 'image/jpeg' });
+      // setFileSelected(file);
+      const blob = URL.createObjectURL(file);
+      setAvatarSrc("data:image/jpeg;base64," + profile.avatar);
+      // setAvatarSrc(blob);
+    }
   }, [profile, reset]);
 
   const onSubmit = async (data: EditProfileBody) => {
-    const formData = mapFormData(data, fileSelected, id);
+    const formData = mapFormData(data, fileSelected);
     onEditProfile(formData);
   };
 
   // Upload img avatar from client pc
-  const [avatarSrc, setAvatarSrc] = useState(
-    "../../../../../../../../public/assets/user.png"
-  );
+  const [avatarSrc, setAvatarSrc] = useState(IMAGES.defaultUser);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleUploadClick = () => {
@@ -110,7 +120,7 @@ export default function MyProfile() {
   const handleFileChangeAndSave = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (event.target.files && event.target.files[0]) {
+    if (!isEmpty(event.target.files)) {
       const file = event.target.files[0];
       setFileSelected(file);
       const filePreviewUrl = URL.createObjectURL(file);
@@ -121,6 +131,7 @@ export default function MyProfile() {
   if (isFetching) {
     return <LoadingCommon />;
   }
+
   return (
     <Box sx={{ flex: 1, width: "100%" }}>
       <Breadcrumbs items={toBreadCrumbs(id)} />
@@ -139,12 +150,11 @@ export default function MyProfile() {
             <Box sx={{ mb: 1 }}>
               <Typography level="title-md">Personal info</Typography>
               <Typography level="body-sm">
-                Customize how your profile information will apper to the
+                Customize how your profile information will appear to the
                 networks.
               </Typography>
             </Box>
             <Divider />
-
             <Stack
               direction="row"
               spacing={3}
@@ -159,7 +169,6 @@ export default function MyProfile() {
                 >
                   <img src={avatarSrc} loading="lazy" alt="Avatar" />
                 </AspectRatio>
-
                 <input
                   accept="image/*"
                   style={{ display: "none" }}
@@ -199,7 +208,7 @@ export default function MyProfile() {
                     }}
                   >
                     <Controller
-                      name="firstName"
+                      name={ProfileProperties.FIRST_NAME}
                       control={control}
                       rules={{
                         required: true,
@@ -209,25 +218,21 @@ export default function MyProfile() {
                         fieldState: { error },
                       }) => (
                         <>
-                          <Input
-                            size="sm"
+                          <MuiInput
                             placeholder="First name"
                             value={value}
                             onChange={(data) => {
                               onChange(data);
                             }}
                             required
-                            // errorMessage={error?.message}
+                            errorMessage={error?.message}
                             {...props}
                           />
-                          {error && (
-                            <p style={{ color: "red" }}>{error.message}</p>
-                          )}
                         </>
                       )}
                     />
                     <Controller
-                      name="lastName"
+                      name={ProfileProperties.LAST_NAME}
                       control={control}
                       rules={{
                         required: true,
@@ -237,25 +242,21 @@ export default function MyProfile() {
                         fieldState: { error },
                       }) => (
                         <>
-                          <Input
-                            size="sm"
+                          <MuiInput
                             placeholder="Last name"
-                            sx={{ flexGrow: 1 }}
                             value={value}
                             onChange={(data) => {
                               onChange(data);
                             }}
                             required
+                            errorMessage={error?.message}
                             {...props}
                           />
-                          {error && (
-                            <p style={{ color: "red" }}>{error.message}</p>
-                          )}
                         </>
                       )}
                     />
                     <Controller
-                      name="displayName"
+                      name={ProfileProperties.DISPLAY_NAME}
                       control={control}
                       rules={{
                         required: true,
@@ -265,20 +266,16 @@ export default function MyProfile() {
                         fieldState: { error },
                       }) => (
                         <>
-                          <Input
-                            size="sm"
-                            placeholder="User name"
-                            sx={{ flexGrow: 1 }}
+                          <MuiInput
+                            placeholder="First name"
                             value={value}
                             onChange={(data) => {
                               onChange(data);
                             }}
                             required
+                            errorMessage={error?.message}
                             {...props}
                           />
-                          {error && (
-                            <p style={{ color: "red" }}>{error.message}</p>
-                          )}
                         </>
                       )}
                     />
@@ -295,7 +292,7 @@ export default function MyProfile() {
                   >
                     <Divider />
                     <FormLabel>Gender</FormLabel>
-                    <Controller
+                    {/* <Controller
                       name="gender"
                       control={control}
                       render={({
@@ -337,7 +334,7 @@ export default function MyProfile() {
                           {error && <p>{error.message}</p>}
                         </div>
                       )}
-                    />
+                    /> */}
                     <Divider />
                     <FormLabel>Date of Birth</FormLabel>
                     <Controller
@@ -349,7 +346,7 @@ export default function MyProfile() {
                       render={({
                         field: { value, onChange, ...props },
                         fieldState: { error },
-                      }) => {                        
+                      }) => {
                         const date = dayjs(value);
                         return (
                           <>
@@ -408,34 +405,6 @@ export default function MyProfile() {
                         </>
                       )}
                     />
-                    <Controller
-                      name="id"
-                      control={control}
-                      rules={{
-                        required: true,
-                      }}
-                      render={({
-                        field: { value, onChange, ...props },
-                        fieldState: { error },
-                      }) => (
-                        <>
-                          <Input
-                            size="sm"
-                            placeholder="id"
-                            sx={{ flexGrow: 1, display: "none" }}
-                            value={value}
-                            onChange={(data) => {
-                              onChange(data);
-                            }}
-                            required
-                            {...props}
-                          />
-                          {error && (
-                            <p style={{ color: "red" }}>{error.message}</p>
-                          )}
-                        </>
-                      )}
-                    />
                   </FormControl>
                 </Stack>
               </Stack>
@@ -445,7 +414,7 @@ export default function MyProfile() {
               sx={{ borderTop: "1px solid", borderColor: "divider" }}
             >
               <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-                <Button type="submit" size="sm" variant="solid">
+                <Button isLoading={isEditPending} type="submit" >
                   Save
                 </Button>
               </CardActions>

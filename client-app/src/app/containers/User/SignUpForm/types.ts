@@ -4,6 +4,7 @@ export enum SignUpFormKey {
   LAST_NAME = "lastName",
   FIRST_NAME = "firstName",
   USER_NAME = "username",
+  DISPLAY_NAME = "displayName",
 }
 
 export const SignUpLabel = {
@@ -12,4 +13,5 @@ export const SignUpLabel = {
   [SignUpFormKey.LAST_NAME]: "Last Name",
   [SignUpFormKey.FIRST_NAME]: "First Name",
   [SignUpFormKey.USER_NAME]: "Username",
+  [SignUpFormKey.DISPLAY_NAME]: "Display Name",
 };

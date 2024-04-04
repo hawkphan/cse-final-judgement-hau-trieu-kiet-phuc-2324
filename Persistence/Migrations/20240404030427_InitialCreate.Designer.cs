@@ -11,8 +11,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240311131634_UpdateGensderAttribute")]
-    partial class UpdateGensderAttribute
+    [Migration("20240404030427_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,6 +57,9 @@ namespace Persistence.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("AvatarUrl")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("TEXT");
@@ -129,6 +132,74 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Contest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contests");
+                });
+
+            modelBuilder.Entity("Domain.ContestMember", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ContestId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Role")
+                        .HasColumnType("REAL");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContestId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ContestMembers");
+                });
+
+            modelBuilder.Entity("Domain.ContestProblem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ContestId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProblemId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContestId");
+
+                    b.HasIndex("ProblemId");
+
+                    b.ToTable("ContestProblems");
+                });
+
             modelBuilder.Entity("Domain.Language", b =>
                 {
                     b.Property<Guid>("Id")
@@ -169,8 +240,8 @@ namespace Persistence.Migrations
                     b.Property<double>("Difficulty")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("TimeLimit")
-                        .HasColumnType("REAL");
+                    b.Property<int>("TimeLimit")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
@@ -209,23 +280,26 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Error")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Error")
+                        .HasColumnType("REAL");
 
                     b.Property<double>("ExecutionTime")
                         .HasColumnType("REAL");
 
+                    b.Property<long>("MemoryUsage")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Output")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("Passed")
-                        .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("ProblemId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("SolutionId")
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("Status")
+                        .HasColumnType("REAL");
 
                     b.Property<Guid>("TestCaseId")
                         .HasColumnType("TEXT");
@@ -247,11 +321,20 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("ExecutionTime")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("FileName")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("LanguageId")
                         .HasColumnType("TEXT");
+
+                    b.Property<long>("MemoryUsage")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("ProblemId")
                         .HasColumnType("TEXT");
@@ -259,8 +342,8 @@ namespace Persistence.Migrations
                     b.Property<double>("Score")
                         .HasColumnType("REAL");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Status")
+                        .HasColumnType("REAL");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
@@ -283,6 +366,9 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Input")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Output")
@@ -422,6 +508,44 @@ namespace Persistence.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.ContestMember", b =>
+                {
+                    b.HasOne("Domain.Contest", "Contest")
+                        .WithMany("Members")
+                        .HasForeignKey("ContestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.AppUser", "User")
+                        .WithMany("MemberContests")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contest");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.ContestProblem", b =>
+                {
+                    b.HasOne("Domain.Contest", "Contest")
+                        .WithMany("Problems")
+                        .HasForeignKey("ContestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Problem", "Problem")
+                        .WithMany("ProblemContests")
+                        .HasForeignKey("ProblemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contest");
+
+                    b.Navigation("Problem");
                 });
 
             modelBuilder.Entity("Domain.Language", b =>
@@ -577,9 +701,18 @@ namespace Persistence.Migrations
                 {
                     b.Navigation("Languages");
 
+                    b.Navigation("MemberContests");
+
                     b.Navigation("Problems");
 
                     b.Navigation("Solutions");
+                });
+
+            modelBuilder.Entity("Domain.Contest", b =>
+                {
+                    b.Navigation("Members");
+
+                    b.Navigation("Problems");
                 });
 
             modelBuilder.Entity("Domain.Language", b =>
@@ -589,6 +722,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Problem", b =>
                 {
+                    b.Navigation("ProblemContests");
+
                     b.Navigation("ProblemLanguages");
 
                     b.Navigation("Results");

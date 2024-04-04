@@ -3,42 +3,36 @@
 import { Accept } from "react-dropzone";
 import { EditProfileBody } from "../../../../queries/Profiles/types";
 import { PATHS } from "../../../../configs/paths";
-import { Yup } from "../../../../shared";
+import { Yup, isEmpty } from "../../../../shared";
 
 export const acceptedFileType: Accept = { "application/zip": [".zip"] };
 
 export enum ProfileProperties {
   ID = "id",
-  FIRSTNAME = "firstName",
-  LASTNAME = "lastName",
-  USERNAME = "userName",
+  FIRST_NAME = "firstName",
+  LAST_NAME = "lastName",
+  DISPLAY_NAME = "displayName",
   EMAIL = "email",
-  DESCRIPTION = "description",
   USER_ID = "userId",
   GENDER = "gender",
-  DATEOFBIRTH = "dateOfBirth",
+  DATE_OF_BIRTH = "dateOfBirth",
+  AVATAR = "Image",
 }
 
-export enum ValidationMessage {
-  EXISTING_CODE = "This problem code has been existed!",
-  LACK_OF_FILE = "Please provide a file for test cases!",
-}
-
-export const mapFormData = (
-  data:  EditProfileBody,
-  fileSelected: any,
-  userId: string,
-) => {
+export const mapFormData = (data: EditProfileBody, fileSelected: any) => {
   const formData = new FormData();
-
-  if (ProfileProperties.ID in data) {
-    formData.append(ProfileProperties.ID, data.id);
+  if (fileSelected) {
+    formData.append(ProfileProperties.AVATAR, fileSelected);
   }
-  formData.append(ProfileProperties.FIRSTNAME, data.firstName);
-  formData.append(ProfileProperties.LASTNAME, data.lastName);
-  formData.append(ProfileProperties.USERNAME, data.displayName);
+  formData.append(ProfileProperties.FIRST_NAME, data.firstName);
+  formData.append(ProfileProperties.LAST_NAME, data.lastName);
+
+  formData.append(ProfileProperties.DISPLAY_NAME, data.displayName);
   formData.append(ProfileProperties.EMAIL, data.email);
-  // formData.append(ProfileProperties.DESCRIPTION, data.description);
+
+  //birthdate
+  //gender
+
   return formData;
 };
 
@@ -46,20 +40,19 @@ export const toBreadCrumbs = (id: string) => {
   return [
     {
       id: 0,
-      label: 'Profile: ' + id,
+      label: "Profile: ",
       href: `${PATHS.profile.replace(":id", id)}`,
     },
     {
       id: 1,
-      label:  'Edit ',
+      label: "Edit ",
     },
   ];
 };
 
 export const EditProfileFormSchema = Yup.object().shape({
-  [ProfileProperties.ID]: Yup.string().required(),
-  [ProfileProperties.FIRSTNAME]: Yup.string().required(),
-  [ProfileProperties.LASTNAME]: Yup.string().required(),
-  [ProfileProperties.USERNAME]: Yup.string().required(),
+  [ProfileProperties.FIRST_NAME]: Yup.string().required(),
+  [ProfileProperties.LAST_NAME]: Yup.string().required(),
+  [ProfileProperties.DISPLAY_NAME]: Yup.string().required(),
   [ProfileProperties.EMAIL]: Yup.string().required(),
 });

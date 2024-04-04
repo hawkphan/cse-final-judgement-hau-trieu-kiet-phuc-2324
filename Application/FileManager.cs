@@ -11,10 +11,10 @@ namespace Application.Solutions
     public class FileManager
     {
         public readonly String CurrentDirectory = Directory.GetCurrentDirectory();
-        public readonly String ProfilePicturePath = Path.Combine(Directory.GetCurrentDirectory(), "ProfilePicturePath");
         public readonly String UploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
         public readonly String TestCasesPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\TestCases");
         public readonly String SolutionsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Solutions");
+        public readonly String ImagesPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Images");
         public string WriteAndSaveSolutions(String solution, String SolutionId, String fileExtension)
         {
             string SolutionFileName = $"main.{fileExtension}";
@@ -81,7 +81,7 @@ namespace Application.Solutions
             var targetFolder = Path.Combine(Directory.GetCurrentDirectory(), FolderPath);
 
             var InputFiles = Directory.GetFiles(targetFolder, Pattern);
-
+    
 
             return InputFiles;
         }

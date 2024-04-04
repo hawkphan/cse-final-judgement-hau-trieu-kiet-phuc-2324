@@ -118,6 +118,16 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
+                  id={SignUpFormKey.DISPLAY_NAME}
+                  label={SignUpLabel[SignUpFormKey.DISPLAY_NAME]}
+                  name={SignUpFormKey.DISPLAY_NAME}
+                  autoComplete={SignUpFormKey.DISPLAY_NAME}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
                   id={SignUpFormKey.EMAIL}
                   label={SignUpLabel[SignUpFormKey.EMAIL]}
                   name={SignUpFormKey.EMAIL}

@@ -63,7 +63,7 @@ export const UserDetailInformation = ({ id }: Props) => {
     >
       <Stack direction="row" spacing={2} style={{ paddingBottom: "20px" }}>
         <Avatar sx={{ width: 80, height: 80 }} />
-
+        
         <Stack direction="column" spacing={0.5}>
           <h4>{profile?.displayName}</h4>
           <h5>{profile?.email}</h5>
