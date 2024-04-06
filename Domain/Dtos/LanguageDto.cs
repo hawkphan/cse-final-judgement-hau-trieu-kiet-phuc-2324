@@ -3,7 +3,7 @@ namespace Domain
 {
     public class LanguageDto
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
+        [property: JsonPropertyName("id")] public int Id { get; set; }
+        [property: JsonPropertyName("name")] public string Name { get; set; }
     }
 }

@@ -198,7 +198,8 @@ namespace Persistence.Migrations
                 name: "Languages",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     FileExtension = table.Column<string>(type: "TEXT", nullable: true),
                     AppUserId = table.Column<Guid>(type: "TEXT", nullable: true)
@@ -293,7 +294,7 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     ProblemId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    LanguageId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    LanguageId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -319,8 +320,7 @@ namespace Persistence.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ProblemId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    FileName = table.Column<string>(type: "TEXT", nullable: true),
-                    LanguageId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    LanguageId = table.Column<int>(type: "INTEGER", nullable: false),
                     Status = table.Column<double>(type: "REAL", nullable: false),
                     MemoryUsage = table.Column<long>(type: "INTEGER", nullable: false),
                     ExecutionTime = table.Column<double>(type: "REAL", nullable: false),

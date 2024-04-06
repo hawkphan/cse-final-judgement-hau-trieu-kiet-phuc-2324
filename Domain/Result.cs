@@ -20,5 +20,6 @@ namespace Domain
 
         public Double Error { get; set; }
         public double Status { get; set; }
+        public String StatusMessage { get; set; }
     }
 }

@@ -1,3 +1,5 @@
+using System.Net;
+using System.Text.Json;
 using Application.Core;
 using Application.Interfaces;
 using AutoMapper;
@@ -6,6 +8,7 @@ using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Newtonsoft.Json;
 
 namespace Application.Languages
 {
@@ -28,13 +31,16 @@ namespace Application.Languages
 
             public async Task<Result<PagedList<LanguageDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var query = await _context.Languages
-                    .ProjectTo<LanguageDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync();
+
+                Judge0 judge0 = new Judge0();
+
+                var jsonContent = await judge0.SendGetRequest(judge0.LanguageParam());
+                var languageList = JsonConvert.DeserializeObject<List<LanguageDto>>(jsonContent);
+
                 int PageNumber = (request.Params.PageSize == -1) ? 1 : request.Params.PageNumber;
-                int PageSize = (request.Params.PageSize == -1) ? query.Count : request.Params.PageSize;
+                int PageSize = (request.Params.PageSize == -1) ? languageList.Count : request.Params.PageSize;
                 return Result<PagedList<LanguageDto>>
-                    .Success(PagedList<LanguageDto>.CreateAsyncUsingList(query,
+                    .Success(PagedList<LanguageDto>.CreateAsyncUsingList(languageList,
                         PageNumber, PageSize));
             }
         }

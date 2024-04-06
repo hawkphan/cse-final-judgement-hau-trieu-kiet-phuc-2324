@@ -15,8 +15,7 @@ namespace Domain
         public AppUser User { get; set; }
         public Guid ProblemId { get; set; }
         public Problem Problem { get; set; }
-        public string FileName { get; set; }
-        public Guid LanguageId { get; set; }
+        public int LanguageId { get; set; }
         public Language Language { get; set; }
         public double Status { get; set; }
         public long MemoryUsage { get; set; } = 0;

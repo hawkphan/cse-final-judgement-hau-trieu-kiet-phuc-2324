@@ -85,6 +85,11 @@ namespace Application.Solutions
 
             return InputFiles;
         }
+        public string getTestCaseContent(String TestCasesPath)
+        {
+            string contents = File.ReadAllText(Path.Combine(CurrentDirectory, TestCasesPath));
+            return contents;
+        }
         private static bool IsZipMimeType(string mimeType)
         {
             List<string> zipMimeTypes = new List<string>

@@ -122,50 +122,6 @@ namespace Persistence
                 await context.Problems.AddRangeAsync(seedProblems);
                 await context.SaveChangesAsync();
             };
-
-            if (!context.Languages.Any())
-            {
-                List<Language> languageList = context.Languages.ToList();
-
-                IList<Guid> listId = new List<Guid>();
-                for (int i = 0; i < languageList.Count; i++)
-                {
-                    listId.Add(languageList[i].Id);
-                }
-
-
-                var seedLanguages = new List<Language>();
-
-                // Seed data for languages
-                var languageData = new[]
-                {
-                    new
-                    {
-                        Name = "Python",
-                        FileExtension = "py",
-                    },
-                    new
-                    {
-                        Name = "Java",
-                        FileExtension = "java",
-                    },
-                };
-
-                foreach (var data in languageData)
-                {
-                    var language = new Language
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = data.Name,
-                        FileExtension = data.FileExtension,
-                    };
-
-                    seedLanguages.Add(language);
-                }
-
-                await context.Languages.AddRangeAsync(seedLanguages);
-                await context.SaveChangesAsync();
-            };
         }
     }
 }

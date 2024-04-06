@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240406031437_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.13");
@@ -237,9 +240,6 @@ namespace Persistence.Migrations
                     b.Property<double>("Difficulty")
                         .HasColumnType("REAL");
 
-                    b.Property<int>("GradeMode")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("TimeLimit")
                         .HasColumnType("INTEGER");
 
@@ -299,9 +299,6 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<double>("Status")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("StatusMessage")
                         .HasColumnType("REAL");
 
                     b.Property<Guid>("TestCaseId")

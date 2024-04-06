@@ -16,7 +16,7 @@ namespace API.Controllers
             return HandlePagedResult(await Mediator.Send(new UnregisteredList.Query { Params = pagingParams, UserId = userId }));
         }
         [AllowAnonymous]
-        [HttpGet("registered")] //api/Contests
+        [HttpGet("registered")]
         public async Task<IActionResult> GetRegisteredContests([FromQuery] PagingParams pagingParams, [FromQuery] Guid userId)
         {
             return HandlePagedResult(await Mediator.Send(new RegisteredList.Query { Params = pagingParams, UserId = userId }));
