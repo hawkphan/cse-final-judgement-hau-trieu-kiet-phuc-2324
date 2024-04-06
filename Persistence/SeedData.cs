@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Domain;
 using Microsoft.AspNetCore.Identity;
@@ -12,10 +13,10 @@ namespace Persistence
         public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
         {
             String UploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
-            String ProfilePicturePath = Path.Combine(Directory.GetCurrentDirectory(), "ProfilePicturePath");
             String TestCasesPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\TestCases");
             String SolutionsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Solutions");
-            string[] paths = { UploadsPath, TestCasesPath, SolutionsPath, ProfilePicturePath };
+            String ImagesPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Images");
+            string[] paths = { UploadsPath, TestCasesPath, SolutionsPath, ImagesPath };
             foreach (String p in paths)
             {
                 if (!Path.Exists(p))
@@ -30,19 +31,31 @@ namespace Persistence
                 new AppUser{
                     DisplayName = "Kiet Tran",
                     UserName = "kiet",
-                    Email = "kiet.tran.cit19@eiu.edu.vn"
+                    Email = "kiet.tran.cit19@eiu.edu.vn",
+                    FirstName = "Kiet",
+                    LastName = "Tran",
+                    Birthday = new DateTime(2001, 7, 5, 16, 23, 42, DateTimeKind.Utc),
                 },new AppUser{
                     DisplayName = "Trieu Le",
                     UserName = "trieu",
-                    Email = "trieu.le.cit19@eiu.edu.vn"
+                    Email = "trieu.le.cit19@eiu.edu.vn",
+                    FirstName = "Trieu",
+                    LastName = "Le",
+                    Birthday = new DateTime(2001, 7, 5, 16, 23, 42, DateTimeKind.Utc),
                 },new AppUser{
                     DisplayName = "Hau Phan",
                     UserName = "hau",
-                    Email = "hau.phantrung.set19@eiu.edu.vn"
+                    Email = "hau.phantrung.set19@eiu.edu.vn",
+                    FirstName = "Hau",
+                    LastName = "Phan",
+                    Birthday = new DateTime(2001, 7, 5, 16, 23, 42, DateTimeKind.Utc),
                 },new AppUser{
                     DisplayName = "Phuc Nguyen",
                     UserName = "phuc",
-                    Email = "phuc.nguyenmanh@eiu.edu.vn"
+                    Email = "phuc.nguyenmanh@eiu.edu.vn",
+                    FirstName = "Kiet",
+                    LastName = "Tran",
+                    Birthday = new DateTime(1994, 7, 5, 16, 23, 42, DateTimeKind.Utc),
                 }
             };
                 foreach (var user in users)

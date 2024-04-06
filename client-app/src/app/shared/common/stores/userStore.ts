@@ -21,7 +21,7 @@ export default class UserStore {
     store.commonStore.setToken(user.token);
     runInAction(() => (this.user = user));
     console.log(user);
-    router.navigate(PATHS.root);
+    router.navigate(PATHS.problems);
     store.modalStore.closeModal();
   };
 
@@ -43,7 +43,6 @@ export default class UserStore {
   getUser = async () => {
     try {
       const user = await agent.Account.current();
-      console.log('currentUser', user);
       runInAction(() => (this.user = user));
       return user;
     } catch (error) {

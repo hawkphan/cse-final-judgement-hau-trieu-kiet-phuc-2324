@@ -12,13 +12,13 @@ namespace Domain
         public string LastName { get; set; }
         public DateTime Birthday { get; set; }
         public double Gender { get; set; }
-
         public string DisplayName { get; set; }
+        public string AvatarUrl { get; set; }
         public ICollection<Problem> Problems { get; set; }
         public ICollection<Solution> Solutions { get; set; }
         [JsonIgnore]
         public ICollection<Language> Languages { get; set; }
-        public ICollection<ContestMember> MemberContests { get; set;}
+        public ICollection<ContestMember> MemberContests { get; set; }
     }
 
 }

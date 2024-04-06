@@ -3,8 +3,11 @@ import UserActivityReport from "./UserActivityReport";
 import UserAnnualReport from "./UserAnnualSubmissionReport";
 import { Box, Grid } from "@mui/material";
 import UserAchievement from "./UserAchievements";
+import { useParams } from "react-router-dom";
 
-export default function UserProfile() {
+export const UserProfile = () => {
+  const { id } = useParams();
+
   return (
     <Grid
       container
@@ -13,7 +16,7 @@ export default function UserProfile() {
       wrap="wrap"
     >
       <Grid item xs={3}>
-        <UserDetailInformation />
+        <UserDetailInformation id={id} />
       </Grid>
 
       <Grid item xs={9}>
@@ -40,4 +43,6 @@ export default function UserProfile() {
       </Grid>
     </Grid>
   );
-}
+};
+
+export default UserProfile;

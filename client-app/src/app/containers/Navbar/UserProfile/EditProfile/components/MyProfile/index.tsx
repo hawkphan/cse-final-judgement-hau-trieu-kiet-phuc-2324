@@ -3,7 +3,6 @@
 import * as React from "react";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
 import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
@@ -16,9 +15,8 @@ import CardActions from "@mui/joy/CardActions";
 import CardOverflow from "@mui/joy/CardOverflow";
 
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import { Form } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useStore } from "../../../../../../shared/common/stores/store";
@@ -27,20 +25,36 @@ import {
   useGetProfileById,
 } from "../../../../../../queries/Profiles";
 import { API_QUERIES } from "../../../../../../queries";
-import { EditProfileFormSchema, mapFormData } from "../../helpers";
-import { LoadingCommon, Toastify } from "../../../../../../shared";
+import {
+  EditProfileFormSchema,
+  ProfileProperties,
+  mapFormData,
+  toBreadCrumbs,
+} from "../../helpers";
+import {
+  Breadcrumbs,
+  Button,
+  LoadingCommon,
+  MuiDatePicker,
+  MuiInput,
+  Toastify,
+  isEmpty,
+} from "../../../../../../shared";
 import { PATHS } from "../../../../../../configs/paths";
 import { useEditProfile } from "../../../../../../queries/Profiles/useEditProfile";
+import dayjs from "dayjs";
+import { IMAGES } from "../../../../../../configs/images";
 
 export interface Profile {
+  id?: string;
   userName?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
   birthday?: string;
-  isFemale?: boolean;
+  gender?: number;
   displayName?: string;
-  code?: string;
+  image?: string;
 }
 
 export default function MyProfile() {
@@ -49,30 +63,19 @@ export default function MyProfile() {
     return userStore?.user?.id;
   }, [userStore.user]);
   const navigate = useNavigate();
-  // const id = useMemo(() => {
-  //   return sessionStorage.getItem('myId');
-  // }, [userStore.user]);
 
-  // const id = sessionStorage.getItem('myId');
-  // console.log("ID storage: " + id)
+  const [fileSelected, setFileSelected] = useState<File | undefined>();
 
-  // const isEdit = id && id !== "";
-  const [fileSelected, setFileSelected] = useState();
-
-  const { data, isFetching } = useGetProfileById({
+  const { profile, isFetching, handleInvalidateProfile } = useGetProfileById({
     id,
     queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: id }],
   });
-  const profile: Profile = useMemo(() => {
-    return data?.data;
-  }, [id]);
 
   const { onEditProfile, isPending: isEditPending } = useEditProfile({
     onSuccess: () => {
-      // Toastify.success("Successful!");
-      // handleInvalidateProblems();
-      // handleInvalidateProblem();
-      navigate(PATHS.profile);
+      Toastify.success("Successful!");
+      handleInvalidateProfile();
+      navigate(PATHS.profile.replace(":id", id));
     },
     onError: (error) => {
       Toastify.error(error.message);
@@ -80,7 +83,7 @@ export default function MyProfile() {
     },
   });
 
-  const { control, handleSubmit, reset, setError } = useForm<EditProfileBody>({
+  const { control, handleSubmit, reset } = useForm<EditProfileBody>({
     defaultValues: { ...profile },
 
     mode: "onChange",
@@ -91,39 +94,47 @@ export default function MyProfile() {
 
   useEffect(() => {
     reset({ ...profile });
+
+    if (!isEmpty(profile.avatar)) {
+      const file = new File([profile.avatar], "avatar.jpg", { type: 'image/jpeg' });
+      // setFileSelected(file);
+      const blob = URL.createObjectURL(file);
+      setAvatarSrc("data:image/jpeg;base64," + profile.avatar);
+      // setAvatarSrc(blob);
+    }
   }, [profile, reset]);
 
   const onSubmit = async (data: EditProfileBody) => {
-    alert("Submit successful");
-
-    const formData = mapFormData(data, fileSelected, id);
-
-    // TODO: fix error
+    const formData = mapFormData(data, fileSelected);
     onEditProfile(formData);
   };
 
   // Upload img avatar from client pc
-  const [avatarSrc, setAvatarSrc] = useState(
-    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-  );
+  const [avatarSrc, setAvatarSrc] = useState(IMAGES.defaultUser);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleUploadClick = () => {
     inputRef.current?.click();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const newAvatarSrc = URL.createObjectURL(event.target.files[0]);
-      setAvatarSrc(newAvatarSrc);
+  const handleFileChangeAndSave = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (!isEmpty(event.target.files)) {
+      const file = event.target.files[0];
+      setFileSelected(file);
+      const filePreviewUrl = URL.createObjectURL(file);
+      setAvatarSrc(filePreviewUrl);
     }
   };
 
   if (isFetching) {
     return <LoadingCommon />;
   }
+
   return (
     <Box sx={{ flex: 1, width: "100%" }}>
+      <Breadcrumbs items={toBreadCrumbs(id)} />
       <Stack
         spacing={4}
         sx={{
@@ -139,12 +150,11 @@ export default function MyProfile() {
             <Box sx={{ mb: 1 }}>
               <Typography level="title-md">Personal info</Typography>
               <Typography level="body-sm">
-                Customize how your profile information will apper to the
+                Customize how your profile information will appear to the
                 networks.
               </Typography>
             </Box>
             <Divider />
-
             <Stack
               direction="row"
               spacing={3}
@@ -159,14 +169,14 @@ export default function MyProfile() {
                 >
                   <img src={avatarSrc} loading="lazy" alt="Avatar" />
                 </AspectRatio>
-
                 <input
                   accept="image/*"
                   style={{ display: "none" }}
                   ref={inputRef}
                   type="file"
-                  onChange={handleFileChange}
+                  onChange={handleFileChangeAndSave}
                 />
+
                 <IconButton
                   aria-label="upload new picture"
                   size="sm"
@@ -198,7 +208,7 @@ export default function MyProfile() {
                     }}
                   >
                     <Controller
-                      name="firstName"
+                      name={ProfileProperties.FIRST_NAME}
                       control={control}
                       rules={{
                         required: true,
@@ -207,21 +217,22 @@ export default function MyProfile() {
                         field: { value, onChange, ...props },
                         fieldState: { error },
                       }) => (
-                        <Input
-                          size="sm"
-                          placeholder="First name"
-                          value={value}
-                          onChange={(data) => {
-                            onChange(data);
-                          }}
-                          required
-                          // errorMessage={error?.message}
-                          {...props}
-                        />
+                        <>
+                          <MuiInput
+                            placeholder="First name"
+                            value={value}
+                            onChange={(data) => {
+                              onChange(data);
+                            }}
+                            required
+                            errorMessage={error?.message}
+                            {...props}
+                          />
+                        </>
                       )}
                     />
                     <Controller
-                      name="lastName"
+                      name={ProfileProperties.LAST_NAME}
                       control={control}
                       rules={{
                         required: true,
@@ -230,22 +241,22 @@ export default function MyProfile() {
                         field: { value, onChange, ...props },
                         fieldState: { error },
                       }) => (
-                        <Input
-                          size="sm"
-                          placeholder="Last name"
-                          sx={{ flexGrow: 1 }}
-                          value={value}
-                          onChange={(data) => {
-                            onChange(data);
-                          }}
-                          required
-                          // errorMessage={error?.message}
-                          {...props}
-                        />
+                        <>
+                          <MuiInput
+                            placeholder="Last name"
+                            value={value}
+                            onChange={(data) => {
+                              onChange(data);
+                            }}
+                            required
+                            errorMessage={error?.message}
+                            {...props}
+                          />
+                        </>
                       )}
                     />
                     <Controller
-                      name="userName"
+                      name={ProfileProperties.DISPLAY_NAME}
                       control={control}
                       rules={{
                         required: true,
@@ -254,18 +265,18 @@ export default function MyProfile() {
                         field: { value, onChange, ...props },
                         fieldState: { error },
                       }) => (
-                        <Input
-                          size="sm"
-                          placeholder="User name"
-                          sx={{ flexGrow: 1 }}
-                          value={value}
-                          onChange={(data) => {
-                            onChange(data);
-                          }}
-                          required
-                          // errorMessage={error?.message}
-                          {...props}
-                        />
+                        <>
+                          <MuiInput
+                            placeholder="First name"
+                            value={value}
+                            onChange={(data) => {
+                              onChange(data);
+                            }}
+                            required
+                            errorMessage={error?.message}
+                            {...props}
+                          />
+                        </>
                       )}
                     />
                   </FormControl>
@@ -281,7 +292,7 @@ export default function MyProfile() {
                   >
                     <Divider />
                     <FormLabel>Gender</FormLabel>
-                    <Controller
+                    {/* <Controller
                       name="gender"
                       control={control}
                       render={({
@@ -302,7 +313,7 @@ export default function MyProfile() {
                               id="female"
                               name="gender"
                               value="female"
-                              checked={value === "female"}
+                              checked={value === 1}
                               onChange={onChange}
                               {...props}
                             />
@@ -314,32 +325,60 @@ export default function MyProfile() {
                               id="male"
                               name="gender"
                               value="male"
-                              checked={value === "male"}
+                              checked={value === 0}
                               onChange={onChange}
                               {...props}
                             />
                             <label htmlFor="male">Male</label>
                           </div>
-                          <div>
-                            <input
-                              type="radio"
-                              id="other"
-                              name="gender"
-                              value="other"
-                              checked={value === "other"}
-                              onChange={onChange}
-                              {...props}
-                            />
-                            <label htmlFor="other">Other</label>
-                          </div>
                           {error && <p>{error.message}</p>}
                         </div>
                       )}
-                    />
+                    /> */}
                     <Divider />
                     <FormLabel>Date of Birth</FormLabel>
                     <Controller
-                      name="dateOfBirth"
+                      name="birthday"
+                      control={control}
+                      rules={{
+                        required: true,
+                      }}
+                      render={({
+                        field: { value, onChange, ...props },
+                        fieldState: { error },
+                      }) => {
+                        const date = dayjs(value);
+                        return (
+                          <>
+                            <MuiDatePicker
+                              value={date}
+                              onChange={(e) => {
+                                const newDate = e.target.value
+                                  ? `${e.target.value}T00:00:00`
+                                  : "";
+                                onChange(newDate);
+                              }}
+                            />
+                            {error && (
+                              <p style={{ color: "red" }}>{error.message}</p>
+                            )}
+                          </>
+                        );
+                      }}
+                    />
+                  </FormControl>
+                </Stack>
+
+                {/*Hidden Form  */}
+                <Stack spacing={2} sx={{ flexGrow: 1 }}>
+                  <FormControl
+                    sx={{
+                      display: { sm: "flex-column", md: "flex-row" },
+                      gap: 2,
+                    }}
+                  >
+                    <Controller
+                      name="email"
                       control={control}
                       rules={{
                         required: true,
@@ -348,17 +387,22 @@ export default function MyProfile() {
                         field: { value, onChange, ...props },
                         fieldState: { error },
                       }) => (
-                        <Input
-                          size="sm"
-                          type="date"
-                          sx={{ flexGrow: 1 }}
-                          onChange={(data) => {
-                            onChange(data);
-                          }}
-                          required
-                          // errorMessage={error?.message}
-                          {...props}
-                        />
+                        <>
+                          <Input
+                            size="sm"
+                            placeholder="email"
+                            sx={{ flexGrow: 1, display: "none" }}
+                            value={value}
+                            onChange={(data) => {
+                              onChange(data);
+                            }}
+                            required
+                            {...props}
+                          />
+                          {error && (
+                            <p style={{ color: "red" }}>{error.message}</p>
+                          )}
+                        </>
                       )}
                     />
                   </FormControl>
@@ -370,10 +414,7 @@ export default function MyProfile() {
               sx={{ borderTop: "1px solid", borderColor: "divider" }}
             >
               <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-                <Button size="sm" variant="outlined" color="neutral">
-                  Cancel
-                </Button>
-                <Button type="submit" size="sm" variant="solid">
+                <Button isLoading={isEditPending} type="submit" >
                   Save
                 </Button>
               </CardActions>

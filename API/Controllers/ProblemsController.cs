@@ -31,7 +31,7 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-    public async Task<ActionResult> CreateProblem([FromForm] Problem newProblem, [FromForm] IFormFile file)
+        public async Task<ActionResult> CreateProblem([FromForm] Problem newProblem, [FromForm] IFormFile file)
         {
             return HandleApiResult(await Mediator.Send(new Create.Command { Problem = newProblem, TestCaseZip = file }));
         }

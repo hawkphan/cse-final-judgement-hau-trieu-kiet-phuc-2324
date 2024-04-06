@@ -55,6 +55,9 @@ namespace Persistence.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("AvatarUrl")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("TEXT");
 
@@ -146,7 +149,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Contest");
+                    b.ToTable("Contests");
                 });
 
             modelBuilder.Entity("Domain.ContestMember", b =>
@@ -170,7 +173,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ContestMember");
+                    b.ToTable("ContestMembers");
                 });
 
             modelBuilder.Entity("Domain.ContestProblem", b =>
@@ -191,7 +194,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("ProblemId");
 
-                    b.ToTable("ContestProblem");
+                    b.ToTable("ContestProblems");
                 });
 
             modelBuilder.Entity("Domain.Language", b =>
@@ -532,7 +535,7 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Problem", "Problem")
-                        .WithMany()
+                        .WithMany("ProblemContests")
                         .HasForeignKey("ProblemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -716,6 +719,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Problem", b =>
                 {
+                    b.Navigation("ProblemContests");
+
                     b.Navigation("ProblemLanguages");
 
                     b.Navigation("Results");

@@ -6,7 +6,7 @@ export const PATHS = {
   signup: "/signup",
   login: "/login",
   logout: "/logout",
-  profile: "/profile",
+  profile: "/profile/:id",
   editProfile: '/profile/edit',
   problems: "/problems",
   problemDetails: "/problems/:id",

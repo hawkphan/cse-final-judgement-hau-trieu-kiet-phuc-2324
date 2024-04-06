@@ -12,6 +12,7 @@ import ProblemForm from "../containers/Problems/ProblemForm";
 import Contests from "../containers/Contests";
 import ContestForm from "../containers/Contests/UnregisteredListView/ContestForm";
 import EditProfile from "../containers/Navbar/UserProfile/EditProfile";
+import ProtectedRoute from "../containers/ProtectedRoute";
 
 export const routes: RouteObject[] = [
   {
@@ -24,7 +25,11 @@ export const routes: RouteObject[] = [
       },
       {
         path: PATHS.problems,
-        element: <Problems />,
+        element: (
+          <ProtectedRoute>
+            <Problems />
+          </ProtectedRoute>
+        ),
       },
       {
         path: PATHS.dev,
@@ -32,42 +37,75 @@ export const routes: RouteObject[] = [
       },
       {
         path: PATHS.profile,
-        element: <UserProfile />,
+        element: (
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        ),
       },
       {
         path: PATHS.editProfile,
-        element: <EditProfile />,
+        element: (
+          <ProtectedRoute>
+            <EditProfile />
+          </ProtectedRoute>
+        ),
       },
       {
         path: PATHS.login,
         element: <LoginSide />,
-      },{
+      },
+      {
         path: PATHS.signup,
         element: <SignUp />,
       },
       {
         path: PATHS.problemDetails,
-        element: <ProblemDetail />,
+        element: (
+          <ProtectedRoute>
+            <ProblemDetail />
+          </ProtectedRoute>
+        ),
       },
       {
         path: PATHS.createProblem,
-        element: <ProblemForm />,
+        element: (
+          <ProtectedRoute>
+            <ProblemForm />
+          </ProtectedRoute>
+        ),
       },
       {
         path: PATHS.editProblem,
-        element: <ProblemForm />,
+        element: (
+          <ProtectedRoute>
+            <ProblemForm />
+          </ProtectedRoute>
+        ),
       },
       {
         path: PATHS.contests,
-        element: <Contests />,
+        element: (
+          <ProtectedRoute>
+            <Contests />
+          </ProtectedRoute>
+        ),
       },
       {
         path: PATHS.createContest,
-        element: <ContestForm />,
+        element: (
+          <ProtectedRoute>
+            <ContestForm />
+          </ProtectedRoute>
+        ),
       },
       {
         path: PATHS.editContest,
-        element: <ContestForm />,
+        element: (
+          <ProtectedRoute>
+            <ContestForm />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

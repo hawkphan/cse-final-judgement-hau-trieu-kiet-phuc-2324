@@ -1,12 +1,28 @@
 import { Box, Button } from "@mui/material";
 import bg from "../../../assets/images/Untitled.png";
+import { useNavigate } from "react-router-dom";
+import { PATHS } from "../../configs/paths";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
+  const handleNavigateToProblems = () => {
+    navigate(PATHS.problems);
+  };
+
+  const handleNavigateToLogin = () => {
+    navigate(PATHS.login);
+  };
+  
+  const handleNavigateToContests = () => {
+    navigate(PATHS.contests);
+  };
+
   return (
     <div
       style={{
         backgroundImage: `url(${bg})`,
-        backgroundRepeat: "no-repeat",
+        backgroundRepeat: "round",
       }}
     >
       <Box display="flex" flexDirection="column" justifyContent="center">
@@ -48,9 +64,11 @@ const HomePage = () => {
                 variant="contained"
                 color="success"
                 style={{ borderRadius: 20 }}
+                onClick={handleNavigateToLogin}
               >
-                Register Your Account
+                Login Your Account
               </Button>
+              
             </div>
           </div>
         </div>
@@ -60,11 +78,12 @@ const HomePage = () => {
             textAlign: "center",
             margin: "auto",
             marginBottom: 28,
-            marginTop: 30,
+            marginTop: 0,
 
             alignContent: "center",
             minWidth: "200px",
             width: "600px",
+            paddingTop: "150px",
             paddingLeft: "15px",
             paddingRight: "15px",
             paddingBottom: "20px",
@@ -78,32 +97,38 @@ const HomePage = () => {
             programming problems. CodeCrafter is the promise land for programer
             to improve, and develop themselves.
           </p>
-          <a href="" style={{ color: "#48D600", fontSize: "20px" }}>
-            Start your training?
-          </a>
+          <Button
+            variant="contained"
+            color="success"
+            style={{ borderRadius: 20 }}
+            onClick={handleNavigateToProblems}
+          >
+            Start your training
+          </Button>
         </div>
         <div
           style={{
             textAlign: "center",
             margin: "auto",
             marginBottom: 30,
-            marginTop: 30,
+            marginTop: 0,
             maxWidth: "500px",
           }}
         >
           <p>
-            If you are passionate about tackling some of the most interesting
-            problems around, we would love to hear from you.
+            Programming Contest is the ultimate solution for businesses and organizations looking to
+            host seamless and engaging programming competitions. With our
+            comprehensive software tool, you can effortlessly manage every
+            aspect of your contest.
           </p>
-          <p style={{ color: "#00A9F5", fontSize: 16 }}>
-            <a
-              href="#"
-              style={{ color: "#00A9F5", fontSize: 16, fontWeight: "bold" }}
-            >
-              Join with us
-            </a>{" "}
-            &#11166;
-          </p>
+          <Button
+            variant="contained"
+            color="success"
+            style={{ borderRadius: 20 }}
+            onClick={handleNavigateToContests}
+          >
+            View Contests
+          </Button>
         </div>
       </Box>
     </div>
