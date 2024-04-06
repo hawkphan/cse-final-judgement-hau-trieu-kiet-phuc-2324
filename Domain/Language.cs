@@ -10,8 +10,7 @@ namespace Domain
 {
     public class Language
     {
-        [Key]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public ICollection<ProblemLanguage> ProblemLanguages { get; set; }
         public string Name { get; set; }
         public string FileExtension { get; set; }

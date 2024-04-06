@@ -1,9 +1,10 @@
-using Application.Compiler;
 using Application.Core;
 using AutoMapper;
 using Domain;
+using Domain.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Persistence;
 
 namespace Application.Solutions
@@ -26,7 +27,7 @@ namespace Application.Solutions
             }
             public async Task<ApiResult<Solution>> Handle(Command request, CancellationToken cancellationToken)
             {
-                ICompiler _compiler;
+                Judge0 judge0 = new Judge0();
                 FileManager _fileManager = new FileManager();
                 var solution = _mapper.Map<Solution>(request.SolutionDto);
                 List<TestCase> testCases = _context.TestCases
@@ -42,38 +43,28 @@ namespace Application.Solutions
                 var content = request.SolutionDto.solution;
                 solution.FileName = "none";
 
-
                 Guid solutionId = Guid.NewGuid();
                 solution.Id = solutionId;
-
-
-                var fileExtension = _context.Languages.Find(request.SolutionDto.languageId).FileExtension;
-                var path = _fileManager.WriteAndSaveSolutions(content, solution.Id.ToString(), fileExtension);
-                List<Result> solutionResult = new List<Result>();
-
-                var problem = _context.Problems.Find(request.SolutionDto.problemId);
-                switch (fileExtension)
+                var path = _fileManager.WriteAndSaveSolutions(content, solution.Id.ToString(), "txt");
+                ResultDto result;
+                foreach (TestCase testCase in testCases)
                 {
-                    case "java":
-                        break;
-                    case "py":
-                        _compiler = new PythonCompiler();
-                        solutionResult = _compiler.Compile(path, testCases, problem);
-                        break;
+                    Judge0ResultDto requestDto = new Judge0ResultDto
+                    {
+                        Content = request.SolutionDto.solution,
+                        LanguageId = request.SolutionDto.languageId,
+                        Input = _fileManager.getTestCaseContent(testCase.Input),
+                        ExpectedOutput = _fileManager.getTestCaseContent(testCase.Output)
+                    };
+
+                    var jsonContent = JsonConvert.SerializeObject(requestDto);
+                    string jsonRespond = await judge0.SendPostRequest("submissions/?base64_encoded=false&wait=true", jsonContent);
+                    result = JsonConvert.DeserializeObject<ResultDto>(jsonRespond);
+                    // solution.Results.Add(result);
                 }
 
-                foreach (Result result in solutionResult)
-                {
-                    solution.MemoryUsage += result.MemoryUsage;
-                    solution.ExecutionTime += result.ExecutionTime;
-                }
-
-                solution.Results = solutionResult;
-                solution.CreatedDate = DateTime.Now;
                 _context.Solutions.Add(solution);
                 await _context.SaveChangesAsync();
-
-
                 return ApiResult<Solution>.Success(solution);
 
             }
@@ -82,3 +73,9 @@ namespace Application.Solutions
         }
     }
 }
+// var requestBody = new Dictionary<string, string>{
+//         { "source_code", request.SolutionDto.solution },
+//         { "language_id",request.SolutionDto.languageId+"" },
+//         { "stdin", _fileManager.getTestCaseContent(testCase.Input) },
+//         { "expected_output", _fileManager.getTestCaseContent(testCase.Input) }
+// };

@@ -10,7 +10,7 @@ namespace Domain
     {
         public Guid ProblemId { get; set; }
         public Problem Problem { get; set; }
-        public Guid LanguageId { get; set; }
+        public int LanguageId { get; set; }
         public Language Language { get; set; }
     }
 }

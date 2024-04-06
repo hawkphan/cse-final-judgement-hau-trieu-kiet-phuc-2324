@@ -17,5 +17,12 @@ namespace API.Controllers
         {
             return HandleApiResult(await Mediator.Send(new Detail.Query { UserId = id }));
         }
+        // [AllowAnonymous]
+        // [HttpGet("{id}")] //api/profile
+        // public async Task<IActionResult> GetUserProfileImage(string id)
+        // {
+        //     return HandleApiResult(await Mediator.Send(new Detail.Query { UserId = id }));
+        // }
+                
     }
 }

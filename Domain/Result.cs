@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Domain
 {
@@ -17,8 +19,8 @@ namespace Domain
         public String Output { get; set; }
         public Double ExecutionTime { get; set; }
         public long MemoryUsage { get; set; }
-
         public Double Error { get; set; }
-        public double Status { get; set; }
+        public int ErrorId { get; set; }
+        public string ErrorDescription { get; set; }
     }
 }

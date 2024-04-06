@@ -1,7 +1,9 @@
+using Application.Core;
 using AutoMapper;
 using Domain;
 using MediatR;
 using Persistence;
+using System.Net;
 
 namespace Application.Languages
 {
@@ -25,6 +27,7 @@ namespace Application.Languages
 
             public async Task<LanguageDto> Handle(Query request, CancellationToken cancellationToken)
             {
+                Judge0 judge0 = new Judge0();
                 var languageEntity = await _context.Languages.FindAsync(request.Id);
                 var languageDto = _mapper.Map<LanguageDto>(languageEntity);
                 return languageDto;

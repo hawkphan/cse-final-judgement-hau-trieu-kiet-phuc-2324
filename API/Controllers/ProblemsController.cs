@@ -11,10 +11,12 @@ using System.Text;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.Http;
 namespace API.Controllers
 {
     public class ProblemsController : BaseApiController
     {
+        private static readonly HttpClient client = new HttpClient();
         [AllowAnonymous]
         [HttpGet] //api/problems
         public async Task<IActionResult> GetProblems([FromQuery] PagingParams param, [FromQuery] bool isOnly, [FromQuery] Guid userId, [FromQuery] List<double> difficulty, [FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
