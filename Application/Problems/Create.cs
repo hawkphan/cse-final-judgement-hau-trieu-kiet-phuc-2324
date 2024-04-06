@@ -42,7 +42,7 @@ namespace Application.Problems
             {
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUserName());
 
-                if (request.TestCaseZip.Length == 0 || request.TestCaseZip == null)
+                if (request.TestCaseZip == null || request.TestCaseZip.Length == 0)
                 {
                     return ApiResult<ProblemDto>.Failure(new string[] { "Failed to Create" });
                 }
@@ -50,7 +50,7 @@ namespace Application.Problems
                 request.Problem.User = user;
                 request.Problem.Date = DateTime.UtcNow;
                 request.Problem.Difficulty = 0;
-
+                
 
                 FileManager fileManager = new FileManager();
                 await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);

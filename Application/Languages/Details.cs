@@ -2,6 +2,7 @@ using Application.Core;
 using AutoMapper;
 using Domain;
 using MediatR;
+using Newtonsoft.Json;
 using Persistence;
 using System.Net;
 
@@ -11,7 +12,7 @@ namespace Application.Languages
     {
         public class Query : IRequest<LanguageDto>
         {
-            public Guid Id { get; set; }
+            public int Id { get; set; }
 
         }
         public class Handler : IRequestHandler<Query, LanguageDto>
@@ -28,8 +29,8 @@ namespace Application.Languages
             public async Task<LanguageDto> Handle(Query request, CancellationToken cancellationToken)
             {
                 Judge0 judge0 = new Judge0();
-                var languageEntity = await _context.Languages.FindAsync(request.Id);
-                var languageDto = _mapper.Map<LanguageDto>(languageEntity);
+                var languageEntity = await judge0.SendGetRequest(judge0.LanguageParam() + "/" + request.Id);
+                var languageDto = JsonConvert.DeserializeObject<LanguageDto>(languageEntity);
                 return languageDto;
             }
         }

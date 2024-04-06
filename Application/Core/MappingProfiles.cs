@@ -10,17 +10,26 @@ namespace Application.Core
         {
             CreateMap<Activity, Activity>();
             CreateMap<Problem, Problem>();
-            CreateMap<Domain.AppUser,AppUser>();
+            CreateMap<Domain.AppUser, AppUser>();
             CreateMap<Solution, Solution>();
             CreateMap<SolutionDto, Solution>()
                 .ForMember(d => d.LanguageId, o => o.MapFrom(s => s.languageId))
                 .ForMember(d => d.ProblemId, o => o.MapFrom(s => s.problemId))
             ;
+
             CreateMap<Problem, ProblemDto>()
             .ForMember(dest => dest.Languages, opt => opt.MapFrom(src => src.ProblemLanguages.Select(pl => pl.Language)));
             CreateMap<Language, LanguageDto>()
               .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
               .ForMember(d => d.Id, o => o.MapFrom(s => s.Id));
+            CreateMap<ResultDto, Result>()
+                         .ForMember(d => d.ExecutionTime, o => o.MapFrom(s => s.Time))
+                         .ForMember(d => d.Output, o => o.MapFrom(s => s.Stdout))
+                         .ForMember(d => d.MemoryUsage, o => o.MapFrom(s => s.Memory))
+                         .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.Id))
+                         .ForMember(d => d.StatusMessage, o => o.MapFrom(s => s.Status.Description))
+
+                         ;
 
             CreateMap<AppUser, ProfileDto>()
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.UserName))

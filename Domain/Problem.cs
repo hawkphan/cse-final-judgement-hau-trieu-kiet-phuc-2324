@@ -15,6 +15,9 @@ public class Problem
     public string Description { get; set; }
     public DateTime Date { get; set; }
     public int TimeLimit { get; set; }
+    //0 is without space
+    public int GradeMode { get; set; } = 0;
+
     public ICollection<TestCase> TestCases { get; set; } = new List<TestCase>();
     public ICollection<Result> Results { get; set; } = new List<Result>();
     public ICollection<Solution> Solutions { get; set; } = new List<Solution>();
