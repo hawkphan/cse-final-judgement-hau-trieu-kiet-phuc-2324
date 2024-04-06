@@ -41,12 +41,13 @@ namespace Application.Solutions
                     }
                 }
                 var content = request.SolutionDto.solution;
-                solution.FileName = "none";
 
                 Guid solutionId = Guid.NewGuid();
                 solution.Id = solutionId;
                 var path = _fileManager.WriteAndSaveSolutions(content, solution.Id.ToString(), "txt");
                 ResultDto result;
+                ResultDto resultDto;
+                Result result;
                 foreach (TestCase testCase in testCases)
                 {
                     Judge0ResultDto requestDto = new Judge0ResultDto
@@ -56,15 +57,13 @@ namespace Application.Solutions
                         Input = _fileManager.getTestCaseContent(testCase.Input),
                         ExpectedOutput = _fileManager.getTestCaseContent(testCase.Output)
                     };
-
                     var jsonContent = JsonConvert.SerializeObject(requestDto);
                     string jsonRespond = await judge0.SendPostRequest("submissions/?base64_encoded=false&wait=true", jsonContent);
-                    result = JsonConvert.DeserializeObject<ResultDto>(jsonRespond);
-                    // solution.Results.Add(result);
+                    resultDto = JsonConvert.DeserializeObject<ResultDto>(jsonRespond);
+                    result = _mapper.Map<ResultDto>(resultDto);
+                
                 }
-
                 _context.Solutions.Add(solution);
-                await _context.SaveChangesAsync();
                 return ApiResult<Solution>.Success(solution);
 
             }

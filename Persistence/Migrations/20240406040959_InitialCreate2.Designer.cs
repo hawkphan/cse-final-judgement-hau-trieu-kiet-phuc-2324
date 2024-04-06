@@ -11,8 +11,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240404030427_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240406040959_InitialCreate2")]
+    partial class InitialCreate2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -202,9 +202,9 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Language", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("AppUserId")
                         .HasColumnType("TEXT");
@@ -240,6 +240,9 @@ namespace Persistence.Migrations
                     b.Property<double>("Difficulty")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("GradeMode")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("TimeLimit")
                         .HasColumnType("INTEGER");
 
@@ -264,8 +267,8 @@ namespace Persistence.Migrations
                     b.Property<Guid>("ProblemId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("LanguageId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ProblemId", "LanguageId");
 
@@ -301,6 +304,9 @@ namespace Persistence.Migrations
                     b.Property<double>("Status")
                         .HasColumnType("REAL");
 
+                    b.Property<double>("StatusMessage")
+                        .HasColumnType("REAL");
+
                     b.Property<Guid>("TestCaseId")
                         .HasColumnType("TEXT");
 
@@ -327,11 +333,8 @@ namespace Persistence.Migrations
                     b.Property<double>("ExecutionTime")
                         .HasColumnType("REAL");
 
-                    b.Property<string>("FileName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("LanguageId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<long>("MemoryUsage")
                         .HasColumnType("INTEGER");
