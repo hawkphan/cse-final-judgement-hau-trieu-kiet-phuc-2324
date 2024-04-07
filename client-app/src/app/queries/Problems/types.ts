@@ -57,4 +57,6 @@ export interface User {
   lockoutEnd: any;
   lockoutEnabled: boolean;
   accessFailedCount: number;
+  token?: string;
+  image?: string;
 }

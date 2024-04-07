@@ -4,3 +4,4 @@ export * from './Languages';
 export * from './Problems';
 export * from './Solutions';
 export * from './Contests';
+export * from './Profiles';

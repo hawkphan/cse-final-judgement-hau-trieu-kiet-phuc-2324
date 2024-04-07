@@ -15,20 +15,10 @@ import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { TbPointFilled } from "react-icons/tb";
 import { profileInfo } from "../TestData/data.mock";
 import { Button, LoadingCommon, formatDate, isEmpty } from "../../../../shared";
-import { useGetProfileById } from "../../../../queries/Profiles";
 import { useCallback } from "react";
-import { API_QUERIES } from "../../../../queries";
+import { API_QUERIES, useGetProfileById } from "../../../../queries";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../../../../shared/common/stores/store";
-export interface Profile {
-  userName?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  birthday?: string;
-  gender?: number;
-  displayName?: string;
-}
 
 interface Props {
   id: string;
@@ -47,7 +37,7 @@ export const UserDetailInformation = ({ id }: Props) => {
     navigate(`/profile/edit`);
   }, [navigate]);
 
-  if (isFetching && isEmpty(id)) {
+  if (isFetching || isEmpty(id)) {
     return <LoadingCommon />;
   }
 
@@ -62,12 +52,12 @@ export const UserDetailInformation = ({ id }: Props) => {
       elevation={4}
     >
       <Stack direction="row" spacing={2} style={{ paddingBottom: "20px" }}>
-        <Avatar sx={{ width: 80, height: 80 }} />
+        <Avatar sx={{ width: 80, height: 80 }} src={profile?.avatar ? "data:image/jpeg;base64," + profile?.avatar : ''} />
         
         <Stack direction="column" spacing={0.5}>
           <h4>{profile?.displayName}</h4>
           <h5>{profile?.email}</h5>
-          <h5>{formatDate(profile?.birthday)}</h5>
+          <h5><strong>DOB: </strong>{formatDate(profile?.birthday)}</h5>
         </Stack>
       </Stack>
       {id == userStore?.user?.id && (

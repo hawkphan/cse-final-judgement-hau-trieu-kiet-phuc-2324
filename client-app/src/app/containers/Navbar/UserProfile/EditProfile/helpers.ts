@@ -15,7 +15,7 @@ export enum ProfileProperties {
   EMAIL = "email",
   USER_ID = "userId",
   GENDER = "gender",
-  DATE_OF_BIRTH = "dateOfBirth",
+  DATE_OF_BIRTH = "birthday",
   AVATAR = "Image",
 }
 
@@ -29,9 +29,8 @@ export const mapFormData = (data: EditProfileBody, fileSelected: any) => {
 
   formData.append(ProfileProperties.DISPLAY_NAME, data.displayName);
   formData.append(ProfileProperties.EMAIL, data.email);
-
-  //birthdate
-  //gender
+  formData.append(ProfileProperties.DATE_OF_BIRTH, data.birthday);
+  formData.append(ProfileProperties.GENDER, data.gender + '');
 
   return formData;
 };
@@ -40,7 +39,7 @@ export const toBreadCrumbs = (id: string) => {
   return [
     {
       id: 0,
-      label: "Profile: ",
+      label: "Profile",
       href: `${PATHS.profile.replace(":id", id)}`,
     },
     {
@@ -55,4 +54,6 @@ export const EditProfileFormSchema = Yup.object().shape({
   [ProfileProperties.LAST_NAME]: Yup.string().required(),
   [ProfileProperties.DISPLAY_NAME]: Yup.string().required(),
   [ProfileProperties.EMAIL]: Yup.string().required(),
+  [ProfileProperties.GENDER]: Yup.string().required(),
+  [ProfileProperties.DATE_OF_BIRTH]: Yup.string().required(),
 });

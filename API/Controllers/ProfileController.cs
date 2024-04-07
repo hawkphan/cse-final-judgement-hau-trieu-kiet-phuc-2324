@@ -41,6 +41,8 @@ namespace API.Controllers
             user.DisplayName = UpdateDto.DisplayName;
             user.FirstName = UpdateDto.FirstName;
             user.LastName = UpdateDto.LastName;
+            user.Gender = UpdateDto.Gender;
+            user.Birthday = UpdateDto.Birthday;
 
             if (UpdateDto.Image != null && UpdateDto.Image.Length > 0)
             {

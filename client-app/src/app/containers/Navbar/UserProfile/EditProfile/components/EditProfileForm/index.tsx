@@ -5,7 +5,6 @@ import AspectRatio from "@mui/joy/AspectRatio";
 import Box from "@mui/joy/Box";
 import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import IconButton from "@mui/joy/IconButton";
 import Stack from "@mui/joy/Stack";
@@ -37,6 +36,7 @@ import {
   LoadingCommon,
   MuiDatePicker,
   MuiInput,
+  MuiSelect,
   Toastify,
   isEmpty,
 } from "../../../../../../shared";
@@ -45,19 +45,7 @@ import { useEditProfile } from "../../../../../../queries/Profiles/useEditProfil
 import dayjs from "dayjs";
 import { IMAGES } from "../../../../../../configs/images";
 
-export interface Profile {
-  id?: string;
-  userName?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  birthday?: string;
-  gender?: number;
-  displayName?: string;
-  image?: string;
-}
-
-export default function MyProfile() {
+export const EditProfileForm = () => {
   const { userStore } = useStore();
   const id = useMemo(() => {
     return userStore?.user?.id;
@@ -96,11 +84,7 @@ export default function MyProfile() {
     reset({ ...profile });
 
     if (!isEmpty(profile.avatar)) {
-      const file = new File([profile.avatar], "avatar.jpg", { type: 'image/jpeg' });
-      // setFileSelected(file);
-      const blob = URL.createObjectURL(file);
       setAvatarSrc("data:image/jpeg;base64," + profile.avatar);
-      // setAvatarSrc(blob);
     }
   }, [profile, reset]);
 
@@ -109,7 +93,6 @@ export default function MyProfile() {
     onEditProfile(formData);
   };
 
-  // Upload img avatar from client pc
   const [avatarSrc, setAvatarSrc] = useState(IMAGES.defaultUser);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -170,7 +153,7 @@ export default function MyProfile() {
                   <img src={avatarSrc} loading="lazy" alt="Avatar" />
                 </AspectRatio>
                 <input
-                  accept="image/*"
+                  accept="image/jpeg"
                   style={{ display: "none" }}
                   ref={inputRef}
                   type="file"
@@ -196,11 +179,8 @@ export default function MyProfile() {
                   <EditRoundedIcon />
                 </IconButton>
               </Stack>
-
-              {/*Form  */}
               <Stack spacing={2} sx={{ flexGrow: 1 }}>
                 <Stack spacing={1}>
-                  <FormLabel>Name</FormLabel>
                   <FormControl
                     sx={{
                       display: { sm: "flex-column", md: "flex-row" },
@@ -217,18 +197,17 @@ export default function MyProfile() {
                         field: { value, onChange, ...props },
                         fieldState: { error },
                       }) => (
-                        <>
-                          <MuiInput
-                            placeholder="First name"
-                            value={value}
-                            onChange={(data) => {
-                              onChange(data);
-                            }}
-                            required
-                            errorMessage={error?.message}
-                            {...props}
-                          />
-                        </>
+                        <MuiInput
+                          label="First Name"
+                          placeholder="First name"
+                          value={value}
+                          onChange={(data) => {
+                            onChange(data);
+                          }}
+                          required
+                          errorMessage={error?.message}
+                          {...props}
+                        />
                       )}
                     />
                     <Controller
@@ -241,18 +220,17 @@ export default function MyProfile() {
                         field: { value, onChange, ...props },
                         fieldState: { error },
                       }) => (
-                        <>
-                          <MuiInput
-                            placeholder="Last name"
-                            value={value}
-                            onChange={(data) => {
-                              onChange(data);
-                            }}
-                            required
-                            errorMessage={error?.message}
-                            {...props}
-                          />
-                        </>
+                        <MuiInput
+                          label="Last Name"
+                          placeholder="Last name"
+                          value={value}
+                          onChange={(data) => {
+                            onChange(data);
+                          }}
+                          required
+                          errorMessage={error?.message}
+                          {...props}
+                        />
                       )}
                     />
                     <Controller
@@ -265,23 +243,21 @@ export default function MyProfile() {
                         field: { value, onChange, ...props },
                         fieldState: { error },
                       }) => (
-                        <>
-                          <MuiInput
-                            placeholder="First name"
-                            value={value}
-                            onChange={(data) => {
-                              onChange(data);
-                            }}
-                            required
-                            errorMessage={error?.message}
-                            {...props}
-                          />
-                        </>
+                        <MuiInput
+                          label="Display Name"
+                          placeholder="Display name"
+                          value={value}
+                          onChange={(data) => {
+                            onChange(data);
+                          }}
+                          required
+                          errorMessage={error?.message}
+                          {...props}
+                        />
                       )}
                     />
                   </FormControl>
                 </Stack>
-
                 <Stack direction="row" spacing={2}>
                   <FormControl
                     sx={{
@@ -290,55 +266,33 @@ export default function MyProfile() {
                       flexGrow: 1,
                     }}
                   >
-                    <Divider />
-                    <FormLabel>Gender</FormLabel>
-                    {/* <Controller
-                      name="gender"
+                    <Controller
+                      name={ProfileProperties.GENDER}
                       control={control}
                       render={({
                         field: { value, onChange, ...props },
                         fieldState: { error },
                       }) => (
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            flexGrow: 3,
-                            gap: 20,
+                        <MuiSelect
+                          size="small"
+                          label="Gender"
+                          options={[
+                            { label: "Male", value: "0" },
+                            { label: "Female", value: "1" },
+                            { label: "Other", value: "2" },
+                          ]}
+                          value={value + ""}
+                          onChange={(_, value) => {
+                            onChange(value);
                           }}
-                        >
-                          <div>
-                            <input
-                              type="radio"
-                              id="female"
-                              name="gender"
-                              value="female"
-                              checked={value === 1}
-                              onChange={onChange}
-                              {...props}
-                            />
-                            <label htmlFor="female">Female</label>
-                          </div>
-                          <div>
-                            <input
-                              type="radio"
-                              id="male"
-                              name="gender"
-                              value="male"
-                              checked={value === 0}
-                              onChange={onChange}
-                              {...props}
-                            />
-                            <label htmlFor="male">Male</label>
-                          </div>
-                          {error && <p>{error.message}</p>}
-                        </div>
+                          required
+                          errorMessage={error?.message}
+                          {...props}
+                        />
                       )}
-                    /> */}
-                    <Divider />
-                    <FormLabel>Date of Birth</FormLabel>
+                    />
                     <Controller
-                      name="birthday"
+                      name={ProfileProperties.DATE_OF_BIRTH}
                       control={control}
                       rules={{
                         required: true,
@@ -347,22 +301,15 @@ export default function MyProfile() {
                         field: { value, onChange, ...props },
                         fieldState: { error },
                       }) => {
-                        const date = dayjs(value);
                         return (
-                          <>
-                            <MuiDatePicker
-                              value={date}
-                              onChange={(e) => {
-                                const newDate = e.target.value
-                                  ? `${e.target.value}T00:00:00`
-                                  : "";
-                                onChange(newDate);
-                              }}
-                            />
-                            {error && (
-                              <p style={{ color: "red" }}>{error.message}</p>
-                            )}
-                          </>
+                          <MuiDatePicker
+                            label="Date of Birth"
+                            value={dayjs(value)}
+                            onChange={(value) => onChange(value.toLocaleDateString())}
+                            required
+                            errorMessage={error?.message}
+                            {...props}
+                          />
                         );
                       }}
                     />
@@ -414,7 +361,7 @@ export default function MyProfile() {
               sx={{ borderTop: "1px solid", borderColor: "divider" }}
             >
               <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-                <Button isLoading={isEditPending} type="submit" >
+                <Button isLoading={isEditPending} type="submit">
                   Save
                 </Button>
               </CardActions>
@@ -425,3 +372,5 @@ export default function MyProfile() {
     </Box>
   );
 }
+
+export default EditProfileForm;

@@ -13,6 +13,7 @@ import Contests from "../containers/Contests";
 import ContestForm from "../containers/Contests/UnregisteredListView/ContestForm";
 import EditProfile from "../containers/Navbar/UserProfile/EditProfile";
 import ProtectedRoute from "../containers/ProtectedRoute";
+import ContestPage from "../containers/Contests/ContestPage";
 
 export const routes: RouteObject[] = [
   {
@@ -104,6 +105,14 @@ export const routes: RouteObject[] = [
         element: (
           <ProtectedRoute>
             <ContestForm />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: PATHS.contestPage,
+        element: (
+          <ProtectedRoute>
+            <ContestPage />
           </ProtectedRoute>
         ),
       },

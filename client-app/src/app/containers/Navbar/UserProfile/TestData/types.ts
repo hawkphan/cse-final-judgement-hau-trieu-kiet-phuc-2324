@@ -1,10 +1,4 @@
-export interface User {
-    displayName: string;
-    userName: string;
-    token: string;
-    image?: string;
-    userProfile: UserProfile;
-}
+
 export interface UserFormValues {
     email: string;
     password: string;

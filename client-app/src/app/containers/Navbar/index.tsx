@@ -18,6 +18,9 @@ import { MuiMenuItem } from "./MuiMenuItem";
 import { useStore } from "../../shared/common/stores/store";
 import { PATHS } from "../../configs/paths";
 import { Logout } from "@mui/icons-material";
+import { API_QUERIES, useGetProfileById } from "../../queries";
+import { Badge } from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 function Navbar() {
   const { userStore } = useStore();
@@ -25,15 +28,57 @@ function Navbar() {
 
   userStore.getUser();
 
+  const { profile } = useGetProfileById({
+    id: userStore?.user?.id,
+    queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: userStore?.user?.id }],
+  });
+
   useEffect(() => {
     if (!localStorage.getItem("jwt")) {
       navigate(PATHS.login);
     }
   }, [navigate]);
 
+  const notifications = [
+    {
+      id: 1,
+      type: "New Message",
+      content: "You have a new message from John Doe",
+      timestamp: "2022-10-25 14:30:00",
+      isRead: false,
+      relatedId: 123,
+    },
+    {
+      id: 2,
+      type: "Friend Request",
+      content: "You have a new friend request from Jane Smith",
+      timestamp: "2022-10-24 09:45:00",
+      isRead: true,
+      relatedId: 456,
+    },
+    {
+      id: 3,
+      type: "Mention",
+      content: "You were mentioned in a post by Alan Johnson",
+      timestamp: "2022-10-23 17:15:00",
+      isRead: false,
+      relatedId: 789,
+    },
+  ];
+
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+
+  const [anchorElNotification, setAnchorElNotification] = React.useState(null);
+
+  const handleClickNotification = (event) => {
+    setAnchorElNotification(event.currentTarget);
+  };
+
+  const handleCloseNotification = () => {
+    setAnchorElNotification(null);
+  };
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -119,10 +164,58 @@ function Navbar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
+            <IconButton
+              aria-label="show notifications"
+              aria-controls="notification-menu"
+              aria-haspopup="true"
+              onClick={handleClickNotification}
+              color="inherit"
+              sx={{ marginRight: "20px" }}
+            >
+              <Badge badgeContent={notifications.length} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <Menu
+              id="notification-menu"
+              anchorEl={anchorElNotification}
+              keepMounted
+              open={Boolean(anchorElNotification)}
+              onClose={handleCloseNotification}
+            >
+              <Typography variant="h5" component="h5" margin={2}>
+                Notifications
+              </Typography>
+              {notifications.map((notification) => (
+                <MenuItem
+                  key={notification.id}
+                  onClick={handleCloseNotification}
+                  style={{ opacity: notification.isRead ? "1" : "0.5" }}
+                >
+                  <Avatar
+                    alt="Avatar"
+                    src={`https://i.pravatar.cc/40?u=${notification.relatedId}`}
+                    style={{ marginRight: "15px" }}
+                  />
+                  <div>
+                    <strong>{notification.type}</strong>
+                    <br />
+                    <span>{notification.content}</span>
+                    <br />
+                    <small>{notification.timestamp}</small>
+                  </div>
+                </MenuItem>
+              ))}
+            </Menu>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {/* <Avatar alt="A" src="/static/images/avatar/2.jpg" /> */}
-                <Avatar />
+                <Avatar
+                  src={
+                    profile?.avatar
+                      ? "data:image/jpeg;base64," + profile?.avatar
+                      : ""
+                  }
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -140,29 +233,21 @@ function Navbar() {
               onClose={handleCloseUserMenu}
             >
               <MenuItem key="menu-profile" onClick={handleNavigateToProfile}>
-                <Avatar />
+                <Avatar
+                  src={
+                    profile?.avatar
+                      ? "data:image/jpeg;base64," + profile?.avatar
+                      : ""
+                  }
+                />
                 <Typography
                   textAlign="center"
                   component={Box}
                   style={{ textDecoration: "none", marginLeft: "10px" }}
                 >
-                  Profile
+                  {profile?.displayName}
                 </Typography>
               </MenuItem>
-              {/* <MenuItem key="menu-profile" onClick={userStore.logout}>
-                <Link
-                  style={{ textDecoration: "none", color: "black" }}
-                  to={""}
-                >
-                  <Typography
-                    textAlign="center"
-                    component={Box}
-                    style={{ textDecoration: "none" }}
-                  >
-                    Logout
-                  </Typography>
-                </Link>
-              </MenuItem> */}
               <MenuItem key="menu-logout" onClick={userStore.logout}>
                 <Logout fontSize="small" />
                 <Typography

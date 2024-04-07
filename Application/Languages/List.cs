@@ -38,7 +38,7 @@ namespace Application.Languages
                 var languageList = JsonConvert.DeserializeObject<List<LanguageDto>>(jsonContent);
 
                 int PageNumber = (request.Params.PageSize == -1) ? 1 : request.Params.PageNumber;
-                int PageSize = (request.Params.PageSize == -1) ? languageList.Count : request.Params.PageSize;
+                int PageSize = (request.Params.PageSize == -1) ? request.Params.PageSize : languageList.Count;
                 return Result<PagedList<LanguageDto>>
                     .Success(PagedList<LanguageDto>.CreateAsyncUsingList(languageList,
                         PageNumber, PageSize));

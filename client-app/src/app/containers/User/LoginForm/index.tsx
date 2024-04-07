@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,14 +15,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useStore } from "../../../shared/common/stores/store";
 import { PATHS } from "../../../configs/paths";
 import { Link } from "../../../shared";
+import { useEffect, useState } from "react";
 
 function Copyright(props: any) {
-
   const navigate = useNavigate();
 
   const handleNavigateToProblems = () => {
     navigate(PATHS.problems);
-  }
+  };
 
   return (
     <Typography
@@ -46,7 +45,10 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function LoginSide() {
-  const [error, setError] = React.useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [rememberMeChecked, setRememberMeChecked] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const { userStore } = useStore();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -57,12 +59,36 @@ export default function LoginSide() {
 
     try {
       await userStore.login({ email, password });
-      // Reset any previous errors
+
+      if (rememberMeChecked) {
+        localStorage.setItem("loginEmail", email);
+        localStorage.setItem("loginPassword", password);
+        localStorage.setItem("rememberMeChecked", "true");
+      } else {
+        localStorage.removeItem("loginEmail");
+        localStorage.removeItem("loginPassword");
+        localStorage.removeItem("rememberMeChecked");
+      }
+
       setError("");
     } catch (error) {
       setError("Invalid email or password");
     }
   };
+
+  const onChangeCheckbox = (event) => {
+    setRememberMeChecked(event.target.checked);
+  };
+
+  useEffect(() => {
+    if (localStorage.loginEmail !== null) {
+      setEmail(localStorage.getItem("loginEmail"));
+      setPassword(localStorage.getItem("loginPassword"));
+      setRememberMeChecked(
+        localStorage.getItem("rememberMeChecked") === "true" ? true : false
+      );
+    }
+  }, []);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -114,6 +140,10 @@ export default function LoginSide() {
                 id="email"
                 label="Email Address"
                 name="email"
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setEmail(event.target.value);
+                }}
+                value={email}
                 autoComplete="email"
                 autoFocus
               />
@@ -122,13 +152,19 @@ export default function LoginSide() {
                 required
                 fullWidth
                 name="password"
+                value={password}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setPassword(event.target.value);
+                }}
                 label="Password"
                 type="password"
                 id="password"
                 autoComplete="current-password"
               />
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
+                control={
+                  <Checkbox checked={rememberMeChecked} color="primary" onChange={onChangeCheckbox} />
+                }
                 label="Remember me"
               />
               <Button

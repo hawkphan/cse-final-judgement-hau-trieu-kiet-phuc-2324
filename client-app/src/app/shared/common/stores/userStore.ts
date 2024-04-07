@@ -37,7 +37,7 @@ export default class UserStore {
     store.commonStore.setToken(null);
     this.user = null;
     console.log("logged out");
-    router.navigate("/login");
+    router.navigate(PATHS.login);
   };
 
   getUser = async () => {

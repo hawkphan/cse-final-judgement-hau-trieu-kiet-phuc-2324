@@ -1,5 +1,5 @@
 import Box from "@mui/joy/Box";
-import MyProfile from "./components/MyProfile";
+import EditProfileForm from "./components/EditProfileForm";
 
 export default function EditProfile() {
   return (
@@ -19,7 +19,7 @@ export default function EditProfile() {
           overflow: "auto",
         }}
       >
-        <MyProfile />
+        <EditProfileForm />
       </Box>
     </Box>
   );
