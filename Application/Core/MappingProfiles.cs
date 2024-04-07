@@ -23,13 +23,12 @@ namespace Application.Core
               .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
               .ForMember(d => d.Id, o => o.MapFrom(s => s.Id));
             CreateMap<ResultDto, Result>()
-                         .ForMember(d => d.ExecutionTime, o => o.MapFrom(s => s.Time))
-                         .ForMember(d => d.Output, o => o.MapFrom(s => s.Stdout))
-                         .ForMember(d => d.MemoryUsage, o => o.MapFrom(s => s.Memory))
-                         .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.Id))
-                         .ForMember(d => d.StatusMessage, o => o.MapFrom(s => s.Status.Description))
+                .ForMember(d => d.ExecutionTime, o => o.MapFrom(s => s.Time))
+                .ForMember(d => d.Output, o => o.MapFrom(s => s.Stdout))
+                .ForMember(d => d.MemoryUsage, o => o.MapFrom(s => s.Memory))
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.Id))
+                .ForMember(d => d.StatusMessage, o => o.MapFrom(s => s.Status.Description));
 
-                         ;
 
             CreateMap<AppUser, ProfileDto>()
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.UserName))

@@ -37,8 +37,16 @@ namespace Application.Profiles
                 var profile = _mapper.Map<ProfileDto>(user);
                 string avatarPath = Path.Combine(Directory.GetCurrentDirectory(), $"Uploads\\Images\\{user.Id}.jpg");
 
+
                 if (File.Exists(avatarPath))
                 {
+                    byte[] fileBytes = await File.ReadAllBytesAsync(avatarPath);
+                    string base64Image = Convert.ToBase64String(fileBytes);
+                    profile.Avatar = base64Image;
+                }
+                else
+                {
+                    avatarPath = Path.Combine(Directory.GetCurrentDirectory(), $"Uploads\\Images\\defaukt.jpg");
                     byte[] fileBytes = await File.ReadAllBytesAsync(avatarPath);
                     string base64Image = Convert.ToBase64String(fileBytes);
                     profile.Avatar = base64Image;

@@ -45,7 +45,6 @@ namespace Application.Solutions
                 Guid solutionId = Guid.NewGuid();
                 solution.Id = solutionId;
                 var path = _fileManager.WriteAndSaveSolutions(content, solution.Id.ToString(), "txt");
-                ResultDto result;
                 ResultDto resultDto;
                 Result result;
                 foreach (TestCase testCase in testCases)
@@ -60,8 +59,8 @@ namespace Application.Solutions
                     var jsonContent = JsonConvert.SerializeObject(requestDto);
                     string jsonRespond = await judge0.SendPostRequest("submissions/?base64_encoded=false&wait=true", jsonContent);
                     resultDto = JsonConvert.DeserializeObject<ResultDto>(jsonRespond);
-                    result = _mapper.Map<ResultDto>(resultDto);
-                
+                    result = _mapper.Map<Result>(resultDto);
+                    solution.Results.Add(result);
                 }
                 _context.Solutions.Add(solution);
                 return ApiResult<Solution>.Success(solution);
