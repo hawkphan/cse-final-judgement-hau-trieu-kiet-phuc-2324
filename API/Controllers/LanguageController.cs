@@ -22,7 +22,9 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<LanguageDto>> GetLanguage(int id)
         {
-            return await Mediator.Send(new Details.Query { Id = id });
+            // return await Mediator.Send(new Details.Query { Id = id });
+            return Ok();
+
         }
         [AllowAnonymous]
         [HttpPost]
