@@ -1,5 +1,5 @@
-import { Problem } from "../../models/problem";
-import { User } from "../Profiles";
+import { Problem, User } from "../Problems";
+
 
 export interface Contest {
   id: string;
