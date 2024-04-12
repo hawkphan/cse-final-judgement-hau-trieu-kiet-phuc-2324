@@ -29,7 +29,7 @@ const RowActions: React.FC<Props> = ({
   titleEdit = "Edit",
   titleDelete = "Delete",
   titleReverse = "Reverse",
-  titleEnter = "Enter", // New prop for Enter Tooltip title
+  titleEnter = "Enter",
 }) => {
   return (
     <Stack direction="row" alignItems="center" sx={{ width: "100%" }}>

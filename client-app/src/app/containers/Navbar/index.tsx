@@ -157,6 +157,11 @@ function Navbar() {
               path={PATHS.contests}
             />
             <MuiMenuItem
+              itemKey={KEYS.users}
+              label={LABELS.users}
+              path={PATHS.users}
+            />
+            <MuiMenuItem
               itemKey={KEYS.dev}
               label={LABELS.dev}
               path={PATHS.dev}
