@@ -21,6 +21,7 @@ import { Logout } from "@mui/icons-material";
 import { API_QUERIES, useGetProfileById } from "../../queries";
 import { Badge } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationMenu from "../NotificationMenu";
 
 function Navbar() {
   const { userStore } = useStore();
@@ -181,37 +182,7 @@ function Navbar() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <Menu
-              id="notification-menu"
-              anchorEl={anchorElNotification}
-              keepMounted
-              open={Boolean(anchorElNotification)}
-              onClose={handleCloseNotification}
-            >
-              <Typography variant="h5" component="h5" margin={2}>
-                Notifications
-              </Typography>
-              {notifications.map((notification) => (
-                <MenuItem
-                  key={notification.id}
-                  onClick={handleCloseNotification}
-                  style={{ opacity: notification.isRead ? "1" : "0.5" }}
-                >
-                  <Avatar
-                    alt="Avatar"
-                    src={`https://i.pravatar.cc/40?u=${notification.relatedId}`}
-                    style={{ marginRight: "15px" }}
-                  />
-                  <div>
-                    <strong>{notification.type}</strong>
-                    <br />
-                    <span>{notification.content}</span>
-                    <br />
-                    <small>{notification.timestamp}</small>
-                  </div>
-                </MenuItem>
-              ))}
-            </Menu>
+            <NotificationMenu anchorElNotification={anchorElNotification} onCloseNotification={handleCloseNotification} />
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
