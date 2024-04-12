@@ -12,7 +12,6 @@ export const PATHS = {
   problemDetails: "/problems/:id",
   createProblem: "/problems/create",
   editProblem: "/problems/:id/edit",
-
   contests: "/contests",
   createContest: "/contests/create",
   editContest: "/contests/:id/edit",
