@@ -2,13 +2,28 @@
 import { MRT_ColumnDef } from "material-react-table";
 import "material-symbols";
 import { Contest } from "../../../queries";
-import { formatDateOrNull, formatValueOrNull } from "../../../shared";
+import {
+  convertUTCtoLocal,
+  formatUTCToLocale,
+  formatValueOrNull,
+  isTimeInPast,
+} from "../../../shared";
 import RowActions from "../../../shared/components/RowActions";
+import CountdownTimer from "./CountdownTimer";
 
-interface Props {}
-
-export const allColumns = (): MRT_ColumnDef<Contest>[] => {
+export const allColumns = (
+  isTimerExpired: boolean,
+  setIsTimerExpired: (boolean) => void
+): MRT_ColumnDef<Contest>[] => {
   return [
+    {
+      accessorKey: "code",
+      header: "Code",
+      enableColumnFilterModes: false,
+      enableSorting: false,
+      size: 114,
+      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+    },
     {
       accessorKey: "title",
       header: "Title",
@@ -23,21 +38,35 @@ export const allColumns = (): MRT_ColumnDef<Contest>[] => {
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatDateOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) =>
+        formatUTCToLocale(cell.getValue<string>(), "Asia/Ho_Chi_Minh"),
     },
     {
-      accessorKey: "endTime",
-      header: "End Time",
+      accessorKey: "status",
+      header: "Status",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      muiTableBodyCellProps: {
-        align: "center",
-      },
-      muiTableHeadCellProps: {
-        align: "center",
-      },
-      Cell: ({ cell }) => formatDateOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => (
+        <CountdownTimer
+          startTime={convertUTCtoLocal(
+            cell.row.original.startTime,
+            "Asia/Ho_Chi_Minh"
+          )}
+          endTime={convertUTCtoLocal(
+            cell.row.original.endTime,
+            "Asia/Ho_Chi_Minh"
+          )}
+        />
+      ),
+    },
+    {
+      accessorKey: "numOfMembers",
+      header: "Participants",
+      enableColumnFilterModes: false,
+      enableSorting: false,
+      size: 114,
+      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
     },
     {
       accessorKey: "actions",
@@ -49,16 +78,15 @@ export const allColumns = (): MRT_ColumnDef<Contest>[] => {
       enableSorting: false,
       size: 0,
 
-      Cell: ({ row }) =>
-          <RowActions
-            hideEdit={false}
-            hideDelete={false}
-            DeleteFunction={() => {
-          
-            }}
-            EditFunction={() => {}}
-          />
-        
+      Cell: ({ row }) => (
+        <RowActions
+          hideEnter={false}
+          hideDetail={false}
+          disableEnter={!row.original.hasStarted} // Use state value
+          DetailFunction={() => {}}
+          EnterFunction={() => {}}
+        />
+      ),
     },
   ];
 };

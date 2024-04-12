@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, Card, Stack } from "@mui/material";
 import {
@@ -7,32 +8,63 @@ import {
   Table2,
   Text,
 } from "../../../shared";
-import { Contest, GetPropertiesParams, useGetRegisteredContest, useGetUnregisteredContest } from "../../../queries";
-import { useCallback, useMemo } from "react";
+import {
+  Contest,
+  GetPropertiesParams,
+  useGetRegisteredContest,
+  useGetUnregisteredContest,
+} from "../../../queries";
+import { useMemo, useState } from "react";
 import { allColumns } from "./allColumns";
 import RegisteredListToolbar from "./RegisteredListToolbar";
 
 const RegisteredListView = () => {
-  const { registeredContests, isFetching, setParams, totalRecords } = useGetRegisteredContest();
+  // const { registeredContests, isFetching, setParams, totalRecords } = useGetRegisteredContest();
+  const [isTimerExpired, setIsTimerExpired] = useState(false);
 
-  const columns = useMemo(() => allColumns(), []);
-  const handleGetUnregisteredContests = useCallback(
-    (params: GetPropertiesParams) => {
-      setParams({ ...params});
+  const registeredContests: Contest[] = [
+    {
+      id: "1",
+      code: "T1CON",
+      title: "T1 Con",
+      description: "Description",
+      startTime: "2024-04-10T10:10:30.000Z",
+      endTime: "2024-04-11T13:30:00.000Z",   
+      hasStarted: false,
+      numOfMembers: 2,
+      members: [],
+      problems: [],
     },
-    [setParams]
+    {
+      id: "1",
+      code: "T1CON",
+      title: "T1 Con",
+      description: "Description",
+      startTime: "2024-04-10T09:10:30.000Z",
+      endTime: "2024-04-10T13:30:00.000Z",
+      hasStarted: true,
+      numOfMembers: 2,
+      members: [],
+      problems: [],
+    },
+  ];
+
+  const columns = useMemo(
+    () => allColumns(isTimerExpired, setIsTimerExpired),
+    [isTimerExpired, setIsTimerExpired]
   );
+
   return (
     <Stack marginTop={2}>
-      <Accordion title={<Text>Registered Contests</Text>} isExpanded>
+      <Accordion title={<Text>Your Schedule</Text>} isExpanded>
         <Box padding={2}>
           <Card sx={{ paddingLeft: 2, paddingRight: 2, paddingTop: 0 }}>
             <Table2<Contest>
               rowCount={0}
               columns={columns}
-              data={[]}
+              data={registeredContests}
               recordName="items"
-              onAction={handleGetUnregisteredContests}
+              onAction={() => {}}
               enableDensityToggle={false}
               enableColumnOrdering={false}
               enableRowActions
@@ -46,7 +78,7 @@ const RegisteredListView = () => {
               }}
               additionalFilterParams={["keywords"]}
               state={{
-                isLoading: isFetching,
+                isLoading: false,
               }}
               renderToolbarInternalActions={({ table }) => {
                 return <RegisteredListToolbar table={table} />;
@@ -55,8 +87,6 @@ const RegisteredListView = () => {
               muiTopToolbarProps={{
                 sx: {
                   backgroundColor: "transparent",
-                  mx: "-8px",
-                  my: "4px",
                 },
               }}
             />

@@ -13,26 +13,60 @@ import { allColumns } from "./allColumns";
 import UnregisteredListToolbar from "./UnregisteredListToolbar";
 
 const UnregisteredListView = () => {
-  const { unregisteredContests, isFetching, setParams, totalRecords } = useGetUnregisteredContest();
+  // const { unregisteredContests, isFetching, setParams, totalRecords } = useGetUnregisteredContest();
+
+  const unregisteredContests: Contest[] = [
+    {
+      id: "2",
+      code: "TLietCON",
+      title: "TLiet Con",
+      description: "Description",
+      startTime: "2024-04-11T10:30:00.000Z",
+      endTime: "2024-04-11T13:30:00.000Z",
+      hasStarted: false,
+      numOfMembers: 2,
+      members: [],
+      problems: [],
+    },
+    {
+      id: "3",
+      code: "TLietCON",
+      title: "TLiet Con",
+      description: "Description",
+      startTime: "2024-04-11T10:30:00.000Z",
+      endTime: "2024-04-11T13:30:00.000Z",
+      hasStarted: false,
+      numOfMembers: 2,
+      members: [],
+      problems: [],
+    },
+    {
+      id: "4",
+      code: "TLietCON",
+      title: "TLiet Con",
+      description: "Description",
+      startTime: "2024-04-10T10:30:00.000Z",
+      endTime: "2024-04-11T13:30:00.000Z",
+      hasStarted: false,
+      numOfMembers: 2,
+      members: [],
+      problems: [],
+    },
+  ];
 
   const columns = useMemo(() => allColumns(), []);
-  const handleGetUnregisteredContests = useCallback(
-    (params: GetPropertiesParams) => {
-      setParams({ ...params});
-    },
-    [setParams]
-  );
+
   return (
     <Stack marginTop={2}>
-      <Accordion title={<Text>Unregistered Contests</Text>} isExpanded>
+      <Accordion title={<Text>Other Contests</Text>} isExpanded>
         <Box padding={2}>
           <Card sx={{ paddingLeft: 2, paddingRight: 2, paddingTop: 0 }}>
             <Table2<Contest>
-              rowCount={totalRecords}
+              rowCount={0}
               columns={columns}
               data={unregisteredContests}
               recordName="items"
-              onAction={handleGetUnregisteredContests}
+              onAction={() => {}}
               enableDensityToggle={false}
               enableColumnOrdering={false}
               enableRowActions
@@ -46,7 +80,7 @@ const UnregisteredListView = () => {
               }}
               additionalFilterParams={["keywords"]}
               state={{
-                isLoading: isFetching,
+                isLoading: false,
               }}
               renderTopToolbarCustomActions={() => (
                 <Stack direction="row" spacing={1} my={0.5}>

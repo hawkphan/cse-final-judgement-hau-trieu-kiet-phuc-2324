@@ -30,6 +30,7 @@ import ProblemToolbar from "../../../Problems/ProblemToolbar";
 import { PATHS } from "../../../../configs/paths";
 import { MRT_RowSelectionState } from "material-react-table";
 import { toBreadCrumbs } from "./helpers";
+import BasicTimezoneProp from "./BasicTimeZoneProp";
 
 const ContestForm = () => {
   const { id } = useParams();
@@ -99,6 +100,7 @@ const ContestForm = () => {
         <Typography variant="h5" mb={5} mt={2}>
           {isEdit ? "Edit Contest" : "Create New Contest"}
         </Typography>
+       <BasicTimezoneProp />
         <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
           <Grid.Wrap>
             <Grid.Item xs={4}>

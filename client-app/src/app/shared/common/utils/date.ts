@@ -105,6 +105,12 @@ export const isOutOperationHours = (operationTimeObj: { open: string; close: str
   return isBeforeOpen || isAfterClose;
 };
 
+export const isTimeInPast = (timeString: string) => {
+  const givenTime = new Date(timeString);
+  const currentTime = new Date();
+  return givenTime < currentTime;
+}
+
 export const getFromNow = (value: string, options?: GetFromNowOptions) => {
   if (!value) return null;
 

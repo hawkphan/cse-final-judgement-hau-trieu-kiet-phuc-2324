@@ -2,13 +2,21 @@
 import { MRT_ColumnDef } from "material-react-table";
 import "material-symbols";
 import { Contest } from "../../../queries";
-import { formatDateOrNull, formatValueOrNull } from "../../../shared";
+import { DateFormatDisplayMinute, formatDateOrNull, formatDateUtc, formatUTCToLocale, formatValueOrNull } from "../../../shared";
 import RowActions from "../../../shared/components/RowActions";
 
 interface Props {}
 
 export const allColumns = (): MRT_ColumnDef<Contest>[] => {
   return [
+    {
+      accessorKey: "code",
+      header: "Code",
+      enableColumnFilterModes: false,
+      enableSorting: false,
+      size: 114,
+      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+    },
     {
       accessorKey: "title",
       header: "Title",
@@ -23,7 +31,7 @@ export const allColumns = (): MRT_ColumnDef<Contest>[] => {
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatDateOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => formatUTCToLocale(cell.getValue<string>(), 'Asia/Ho_Chi_Minh'),
     },
     {
       accessorKey: "endTime",
@@ -37,7 +45,15 @@ export const allColumns = (): MRT_ColumnDef<Contest>[] => {
       muiTableHeadCellProps: {
         align: "center",
       },
-      Cell: ({ cell }) => formatDateOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => formatUTCToLocale(cell.getValue<string>(), 'Asia/Ho_Chi_Minh'),
+    },
+    {
+      accessorKey: "numOfMembers",
+      header: "Participants",
+      enableColumnFilterModes: false,
+      enableSorting: false,
+      size: 114,
+      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
     },
     {
       accessorKey: "actions",
@@ -51,12 +67,8 @@ export const allColumns = (): MRT_ColumnDef<Contest>[] => {
 
       Cell: ({ row }) =>
           <RowActions
-            hideEdit={false}
-            hideDelete={false}
-            DeleteFunction={() => {
-          
-            }}
-            EditFunction={() => {}}
+            hideDetail={false}
+            DetailFunction={() => {}}
           />
         
     },

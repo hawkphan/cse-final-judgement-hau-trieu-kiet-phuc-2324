@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { IconButton, Stack, Tooltip } from '@mui/material';
+import { IconButton, Stack, Tooltip } from "@mui/material";
 
-import { MaterialSymbol } from 'react-material-symbols';
-import { COLOR_CODE } from '../..';
+import { MaterialSymbol } from "react-material-symbols";
+import { COLOR_CODE } from "../..";
 
 const RowActions: React.FC<Props> = ({
   DetailFunction,
@@ -11,24 +11,28 @@ const RowActions: React.FC<Props> = ({
   CreateFunction,
   EditFunction,
   ReverseFunction,
+  EnterFunction,
   hideDetail = true,
   hideCreate = true,
   hideEdit = true,
   hideDelete = true,
   hideReverse = true,
+  hideEnter = true,
   disableDetail = false,
   disableCreate = false,
   disableEdit = false,
   disableDelete = false,
   disableReverse = false,
-  titleDetail = 'Detail',
-  titleCreate = 'Create',
-  titleEdit = 'Edit',
-  titleDelete = 'Delete',
-  titleReverse = 'Reverse',
+  disableEnter = false,
+  titleDetail = "Detail",
+  titleCreate = "Create",
+  titleEdit = "Edit",
+  titleDelete = "Delete",
+  titleReverse = "Reverse",
+  titleEnter = "Enter", // New prop for Enter Tooltip title
 }) => {
   return (
-    <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
+    <Stack direction="row" alignItems="center" sx={{ width: "100%" }}>
       {!hideDetail && (
         <Tooltip title={titleDetail} arrow placement="top">
           <IconButton
@@ -38,19 +42,21 @@ const RowActions: React.FC<Props> = ({
               !disableDetail && DetailFunction();
             }}
             sx={{
-              '&:hover': !disableDetail && {
+              "&:hover": !disableDetail && {
                 bgcolor: COLOR_CODE.WHITE,
                 boxShadow:
-                  '0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)',
-                borderRadius: '4px',
+                  "0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)",
+                borderRadius: "4px",
               },
-              p: '4px',
+              p: "4px",
             }}
           >
             <MaterialSymbol
               icon="list"
               size={20}
-              color={disableDetail ? COLOR_CODE.GREY_500 : COLOR_CODE.PRIMARY_400}
+              color={
+                disableDetail ? COLOR_CODE.GREY_500 : COLOR_CODE.PRIMARY_400
+              }
             />
           </IconButton>
         </Tooltip>
@@ -64,19 +70,21 @@ const RowActions: React.FC<Props> = ({
               !disableCreate && CreateFunction();
             }}
             sx={{
-              '&:hover': !disableCreate && {
+              "&:hover": !disableCreate && {
                 bgcolor: COLOR_CODE.WHITE,
                 boxShadow:
-                  '0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)',
-                borderRadius: '4px',
+                  "0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)",
+                borderRadius: "4px",
               },
-              p: '4px',
+              p: "4px",
             }}
           >
             <MaterialSymbol
               icon="add_circle"
               size={20}
-              color={disableCreate ? COLOR_CODE.GREY_500 : COLOR_CODE.PRIMARY_400}
+              color={
+                disableCreate ? COLOR_CODE.GREY_500 : COLOR_CODE.PRIMARY_400
+              }
             />
           </IconButton>
         </Tooltip>
@@ -90,13 +98,13 @@ const RowActions: React.FC<Props> = ({
               !disableEdit && EditFunction();
             }}
             sx={{
-              '&:hover': !disableEdit && {
+              "&:hover": !disableEdit && {
                 bgcolor: COLOR_CODE.WHITE,
                 boxShadow:
-                  '0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)',
-                borderRadius: '4px',
+                  "0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)",
+                borderRadius: "4px",
               },
-              p: '4px',
+              p: "4px",
             }}
           >
             <MaterialSymbol
@@ -116,13 +124,13 @@ const RowActions: React.FC<Props> = ({
               !disableDelete && DeleteFunction();
             }}
             sx={{
-              '&:hover': !disableDelete && {
+              "&:hover": !disableDelete && {
                 bgcolor: COLOR_CODE.WHITE,
                 boxShadow:
-                  '0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)',
-                borderRadius: '4px',
+                  "0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)",
+                borderRadius: "4px",
               },
-              p: '4px',
+              p: "4px",
             }}
           >
             <MaterialSymbol
@@ -142,19 +150,47 @@ const RowActions: React.FC<Props> = ({
               ReverseFunction();
             }}
             sx={{
-              '&:hover': {
+              "&:hover": {
                 bgcolor: COLOR_CODE.WHITE,
                 boxShadow:
-                  '0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)',
-                borderRadius: '4px',
+                  "0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)",
+                borderRadius: "4px",
               },
-              p: '4px',
+              p: "4px",
             }}
           >
             <MaterialSymbol
               icon="autorenew"
               size={20}
               color={disableReverse ? COLOR_CODE.GREY_500 : COLOR_CODE.PRIMARY}
+            />
+          </IconButton>
+        </Tooltip>
+      )}
+      {!hideEnter && (
+        <Tooltip title={titleEnter} arrow placement="top">
+          <IconButton
+            disableRipple={disableEnter}
+            onClick={(event) => {
+              event.stopPropagation();
+              EnterFunction();
+            }}
+            sx={{
+              "&:hover": !disableEnter && {
+                bgcolor: COLOR_CODE.WHITE,
+                boxShadow:
+                  "0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)",
+                borderRadius: "4px",
+              },
+              p: "4px",
+            }}
+          >
+            <MaterialSymbol
+              icon="keyboard_return"
+              size={20}
+              color={
+                disableEnter ? COLOR_CODE.GREY_500 : COLOR_CODE.PRIMARY_400
+              }
             />
           </IconButton>
         </Tooltip>
@@ -169,21 +205,25 @@ type Props = {
   CreateFunction?: (..._args: any[]) => void;
   EditFunction?: (..._args: any[]) => void;
   ReverseFunction?: (..._args: any[]) => void;
+  EnterFunction?: (..._args: any[]) => void;
   hideDetail?: boolean;
   hideCreate?: boolean;
   hideEdit?: boolean;
   hideDelete?: boolean;
   hideReverse?: boolean;
+  hideEnter?: boolean; // New prop for hiding Enter button
   disableDetail?: boolean;
   disableCreate?: boolean;
   disableEdit?: boolean;
   disableDelete?: boolean;
   disableReverse?: boolean;
+  disableEnter?: boolean;
   titleDetail?: string;
   titleCreate?: string;
   titleEdit?: string;
   titleDelete?: string;
   titleReverse?: string;
+  titleEnter?: string;
 };
 
 export default RowActions;
