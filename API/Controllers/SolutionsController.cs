@@ -14,7 +14,7 @@ namespace API.Controllers
 {
     public class SolutionsController : BaseApiController
     {
-
+        //api/solutions
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<Solution>> GetSolutions([FromQuery] Guid userId, [FromQuery] Guid problemId, [FromQuery] PagingParams param)

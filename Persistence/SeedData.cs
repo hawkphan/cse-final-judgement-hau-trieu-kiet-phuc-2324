@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Domain;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 
 namespace Persistence
 {
@@ -64,7 +65,6 @@ namespace Persistence
                 }
                 await context.SaveChangesAsync();
             }
-
             if (!context.Problems.Any())
             {
                 List<AppUser> userList = context.Users.ToList();

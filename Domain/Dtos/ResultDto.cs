@@ -15,7 +15,7 @@ namespace Domain.Dtos
     public string Time { get; set; }
 
     [JsonProperty("memory")]
-    public int Memory { get; set; }
+    public int? Memory { get; set; }
 
     [JsonProperty("stderr")]
     public string Stderr { get; set; }

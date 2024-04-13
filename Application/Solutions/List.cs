@@ -3,8 +3,10 @@ using Application.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain;
+using Domain.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Persistence;
 
 namespace Application.Solutions
@@ -30,16 +32,18 @@ namespace Application.Solutions
 
             public async Task<Result<PagedList<Solution>>> Handle(Query request, CancellationToken cancellationToken)
             {
+                Judge0 judge0 = new Judge0();
+                String resultJson;
                 Guid? problemId = request.ProblemId;
                 Guid? userId = request.UserId;
 
-                var solutions = _context.Solutions.Include(s => s.Language).Include(s => s.Results).ThenInclude(r => r.TestCase).AsQueryable();
-
+                var solutions = _context.Solutions.Include(s => s.Results).ThenInclude(r => r.TestCase).AsQueryable();
+                
+                solutions = _context.Solutions.Include(s => s.Results).ThenInclude(r => r.TestCase).AsQueryable();
                 foreach (var solution in solutions)
                 {
                     solution.Results = solution.Results.OrderBy(r => r.TestCase.Name).ToList();
                 }
-
                 if (userId != null)
                 {
                     solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);

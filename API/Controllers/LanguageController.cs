@@ -22,15 +22,12 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<LanguageDto>> GetLanguage(int id)
         {
-            // return await Mediator.Send(new Details.Query { Id = id });
-            return Ok();
-
+            return await Mediator.Send(new Details.Query { Id = id });
         }
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> CreateLanguage(Language newLanguage)
         {
-            // await Mediator.Send(new Create.Command { Language = newLanguage });
             return Ok();
         }
         [AllowAnonymous]
@@ -38,8 +35,6 @@ namespace API.Controllers
         public async Task<ActionResult> Edit(Language Language)
         {
             return Ok();
-
-            // return HandleApiResult(await Mediator.Send(new Edit.Command { Language = Language }));
         }
         [AllowAnonymous]
         [HttpDelete("{id}")]
