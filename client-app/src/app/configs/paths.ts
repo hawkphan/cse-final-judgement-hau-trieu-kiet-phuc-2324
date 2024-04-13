@@ -28,6 +28,7 @@ export const PATHS = {
   createContest: "/contests/create",
   editContest: "/contests/:id/edit",
   contestPage: "/contest-page",
+  contestManagement: "/contest-management",
   
 };
 
