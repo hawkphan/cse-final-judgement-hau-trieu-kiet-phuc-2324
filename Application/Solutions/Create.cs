@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using Application.Core;
 using AutoMapper;
 using Domain;
@@ -27,9 +28,10 @@ namespace Application.Solutions
             }
             public async Task<ApiResult<Solution>> Handle(Command request, CancellationToken cancellationToken)
             {
+                Problem problem = await _context.Problems.FirstOrDefaultAsync(p => p.Id == request.SolutionDto.problemId);
                 Judge0 judge0 = new Judge0();
                 FileManager _fileManager = new FileManager();
-                var solution = _mapper.Map<Solution>(request.SolutionDto);
+                Solution solution = _mapper.Map<Solution>(request.SolutionDto);
                 List<TestCase> testCases = _context.TestCases
                 .Where(tc => tc.ProblemId == request.SolutionDto.problemId)
                 .ToList();
@@ -47,22 +49,49 @@ namespace Application.Solutions
                 var path = _fileManager.WriteAndSaveSolutions(content, solution.Id.ToString(), "txt");
                 ResultDto resultDto;
                 Result result;
+                Judge0ResultDto requestDto;
                 foreach (TestCase testCase in testCases)
                 {
-                    Judge0ResultDto requestDto = new Judge0ResultDto
+                    // memory relating is kilobytes
+                    requestDto = new Judge0ResultDto
                     {
                         Content = request.SolutionDto.solution,
                         LanguageId = request.SolutionDto.languageId,
                         Input = _fileManager.getTestCaseContent(testCase.Input),
-                        ExpectedOutput = _fileManager.getTestCaseContent(testCase.Output)
+                        ExpectedOutput = _fileManager.getTestCaseContent(testCase.Output),
+                        
+                        TimeLimit = Math.Min(problem.TimeLimit, 15),
+                        ExtraTime = (float)0.5,
+                        WallTimeLimit = Math.Min(problem.TimeLimit + 1, 20),
+                        
+                        MemoryLimit = Math.Min(problem.MemoryLimit, 64000),
+                        StackLimit = 128000,
+                        EnableMemoryLimit = true,
+                        EnableTimeLimit = true,
                     };
+
+
                     var jsonContent = JsonConvert.SerializeObject(requestDto);
-                    string jsonRespond = await judge0.SendPostRequest("submissions/?base64_encoded=false&wait=true", jsonContent);
-                    resultDto = JsonConvert.DeserializeObject<ResultDto>(jsonRespond);
+                    // write into json file for easy test with postman
+                    // _fileManager.WriteAndSaveSolutions(jsonContent, solution.Id.ToString(), "json.txt");
+
+                    string jsonRespond = await judge0.SendPostRequest("submissions/?base64_encoded=false&wait=false", jsonContent);
+                    String ResultToken = (string)JsonNode.Parse(jsonRespond)["token"];
+
+                    string initialResult = await judge0.SendGetRequest($"submissions/{ResultToken}");
+                    resultDto = JsonConvert.DeserializeObject<ResultDto>(initialResult);
                     result = _mapper.Map<Result>(resultDto);
+
+                    result.TestCaseId = testCase.Id;
+                    result.SolutionId = solutionId;
+
                     solution.Results.Add(result);
                 }
+
+                solution.LanguageId = request.SolutionDto.languageId;
+                solution.CreatedDate = DateTime.Now;
                 _context.Solutions.Add(solution);
+                await _context.SaveChangesAsync();
                 return ApiResult<Solution>.Success(solution);
 
             }
@@ -71,9 +100,3 @@ namespace Application.Solutions
         }
     }
 }
-// var requestBody = new Dictionary<string, string>{
-//         { "source_code", request.SolutionDto.solution },
-//         { "language_id",request.SolutionDto.languageId+"" },
-//         { "stdin", _fileManager.getTestCaseContent(testCase.Input) },
-//         { "expected_output", _fileManager.getTestCaseContent(testCase.Input) }
-// };

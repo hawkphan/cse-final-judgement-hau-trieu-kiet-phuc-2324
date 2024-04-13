@@ -34,7 +34,7 @@ namespace Application.Languages
 
                 Judge0 judge0 = new Judge0();
 
-                var jsonContent = await judge0.SendGetRequest(judge0.LanguageParam());
+                var jsonContent = await judge0.SendGetRequest("languages");
                 var languageList = JsonConvert.DeserializeObject<List<LanguageDto>>(jsonContent);
 
                 int PageNumber = (request.Params.PageSize == -1) ? 1 : request.Params.PageNumber;

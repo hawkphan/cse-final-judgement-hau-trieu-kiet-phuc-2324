@@ -14,6 +14,8 @@ public class Problem
     public double Difficulty { get; set; }
     public string Description { get; set; }
     public DateTime Date { get; set; }
+    //kilobyte Limit address space of the program in kilobytes.	
+    public int MemoryLimit { get; set; } = 128000;
     public int TimeLimit { get; set; }
     //0 is without space
     public int GradeMode { get; set; } = 0;

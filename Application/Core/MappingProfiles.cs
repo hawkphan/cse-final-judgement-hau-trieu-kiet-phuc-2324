@@ -12,6 +12,8 @@ namespace Application.Core
             CreateMap<Problem, Problem>();
             CreateMap<Domain.AppUser, AppUser>();
             CreateMap<Solution, Solution>();
+            CreateMap<Result, Result>();
+            
             CreateMap<SolutionDto, Solution>()
                 .ForMember(d => d.LanguageId, o => o.MapFrom(s => s.languageId))
                 .ForMember(d => d.ProblemId, o => o.MapFrom(s => s.problemId))
@@ -28,7 +30,6 @@ namespace Application.Core
                 .ForMember(d => d.MemoryUsage, o => o.MapFrom(s => s.Memory))
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.Id))
                 .ForMember(d => d.StatusMessage, o => o.MapFrom(s => s.Status.Description));
-
 
             CreateMap<AppUser, ProfileDto>()
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.UserName))

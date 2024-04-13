@@ -10,9 +10,9 @@ namespace Domain
 {
     public class Language
     {
-        public int Id { get; set; }
+        [property: JsonPropertyName("id")] public int Id { get; set; }
         public ICollection<ProblemLanguage> ProblemLanguages { get; set; }
-        public string Name { get; set; }
+        [property: JsonPropertyName("name")] public string Name { get; set; }
         public string FileExtension { get; set; }
     }
 }

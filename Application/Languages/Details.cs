@@ -29,7 +29,7 @@ namespace Application.Languages
             public async Task<LanguageDto> Handle(Query request, CancellationToken cancellationToken)
             {
                 Judge0 judge0 = new Judge0();
-                var languageEntity = await judge0.SendGetRequest(judge0.LanguageParam() + "/" + request.Id);
+                var languageEntity = await judge0.SendGetRequest("languages/" + request.Id);
                 var languageDto = JsonConvert.DeserializeObject<LanguageDto>(languageEntity);
                 return languageDto;
             }

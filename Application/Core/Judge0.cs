@@ -10,10 +10,6 @@ namespace Application.Core
     {
         private readonly String serverAddress = "http://192.168.56.102:2358/";
         private HttpClient client;
-        public String LanguageParam()
-        {
-            return serverAddress + "languages";
-        }
         public String SubmissionParam()
         {
             return serverAddress + "";
@@ -21,7 +17,7 @@ namespace Application.Core
         public async Task<string> SendGetRequest(String param)
         {
             client = new HttpClient();
-            using var response = await client.GetAsync(param);
+            using var response = await client.GetAsync(serverAddress + param);
             response.EnsureSuccessStatusCode();
             string jsonContent = await response.Content.ReadAsStringAsync();
             return jsonContent;
