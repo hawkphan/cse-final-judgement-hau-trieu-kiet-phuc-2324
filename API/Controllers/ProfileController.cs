@@ -54,19 +54,20 @@ namespace API.Controllers
 
             if (result.Succeeded)
             {
-                return CreateNewUserDto(user);
+                return await CreateNewUserDto(user);
             }
             return BadRequest(result.Errors);
         }
 
-        private UserDto CreateNewUserDto(AppUser user)
+        private async Task<UserDto> CreateNewUserDto(AppUser user)
         {
+            var roles = await _userManager.GetRolesAsync(user);
             return new UserDto
             {
                 Id = user.Id,
                 DisplayName = user.DisplayName,
                 Image = null,
-                Token = _tokenServices.CreateToken(user),
+                Token = _tokenServices.CreateToken(user, roles),
                 UserName = user.UserName
             };
         }

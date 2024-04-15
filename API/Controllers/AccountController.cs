@@ -18,12 +18,11 @@ namespace API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly IMapper _mapper;
-        private readonly TokenService _tokenServices;
+        private readonly TokenService _tokenService;
 
-        public AccountController(UserManager<AppUser> userManager, TokenService tokenServices)
+        public AccountController(UserManager<AppUser> userManager, TokenService tokenService)
         {
-            _tokenServices = tokenServices;
+            _tokenService = tokenService;
             _userManager = userManager;
         }
 
@@ -38,7 +37,7 @@ namespace API.Controllers
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
             if (result)
             {
-                return CreateNewUserDto(user);
+                return await CreateNewUserDto(user);
             }
             else
             {
@@ -68,27 +67,30 @@ namespace API.Controllers
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (result.Succeeded)
             {
-                return CreateNewUserDto(user);
+                return await CreateNewUserDto(user);
             }
             return BadRequest(result.Errors);
         }
-        private UserDto CreateNewUserDto(AppUser user)
+        private async Task<UserDto> CreateNewUserDto(AppUser user)
         {
+            var roles = await _userManager.GetRolesAsync(user);
             return new UserDto
             {
                 Id = user.Id,
                 DisplayName = user.DisplayName,
                 Image = null,
-                Token = _tokenServices.CreateToken(user),
-                UserName = user.UserName
+                Token = _tokenService.CreateToken(user, roles),
+                UserName = user.UserName,
+                Roles = roles // Populate the roles
             };
         }
-        [Authorize]
+        
+        [Authorize(Roles = "User,Admin,Author")]
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
-            return CreateNewUserDto(user);
+            return await CreateNewUserDto(user);
         }
 
 

@@ -1,29 +1,60 @@
+using System;
 using System.Net;
+using System.Text;
 using API.Extensions;
+using API.Services;
 using Application.Activities;
 using Application.Core;
 using Domain;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers(opt=>
-    {
-        var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-        opt.Filters.Add(new AuthorizeFilter(policy));
-    }
+builder.Services.AddControllers(opt =>
+{
+    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+    opt.Filters.Add(new AuthorizeFilter(policy));
+});
 
-);
-builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>()
+ .AddEntityFrameworkStores<DataContext>()
+ .AddDefaultTokenProviders().AddRoles<IdentityRole<Guid>>();
+
+builder.Services.AddScoped<IRoleStore<IdentityRole>, RoleStore<IdentityRole, DataContext>>();
+
+// Configure JWT authentication
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+var key = Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
 
 builder.Services.AddApplicationServices(builder.Configuration);
-
+builder.Services.AddScoped<TokenService>();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
@@ -58,8 +89,9 @@ try
 {
     var context = services.GetRequiredService<DataContext>();
     var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
     await context.Database.MigrateAsync();
-    await Seed.SeedData(context,userManager);
+    await Seed.SeedData(context, userManager, roleManager);
 
 }
 catch (Exception ex)
