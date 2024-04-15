@@ -63,7 +63,6 @@ namespace Application.Solutions
                         TimeLimit = Math.Min(problem.TimeLimit, 15),
                         ExtraTime = (float)0.5,
                         WallTimeLimit = Math.Min(problem.TimeLimit + 1, 20),
-                        
                         MemoryLimit = Math.Min(problem.MemoryLimit, 64000),
                         StackLimit = 128000,
                         EnableMemoryLimit = true,
@@ -73,7 +72,7 @@ namespace Application.Solutions
 
                     var jsonContent = JsonConvert.SerializeObject(requestDto);
                     // write into json file for easy test with postman
-                    // _fileManager.WriteAndSaveSolutions(jsonContent, solution.Id.ToString(), "json.txt");
+                    _fileManager.WriteAndSaveSolutions(jsonContent, solution.Id.ToString(), "json.txt");
 
                     string jsonRespond = await judge0.SendPostRequest("submissions/?base64_encoded=false&wait=false", jsonContent);
                     String ResultToken = (string)JsonNode.Parse(jsonRespond)["token"];
