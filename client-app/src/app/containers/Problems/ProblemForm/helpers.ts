@@ -18,7 +18,7 @@ export enum ProblemProperties {
   TIME_LIMIT = "timeLimit",
   USER_ID = "userId",
   TEST_CASES_FILE = "file",
-  MEMORY_LIMIT = "memory",
+  MEMORY_LIMIT = "memoryLimit",
   COMPARE_MODE = "compareMode",
   APPROXIMATE_VALUE = "approximateValue",
 }

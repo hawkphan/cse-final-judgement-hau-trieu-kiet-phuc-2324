@@ -17,6 +17,7 @@ namespace Domain
         public string Description { get; set; }
         public DateTime Date { get; set; }
         public int TimeLimit { get; set; }
+        public int MemoryLimit { get; set; }
         // public ICollection<TestCase> TestCases { get; set; }
         // public ICollection<Result> Results { get; set; }
         // public ICollection<Solution> UserSolutions { get; set; }

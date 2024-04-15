@@ -19,7 +19,7 @@ export interface CreateProblemBody {
   date?: string;
   description?: string;
   timeLimit?: number;
-  memory?: number;
+  memoryLimit?: number;
   compareMode?: number;
   approximateValue?: number;
 }
@@ -34,6 +34,9 @@ export interface EditProblemBody {
   date?: string;
   description?: string;
   timeLimit?: number;
+  memoryLimit?: number;
+  compareMode?: number;
+  approximateValue?: number;
 }
 
 export interface User {

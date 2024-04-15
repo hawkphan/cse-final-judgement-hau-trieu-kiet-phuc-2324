@@ -111,7 +111,7 @@ const ProblemForm = () => {
         ? { ...problem }
         : {
             [ProblemProperties.TIME_LIMIT]: 1000,
-            [ProblemProperties.MEMORY_LIMIT]: 500,
+            [ProblemProperties.MEMORY_LIMIT]: 128000,
             [ProblemProperties.APPROXIMATE_VALUE]: 0,
           },
       mode: "onChange",
@@ -265,7 +265,7 @@ const ProblemForm = () => {
                 control={control}
                 render={({ field, fieldState }) => (
                   <MuiInput
-                    label="Memory Limit (MB)"
+                    label="Memory Limit (KB)"
                     type="number"
                     placeholder="Memory Limit (s)"
                     onChange={(e) => {

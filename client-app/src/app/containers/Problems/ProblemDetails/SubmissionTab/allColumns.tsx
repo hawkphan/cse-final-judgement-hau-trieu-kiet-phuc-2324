@@ -2,7 +2,7 @@
 import { MRT_ColumnDef } from "material-react-table";
 import "material-symbols";
 import { Solution } from "../../../../queries";
-import { formatDateOrNull, formatValueOrNull } from "../../../../shared";
+import { formatValueOrNull } from "../../../../shared";
 import { renderStatusTag } from "./helpers";
 import dayjs from "dayjs";
 
