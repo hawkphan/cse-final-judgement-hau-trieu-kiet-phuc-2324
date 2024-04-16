@@ -36,10 +36,26 @@ namespace Application.Solutions
                 String resultJson;
                 Guid? problemId = request.ProblemId;
                 Guid? userId = request.UserId;
+                var AllResult = _context.Results.Where(r => r.Status == 1 || r.Status == 2).ToList();
+
+                foreach (var result in AllResult)
+                {
+                    if (result.Status == 1 || result.Status == 2)
+                    {
+                        string initialResult = await judge0.SendGetRequest($"submissions/{result.Token}");
+                        ResultDto resultDto = JsonConvert.DeserializeObject<ResultDto>(initialResult);
+                        var newresult = _mapper.Map<Result>(resultDto);
+
+                        newresult.Id = result.Id;
+                        newresult.TestCaseId = result.TestCaseId;
+                        newresult.SolutionId = result.SolutionId;
+
+                        _mapper.Map(newresult, result);
+                        await _context.SaveChangesAsync();
+                    }
+                }
 
                 var solutions = _context.Solutions.Include(s => s.Results).ThenInclude(r => r.TestCase).AsQueryable();
-                
-                solutions = _context.Solutions.Include(s => s.Results).ThenInclude(r => r.TestCase).AsQueryable();
                 foreach (var solution in solutions)
                 {
                     solution.Results = solution.Results.OrderBy(r => r.TestCase.Name).ToList();
