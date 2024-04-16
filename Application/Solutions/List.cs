@@ -13,14 +13,14 @@ namespace Application.Solutions
 {
     public class List
     {
-        public class Query : IRequest<Result<PagedList<Solution>>>
+        public class Query : IRequest<Result<PagedList<SolutionRespondDto>>>
         {
             public Guid? UserId { get; set; }
             public Guid? ProblemId { get; set; }
             public PagingParams Params { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Result<PagedList<Solution>>>
+        public class Handler : IRequestHandler<Query, Result<PagedList<SolutionRespondDto>>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -30,7 +30,7 @@ namespace Application.Solutions
                 _mapper = mapper;
             }
 
-            public async Task<Result<PagedList<Solution>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<PagedList<SolutionRespondDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 Judge0 judge0 = new Judge0();
                 String resultJson;
@@ -55,11 +55,9 @@ namespace Application.Solutions
                     }
                 }
 
-                var solutions = _context.Solutions.Include(s => s.Results).ThenInclude(r => r.TestCase).AsQueryable();
-                foreach (var solution in solutions)
-                {
-                    solution.Results = solution.Results.OrderBy(r => r.TestCase.Name).ToList();
-                }
+                var solutions = _context.Solutions.AsQueryable();
+                //     solution.Results = solution.Results.OrderBy(r => r.TestCase.Name).ToList();
+
                 if (userId != null)
                 {
                     solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);
@@ -70,14 +68,16 @@ namespace Application.Solutions
                     solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.ProblemId == problemId);
                 }
 
-                var queryList = await solutions.OrderByDescending(s => s.CreatedDate).ToListAsync();
-
+                var queryList = await solutions.ProjectTo<SolutionRespondDto>(_mapper.ConfigurationProvider)
+                .OrderByDescending(s => s.CreatedDate)
+                .ToListAsync(cancellationToken: cancellationToken);
+            
 
                 int PageNumber = (request.Params.PageSize == -1) ? 1 : request.Params.PageNumber;
                 int PageSize = (request.Params.PageSize == -1) ? queryList.Count : request.Params.PageSize;
 
-                return Result<PagedList<Solution>>
-                    .Success(PagedList<Solution>.CreateAsyncUsingList(queryList,
+                return Result<PagedList<SolutionRespondDto>>
+                    .Success(PagedList<SolutionRespondDto>.CreateAsyncUsingList(queryList,
                         PageNumber, PageSize));
             }
         }
