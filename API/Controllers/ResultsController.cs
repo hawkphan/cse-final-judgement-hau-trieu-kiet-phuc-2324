@@ -17,7 +17,7 @@ namespace API.Controllers
         [HttpGet] //api/results
         public async Task<IActionResult> GetResultsBySolutionId(Guid id, [FromQuery] PagingParams param)
         {
-            return HandlePagedResult<Result>(await Mediator.Send(new List.Query { Id = id, Params = param }));
+            return HandlePagedResult<Result>(await Mediator.Send(new List.Query { SolutionId = id, Params = param }));
         }
         // [AllowAnonymous]
         // [HttpGet("{id}")]

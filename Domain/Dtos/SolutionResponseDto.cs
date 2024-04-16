@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public class SolutionRespondDto
+    public class SolutionResponseDto
     {
         public Guid Id { get; set; }
 

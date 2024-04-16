@@ -13,14 +13,14 @@ namespace Application.Solutions
 {
     public class List
     {
-        public class Query : IRequest<Result<PagedList<SolutionRespondDto>>>
+        public class Query : IRequest<Result<PagedList<SolutionResponseDto>>>
         {
             public Guid? UserId { get; set; }
             public Guid? ProblemId { get; set; }
             public PagingParams Params { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Result<PagedList<SolutionRespondDto>>>
+        public class Handler : IRequestHandler<Query, Result<PagedList<SolutionResponseDto>>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -30,7 +30,7 @@ namespace Application.Solutions
                 _mapper = mapper;
             }
 
-            public async Task<Result<PagedList<SolutionRespondDto>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<PagedList<SolutionResponseDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 Judge0 judge0 = new Judge0();
                 String resultJson;
@@ -40,7 +40,7 @@ namespace Application.Solutions
 
                 foreach (var result in AllResult)
                 {
-                    if (result.Status == 1 || result.Status == 2)
+                    if (result.Status < 3)
                     {
                         string initialResult = await judge0.SendGetRequest($"submissions/{result.Token}");
                         ResultDto resultDto = JsonConvert.DeserializeObject<ResultDto>(initialResult);
@@ -68,16 +68,16 @@ namespace Application.Solutions
                     solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.ProblemId == problemId);
                 }
 
-                var queryList = await solutions.ProjectTo<SolutionRespondDto>(_mapper.ConfigurationProvider)
+                var queryList = await solutions.ProjectTo<SolutionResponseDto>(_mapper.ConfigurationProvider)
                 .OrderByDescending(s => s.CreatedDate)
                 .ToListAsync(cancellationToken: cancellationToken);
-            
+
 
                 int PageNumber = (request.Params.PageSize == -1) ? 1 : request.Params.PageNumber;
                 int PageSize = (request.Params.PageSize == -1) ? queryList.Count : request.Params.PageSize;
 
-                return Result<PagedList<SolutionRespondDto>>
-                    .Success(PagedList<SolutionRespondDto>.CreateAsyncUsingList(queryList,
+                return Result<PagedList<SolutionResponseDto>>
+                    .Success(PagedList<SolutionResponseDto>.CreateAsyncUsingList(queryList,
                         PageNumber, PageSize));
             }
         }

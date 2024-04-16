@@ -13,7 +13,7 @@ namespace Application.Results
     {
         public class Query : IRequest<Result<PagedList<Result>>>
         {
-            public Guid Id { get; set; }
+            public Guid SolutionId { get; set; }
             public PagingParams Params { get; set; }
         }
         public class Handler : IRequestHandler<Query, Result<PagedList<Result>>>
@@ -28,7 +28,7 @@ namespace Application.Results
             }
             public async Task<Result<PagedList<Result>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var query = await _context.Results.Where(r => r.SolutionId == request.Id).OrderBy(r => r.TestCase.Name).ToListAsync();
+                var query = await _context.Results.Where(r => r.SolutionId == request.SolutionId).OrderBy(r => r.TestCase.Name).ToListAsync();
 
                 int PageNumber = (request.Params.PageNumber == -1) ? 1 : request.Params.PageNumber;
                 int PageSize = (request.Params.PageNumber == -1) ? query.Count : request.Params.PageSize;
