@@ -13,11 +13,12 @@ namespace Application.Core
             CreateMap<Domain.AppUser, AppUser>();
             CreateMap<Solution, Solution>();
             CreateMap<Result, Result>();
-            
-            CreateMap<SolutionDto, Solution>()
+
+            CreateMap<SolutionRequestDto, Solution>()
                 .ForMember(d => d.LanguageId, o => o.MapFrom(s => s.languageId))
                 .ForMember(d => d.ProblemId, o => o.MapFrom(s => s.problemId))
             ;
+            CreateMap<Solution, SolutionResponseDto>();
 
             CreateMap<Problem, ProblemDto>()
             .ForMember(dest => dest.Languages, opt => opt.MapFrom(src => src.ProblemLanguages.Select(pl => pl.Language)));

@@ -17,18 +17,17 @@ namespace API.Controllers
         //api/solutions
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<Solution>> GetSolutions([FromQuery] Guid userId, [FromQuery] Guid problemId, [FromQuery] PagingParams param)
+        public async Task<ActionResult<SolutionResponseDto>> GetSolutions([FromQuery] Guid userId, [FromQuery] Guid problemId, [FromQuery] PagingParams param)
         {
 
             return HandlePagedResult(await Mediator.Send(new List.Query { Params = param, UserId = userId, ProblemId = problemId }));
         }
 
-
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> SubmitSolution(SolutionDto newSolution)
+        public async Task<ActionResult> SubmitSolution(SolutionRequestDto newSolution)
         {
-            return HandleApiResult(await Mediator.Send(new Create.Command { SolutionDto = newSolution }));
+            return HandleApiResult(await Mediator.Send(new Create.Command { SolutionRequestDto = newSolution }));
         }
 
         [HttpDelete("{id}")]
