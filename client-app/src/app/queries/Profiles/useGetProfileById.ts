@@ -3,7 +3,7 @@
 import { UseQueryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Profile } from "./types";
 import { API_QUERIES } from "../common/constants";
-import { getProfileById } from "./profileApis";
+import { getProfileById } from "./apis";
 import { responseWrapper } from "../common";
 import { ApiResponseType } from "../../shared";
 

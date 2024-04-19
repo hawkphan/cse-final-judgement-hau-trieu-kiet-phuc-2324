@@ -1,16 +1,29 @@
 import { Box, CardContent } from "@mui/material";
 import { EmptyTable, Table2 } from "../../../../shared";
-import { GetPropertiesParams, Result, Solution, useGetSolutions } from "../../../../queries";
+import {
+  GetPropertiesParams,
+  Solution,
+  useGetSolutions,
+} from "../../../../queries";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { allColumns } from "./allColumns";
 import SubmissionResultDialog from "./SubmissionResultDialog";
 
 const SubmissionTab = ({ userId, problemId }: Props) => {
+  const DELAY_MS = 5000;
+
   const columns = useMemo(() => allColumns(), []);
   const [isOpen, setIsOpen] = useState(false);
-  const [resultData, setResultData] = useState<Result[]>();
+  const [selectedSolutionId, setSelectedSolutionId] = useState<string>();
 
-  const { solutions, totalRecords, isFetching, setParams } = useGetSolutions();
+  const {
+    solutions,
+    totalRecords,
+    isFetching,
+    setParams: setSolutionParams,
+    handleInvalidateSolutions,
+    onGetSolutions,
+  } = useGetSolutions();
 
   const handleCloseResult = () => {
     setIsOpen(false);
@@ -18,14 +31,30 @@ const SubmissionTab = ({ userId, problemId }: Props) => {
 
   const handleGetSolutions = useCallback(
     (params: GetPropertiesParams) => {
-      setParams({ ...params, userId: userId, problemId: problemId });
+      setSolutionParams({ ...params, userId: userId, problemId: problemId });
     },
-    [problemId, setParams, userId]
+    [problemId, setSolutionParams, userId]
   );
 
   useEffect(() => {
-    setParams({ userId: userId, problemId: problemId });
-  }, [problemId, setParams, userId]);
+    const hasPendingStatus = solutions.some(
+      (solution) => solution.status === 1 || solution.status === 2
+    );
+    const timerId = setTimeout(() => {
+      if (hasPendingStatus) {
+        handleInvalidateSolutions();
+        onGetSolutions();
+      }
+    }, DELAY_MS);
+  
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [solutions, handleInvalidateSolutions, isFetching, onGetSolutions]);
+
+  useEffect(() => {
+    setSolutionParams({ userId: userId, problemId: problemId });
+  }, [problemId, setSolutionParams, userId]);
 
   return (
     <CardContent>
@@ -59,9 +88,11 @@ const SubmissionTab = ({ userId, problemId }: Props) => {
             isLoading: isFetching,
           }}
           muiTableBodyRowProps={({ row }) => ({
-            onClick: () => {
-              setIsOpen(true);
-              setResultData(row.original.results);
+            onClick: () => {    
+              if(![1, 2].includes(row.original.status)) {
+                setSelectedSolutionId(row.original.id);
+                setIsOpen(true);
+              }             
             },
           })}
           renderFallbackValue={<EmptyTable />}
@@ -81,7 +112,7 @@ const SubmissionTab = ({ userId, problemId }: Props) => {
       <SubmissionResultDialog
         isOpen={isOpen}
         handleCloseDeleteDialog={handleCloseResult}
-        data={resultData}
+        solutionId={selectedSolutionId}
       />
     </CardContent>
   );

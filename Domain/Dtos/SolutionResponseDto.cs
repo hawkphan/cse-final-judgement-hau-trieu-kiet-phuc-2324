@@ -16,8 +16,8 @@ namespace Domain
         // public Problem Problem { get; set; }
         public int LanguageId { get; set; }
         public double Status { get; set; }
-        // public long MemoryUsage { get; set; } = 0;
-        // public double ExecutionTime { get; set; } = 0;
+        public long MemoryUsage { get; set; } = 0;
+        public double ExecutionTime { get; set; } = 0;
         public DateTime CreatedDate { get; set; }
         public double Score { get; set; }
     }

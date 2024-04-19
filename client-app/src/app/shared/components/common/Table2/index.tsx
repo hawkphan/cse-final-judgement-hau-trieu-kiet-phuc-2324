@@ -404,15 +404,19 @@ const Table2 = <TData extends MRT_RowData>({
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
     renderBottomToolbarCustomActions: () => {
-      return enablePagination && rowCount ? (
-        <Typo variant="body2" color={COLOR_CODE.DISABLED}>
-          Showing {range} of {rowCount}{" "}
-          {rowCount === 1 ? singularRecordName : recordName}
-        </Typo>
+      return enablePagination ? (
+        rowCount ? (
+          <Typo variant="body2" color={COLOR_CODE.DISABLED}>
+            Showing {range} of {rowCount}{" "}
+            {rowCount === 1 ? singularRecordName : recordName}
+          </Typo>
+        ) : (
+          <Typo variant="body2" color={COLOR_CODE.DISABLED}>
+            No records found.
+          </Typo>
+        )
       ) : (
-        <Typo variant="body2" color={COLOR_CODE.DISABLED}>
-          No records found.
-        </Typo>
+        <></>
       );
     },
 

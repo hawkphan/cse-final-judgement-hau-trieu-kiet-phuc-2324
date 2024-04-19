@@ -118,18 +118,19 @@ const ProblemDetail = () => {
     reValidateMode: "onChange",
   });
 
-  const { handleInvalidateSolutions } = useGetSolutions();
+  const { handleInvalidateSolutions, setParams: setSolutionParams } =
+    useGetSolutions();
 
   const { onSubmitSolution, isPending } = useSubmitSolution({
     onSuccess: () => {
       Toastify.success("Successful!");
-      handleInvalidateSolutions();
       setTab(Tab.SUBMISSION);
+      handleInvalidateSolutions();
     },
     onError: (error) => {
       Toastify.error(error.message);
-      handleInvalidateSolutions();
       setTab(Tab.SUBMISSION);
+      handleInvalidateSolutions();
       console.log("Error", error);
     },
   });
@@ -144,7 +145,8 @@ const ProblemDetail = () => {
 
   useEffect(() => {
     setParams({ pageSize: -1 });
-  }, [setParams]);
+    setSolutionParams({ problemId: problem?.id, userId: user?.id });
+  }, [problem?.id, setParams, setSolutionParams, user?.id]);
 
   const renderTab = () => {
     switch (tab) {

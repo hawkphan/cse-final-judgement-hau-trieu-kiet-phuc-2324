@@ -6,15 +6,17 @@ import {
 import { useState } from "react";
 import {
   PaginationResponseNetType,
+  isEmpty,
   responseWrapper,
 } from "../../shared";
 import { API_QUERIES } from "../common/constants";
-import { Table2Params } from "../common/types";
-import { Solution } from ".";
-import { getSolutions } from "./apis";
 
-export function useGetSolutions(
-  options?: UseQueryOptions<PaginationResponseNetType<Solution>, Error> & {
+import { Table2Params } from "../common/types";
+import { Result } from "./types";
+import { getResults } from "./apis";
+
+export function useGetResults(
+  options?: UseQueryOptions<PaginationResponseNetType<Result>, Error> & {
     [key: string]: string | number | string[] | boolean;
   }
 ) {
@@ -23,40 +25,39 @@ export function useGetSolutions(
     error,
     data,
     isFetching,
-    refetch: onGetSolutions,
-  } = useQuery<PaginationResponseNetType<Solution>, Error>({
-    queryKey: [API_QUERIES.GET_SOLUTIONS, params],
+    refetch: onGetResults,
+  } = useQuery<PaginationResponseNetType<Result>, Error>({
+    queryKey: [API_QUERIES.GET_RESULTS, params],
     queryFn: (query) => {
       const [, ...params] = query.queryKey;
-      return responseWrapper<PaginationResponseNetType<Solution>>(
-        getSolutions,
+      return responseWrapper<PaginationResponseNetType<Result>>(
+        getResults,
         params
       );
     },
 
     notifyOnChangeProps: ["data", "isFetching"],
-    // enabled: !isEmpty(params),
-    enabled: !!params.problemId,
+    enabled: !isEmpty(params),
     ...options,
   });
 
   const queryClient = useQueryClient();
 
-  const handleInvalidateSolutions = () =>
-    queryClient.invalidateQueries({ queryKey: [API_QUERIES.GET_SOLUTIONS] });
+  const handleInvalidateResults = () =>
+    queryClient.invalidateQueries({ queryKey: [API_QUERIES.GET_RESULTS] });
 
-  const { data: solutions = [], pageSize, totalCount, succeeded } = data || {};
+  const { data: results = [], pageSize, totalCount, succeeded } = data || {};
 
   return {
-    solutions,
+    results,
     payloadSize: pageSize,
     totalRecords: totalCount,
     error,
     isFetching,
     succeeded,
     params,
-    onGetSolutions,
+    onGetResults,
     setParams,
-    handleInvalidateSolutions,
+    handleInvalidateResults,
   };
 }

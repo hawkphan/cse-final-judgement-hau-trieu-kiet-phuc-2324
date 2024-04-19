@@ -18,7 +18,7 @@ namespace Application.Core
                 .ForMember(d => d.LanguageId, o => o.MapFrom(s => s.languageId))
                 .ForMember(d => d.ProblemId, o => o.MapFrom(s => s.problemId))
             ;
-            CreateMap<Solution, SolutionResponseDto>();
+            CreateMap<Solution, SolutionResponseDto>().ForMember(d => d.Status, o => o.MapFrom(s => s.Status));
 
             CreateMap<Problem, ProblemDto>()
             .ForMember(dest => dest.Languages, opt => opt.MapFrom(src => src.ProblemLanguages.Select(pl => pl.Language)));

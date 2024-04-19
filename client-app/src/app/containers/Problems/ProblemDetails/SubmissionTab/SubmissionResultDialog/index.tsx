@@ -1,16 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Slide,
-} from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, Slide } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
-import { forwardRef, useMemo } from "react";
-import { Callback, Result } from "../../../../../queries";
-import { EmptyTable, Table2 } from "../../../../../shared";
+import { forwardRef, useCallback, useEffect, useMemo } from "react";
+import {
+  Callback,
+  GetPropertiesParams,
+  Result,
+  useGetResults,
+} from "../../../../../queries";
+import {
+  EmptyTable,
+  Table2,
+} from "../../../../../shared";
 import { allColumns } from "./allColumns";
-import ModalClose from '@mui/joy/ModalClose';
+import ModalClose from "@mui/joy/ModalClose";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -24,10 +27,22 @@ const Transition = forwardRef(function Transition(
 const SubmissionResultDialog: React.FC<Props> = ({
   isOpen,
   handleCloseDeleteDialog,
-  data,
+  solutionId,
 }) => {
+  const { results, setParams, totalRecords, isFetching } =
+    useGetResults();
+  const columns = useMemo(() => allColumns(), []);
 
-    const columns = useMemo(() => allColumns(), []);
+  useEffect(() => {
+    setParams({ solutionId: solutionId, pageSize: -1 });
+  }, [isOpen, setParams, solutionId]);
+
+  const handleGetResults = useCallback(
+    (params: GetPropertiesParams) => {
+      setParams(params);
+    },
+    [setParams]
+  );
 
   return (
     <Dialog
@@ -37,16 +52,18 @@ const SubmissionResultDialog: React.FC<Props> = ({
       onClose={handleCloseDeleteDialog}
       aria-describedby="alert-dialog-slide-description"
     >
-      <ModalClose variant="plain" sx={{ m: 1 }} onClick={handleCloseDeleteDialog} />
-      <DialogTitle fontWeight={"bold"}>
-        Solution Result
-      </DialogTitle>
+      <ModalClose
+        variant="plain"
+        sx={{ m: 1 }}
+        onClick={handleCloseDeleteDialog}
+      />
+      <DialogTitle fontWeight={"bold"}>Solution Result</DialogTitle>
       <DialogContent>
         <Table2<Result>
-          rowCount={data?.length}
+          rowCount={totalRecords}
           columns={columns}
-          data={data}
-          onAction={() => {}}
+          data={results}
+          onAction={handleGetResults}
           enableTopToolbar={true}
           recordName="items"
           singularRecordName="item"
@@ -58,7 +75,7 @@ const SubmissionResultDialog: React.FC<Props> = ({
           additionalFilterParams={["keywords"]}
           nameColumnPinning="actions"
           state={{
-            isLoading: false,
+            isLoading: isFetching,
           }}
           renderFallbackValue={<EmptyTable />}
           renderToolbarInternalActions={() => {
@@ -72,13 +89,9 @@ const SubmissionResultDialog: React.FC<Props> = ({
               fontFamily: "Roboto",
             },
           }}
+          enablePagination={false}
         />
       </DialogContent>
-      {/* <DialogActions>
-        <Button onClick={handleCloseDeleteDialog} variant="grey">
-          Cancel
-        </Button>
-      </DialogActions> */}
     </Dialog>
   );
 };
@@ -86,7 +99,7 @@ const SubmissionResultDialog: React.FC<Props> = ({
 interface Props {
   isOpen: boolean;
   handleCloseDeleteDialog: Callback;
-  data: Result[];
+  solutionId: string;
 }
 
 export default SubmissionResultDialog;

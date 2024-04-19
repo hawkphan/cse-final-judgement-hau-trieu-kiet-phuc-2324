@@ -3,7 +3,7 @@ import { MRT_ColumnDef } from "material-react-table";
 import "material-symbols";
 import { Solution } from "../../../../queries";
 import { formatValueOrNull } from "../../../../shared";
-import { renderStatusTag } from "./helpers";
+import { getLanguageNameById, renderStatusTag } from "./helpers";
 import dayjs from "dayjs";
 
 export const allColumns = (): MRT_ColumnDef<Solution>[] => {
@@ -42,12 +42,12 @@ export const allColumns = (): MRT_ColumnDef<Solution>[] => {
       Cell: ({ cell }) => cell.getValue<string>() + " MB",
     },
     {
-      accessorKey: "language.name",
+      accessorKey: "languageId",
       header: "Language",
       enableColumnFilterModes: false,
       enableSorting: false,
-      size: 20,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      size: 10,
+      Cell: ({ cell }) => formatValueOrNull(getLanguageNameById(cell.getValue<number>())),
     },
   ];
 };

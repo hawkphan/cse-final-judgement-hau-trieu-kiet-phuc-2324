@@ -5,18 +5,9 @@ export interface Solution {
     timeSubmitted: string;
     status: number;
     runTime: number;
-    memory: string;
+    memoryUsage: number;
     languageName: string;
     languageId: string;
-    results: Result[];
-}
-
-export interface Result {
-    id: string;
-    solutionId: string;
-    testCaseId: string;
-    executionTime: number;
-    status: number;
 }
 
 export interface CreateSolutionBody {

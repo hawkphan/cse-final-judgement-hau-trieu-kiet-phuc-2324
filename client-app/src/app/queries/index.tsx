@@ -5,3 +5,4 @@ export * from './Problems';
 export * from './Solutions';
 export * from './Contests';
 export * from './Profiles';
+export * from './Results';

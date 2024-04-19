@@ -3,7 +3,7 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { EditProfileBody } from "./types";
 import { responseWrapper } from "../common/helpers";
-import { editProfile } from "./profileApis";
+import { editProfile } from "./apis";
 
 export function useEditProfile(
   options?: UseMutationOptions<any, Error, EditProfileBody>
