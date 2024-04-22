@@ -81,13 +81,18 @@ namespace Application.Solutions
             var targetFolder = Path.Combine(Directory.GetCurrentDirectory(), FolderPath);
 
             var InputFiles = Directory.GetFiles(targetFolder, Pattern);
-    
+
 
             return InputFiles;
         }
         public string getTestCaseContent(String TestCasesPath)
         {
             string contents = File.ReadAllText(Path.Combine(CurrentDirectory, TestCasesPath));
+            return contents;
+        }
+        public string getSolutionContent(String solutionId)
+        {
+            string contents = File.ReadAllText(Path.Combine(SolutionsPath, solutionId + "\\main.txt"));
             return contents;
         }
         private static bool IsZipMimeType(string mimeType)

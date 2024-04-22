@@ -105,6 +105,15 @@ namespace Application.Solutions
                 .OrderByDescending(s => s.CreatedDate)
                 .ToListAsync(cancellationToken: cancellationToken);
 
+                FileManager fileManager = new FileManager();
+                
+                foreach (var solution in queryList)
+                {
+                    if (Directory.Exists(Path.Combine(fileManager.SolutionsPath, solution.Id.ToString())))
+                    {
+                        solution.Source = fileManager.getSolutionContent(solution.Id.ToString());
+                    }
+                }
 
                 int PageNumber = (request.Params.PageSize == -1) ? 1 : request.Params.PageNumber;
                 int PageSize = (request.Params.PageSize == -1) ? queryList.Count : request.Params.PageSize;

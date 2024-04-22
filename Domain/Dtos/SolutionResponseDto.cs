@@ -14,6 +14,7 @@ namespace Domain
         // public AppUser User { get; set; }
         public Guid ProblemId { get; set; }
         // public Problem Problem { get; set; }
+        public string Source { get; set; } = "Not Available, Probably Deleted or not exist";
         public int LanguageId { get; set; }
         public double Status { get; set; }
         public long MemoryUsage { get; set; } = 0;
