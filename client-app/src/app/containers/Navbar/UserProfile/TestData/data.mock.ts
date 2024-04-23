@@ -107,7 +107,7 @@ export const schema: Props = {
       },
     },
   },
-  series: [{ data: series.monthDataSeries1.prices }],
+  series: [{ data: [0, 3, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0] }],
 };
 
 export const state: Props = {

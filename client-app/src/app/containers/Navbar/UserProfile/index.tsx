@@ -2,8 +2,8 @@ import UserDetailInformation from "./UserDetailInformation";
 import UserActivityReport from "./UserActivityReport";
 import UserAnnualReport from "./UserAnnualSubmissionReport";
 import { Box, Grid } from "@mui/material";
-import UserAchievement from "./UserAchievements";
 import { useParams } from "react-router-dom";
+import UserLanguagesUsage from "./UserLanguagesUsage";
 
 export const UserProfile = () => {
   const { id } = useParams();
@@ -28,16 +28,16 @@ export const UserProfile = () => {
             justifyContent="space-between"
           >
             <Box sx={{ width: "49%" }}>
-              <UserActivityReport />
+              <UserActivityReport id={id}/>
             </Box>
 
             <Box sx={{ width: "49%" }}>
-              <UserAchievement />
+              <UserLanguagesUsage id={id}/>
             </Box>
           </Box>
 
           <Box sx={{ width: "100%", minWidth: "180px" }}>
-            <UserAnnualReport />
+            <UserAnnualReport id={id}/>
           </Box>
         </Box>
       </Grid>

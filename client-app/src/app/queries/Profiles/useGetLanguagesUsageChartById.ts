@@ -2,14 +2,14 @@
 /* eslint-disable no-debugger */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { UseQueryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Profile } from "./types";
+import { LanguagesUsage } from "./types";
 import { API_QUERIES } from "../common/constants";
-import { getProfileById } from "./apis";
+import { getLanguagesUsageById } from "./apis";
 import { responseWrapper } from "../common";
 import { ApiResponseType } from "../../shared";
 
-export function useGetProfileById(
-  options?: UseQueryOptions<ApiResponseType<Profile>, Error, any> & {
+export function useGetLanguagesUsageById(
+  options?: UseQueryOptions<ApiResponseType<LanguagesUsage[]>, Error, any> & {
     id?: string;
   }
 ) {
@@ -18,12 +18,14 @@ export function useGetProfileById(
     error,
     isError,
     isFetching,
-    refetch: onGetProfile,
-  } = useQuery<ApiResponseType<Profile>, Error, any>({
-    queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: options?.id }],
+    refetch: onGetLanguagesUsage,
+  } = useQuery<ApiResponseType<LanguagesUsage[]>, Error, any>({
+    queryKey: [API_QUERIES.GET_LANGUAGES_CHART_BY_ID, { id: options?.id }],
     queryFn: (query) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
       const [_, ...params] = query.queryKey;
-      return responseWrapper<ApiResponseType<Profile>>(getProfileById, params);
+      return responseWrapper<ApiResponseType<LanguagesUsage[]>>(getLanguagesUsageById, params);
     },
     enabled: true,
     ...options,
@@ -32,16 +34,16 @@ export function useGetProfileById(
   const queryClient = useQueryClient();
 
   const handleInvalidateProfile = () =>
-    queryClient.invalidateQueries({queryKey: [API_QUERIES.GET_PROFILE_BY_ID]});
+    queryClient.invalidateQueries({queryKey: [API_QUERIES.GET_LANGUAGES_CHART_BY_ID]});
 
-  const {data: profile = []} = data || [];
+  const {data: languagesUsage = []} = data || [];
 
   return {
-    profile,
+    languagesUsage,
     error,
     isError,
     isFetching,
-    onGetProfile,
+    onGetLanguagesUsage,
     handleInvalidateProfile,
   };
 }
