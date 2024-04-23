@@ -77,7 +77,7 @@ export function DifficultyStatisticDetail({
   );
 }
 
-export interface Props  {
+export interface Props {
   id: string;
 }
 
@@ -95,7 +95,6 @@ export default function UserActivityReport({ id }: Props) {
       100
     );
   }
-
 
   if (isFetching) {
     <LoadingCommon />;
@@ -138,13 +137,14 @@ export default function UserActivityReport({ id }: Props) {
               paddingRirth: "20px",
             }}
           >
-            {submissionStatistic.collectionDifficultyStatistic.map((item) => (
-              <DifficultyStatisticDetail
-                difficulty={item.difficulty}
-                totalSubmissions={item.totalSolvedSubmissions}
-                totalSolved={item.totalSolved}
-              ></DifficultyStatisticDetail>
-            ))}
+            {submissionStatistic.collectionDifficultyStatistic &&
+              submissionStatistic.collectionDifficultyStatistic.map((item) => (
+                <DifficultyStatisticDetail
+                  difficulty={item.difficulty}
+                  totalSubmissions={item.totalSolvedSubmissions}
+                  totalSolved={item.totalSolved}
+                ></DifficultyStatisticDetail>
+              ))}
           </Box>
         </Box>
       </CardContent>
