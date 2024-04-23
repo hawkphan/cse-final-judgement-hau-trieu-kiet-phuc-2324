@@ -10,6 +10,9 @@ export enum API_QUERIES {
 
   // User profile
   GET_PROFILE_BY_ID = "/get-profile-by-id",
+  GET_LANGUAGES_CHART_BY_ID = "/get-languages-usage-chart-by-id",
+  GET_ANNUAL_CHART_BY_ID = "/get-annual-chart-by-id",
+  GET_SUBMISSIONS_CHART_BY_ID = "/get-submission-chart-by-id",
 
   // Solutions
   GET_SOLUTIONS = "/get-solutions",

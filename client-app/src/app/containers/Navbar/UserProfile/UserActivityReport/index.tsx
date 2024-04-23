@@ -1,8 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Card, CardContent, CircularProgress, CircularProgressProps, LinearProgress, Typography } from "@mui/material";
-//Test data
-import { User } from "../TestData/types";
-import { profileInfo } from "../TestData";
+import {
+  Box,
+  Card,
+  CardContent,
+  CircularProgress,
+  CircularProgressProps,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
+import { useGetSubmissionStatisticChartById } from "../../../../queries/Profiles/useGetSubmissionStatisticChartById";
+import { API_QUERIES, DifficultyStatistic } from "../../../../queries";
+import { LoadingCommon } from "../../../../shared";
 
 function CircularProgressWithLabel(
   props: CircularProgressProps & { value: number }
@@ -39,34 +47,66 @@ function CircularProgressWithLabel(
   );
 }
 
-export default function UserActivityReport() {
-  const record = profileInfo.user.activityRecord;
-  const totalSubmit = parseInt(record.easyProblemSubmitted) + parseInt(record.mediumProblemSubmitted) +parseInt(record.hardProblemSubmitted);
-  const totalSolved = parseInt(record.easyProblemSolved) + parseInt(record.mediumProblemSolved) +parseInt(record.hardProblemSolved);
+export function DifficultyStatisticDetail({
+  difficulty,
+  totalSubmissions,
+  totalSolved,
+}: DifficultyStatistic) {
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        marginBottom: "15px",
+      }}
+    >
+      <Box display="flex" flexDirection="column" justifyContent="space-between">
+        <Typography color="text.secondary">Difficulty: {difficulty}</Typography>
+        <Box display="flex" flexDirection="row" justifyContent="space-between">
+          <Typography color="text.primary">
+            {totalSolved} /{totalSubmissions}
+          </Typography>
+        </Box>
+      </Box>
 
-  function calculateTotalProblemSolvedPercent(){    
-    return (totalSolved / totalSubmit)*100;
+      <LinearProgress
+        variant="determinate"
+        value={(totalSolved / totalSubmissions) * 100}
+        color="success"
+      />
+    </Box>
+  );
+}
+
+export interface Props  {
+  id: string;
+}
+
+export default function UserActivityReport({ id }: Props) {
+  const { submissionStatistic, isFetching } =
+    useGetSubmissionStatisticChartById({
+      id,
+      queryKey: [API_QUERIES.GET_SUBMISSIONS_CHART_BY_ID, { id: id }],
+    });
+
+  function calculateTotalProblemSolvedPercent() {
+    return (
+      (submissionStatistic.totalSolvedSubmissions /
+        submissionStatistic.totalSubmissions) *
+      100
+    );
   }
 
-  function calculateEasyProblemSolvedPercent(){    
-    return (parseInt(record.easyProblemSolved) / parseInt(record.easyProblemSubmitted))*100;
-  }
 
-  function calculateMediumProblemSolvedPercent(){    
-    return( parseInt(record.mediumProblemSolved) / parseInt(record.mediumProblemSubmitted))*100;
+  if (isFetching) {
+    <LoadingCommon />;
   }
-
-  function calculateHardProblemSolvedPercent(){    
-    return (parseInt(record.hardProblemSolved) / parseInt(record.hardProblemSubmitted))*100;
-  }
-
   return (
     <Card
       style={{
         marginTop: "20px",
         padding: "20px",
         paddingTop: "10px",
-        minHeight: "290px",
+        minHeight: "300px",
         minWidth: "180px",
       }}
       elevation={4}
@@ -81,8 +121,13 @@ export default function UserActivityReport() {
         </Typography>
 
         <Box display="flex" flexDirection="row">
-          <Box flexDirection="column" sx={{ width: "150px", marginTop: '40px' }}>
-            <CircularProgressWithLabel value={calculateTotalProblemSolvedPercent()} />
+          <Box
+            flexDirection="column"
+            sx={{ width: "150px", marginTop: "40px" }}
+          >
+            <CircularProgressWithLabel
+              value={calculateTotalProblemSolvedPercent()}
+            />
           </Box>
 
           <Box
@@ -93,88 +138,13 @@ export default function UserActivityReport() {
               paddingRirth: "20px",
             }}
           >
-            <Box
-              sx={{
-                width: "100%",
-                marginBottom: "15px",
-              }}
-            >
-              <Box
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-between"
-              >
-                <Typography color="text.secondary">easy</Typography>
-                <Box display="flex" flexDirection="row" justifyContent="space-between">
-                  <Typography color="text.primary">{record.easyProblemSolved} /{record.easyProblemSubmitted}  </Typography>
-                </Box>
-
-              </Box>
-
-              <LinearProgress
-                variant="determinate"
-                value={calculateEasyProblemSolvedPercent()} 
-                color="success"
-              />
-            </Box>
-
-            <Box
-              sx={{
-                width: "100%",
-                marginBottom: "15px",
-              }}
-            >
-              <Box
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-between"
-              >
-                <Typography color="text.secondary">medium</Typography>
-                <Box display="flex" flexDirection="row" justifyContent="space-between">
-                  <Typography color="text.primary">{record.mediumProblemSolved} /{record.mediumProblemSubmitted}</Typography>
-                </Box>
-
-              </Box>
-              <LinearProgress
-                variant="determinate"
-                value={calculateMediumProblemSolvedPercent()} 
-                sx={{
-                  backgroundColor: "#FFEECB",
-                  "& .MuiLinearProgress-bar": {
-                    backgroundColor: "#FFB35A",
-                  },
-                }}
-              />
-            </Box>
-
-            <Box
-              sx={{
-                width: "100%",
-                marginBottom: "15px",
-              }}
-            >
-              <Box
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-between"
-              >
-                <Typography color="text.secondary">hard</Typography>
-                <Box display="flex" flexDirection="row" justifyContent="space-between" >
-                  <Typography color="text.primary">{record.hardProblemSolved} /{record.hardProblemSubmitted}</Typography>
-                </Box>
-
-              </Box>
-              <LinearProgress
-                variant="determinate"
-                value={calculateHardProblemSolvedPercent()} 
-                sx={{
-                  backgroundColor: "#FDDBDB",
-                  "& .MuiLinearProgress-bar": {
-                    backgroundColor: "#FD5C5C",
-                  },
-                }}
-              />
-            </Box>
+            {submissionStatistic.collectionDifficultyStatistic.map((item) => (
+              <DifficultyStatisticDetail
+                difficulty={item.difficulty}
+                totalSubmissions={item.totalSolvedSubmissions}
+                totalSolved={item.totalSolved}
+              ></DifficultyStatisticDetail>
+            ))}
           </Box>
         </Box>
       </CardContent>

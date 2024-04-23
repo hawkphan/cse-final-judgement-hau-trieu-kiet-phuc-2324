@@ -19,7 +19,6 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<SolutionResponseDto>> GetSolutions([FromQuery] Guid userId, [FromQuery] Guid problemId, [FromQuery] PagingParams param)
         {
-
             return HandlePagedResult(await Mediator.Send(new List.Query { Params = param, UserId = userId, ProblemId = problemId }));
         }
 
