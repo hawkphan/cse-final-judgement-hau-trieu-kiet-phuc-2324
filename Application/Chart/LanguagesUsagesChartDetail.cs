@@ -52,8 +52,8 @@ namespace Application.Chart
                 var data = solutions.GroupBy(s => new { s.LanguageId })
                 .Select(group => new LanguagesUsageDto
                 {
-                    languageId = group.Key.LanguageId,
-                    totalSubmissions = group.Count()
+                    LanguageId = group.Key.LanguageId,
+                    TotalSubmissions = group.Count()
                 })
                 .ToList();
 

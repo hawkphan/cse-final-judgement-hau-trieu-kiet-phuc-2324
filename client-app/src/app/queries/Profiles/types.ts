@@ -35,13 +35,14 @@ export interface InMonthSubmissions {
   totalSubmission: number;
 }
 
-export interface SubmissionStatistic<T> {
-  totalSubmission: number;
-  difficulties : T[];
+export interface ProblemStatistic<T> {
+  totalProblems: number;
+  totalSolvedProblems: number;
+  difficultyStatistics : T[];
 }
 
 export interface DifficultyStatistic {
   difficulty: number;
-  totalSubmissions: number;
+  totalProblems: number;
   totalSolved: number;
 }

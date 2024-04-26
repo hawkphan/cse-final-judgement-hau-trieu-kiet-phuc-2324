@@ -7,7 +7,7 @@ namespace Domain.Dtos
 {
     public class LanguagesUsageDto
     {
-        public int languageId { get; set; }
-        public int totalSubmissions { get; set; }
+        public int LanguageId { get; set; }
+        public int TotalSubmissions { get; set; }
     }
 }

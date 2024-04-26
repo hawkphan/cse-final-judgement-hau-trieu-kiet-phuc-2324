@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DifficultyStatistic, EditProfileBody, InMonthSubmissions, LanguagesUsage, Profile, SubmissionStatistic } from "./types";
+import { DifficultyStatistic, EditProfileBody, InMonthSubmissions, LanguagesUsage, Profile, ProblemStatistic } from "./types";
 import { API_URL } from "../common/constants";
 
 
@@ -22,8 +22,8 @@ const getAnnualSubmissionById = (params: {id: string}) => {
   return axios.get<InMonthSubmissions[]>(`${API_URL}/api/chart/annual-chart/${params.id}`,{});
 }
 
-const getSubmissionStatisticById = (params: {id: string}) => {
-  return axios.get<SubmissionStatistic<DifficultyStatistic>>(`${API_URL}/api/chart/statistic-chart/${params.id}`,{});
+const getProblemStatisticById = (params: {id: string}) => {
+  return axios.get<ProblemStatistic<DifficultyStatistic>>(`${API_URL}/api/chart/statistic-chart/${params.id}`,{});
 }
 
-export {  getProfileById, editProfile, getLanguagesUsageById, getAnnualSubmissionById, getSubmissionStatisticById  };
+export {  getProfileById, editProfile, getLanguagesUsageById, getAnnualSubmissionById, getProblemStatisticById  };

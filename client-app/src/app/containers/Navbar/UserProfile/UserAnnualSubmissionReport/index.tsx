@@ -82,29 +82,30 @@ export default function UserAnnualReport({ id }: props) {
 
     if (annualSubmission.length == 12) {
       annualSubmission.map((item, index) => {
-        dataTotalSubmit[index] = item.totalSubmission;
+        dataTotalSubmit[index] = item.totalSubmissions;
         dataMonths[index] = monthNames[item.month - 1];
       });
     } else {
       let i = -1;
-      let month : number = -1;
-      annualSubmission.map((item , index) => {
-        i = i ==-1? 12-annualSubmission.length : i;
-        month = month ==-1? item.month : month;
-        dataTotalSubmit[12-annualSubmission.length + index] = item.totalSubmission;
-        dataMonths[12-annualSubmission.length + index] = monthNames[item.month - 1];
-
+      let month: number = -1;
+      annualSubmission.map((item, index) => {
+        i = i == -1 ? 12 - annualSubmission.length : i;
+        month = month == -1 ? item.month : month;
+        dataTotalSubmit[12 - annualSubmission.length + index] =
+          item.totalSubmissions;
+        dataMonths[12 - annualSubmission.length + index] =
+          monthNames[item.month - 1];
       });
 
       let j = i;
       dataMonths.map((item, index) => {
         if (i > index) {
           month = month - j;
-          if(month<0){
+          if (month < 0) {
             month += 12;
           }
           j -= 1;
-          
+
           dataMonths[index] = monthNames[month - 1];
         }
       });

@@ -8,7 +8,7 @@ import {
   LinearProgress,
   Typography,
 } from "@mui/material";
-import { useGetSubmissionStatisticChartById } from "../../../../queries/Profiles/useGetSubmissionStatisticChartById";
+import { useGetProblemStatisticChartById } from "../../../../queries/Profiles/useGetProblemStatisticChartById";
 import { API_QUERIES, DifficultyStatistic } from "../../../../queries";
 import { LoadingCommon } from "../../../../shared";
 
@@ -47,33 +47,61 @@ function CircularProgressWithLabel(
   );
 }
 
-export function DifficultyStatisticDetail({
-  difficulty,
-  totalSubmissions,
-  totalSolved,
-}: DifficultyStatistic) {
-  return (
-    <Box
-      sx={{
-        width: "100%",
-        marginBottom: "15px",
-      }}
-    >
-      <Box display="flex" flexDirection="column" justifyContent="space-between">
-        <Typography color="text.secondary">Difficulty: {difficulty}</Typography>
-        <Box display="flex" flexDirection="row" justifyContent="space-between">
-          <Typography color="text.primary">
-            {totalSolved} /{totalSubmissions}
-          </Typography>
-        </Box>
-      </Box>
+type statistic = { data: DifficultyStatistic[] };
 
-      <LinearProgress
-        variant="determinate"
-        value={(totalSolved / totalSubmissions) * 100}
-        color="success"
-      />
-    </Box>
+export function DifficultyStatisticDetail({ data }: statistic) {
+  function difficultyConvert(difficulty: number): string {
+    switch (difficulty) {
+      case 0:
+        return "Easy";
+      case 1:
+        return "Medium";
+      case 2:
+        return "Hard";
+      default:
+        return "";
+    }
+  }
+
+  return (
+    <>
+      {data &&
+        data.map((stat) => {
+          return (
+            <Box
+              sx={{
+                width: "100%",
+                marginBottom: "15px",
+              }}
+            >
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="space-between"
+              >
+                <Typography color="text.secondary">
+                  Difficulty: {difficultyConvert(stat.difficulty)}
+                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                >
+                  <Typography color="text.primary">
+                    {stat.totalSolved} / {stat.totalProblems}
+                  </Typography>
+                </Box>
+              </Box>
+
+              <LinearProgress
+                variant="determinate"
+                value={stat.totalProblems != 0 ? ((stat.totalSolved / stat.totalProblems) * 100) : 0}
+                color="success"
+              />
+            </Box>
+          );
+        })}
+    </>
   );
 }
 
@@ -82,16 +110,14 @@ export interface Props {
 }
 
 export default function UserActivityReport({ id }: Props) {
-  const { submissionStatistic, isFetching } =
-    useGetSubmissionStatisticChartById({
-      id,
-      queryKey: [API_QUERIES.GET_SUBMISSIONS_CHART_BY_ID, { id: id }],
-    });
+  const { problemStatistic, isFetching } = useGetProblemStatisticChartById({
+    id,
+    queryKey: [API_QUERIES.GET_PROBLEMS_CHART_BY_ID, { id: id }],
+  });
 
   function calculateTotalProblemSolvedPercent() {
     return (
-      (submissionStatistic.totalSolvedSubmissions /
-        submissionStatistic.totalSubmissions) *
+      (problemStatistic.totalSolvedProblems / problemStatistic.totalProblems) *
       100
     );
   }
@@ -137,14 +163,9 @@ export default function UserActivityReport({ id }: Props) {
               paddingRirth: "20px",
             }}
           >
-            {submissionStatistic.collectionDifficultyStatistic &&
-              submissionStatistic.collectionDifficultyStatistic.map((item) => (
-                <DifficultyStatisticDetail
-                  difficulty={item.difficulty}
-                  totalSubmissions={item.totalSolvedSubmissions}
-                  totalSolved={item.totalSolved}
-                ></DifficultyStatisticDetail>
-              ))}
+            <DifficultyStatisticDetail
+              data={problemStatistic.difficultyStatistics}
+            ></DifficultyStatisticDetail>
           </Box>
         </Box>
       </CardContent>
