@@ -133,3 +133,25 @@ export const state: Props = {
   },
   series: [10, 20, 30, 40],
 };
+
+export const submissionsStatisticData = {
+  totalSubmissions: 126,
+  totalSolvedSubmissions: 97,
+  collectionDifficultyStatistic: [
+    {
+      difficulty: 800,
+      totalSubmissions: 73,
+      totalSolved: 73,
+    },
+    {
+      difficulty: 1000,
+      totalSubmissions: 37,
+      totalSolved: 22,
+    },
+    {
+      difficulty: 1500,
+      totalSubmissions: 16,
+      totalSolved: 2,
+    },
+  ],
+};

@@ -20,12 +20,12 @@ namespace Application.Chart
 {
     public class AnnualSubmissionChartDetail
     {
-        public class Query : IRequest<ApiResult<ICollection<InMonthSubmissionDto>>>
+        public class Query : IRequest<ApiResult<ICollection<InMonthSubmitDto>>>
         {
             public Guid? UserId { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, ApiResult<ICollection<InMonthSubmissionDto>>>
+        public class Handler : IRequestHandler<Query, ApiResult<ICollection<InMonthSubmitDto>>>
         {
             private readonly DataContext _context;
 
@@ -33,33 +33,35 @@ namespace Application.Chart
             {
                 _context = context;
             }
-            public async Task<ApiResult<ICollection<InMonthSubmissionDto>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<ApiResult<ICollection<InMonthSubmitDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 Guid? userId = request.UserId;
                 var solutions = _context.Solutions.AsQueryable();
-
                 if (userId != null)
                 {
                     solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);
                 }
+
+
                 // Filter the last 12 months
+
                 solutions = solutions
                 .Where(s => s.CreatedDate.Year == DateTime.Now.Year && s.CreatedDate.Month >= DateTime.Now.Month - 11);
-                
+
 
                 var data = solutions.GroupBy(s => new { s.CreatedDate.Year, s.CreatedDate.Month })
-                .Select(group => new InMonthSubmissionDto
+                .Select(group => new InMonthSubmitDto
                 {
-                    year = group.Key.Year,
-                    month = group.Key.Month,
-                    totalSubmission = group.Count()
+                    Year = group.Key.Year,
+                    Month = group.Key.Month,
+                    TotalSubmissions = group.Count()
                 })
-                .OrderBy(group => group.year)
-                .ThenBy(group => group.month)
+                .OrderBy(group => group.Year)
+                .ThenBy(group => group.Month)
                 .ToList();
 
 
-                return ApiResult<ICollection<InMonthSubmissionDto>>.Success(data);
+                return ApiResult<ICollection<InMonthSubmitDto>>.Success(data);
             }
         }
     }

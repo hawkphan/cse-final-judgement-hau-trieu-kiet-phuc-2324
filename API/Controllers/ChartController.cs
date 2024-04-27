@@ -40,7 +40,7 @@ namespace API.Controllers
         [HttpGet("statistic-chart/{id}")] //api/chart/statistic-chart/id
         public async Task<IActionResult> GetStatisticChart(Guid id)
         {
-            return HandleApiResult(await Mediator.Send(new SubmissionStatisticChartDetai.Query { UserId = id }));
+            return HandleApiResult(await Mediator.Send(new ProblemStatisticChartDetail.Query { UserId = id }));
         }
     }
 }
