@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,7 +53,6 @@ namespace Persistence.Migrations
                     Gender = table.Column<double>(type: "REAL", nullable: false),
                     DisplayName = table.Column<string>(type: "TEXT", nullable: true),
                     AvatarUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    Rating = table.Column<double>(type: "REAL", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -226,9 +225,7 @@ namespace Persistence.Migrations
                     Difficulty = table.Column<double>(type: "REAL", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    MemoryLimit = table.Column<int>(type: "INTEGER", nullable: false),
-                    TimeLimit = table.Column<int>(type: "INTEGER", nullable: false),
-                    GradeMode = table.Column<int>(type: "INTEGER", nullable: false)
+                    TimeLimit = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -296,13 +293,12 @@ namespace Persistence.Migrations
                 name: "ProblemLanguages",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    LanguageId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ProblemId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    ProblemId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    LanguageId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProblemLanguages", x => x.Id);
+                    table.PrimaryKey("PK_ProblemLanguages", x => new { x.ProblemId, x.LanguageId });
                     table.ForeignKey(
                         name: "FK_ProblemLanguages_Languages_LanguageId",
                         column: x => x.LanguageId,
@@ -329,8 +325,7 @@ namespace Persistence.Migrations
                     MemoryUsage = table.Column<long>(type: "INTEGER", nullable: false),
                     ExecutionTime = table.Column<double>(type: "REAL", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Score = table.Column<double>(type: "REAL", nullable: false),
-                    Rating = table.Column<double>(type: "REAL", nullable: false)
+                    Score = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -339,6 +334,12 @@ namespace Persistence.Migrations
                         name: "FK_Solutions_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Solutions_Languages_LanguageId",
+                        column: x => x.LanguageId,
+                        principalTable: "Languages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -378,12 +379,10 @@ namespace Persistence.Migrations
                     SolutionId = table.Column<Guid>(type: "TEXT", nullable: false),
                     TestCaseId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Output = table.Column<string>(type: "TEXT", nullable: true),
-                    ExecutionTime = table.Column<double>(type: "REAL", nullable: true),
-                    MemoryUsage = table.Column<long>(type: "INTEGER", nullable: true),
-                    Error = table.Column<double>(type: "REAL", nullable: true),
+                    ExecutionTime = table.Column<double>(type: "REAL", nullable: false),
+                    MemoryUsage = table.Column<long>(type: "INTEGER", nullable: false),
+                    Error = table.Column<double>(type: "REAL", nullable: false),
                     Status = table.Column<double>(type: "REAL", nullable: false),
-                    StatusMessage = table.Column<string>(type: "TEXT", nullable: true),
-                    Token = table.Column<string>(type: "TEXT", nullable: true),
                     ProblemId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -476,11 +475,6 @@ namespace Persistence.Migrations
                 column: "LanguageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProblemLanguages_ProblemId",
-                table: "ProblemLanguages",
-                column: "ProblemId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Problems_Code",
                 table: "Problems",
                 column: "Code",
@@ -505,6 +499,11 @@ namespace Persistence.Migrations
                 name: "IX_Results_TestCaseId",
                 table: "Results",
                 column: "TestCaseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Solutions_LanguageId",
+                table: "Solutions",
+                column: "LanguageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Solutions_ProblemId",
@@ -562,13 +561,13 @@ namespace Persistence.Migrations
                 name: "Contests");
 
             migrationBuilder.DropTable(
-                name: "Languages");
-
-            migrationBuilder.DropTable(
                 name: "Solutions");
 
             migrationBuilder.DropTable(
                 name: "TestCases");
+
+            migrationBuilder.DropTable(
+                name: "Languages");
 
             migrationBuilder.DropTable(
                 name: "Problems");

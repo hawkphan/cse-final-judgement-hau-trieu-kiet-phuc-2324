@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240410035131_InitialCreate5")]
+    partial class InitialCreate5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.13");
@@ -285,13 +288,13 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<double?>("Error")
+                    b.Property<double>("Error")
                         .HasColumnType("REAL");
 
-                    b.Property<double?>("ExecutionTime")
+                    b.Property<double>("ExecutionTime")
                         .HasColumnType("REAL");
 
-                    b.Property<long?>("MemoryUsage")
+                    b.Property<long>("MemoryUsage")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Output")
@@ -310,9 +313,6 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("TestCaseId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Token")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240406040959_InitialCreate2")]
+    partial class InitialCreate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.13");
@@ -201,8 +204,7 @@ namespace Persistence.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasAnnotation("Relational:JsonPropertyName", "id");
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("AppUserId")
                         .HasColumnType("TEXT");
@@ -211,8 +213,7 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT")
-                        .HasAnnotation("Relational:JsonPropertyName", "name");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -240,9 +241,6 @@ namespace Persistence.Migrations
                         .HasColumnType("REAL");
 
                     b.Property<int>("GradeMode")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("MemoryLimit")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TimeLimit")
@@ -285,13 +283,13 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<double?>("Error")
+                    b.Property<double>("Error")
                         .HasColumnType("REAL");
 
-                    b.Property<double?>("ExecutionTime")
+                    b.Property<double>("ExecutionTime")
                         .HasColumnType("REAL");
 
-                    b.Property<long?>("MemoryUsage")
+                    b.Property<long>("MemoryUsage")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Output")
@@ -306,13 +304,10 @@ namespace Persistence.Migrations
                     b.Property<double>("Status")
                         .HasColumnType("REAL");
 
-                    b.Property<string>("StatusMessage")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("StatusMessage")
+                        .HasColumnType("REAL");
 
                     b.Property<Guid>("TestCaseId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Token")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -357,6 +352,8 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
 
                     b.HasIndex("ProblemId");
 
@@ -616,6 +613,12 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Solution", b =>
                 {
+                    b.HasOne("Domain.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Problem", "Problem")
                         .WithMany("Solutions")
                         .HasForeignKey("ProblemId")
@@ -627,6 +630,8 @@ namespace Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Language");
 
                     b.Navigation("Problem");
 

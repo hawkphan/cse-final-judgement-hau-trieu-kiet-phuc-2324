@@ -14,7 +14,7 @@ namespace Application.Problems
         public class Command : IRequest<ApiResult<ProblemDto>>
         {
             public Problem Problem { get; set; }
-            public IFormFile? TestCaseZip { get; set; }
+            public IFormFile TestCaseZip { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -49,7 +49,6 @@ namespace Application.Problems
                         await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);
                         var testCaseLocation = Path.Combine("Uploads\\TestCases", request.Problem.Code);
                         String[] files = fileManager.getFileNameInFolder(testCaseLocation, "*.in");
-                        ICollection<TestCase> testCases = new List<TestCase>();
                         foreach (var inputPath in files)
                         {
                             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
@@ -59,11 +58,10 @@ namespace Application.Problems
                                 Output = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.out"),
                                 Name = fileNameWithoutExtension,
                             };
-                            testCases.Add(testCase);
+                            request.Problem.TestCases.Add(testCase);
                         }
-                        request.Problem.TestCases = testCases;
                     }
-                    if (request.Problem.TestCases == null)
+                    if (request.Problem.TestCases.Count == 0)
                     {
                         request.Problem.TestCases = problem.TestCases;
                     }

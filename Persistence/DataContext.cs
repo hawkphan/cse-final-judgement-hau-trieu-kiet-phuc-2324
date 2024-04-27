@@ -25,9 +25,20 @@ namespace Persistence
         {
             // Configure primary keys
             builder.Entity<Language>().HasKey(x => x.Id);
-            builder.Entity<ProblemLanguage>().HasKey(x => x.Id);
+            builder.Entity<ProblemLanguage>()
+                .HasKey(pl => new { pl.ProblemId, pl.LanguageId });
 
             // Configure foreign keys
+            builder.Entity<ProblemLanguage>()
+                .HasOne(pl => pl.Problem)
+                .WithMany(p => p.ProblemLanguages)
+                .HasForeignKey(pl => pl.ProblemId);
+
+            builder.Entity<ProblemLanguage>()
+                .HasOne(pl => pl.Language)
+                .WithMany(l => l.ProblemLanguages)
+                .HasForeignKey(pl => pl.LanguageId);
+
 
             // Configure Result entity
             builder.Entity<Result>()

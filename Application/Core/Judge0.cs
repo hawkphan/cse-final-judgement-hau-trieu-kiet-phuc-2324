@@ -29,7 +29,7 @@ namespace Application.Core
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
             using var response = await client.PostAsync(SubmissionParam() + url, content);
-            Console.WriteLine();
+
             response.EnsureSuccessStatusCode();
 
             string responseContent = await response.Content.ReadAsStringAsync();
