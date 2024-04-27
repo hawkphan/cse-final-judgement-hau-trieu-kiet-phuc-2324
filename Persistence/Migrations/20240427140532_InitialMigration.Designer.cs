@@ -11,8 +11,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240411153628_InitialCreate6")]
-    partial class InitialCreate6
+    [Migration("20240427140532_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -109,6 +109,9 @@ namespace Persistence.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
@@ -245,7 +248,7 @@ namespace Persistence.Migrations
                     b.Property<int>("GradeMode")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("MemoryLimit")
+                    b.Property<int>("MemoryLimit")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TimeLimit")
@@ -269,15 +272,21 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.ProblemLanguage", b =>
                 {
-                    b.Property<Guid>("ProblemId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("LanguageId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ProblemId", "LanguageId");
+                    b.Property<Guid>("ProblemId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("LanguageId");
+
+                    b.HasIndex("ProblemId");
 
                     b.ToTable("ProblemLanguages");
                 });
@@ -349,6 +358,9 @@ namespace Persistence.Migrations
 
                     b.Property<Guid>("ProblemId")
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("REAL");
 
                     b.Property<double>("Score")
                         .HasColumnType("REAL");

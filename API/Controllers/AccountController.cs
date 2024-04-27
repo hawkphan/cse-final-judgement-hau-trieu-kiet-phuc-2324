@@ -62,6 +62,7 @@ namespace API.Controllers
                 DisplayName = registerDto.DisplayName,
                 Email = registerDto.Email,
                 UserName = registerDto.UserName,
+                Rating = 1500,
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
@@ -84,7 +85,7 @@ namespace API.Controllers
                 Roles = roles // Populate the roles
             };
         }
-        
+
         [Authorize(Roles = "User,Admin,Author")]
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser()

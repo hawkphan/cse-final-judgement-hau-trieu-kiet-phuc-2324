@@ -50,12 +50,13 @@ namespace Application.Problems
                 request.Problem.User = user;
                 request.Problem.Date = DateTime.UtcNow;
                 request.Problem.Difficulty = 0;
-                
+
 
                 FileManager fileManager = new FileManager();
                 await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);
                 var testCaseLocation = Path.Combine("Uploads\\TestCases", request.Problem.Code);
                 String[] files = fileManager.getFileNameInFolder(testCaseLocation, "*.in");
+                ICollection<TestCase> testCases = new List<TestCase>();
                 foreach (var inputPath in files)
                 {
                     var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);
@@ -65,9 +66,10 @@ namespace Application.Problems
                         Output = Path.Combine(testCaseLocation, $"{fileNameWithoutExtension}.out"),
                         Name = fileNameWithoutExtension
                     };
-                    request.Problem.TestCases.Add(testCase);
+                    testCases.Add(testCase);
                 }
-
+                request.Problem.TestCases = testCases;
+                
                 _context.Problems.Add(request.Problem);
                 var result = await _context.SaveChangesAsync() > 0;
                 if (!result)

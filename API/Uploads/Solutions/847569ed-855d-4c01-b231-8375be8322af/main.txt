@@ -1,0 +1,178 @@
+import java.util.*;
+import java.io.*;
+ 
+class Main {
+    public static void main(String[] args) {
+        InputReader reader = new InputReader();
+ 
+        int n = reader.readInteger();
+        int m = reader.readInteger();
+ 
+        int[] a = new int[n];
+        int[] b = new int[m];
+ 
+        for (int i = 0; i < n; i++) {
+            a[i] = reader.readInteger();
+        }
+ 
+        for (int i = 0; i < m; i++) {
+            b[i] = reader.readInteger();
+        }
+        
+        Arrays.sort(a);
+        Arrays.sort(b);
+        
+        int i = 0;
+        int j = 0;
+        int count = 0;
+        
+        while(i < n && j < m) {
+            int value1 = a[i];
+            int value2 = b[j];
+            
+            double div = (double)value2 / value1;
+            
+            if(div >= 2d && div <= 3d) {
+                i++;
+                j++;
+                count++;
+                continue;
+            }
+            
+            if(div < 2d) {
+                j++;
+                continue;
+            }
+            
+            if(div > 3d) {
+                i++;
+            }
+        }
+        System.out.println(count);
+    }
+    
+    static class InputReader {
+ 
+        private InputStream is = System.in;
+        private byte[] inbuf = new byte[1 << 24];
+        private int lenbuf = 0;
+        private int ptrbuf = 0;
+        
+        public int readInteger() {
+            return ni();
+        }
+        
+        public long readLong() {
+            return nl();
+        }
+        
+        public String readString() {
+            return ns();
+        }
+        
+        public double readDouble() {
+            return nd();
+        }
+        
+        public char readChar() {
+            return nc();
+        }
+        
+        private int readByte() {
+            if(lenbuf == -1) throw new InputMismatchException();
+            if(ptrbuf >= lenbuf) {
+                ptrbuf = 0;
+                try {
+                    lenbuf = is.read(inbuf);
+                } catch (IOException e) {
+                    throw new InputMismatchException();
+                }
+                
+                if(lenbuf <= 0) {
+                    return -1;
+                }
+            }
+            return inbuf[ptrbuf++];
+        }
+        
+        private int skip() {
+            int b;
+            while((b = readByte()) != -1 && isSpaceChar(b));
+            return b;
+        }
+        
+        private boolean isSpaceChar(int c) {
+            return !(c >= 33 && c <= 126);
+        }
+        
+        private String ns() {
+            int b = skip();
+            StringBuilder sb = new StringBuilder();
+            while(!isSpaceChar(b)) {
+                sb.appendCodePoint(b);
+                b = readByte();
+            }
+            return sb.toString();
+        }
+        
+        private double nd() {
+            return Double.parseDouble(ns());
+        }
+        
+        private int ni() {
+            int num = 0; int b;
+            boolean minus = false;
+            while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+            
+            if(b == '-') {
+                minus = true;
+                b = readByte();
+            }
+            
+            while(true) {
+                if(b >= '0' && b <= '9') {
+                    num = num * 10 + (b - '0');
+                } else {
+                    return minus ? -num : num;
+                }
+                b = readByte();
+            }
+        }
+        
+        private long nl() {
+            long num = 0; int b;
+            boolean minus = false;
+            while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+            
+            if(b == '-') {
+                minus = true;
+                b = readByte();
+            }
+            
+            while(true) {
+                if(b >= '0' && b <= '9') {
+                    num = num * 10 + (b - '0');
+                } else {
+                    return minus ? -num : num;
+                }
+                b = readByte();
+            }
+        }
+        
+        private char nc() {
+            return (char) skip();
+        }
+        
+        private char[] ns(int n) {
+            char[] buf = new char[n];
+            int b = skip(), p = 0;
+            while(p < n && !(isSpaceChar(b))) {
+                buf[p++] = (char) b;
+                b = readByte();
+            }
+            
+            return p == n ? buf : Arrays.copyOf(buf, p);
+        }
+    }
+} 
+

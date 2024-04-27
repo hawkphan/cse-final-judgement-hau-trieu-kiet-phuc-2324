@@ -36,7 +36,7 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpPut("{id}")]
-        public async Task<ActionResult> Edit([FromRoute] Guid id, [FromForm] Problem Problem, [FromForm] IFormFile file)
+        public async Task<ActionResult> Edit([FromRoute] Guid id, [FromForm] Problem Problem, [FromForm] IFormFile? file)
         {
             Problem.Id = id;
             return HandleApiResult(await Mediator.Send(new Edit.Command { Problem = Problem, TestCaseZip = file }));

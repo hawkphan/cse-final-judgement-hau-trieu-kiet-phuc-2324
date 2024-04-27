@@ -14,6 +14,7 @@ namespace Domain
         public double Gender { get; set; }
         public string DisplayName { get; set; }
         public string AvatarUrl { get; set; }
+        public double Rating { get; set; }
         public ICollection<Problem> Problems { get; set; }
         public ICollection<Solution> Solutions { get; set; }
         [JsonIgnore]
