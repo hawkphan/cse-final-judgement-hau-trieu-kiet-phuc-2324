@@ -8,9 +8,11 @@ namespace Domain
 {
     public class ProblemLanguage
     {
-        public Guid ProblemId { get; set; }
-        public Problem Problem { get; set; }
+        [Key]
+        public Guid Id { get; }
         public int LanguageId { get; set; }
         public Language Language { get; set; }
+        public Guid ProblemId { get; set; }
+        public Problem Problem { get; set; }
     }
 }

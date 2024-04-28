@@ -17,11 +17,12 @@ namespace Domain
         public Problem Problem { get; set; }
         public int LanguageId { get; set; }
         public double Status { get; set; }
-        public long MemoryUsage { get; set; } = 0;
-        public double ExecutionTime { get; set; } = 0;
+        public long MemoryUsage { get; set; }
+        public double ExecutionTime { get; set; }
         public DateTime CreatedDate { get; set; }
-        public ICollection<Result> Results { get; set; } = new List<Result>();
+        public ICollection<Result> Results { get; set; }
         public double Score { get; set; }
+        public double Rating { get; set; }
     }
 
 }
