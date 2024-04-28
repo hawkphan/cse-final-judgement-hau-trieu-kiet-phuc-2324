@@ -17,10 +17,10 @@ import ProblemFilter from "./ProblemFilter";
 
 type Props = {
   table: MRT_TableInstance<Problem>;
-  isExternal?: boolean;
+  canCreate?: boolean;
 };
 
-const ProblemToolbar = ({ table, isExternal = false }: Props) => {
+const ProblemToolbar = ({ table, canCreate = true }: Props) => {
   const navigate = useNavigate();
   const { handleInvalidateProblems } = useGetProblems();
 
@@ -59,7 +59,7 @@ const ProblemToolbar = ({ table, isExternal = false }: Props) => {
               <CustomTableColumnOptionsModal table={table} />
             </Tooltip>
           </CustomTableColumnOptions>
-          {!isExternal && <Button
+          {canCreate && <Button
             className="btn btn-primary"
             icon={<PostAddRoundedIcon fontSize="medium" />}
             style={{ fontFamily: "Roboto", marginTop: "6px" }}

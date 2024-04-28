@@ -4,6 +4,7 @@ export interface User {
     userName: string;
     token: string;
     image?: string;
+    roles?: string[];
 }
 export interface UserFormValues {
     email: string;

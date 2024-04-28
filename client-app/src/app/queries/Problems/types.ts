@@ -62,4 +62,5 @@ export interface User {
   accessFailedCount: number;
   token?: string;
   image?: string;
+  roles?: string[];
 }

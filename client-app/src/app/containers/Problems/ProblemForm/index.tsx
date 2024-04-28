@@ -17,6 +17,7 @@ import {
   LoadingCommon,
   MuiInput,
   MuiSelect,
+  PermissionRestrict,
   Toastify,
   View,
 } from "../../../shared";
@@ -159,6 +160,13 @@ const ProblemForm = () => {
     return <LoadingCommon />;
   }
 
+  if (
+    !userStore?.user?.roles?.includes("Admin") &&
+    !userStore?.user?.roles?.includes("Author")
+  ) {
+    return <PermissionRestrict />;
+  }
+
   return (
     <Container maxWidth="xl" style={{ padding: "10px" }}>
       <Breadcrumbs items={breadCrumbsItems} />
@@ -236,7 +244,7 @@ const ProblemForm = () => {
             </Grid.Item>
             <Grid.Item xs={6}></Grid.Item>
           </Grid.Wrap>
-          <Grid.Wrap style={{marginBottom: '10px'}}>
+          <Grid.Wrap style={{ marginBottom: "10px" }}>
             <Grid.Item xs={3}>
               <Controller
                 name={ProblemProperties.TIME_LIMIT}
@@ -282,7 +290,7 @@ const ProblemForm = () => {
               />
             </Grid.Item>
           </Grid.Wrap>
-          <Grid.Wrap style={{marginBottom: '10px'}}>
+          <Grid.Wrap style={{ marginBottom: "10px" }}>
             <Grid.Item xs={3}>
               <Controller
                 name={ProblemProperties.COMPARE_MODE}

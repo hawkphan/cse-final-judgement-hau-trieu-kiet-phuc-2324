@@ -1,22 +1,34 @@
-import { FC } from "react";
-import { Typo, View } from "../common";
-import { Trans } from "react-i18next";
+import { Container, Stack, Typography } from "@mui/material";
+import React from "react";
+import "./styles.scss";
+import { IMAGES } from "../../../configs/images";
+import { LoadingCommon, Text } from "../common";
 
-const PermissionRestrict: FC<Props> = () => {
+const PermissionRestrict: React.FC<{ loading?: boolean }> = ({
+  loading = false,
+}) => {
   return (
-    <View className="c-container" flexGrow={1} justify="center" align="center">
-      <Typo variant="body1">
-        {
-          <Trans i18nKey={"dont_have_permission_view_page"}>
-            Sorry! You don't have <b className="has-text-danger">permission</b>{" "}
-            to view this page.
-          </Trans>
-        }
-      </Typo>
-    </View>
+    <Stack py={6} marginTop={10}>
+      <Container maxWidth="xl">
+        {loading ? (
+          <Typography textAlign="center">
+            {"Loading your permissions to access this resource."}
+            <LoadingCommon className="mt-16" />
+          </Typography>
+        ) : (
+          <Typography textAlign="center" lineHeight={3}>
+            <img src={IMAGES.noPermission} alt="403NoPermission" />
+            <Text size={32} className="cmp-permission__restrict-title">
+              No Permission
+            </Text>
+            <Text size={20} className="cmp-permission__restrict-content">
+              Sorry, but you don’t have permission to access this page
+            </Text>
+          </Typography>
+        )}
+      </Container>
+    </Stack>
   );
 };
-
-type Props = {};
 
 export default PermissionRestrict;

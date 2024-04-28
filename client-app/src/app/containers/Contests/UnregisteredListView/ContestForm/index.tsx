@@ -69,8 +69,6 @@ const ContestForm = () => {
     [onCreateContest, rowSelection]
   );
 
-  
-
   const handleGetProblems = useCallback(
     (params: GetPropertiesParams) => {
       setParams({ ...params });
@@ -89,9 +87,9 @@ const ContestForm = () => {
 
   const columns = useMemo(() => allColumns(), []);
 
-    // if (isFetching) {
-    //   return <LoadingCommon />;
-    // }
+  // if (isFetching) {
+  //   return <LoadingCommon />;
+  // }
 
   return (
     <Container maxWidth="xl" style={{ padding: "10px" }}>
@@ -100,7 +98,7 @@ const ContestForm = () => {
         <Typography variant="h5" mb={5} mt={2}>
           {isEdit ? "Edit Contest" : "Create New Contest"}
         </Typography>
-       <BasicTimezoneProp />
+        <BasicTimezoneProp />
         <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
           <Grid.Wrap>
             <Grid.Item xs={4}>
@@ -236,7 +234,7 @@ const ContestForm = () => {
               </Stack>
             )}
             renderToolbarInternalActions={({ table }) => {
-              return <ProblemToolbar table={table} isExternal />;
+              return <ProblemToolbar table={table} canCreate={false} />;
             }}
             renderFallbackValue={<EmptyTable />}
             muiTopToolbarProps={{

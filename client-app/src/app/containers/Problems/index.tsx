@@ -142,7 +142,15 @@ const Problems = () => {
           </Stack>
         )}
         renderToolbarInternalActions={({ table }) => {
-          return <ProblemToolbar table={table} />;
+          return (
+            <ProblemToolbar
+              table={table}
+              canCreate={
+                userStore?.user?.roles?.includes("Author") ||
+                userStore?.user?.roles?.includes("Admin")
+              }
+            />
+          );
         }}
         renderFallbackValue={<EmptyTable />}
         muiTopToolbarProps={{

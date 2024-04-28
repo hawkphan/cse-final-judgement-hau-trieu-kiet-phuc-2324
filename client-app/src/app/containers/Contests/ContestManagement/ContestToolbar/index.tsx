@@ -11,10 +11,10 @@ import { PATHS } from "../../../../configs/paths";
 
 type Props = {
   table: MRT_TableInstance<Contest>;
-  isExternal?: boolean;
+  canCreate?: boolean;
 };
 
-const ContestToolbar = ({ table, isExternal = false }: Props) => {
+const ContestToolbar = ({ table, canCreate = true }: Props) => {
   const navigate = useNavigate();
   const { handleInvalidateRegisteredContest } = useGetRegisteredContest();
 
@@ -53,7 +53,7 @@ const ContestToolbar = ({ table, isExternal = false }: Props) => {
               <CustomTableColumnOptionsModal table={table} />
             </Tooltip>
           </CustomTableColumnOptions>
-          {!isExternal && <Button
+          {canCreate && <Button
             className="btn btn-primary"
             icon={<PostAddRoundedIcon fontSize="medium" />}
             style={{ fontFamily: "Roboto", marginTop: "6px" }}
