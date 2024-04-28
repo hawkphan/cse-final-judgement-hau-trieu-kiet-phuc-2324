@@ -42,11 +42,11 @@ namespace Application.Chart
             public async Task<ApiResult<ProblemStatisticDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 Guid? userId = request.UserId;
-                var problems = _context.Problems.AsQueryable();
+                var problems = _context.Problems.Include(p => p.Solutions).AsQueryable();
 
                 if (userId != null)
                 {
-                    problems = _context.Problems.Where(problem =>
+                    problems = _context.Problems.Include(p => p.Solutions).Where(problem =>
                     problem.UserId.Equals(userId));
                 }
 
