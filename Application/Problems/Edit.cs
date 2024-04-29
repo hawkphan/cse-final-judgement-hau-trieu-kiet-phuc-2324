@@ -14,6 +14,7 @@ namespace Application.Problems
         public class Command : IRequest<ApiResult<ProblemDto>>
         {
             public Problem Problem { get; set; }
+            public string AllowedLanguages { get; set; }
             public IFormFile? TestCaseZip { get; set; }
         }
 
@@ -83,8 +84,19 @@ namespace Application.Problems
                     request.Problem.Date = problem.Date;
                     request.Problem.Difficulty = problem.Difficulty;
 
-                    _mapper.Map(request.Problem, problem);
+                    var languageIds = request.AllowedLanguages?.Split(',')?.Select(Int32.Parse)?.ToList();
+                    ProblemLanguage language;
+                    List<ProblemLanguage> problemLanguages = new List<ProblemLanguage>();
+                    foreach (int i in languageIds)
+                    {
+                        language = new ProblemLanguage();
+                        language.LanguageId = i;
+                        problemLanguages.Add(language);
+                    }
+                    request.Problem.ProblemLanguages = problemLanguages;
 
+
+                    _mapper.Map(request.Problem, problem);
                     await _context.SaveChangesAsync();
 
 
