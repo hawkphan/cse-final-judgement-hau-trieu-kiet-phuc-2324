@@ -17,6 +17,7 @@ namespace Application.Problems
         public class Command : IRequest<ApiResult<ProblemDto>>
         {
             public Problem Problem { get; set; }
+            public String AllowedLanguages { get; set; }
             public IFormFile TestCaseZip { get; set; }
         }
         public class CommandValidator : AbstractValidator<Command>
@@ -44,13 +45,22 @@ namespace Application.Problems
 
                 if (request.TestCaseZip == null || request.TestCaseZip.Length == 0)
                 {
-                    return ApiResult<ProblemDto>.Failure(new string[] { "Failed to Create" });
+                    return ApiResult<ProblemDto>.Failure(new string[] { "Failed to Create, Test Case is Empty" });
                 }
-
+                var languageIds = request.AllowedLanguages?.Split(',')?.Select(Int32.Parse)?.ToList();
+                ProblemLanguage language;
+                List<ProblemLanguage> problemLanguages = new List<ProblemLanguage>();
+                foreach (int i in languageIds)
+                {
+                    language = new ProblemLanguage();
+                    language.LanguageId = i;
+                    problemLanguages.Add(language);
+                }
+                request.Problem.ProblemLanguages = problemLanguages;
                 request.Problem.User = user;
                 request.Problem.Date = DateTime.UtcNow;
                 request.Problem.Difficulty = 0;
-                
+
 
                 FileManager fileManager = new FileManager();
                 await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);
@@ -69,7 +79,7 @@ namespace Application.Problems
                     testCases.Add(testCase);
                 }
                 request.Problem.TestCases = testCases;
-                
+
                 _context.Problems.Add(request.Problem);
                 var result = await _context.SaveChangesAsync() > 0;
                 if (!result)

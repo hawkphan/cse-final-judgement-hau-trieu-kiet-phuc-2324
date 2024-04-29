@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Dtos;
 
 namespace Domain
 {
-    public class ProblemDto
+public class ProblemDto
     {
 
         public Guid Id { get; set; }
@@ -21,6 +22,6 @@ namespace Domain
         // public ICollection<TestCase> TestCases { get; set; }
         // public ICollection<Result> Results { get; set; }
         // public ICollection<Solution> UserSolutions { get; set; }
-        public ICollection<LanguageDto> Languages { get; set; }
+        public ICollection<ProblemLanguageDto> ProblemLanguages { get; set; }
     }
 }
