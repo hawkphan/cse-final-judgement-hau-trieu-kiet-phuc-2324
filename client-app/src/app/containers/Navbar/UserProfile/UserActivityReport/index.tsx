@@ -53,11 +53,11 @@ export function DifficultyStatisticDetail({ data }: statistic) {
   function difficultyConvert(difficulty: number): string {
     switch (difficulty) {
       case 0:
-        return "Easy";
+        return "Below 1000";
       case 1:
-        return "Medium";
+        return "From 1000 to 2000";
       case 2:
-        return "Hard";
+        return "Over 2000";
       default:
         return "";
     }
@@ -80,7 +80,7 @@ export function DifficultyStatisticDetail({ data }: statistic) {
                 justifyContent="space-between"
               >
                 <Typography color="text.secondary">
-                  Difficulty: {difficultyConvert(stat.difficulty)}
+                  {difficultyConvert(stat.difficulty)}
                 </Typography>
                 <Box
                   display="flex"
@@ -131,18 +131,18 @@ export default function UserActivityReport({ id }: Props) {
         marginTop: "20px",
         padding: "20px",
         paddingTop: "10px",
-        minHeight: "300px",
+        height: "330px",
         minWidth: "180px",
       }}
       elevation={4}
     >
       <CardContent>
         <Typography
-          sx={{ fontSize: 14, fontWeight: "bold" }}
+          sx={{ fontSize: 20, fontWeight: "bold", marginBottom: "40px" }}
           color="text.secondary"
           gutterBottom
         >
-          Solved Problems
+          Solved Problems on Difficulties
         </Typography>
 
         <Box display="flex" flexDirection="row">

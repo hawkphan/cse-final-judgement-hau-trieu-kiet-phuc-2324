@@ -42,17 +42,13 @@ namespace Application.Chart
             public async Task<ApiResult<ProblemStatisticDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 Guid? userId = request.UserId;
-                var problems = _context.Problems.Include(p => p.Solutions).AsQueryable();
+                var problems = _context.Problems.Include(p => p.Solutions);
 
-                if (userId != null)
-                {
-                    problems = _context.Problems.Include(p => p.Solutions).Where(problem =>
-                    problem.UserId.Equals(userId));
-                }
 
                 var data = new ProblemStatisticDto();
                 data.TotalProblems = problems.Count();
-                data.TotalSolvedProblems = problems.Count(p => p.Solutions.Any(s => s.Status == 3));
+                data.TotalSolvedProblems = problems.Count(p => p.Solutions.Any(s => (s.Status == 3 && s.UserId == userId)));
+
 
                 var difficultyStatistics = new List<DifficultyStatistic>();
 
@@ -65,7 +61,7 @@ namespace Application.Chart
                 for (int i = 0; i < 3; i++)
                 {
 
-                    if (index == i && groupedProblems[index].Key.Equals(i))
+                    if (index == i && groupedProblems.Count > index && groupedProblems[index].Key.Equals(i))
                     {
                         var difficultyStatistic = new DifficultyStatistic
                         {
@@ -74,7 +70,7 @@ namespace Application.Chart
                             TotalSolved = groupedProblems[i].Count(p => p.Solutions.Any(s => s.Status == 3))
                         };
                         difficultyStatistics.Add(difficultyStatistic);
-                        index = (index + 1 < groupedProblems.Count()) ? index + 1 : 0;
+                        index = (index + 1 < groupedProblems.Count) ? index + 1 : 0;
                     }
                     else
                     {

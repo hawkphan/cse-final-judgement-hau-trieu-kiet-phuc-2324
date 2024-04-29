@@ -38,14 +38,14 @@ export default function UserLanguagesUsage({ id }: props) {
         marginTop: "20px",
         padding: "20px",
         paddingTop: "10px",
-        minHeight: "300px",
+        height: "330px",
         minWidth: "180px",
       }}
       elevation={4}
     >
       <CardContent>
         <Typography
-          sx={{ fontSize: 14, fontWeight: "bold" }}
+          sx={{ fontSize: 20, fontWeight: "bold", marginBottom: "10px" }}
           color="text.secondary"
           gutterBottom
         >
@@ -56,7 +56,7 @@ export default function UserLanguagesUsage({ id }: props) {
             series={state.series}
             options={state.options}
             type="pie"
-            width="100%"
+            height="100%"
           />
         </Suspense>
       </CardContent>
