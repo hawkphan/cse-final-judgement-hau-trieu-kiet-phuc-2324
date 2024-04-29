@@ -144,7 +144,7 @@ export default function UserAnnualReport({ id }: props) {
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
-          sx={{ marginTop: "10px" }}
+          sx={{ marginTop: "40px" }}
         >
           <Box
             display="flex"
