@@ -11,7 +11,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240427140532_InitialMigration")]
+    [Migration("20240428194541_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -203,30 +203,6 @@ namespace Persistence.Migrations
                     b.ToTable("ContestProblems");
                 });
 
-            modelBuilder.Entity("Domain.Language", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasAnnotation("Relational:JsonPropertyName", "id");
-
-                    b.Property<Guid?>("AppUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FileExtension")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT")
-                        .HasAnnotation("Relational:JsonPropertyName", "name");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.ToTable("Languages");
-                });
-
             modelBuilder.Entity("Domain.Problem", b =>
                 {
                     b.Property<Guid>("Id")
@@ -283,8 +259,6 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LanguageId");
 
                     b.HasIndex("ProblemId");
 
@@ -569,13 +543,6 @@ namespace Persistence.Migrations
                     b.Navigation("Problem");
                 });
 
-            modelBuilder.Entity("Domain.Language", b =>
-                {
-                    b.HasOne("Domain.AppUser", null)
-                        .WithMany("Languages")
-                        .HasForeignKey("AppUserId");
-                });
-
             modelBuilder.Entity("Domain.Problem", b =>
                 {
                     b.HasOne("Domain.AppUser", "User")
@@ -589,19 +556,11 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.ProblemLanguage", b =>
                 {
-                    b.HasOne("Domain.Language", "Language")
-                        .WithMany("ProblemLanguages")
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Problem", "Problem")
                         .WithMany("ProblemLanguages")
                         .HasForeignKey("ProblemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Language");
 
                     b.Navigation("Problem");
                 });
@@ -712,8 +671,6 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.AppUser", b =>
                 {
-                    b.Navigation("Languages");
-
                     b.Navigation("MemberContests");
 
                     b.Navigation("Problems");
@@ -726,11 +683,6 @@ namespace Persistence.Migrations
                     b.Navigation("Members");
 
                     b.Navigation("Problems");
-                });
-
-            modelBuilder.Entity("Domain.Language", b =>
-                {
-                    b.Navigation("ProblemLanguages");
                 });
 
             modelBuilder.Entity("Domain.Problem", b =>

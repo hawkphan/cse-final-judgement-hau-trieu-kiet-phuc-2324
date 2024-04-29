@@ -17,8 +17,8 @@ namespace Domain
         public double Rating { get; set; }
         public ICollection<Problem> Problems { get; set; }
         public ICollection<Solution> Solutions { get; set; }
-        [JsonIgnore]
-        public ICollection<Language> Languages { get; set; }
+        // [JsonIgnore]
+        // public ICollection<Language> Languages { get; set; }
         public ICollection<ContestMember> MemberContests { get; set; }
     }
 

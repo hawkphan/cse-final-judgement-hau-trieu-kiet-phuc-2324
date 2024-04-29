@@ -1,6 +1,7 @@
 using AutoMapper;
 using Domain;
 using Domain.Dtos;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Application.Core
 {
@@ -21,10 +22,9 @@ namespace Application.Core
             CreateMap<Solution, SolutionResponseDto>().ForMember(d => d.Status, o => o.MapFrom(s => s.Status));
 
             CreateMap<Problem, ProblemDto>()
-            .ForMember(dest => dest.Languages, opt => opt.MapFrom(src => src.ProblemLanguages.Select(pl => pl.Language)));
-            CreateMap<Language, LanguageDto>()
-              .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
-              .ForMember(d => d.Id, o => o.MapFrom(s => s.Id));
+                .ForMember(d => d.ProblemLanguages, o => o.MapFrom(s => s.ProblemLanguages));
+            CreateMap<ProblemLanguage, ProblemLanguageDto>()
+                .ForMember(d => d.LanguageId, o => o.MapFrom(s => s.LanguageId));
             CreateMap<ResultDto, Result>()
                 .ForMember(d => d.ExecutionTime, o => o.MapFrom(s => s.Time))
                 .ForMember(d => d.Output, o => o.MapFrom(s => s.Stdout))

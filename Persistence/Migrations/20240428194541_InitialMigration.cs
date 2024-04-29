@@ -196,26 +196,6 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Languages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    FileExtension = table.Column<string>(type: "TEXT", nullable: true),
-                    AppUserId = table.Column<Guid>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Languages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Languages_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Problems",
                 columns: table => new
                 {
@@ -303,12 +283,6 @@ namespace Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProblemLanguages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProblemLanguages_Languages_LanguageId",
-                        column: x => x.LanguageId,
-                        principalTable: "Languages",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProblemLanguages_Problems_ProblemId",
                         column: x => x.ProblemId,
@@ -466,16 +440,6 @@ namespace Persistence.Migrations
                 column: "ProblemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Languages_AppUserId",
-                table: "Languages",
-                column: "AppUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProblemLanguages_LanguageId",
-                table: "ProblemLanguages",
-                column: "LanguageId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProblemLanguages_ProblemId",
                 table: "ProblemLanguages",
                 column: "ProblemId");
@@ -560,9 +524,6 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Contests");
-
-            migrationBuilder.DropTable(
-                name: "Languages");
 
             migrationBuilder.DropTable(
                 name: "Solutions");

@@ -12,7 +12,6 @@ namespace Persistence
         }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Problem> Problems { get; set; }
-        public DbSet<Language> Languages { get; set; }
         public DbSet<ProblemLanguage> ProblemLanguages { get; set; }
         public DbSet<Result> Results { get; set; }
         public DbSet<Solution> Solutions { get; set; }
@@ -24,14 +23,14 @@ namespace Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // Configure primary keys
-            builder.Entity<Language>().HasKey(x => x.Id);
             builder.Entity<ProblemLanguage>().HasKey(x => x.Id);
 
             // Configure foreign keys
             builder.Entity<ProblemLanguage>()
-                .HasOne(pl => pl.Problem)
-                .WithMany(p => p.ProblemLanguages)
-                .HasForeignKey(pl => pl.ProblemId);
+                .HasOne(p => p.Problem)
+                .WithMany(pl => pl.ProblemLanguages)
+                .HasForeignKey(plk => plk.ProblemId);
+            
 
             // Configure Result entity
             builder.Entity<Result>()
