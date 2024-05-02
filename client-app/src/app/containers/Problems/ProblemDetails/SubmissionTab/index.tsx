@@ -1,6 +1,7 @@
 import { Box, CardContent } from "@mui/material";
 import { EmptyTable, Table2 } from "../../../../shared";
 import {
+  Callback,
   GetPropertiesParams,
   Solution,
   useGetSolutions,
@@ -9,7 +10,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { allColumns } from "./allColumns";
 import SubmissionResultDialog from "./SubmissionResultDialog";
 
-const SubmissionTab = ({ userId, problemId }: Props) => {
+const SubmissionTab = ({
+  userId,
+  problemId,
+  setEditorValue,
+  setLanguageId,
+}: Props) => {
   const DELAY_MS = 5000;
 
   const columns = useMemo(() => allColumns(), []);
@@ -46,7 +52,7 @@ const SubmissionTab = ({ userId, problemId }: Props) => {
         onGetSolutions();
       }
     }, DELAY_MS);
-  
+
     return () => {
       clearTimeout(timerId);
     };
@@ -88,11 +94,13 @@ const SubmissionTab = ({ userId, problemId }: Props) => {
             isLoading: isFetching,
           }}
           muiTableBodyRowProps={({ row }) => ({
-            onClick: () => {    
-              if(![1, 2].includes(row.original.status)) {
+            onClick: () => {
+              if (![1, 2].includes(row.original.status)) {
                 setSelectedSolutionId(row.original.id);
                 setIsOpen(true);
-              }             
+              }
+              setEditorValue(row.original.source);
+              setLanguageId(row.original.languageId);
             },
           })}
           renderFallbackValue={<EmptyTable />}
@@ -121,6 +129,8 @@ const SubmissionTab = ({ userId, problemId }: Props) => {
 interface Props {
   userId: string;
   problemId: string;
+  setEditorValue: Callback;
+  setLanguageId: Callback;
 }
 
 export default SubmissionTab;

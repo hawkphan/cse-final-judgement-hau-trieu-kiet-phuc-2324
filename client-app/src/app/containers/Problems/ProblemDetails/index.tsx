@@ -40,7 +40,7 @@ import { useStore } from "../../../shared/common/stores/store";
 
 const ProblemDetail = () => {
   const [tab, setTab] = useState(Tab.DESCRIPTION);
-  const [currentLanguageId, setCurrentLanguageId] = useState();
+  const [currentLanguageId, setCurrentLanguageId] = useState<string>();
   const { id } = useParams<{ id: string }>();
 
   const { userStore } = useStore();
@@ -143,6 +143,14 @@ const ProblemDetail = () => {
     onSubmitSolution(data);
   };
 
+  const handleSetEditorValue = (value: string) => {
+    editorRef.current.setValue(value);
+  };
+
+  const handleSetLanguageId = (value: string) => {
+    setCurrentLanguageId(value);
+  }
+
   useEffect(() => {
     setParams({ pageSize: -1 });
     setSolutionParams({ problemId: problem?.id, userId: user?.id });
@@ -153,7 +161,14 @@ const ProblemDetail = () => {
       case Tab.DESCRIPTION:
         return <DescriptionTab problem={problem} />;
       case Tab.SUBMISSION:
-        return <SubmissionTab userId={getUserId} problemId={problem?.id} />;
+        return (
+          <SubmissionTab
+            userId={getUserId}
+            problemId={problem?.id}
+            setEditorValue={handleSetEditorValue}
+            setLanguageId={handleSetLanguageId}
+          />
+        );
       case Tab.OTHER:
         return <></>;
       default:
@@ -209,7 +224,7 @@ const ProblemDetail = () => {
                     onChange={(_, data) => {
                       setCurrentLanguageId(data);
                     }}
-                    style={{ width: "220px" }}
+                    style={{ width: "320px" }}
                   />
 
                   <Button

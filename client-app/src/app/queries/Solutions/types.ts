@@ -8,6 +8,7 @@ export interface Solution {
     memoryUsage: number;
     languageName: string;
     languageId: string;
+    source: string;
 }
 
 export interface CreateSolutionBody {

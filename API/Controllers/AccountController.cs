@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Persistence;
 namespace API.Controllers
 {
     [ApiController]
@@ -19,11 +20,13 @@ namespace API.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly TokenService _tokenService;
+        private readonly DataContext _context;
 
-        public AccountController(UserManager<AppUser> userManager, TokenService tokenService)
+        public AccountController(UserManager<AppUser> userManager, TokenService tokenService, DataContext context)
         {
             _tokenService = tokenService;
             _userManager = userManager;
+            _context = context;
         }
 
 
@@ -66,6 +69,8 @@ namespace API.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
+            await _userManager.AddToRoleAsync(user, "User");
+            await _context.SaveChangesAsync();
             if (result.Succeeded)
             {
                 return await CreateNewUserDto(user);
@@ -82,7 +87,7 @@ namespace API.Controllers
                 Image = null,
                 Token = _tokenService.CreateToken(user, roles),
                 UserName = user.UserName,
-                Roles = roles // Populate the roles
+                Roles = roles,
             };
         }
 
