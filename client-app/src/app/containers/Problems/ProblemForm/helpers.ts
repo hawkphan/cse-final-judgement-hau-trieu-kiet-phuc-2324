@@ -5,7 +5,7 @@ import {
   CreateProblemBody,
   EditProblemBody,
 } from "../../../queries/Problems/types";
-import { Yup } from "../../../shared";
+import { Yup, isEmpty } from "../../../shared";
 import { PATHS } from "../../../configs/paths";
 
 export const acceptedFileType: Accept = { "application/zip": [".zip"] };
@@ -21,6 +21,7 @@ export enum ProblemProperties {
   MEMORY_LIMIT = "memoryLimit",
   COMPARE_MODE = "compareMode",
   APPROXIMATE_VALUE = "approximateValue",
+  VALID_LANGUAGES = "allowedLanguages",
 }
 
 export enum ValidationMessage {
@@ -32,7 +33,8 @@ export const mapFormData = (
   data: CreateProblemBody | EditProblemBody,
   fileSelected: any,
   userId: string,
-  isEdit: boolean
+  isEdit: boolean,
+  selectedLanguages: string[]
 ) => {
   const formData = new FormData();
 
@@ -46,6 +48,10 @@ export const mapFormData = (
   formData.append(ProblemProperties.DESCRIPTION, data.description);
   formData.append(ProblemProperties.TIME_LIMIT, data.timeLimit.toString());
   formData.append(ProblemProperties.USER_ID, userId);
+  formData.append(
+    ProblemProperties.VALID_LANGUAGES,
+    !isEmpty(selectedLanguages) ? selectedLanguages.join(",") : ""
+  );
 
   return formData;
 };
@@ -54,12 +60,12 @@ export const toBreadCrumbs = (isEdit: boolean, id?: string) => {
   return [
     {
       id: 0,
-      label: 'Problems',
+      label: "Problems",
       href: `${PATHS.problems}`,
     },
     {
       id: 1,
-      label: isEdit ? 'Edit ' + id : 'Create',
+      label: isEdit ? "Edit " + id : "Create",
     },
   ];
 };
@@ -69,12 +75,14 @@ export const CreateProblemFormSchema = Yup.object().shape({
   [ProblemProperties.TITLE]: Yup.string().required(),
   [ProblemProperties.TIME_LIMIT]: Yup.string().required(),
   [ProblemProperties.MEMORY_LIMIT]: Yup.string().required(),
-  [ProblemProperties.COMPARE_MODE]: Yup.string().required(),
+  // [ProblemProperties.COMPARE_MODE]: Yup.string().required(),
+  // [ProblemProperties.VALID_LANGUAGES]: Yup.array().defined(),
 });
 export const EditProblemFormSchema = Yup.object().shape({
   [ProblemProperties.CODE]: Yup.string().required(),
   [ProblemProperties.TITLE]: Yup.string().required(),
   [ProblemProperties.TIME_LIMIT]: Yup.string().required(),
   [ProblemProperties.MEMORY_LIMIT]: Yup.string().required(),
-  [ProblemProperties.COMPARE_MODE]: Yup.string().required(),
+  // [ProblemProperties.COMPARE_MODE]: Yup.string().required(),
+  // [ProblemProperties.VALID_LANGUAGES]: Yup.array().defined(),
 });

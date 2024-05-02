@@ -30,16 +30,16 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> CreateProblem([FromForm] Problem newProblem, [FromForm] String AllowedLanguages, [FromForm] IFormFile file)
+        public async Task<ActionResult> CreateProblem([FromForm] Problem newProblem, [FromForm] String allowedLanguages, [FromForm] IFormFile file)
         {
-            return HandleApiResult(await Mediator.Send(new Create.Command { Problem = newProblem, AllowedLanguages = AllowedLanguages, TestCaseZip = file }));
+            return HandleApiResult(await Mediator.Send(new Create.Command { Problem = newProblem, AllowedLanguages = allowedLanguages, TestCaseZip = file }));
         }
         [AllowAnonymous]
         [HttpPut("{id}")]
-        public async Task<ActionResult> Edit([FromRoute] Guid id, [FromForm] Problem Problem, [FromForm] String AllowedLanguages, [FromForm] IFormFile? file)
+        public async Task<ActionResult> Edit([FromRoute] Guid id, [FromForm] Problem Problem, [FromForm] String allowedLanguages, [FromForm] IFormFile? file)
         {
             Problem.Id = id;
-            return HandleApiResult(await Mediator.Send(new Edit.Command { Problem = Problem, TestCaseZip = file, AllowedLanguages = AllowedLanguages }));
+            return HandleApiResult(await Mediator.Send(new Edit.Command { Problem = Problem, TestCaseZip = file, AllowedLanguages = allowedLanguages }));
         }
         [AllowAnonymous]
         [HttpDelete("{id}")]

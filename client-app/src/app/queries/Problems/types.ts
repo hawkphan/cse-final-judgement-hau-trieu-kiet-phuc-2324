@@ -9,6 +9,7 @@ export interface Problem {
   user: User;
   userId?: string;
   testCasesFiles?: any;
+  problemLanguages?: any;
 }
 
 export interface CreateProblemBody {
@@ -22,6 +23,7 @@ export interface CreateProblemBody {
   memoryLimit?: number;
   compareMode?: number;
   approximateValue?: number;
+  allowedLanguages?: string[];
 }
 
 export interface EditProblemBody {
@@ -37,6 +39,7 @@ export interface EditProblemBody {
   memoryLimit?: number;
   compareMode?: number;
   approximateValue?: number;
+  allowedLanguages?: string[];
 }
 
 export interface User {

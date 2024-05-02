@@ -1,13 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Card,
-  Container,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Card, Container, InputLabel, Stack, Typography } from "@mui/material";
 import { stripHtml } from "string-strip-html";
 import {
   Breadcrumbs,
@@ -16,10 +8,9 @@ import {
   Grid,
   LoadingCommon,
   MuiInput,
-  MuiSelect,
+  MuiMultiSelect,
   PermissionRestrict,
   Toastify,
-  View,
 } from "../../../shared";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -47,10 +38,12 @@ import {
 } from "./helpers";
 import { API_QUERIES } from "../../../queries/common/constants";
 import WYSIWYGEditor from "../../../shared/components/common/RichTextEditor";
+import { useGetLanguages } from "../../../queries";
 
 const ProblemForm = () => {
   const [fileSelected, setFileSelected] = useState();
-  const [compareValue, setCompareValue] = useState("");
+  // const [compareValue, setCompareValue] = useState("");
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>();
 
   const { id } = useParams();
   const { userStore } = useStore();
@@ -60,6 +53,8 @@ const ProblemForm = () => {
     id,
     queryKey: [API_QUERIES.GET_PROBLEM_BY_ID, { id: id }],
   });
+
+  const { languageOptions } = useGetLanguages();
 
   const { onCreateProblem, isPending: isCreatePending } = useCreateProblem({
     onSuccess: () => {
@@ -106,23 +101,23 @@ const ProblemForm = () => {
     });
   }, [problem?.code, problems]);
 
-  const { control, handleSubmit, reset, setError } = useForm<CreateProblemBody>(
-    {
-      defaultValues: isEdit
-        ? { ...problem }
-        : {
-            [ProblemProperties.TIME_LIMIT]: 1000,
-            [ProblemProperties.MEMORY_LIMIT]: 128000,
-            [ProblemProperties.APPROXIMATE_VALUE]: 0,
-          },
-      mode: "onChange",
-      shouldFocusError: true,
-      reValidateMode: "onChange",
-      resolver: yupResolver<any>(
-        isEdit ? EditProblemFormSchema : CreateProblemFormSchema
-      ),
-    }
-  );
+  const { control, handleSubmit, reset, setError } = useForm<
+    CreateProblemBody | EditProblemBody
+  >({
+    defaultValues: isEdit
+      ? { ...problem }
+      : {
+          [ProblemProperties.TIME_LIMIT]: 1000,
+          [ProblemProperties.MEMORY_LIMIT]: 128000,
+          [ProblemProperties.APPROXIMATE_VALUE]: 0,
+        },
+    mode: "onChange",
+    shouldFocusError: true,
+    reValidateMode: "onChange",
+    resolver: yupResolver<any>(
+      isEdit ? EditProblemFormSchema : CreateProblemFormSchema
+    ),
+  });
 
   const onSubmit = async (data: CreateProblemBody | EditProblemBody) => {
     if (
@@ -136,7 +131,13 @@ const ProblemForm = () => {
       return;
     }
 
-    const formData = mapFormData(data, fileSelected, userStore.user.id, isEdit);
+    const formData = mapFormData(
+      data,
+      fileSelected,
+      userStore.user.id,
+      isEdit,
+      selectedLanguages
+    );
     if (!isEdit) {
       if (!fileSelected) {
         Toastify.error(ValidationMessage.LACK_OF_FILE);
@@ -148,9 +149,17 @@ const ProblemForm = () => {
     }
   };
 
+  const handleChangeLanguages = (_name: string, languages: string[]) => {
+    setSelectedLanguages(languages);
+  };
+
   useEffect(() => {
     reset({ ...problem });
   }, [problem, reset]);
+
+  useEffect(() => {
+    setSelectedLanguages(problem?.problemLanguages?.map((p) => p.languageId));
+  }, [problem?.problemLanguages]);
 
   useEffect(() => {
     setParams({ pageSize: -1 });
@@ -291,6 +300,25 @@ const ProblemForm = () => {
             </Grid.Item>
           </Grid.Wrap>
           <Grid.Wrap style={{ marginBottom: "10px" }}>
+            <Grid.Item xs={6}>
+              <Controller
+                name={ProblemProperties.VALID_LANGUAGES}
+                control={control}
+                render={({ fieldState }) => (
+                  <MuiMultiSelect
+                    label="Languages"
+                    placeholder="Valid languages"
+                    options={languageOptions}
+                    value={selectedLanguages}
+                    onChange={handleChangeLanguages}
+                    size="small"
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
+              />
+            </Grid.Item>
+          </Grid.Wrap>
+          {/* <Grid.Wrap style={{ marginBottom: "10px" }}>
             <Grid.Item xs={3}>
               <Controller
                 name={ProblemProperties.COMPARE_MODE}
@@ -362,7 +390,7 @@ const ProblemForm = () => {
                 />
               </View>
             </Grid.Item>
-          </Grid.Wrap>
+          </Grid.Wrap> */}
           <Grid.Wrap>
             <Grid.Item xs={12}>
               <InputLabel sx={{ fontSize: "14px" }}>

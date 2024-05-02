@@ -19,7 +19,6 @@ import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import { API_QUERIES } from "../../../queries/common/constants";
-import { LanguageOption, useGetLanguages } from "../../../queries/Languages";
 import { useGetProblemById } from "../../../queries/Problems";
 import DescriptionTab from "./DescriptionTab";
 import SubmissionTab from "./SubmissionTab";
@@ -37,6 +36,7 @@ import {
 } from "../../../queries";
 import { useForm } from "react-hook-form";
 import { useStore } from "../../../shared/common/stores/store";
+import { getLanguageNameById } from "./SubmissionTab/helpers";
 
 const ProblemDetail = () => {
   const [tab, setTab] = useState(Tab.DESCRIPTION);
@@ -51,22 +51,17 @@ const ProblemDetail = () => {
     queryKey: [API_QUERIES.GET_PROBLEM_BY_ID, { id: id }],
   });
 
-  const { languages, setParams } = useGetLanguages();
-
-  const languageOptions: LanguageOption[] = useMemo(
-    () => languages.map((item) => ({ label: item.name, value: item.id })),
-    [languages]
-  );
-
-  type Monaco = typeof monaco;
+  const languageOptions = problem?.problemLanguages?.map((p) => ({
+    value: p.languageId,
+    label: getLanguageNameById(p.languageId),
+  }));
 
   const file = CompilerEnv["Python"];
   const editorRef = useRef(null);
   const [darkOrLight, setDarkOrLight] = useState(ThemeMode.DARK);
 
   const handleComponentDidMount = (
-    editor: monaco.editor.IStandaloneCodeEditor,
-    monaco: Monaco
+    editor: monaco.editor.IStandaloneCodeEditor
   ) => {
     editorRef.current = editor;
   };
@@ -149,12 +144,11 @@ const ProblemDetail = () => {
 
   const handleSetLanguageId = (value: string) => {
     setCurrentLanguageId(value);
-  }
+  };
 
   useEffect(() => {
-    setParams({ pageSize: -1 });
     setSolutionParams({ problemId: problem?.id, userId: user?.id });
-  }, [problem?.id, setParams, setSolutionParams, user?.id]);
+  }, [problem?.id, setSolutionParams, user?.id]);
 
   const renderTab = () => {
     switch (tab) {

@@ -87,6 +87,10 @@ namespace Application.Problems
                     var languageIds = request.AllowedLanguages?.Split(',')?.Select(Int32.Parse)?.ToList();
                     ProblemLanguage language;
                     List<ProblemLanguage> problemLanguages = new List<ProblemLanguage>();
+
+                    var languagesToDelete = _context.ProblemLanguages.Where(l => l.ProblemId == request.Problem.Id).ToList();
+                    _context.ProblemLanguages.RemoveRange(languagesToDelete);
+
                     foreach (int i in languageIds)
                     {
                         language = new ProblemLanguage();
@@ -94,7 +98,6 @@ namespace Application.Problems
                         problemLanguages.Add(language);
                     }
                     request.Problem.ProblemLanguages = problemLanguages;
-
 
                     _mapper.Map(request.Problem, problem);
                     await _context.SaveChangesAsync();
