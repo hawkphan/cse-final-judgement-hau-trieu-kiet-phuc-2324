@@ -11,14 +11,13 @@ import {
   Typography,
 } from "@mui/material";
 import { FaEye, FaCheckCircle, FaStar } from "react-icons/fa";
-import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { TbPointFilled } from "react-icons/tb";
-import { profileInfo } from "../TestData/data.mock";
 import { Button, LoadingCommon, formatDate, isEmpty } from "../../../../shared";
 import { useCallback } from "react";
 import { API_QUERIES, useGetProfileById } from "../../../../queries";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../../../../shared/common/stores/store";
+import { getLanguageNameById } from "../../../Problems/ProblemDetails/SubmissionTab/helpers";
 
 interface Props {
   id: string;
@@ -46,140 +45,144 @@ export const UserDetailInformation = ({ id }: Props) => {
       style={{
         marginTop: "20px",
         padding: "20px",
-        minHeight: "800px",
         minWidth: "180px",
       }}
       elevation={4}
     >
-      <Stack direction="row" spacing={2} style={{ paddingBottom: "20px" }}>
-        <Avatar sx={{ width: 80, height: 80 }} src={profile?.avatar ? "data:image/jpeg;base64," + profile?.avatar : ''} />
-        
-        <Stack direction="column" spacing={0.5}>
-          <h4>{profile?.displayName}</h4>
-          <h5>{profile?.email}</h5>
-          <h5><strong>DOB: </strong>{formatDate(profile?.birthday)}</h5>
-        </Stack>
-      </Stack>
-      {id == userStore?.user?.id && (
-        <Button
-          onClick={handleEditProfile}
-          style={{
-            width: "100%",
-            maxWidth: "500px",
-            maxHeight: "30px",
-            minWidth: "100px",
-            minHeight: "30px",
-          }}
-        >
-          Edit Profile
-        </Button>
-      )}
-      <Divider style={{ marginTop: "20px", marginBottom: "5px" }} />
-      <List
-        sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-        dense
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+        }}
       >
-        <Typography
-          sx={{ fontSize: 16, fontWeight: "bold" }}
-          color="text.primary"
-          gutterBottom
-        >
-          Community Stats
-        </Typography>
-        <ListItem>
-          <ListItemIcon>
-            <FaEye style={{ color: "blue" }} />
-          </ListItemIcon>
-          <ListItemText
-            primary={`Views ${profileInfo.user.userProfile.views}`}
-            secondary="Last week 0"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <FaCheckCircle style={{ color: "#8AFF72" }} />
-          </ListItemIcon>
-          <ListItemText
-            primary={`Solutions ${profileInfo.user.userProfile.solutions}`}
-            secondary="Last week 0"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <IoChatboxEllipsesOutline style={{ color: "#61B350" }} />
-          </ListItemIcon>
-          <ListItemText primary="Discuss 0" secondary="Last week 0" />
-        </ListItem>
+        <Box sx={{ marginTop: "0px", flexGrow: 3, padding: "10px 20px" }}>
+          <Stack direction="row" spacing={2} style={{ paddingBottom: "20px" }}>
+            <Avatar
+              sx={{ width: 180, height: 180 }}
+              src={
+                profile?.avatar
+                  ? "data:image/jpeg;base64," + profile?.avatar
+                  : ""
+              }
+            />
 
-        <ListItem>
-          <ListItemIcon>
-            <FaStar style={{ color: "#EBF068" }} />
-          </ListItemIcon>
-          <ListItemText
-            primary={`Reputation ${profileInfo.user.userProfile.reputation}`}
-            secondary="Last week 0"
-          />
-        </ListItem>
-      </List>
-
-      <Divider style={{ marginTop: "20px", marginBottom: "5px" }} />
-      <List
-        sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-        dense
-      >
-        <Typography
-          sx={{ fontSize: 16, fontWeight: "bold" }}
-          color="text.primary"
-          gutterBottom
-        >
-          Languages
-        </Typography>
-        <Box display="flex" flexDirection="column">
-          {profileInfo.user.userProfile.languagesUsage === null ? (
-            <ListItemText secondary="Not enough data" />
-          ) : (
-            profileInfo.user.userProfile.languages.map((language) => (
-              <ListItem key={language}>
-                <ListItemIcon>
-                  <TbPointFilled />
-                </ListItemIcon>
-                <ListItemText primary={`${language}`} />
-              </ListItem>
-            ))
+            <Stack
+              direction="column"
+              spacing={0.5}
+              flexGrow={1}
+              sx={{ padding: "20px" }}
+            >
+              <h3>{profile?.displayName}</h3>
+              <h3>{profile?.email}</h3>
+              <h3>
+                <strong>DOB: </strong>
+                {formatDate(profile?.birthday)}
+              </h3>
+            </Stack>
+          </Stack>
+          {id == userStore?.user?.id && (
+            <Button
+              onClick={handleEditProfile}
+              style={{
+                width: "100%",
+                maxHeight: "30px",
+                minHeight: "30px",
+              }}
+            >
+              Edit Profile
+            </Button>
           )}
         </Box>
-      </List>
-      <Divider style={{ marginTop: "20px", marginBottom: "5px" }} />
-      <List
-        sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-        dense
-      >
-        <Typography
-          sx={{ fontSize: 16, fontWeight: "bold" }}
-          color="text.primary"
-          gutterBottom
-        >
-          Skills
-        </Typography>
-        <ListItem>
-          <ListItemIcon>
-            <TbPointFilled style={{ color: "red" }} />
-          </ListItemIcon>
-          <ListItemText primary="Advanced" />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <TbPointFilled style={{ color: "orange" }} />
-          </ListItemIcon>
-          <ListItemText primary="Intermediate" />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <TbPointFilled style={{ color: "green" }} />
-          </ListItemIcon>
-          <ListItemText primary="Fundamental" />
-        </ListItem>
-      </List>
+
+        <Divider
+          orientation="vertical"
+          variant="middle"
+          flexItem
+          sx={{ marginRight: "20px" }}
+        />
+
+        <Box sx={{ marginTop: "0px", flexGrow: 3 }}>
+          <List
+            sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+            dense
+          >
+            <Typography
+              sx={{ fontSize: 20, fontWeight: "bold" }}
+              color="text.primary"
+              gutterBottom
+            >
+              Community Stats
+            </Typography>
+
+            <ListItem>
+              <ListItemIcon>
+                <FaCheckCircle style={{ color: "#8AFF72" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={`Solutions ${profile.activities.solutions}`}
+                secondary={`Last week ${profile.activities.lastWeekSolutions}`}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <FaEye style={{ color: "blue" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={`Problems ${profile.activities.views}`}
+                secondary={`Last week ${profile.activities.lastWeekViews}`}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <FaStar style={{ color: "#EBF068" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={`Solved problems ${profile.activities.solvedProblems}`}
+                secondary={`Last week ${profile.activities.lastWeekSolvedProblems}`}
+              />
+            </ListItem>
+          </List>
+        </Box>
+
+        <Divider
+          orientation="vertical"
+          variant="middle"
+          flexItem
+          sx={{ marginRight: "20px" }}
+        />
+
+        <Box sx={{ marginTop: "0", flexGrow: 3 }}>
+          <List
+            sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+            dense
+          >
+            <Typography
+              sx={{ fontSize: 20, fontWeight: "bold" }}
+              color="text.primary"
+              gutterBottom
+            >
+              Languages
+            </Typography>
+            <Box display="flex" flexDirection="column">
+              {profile.languageUsage === null ? (
+                <ListItemText secondary="Not enough data" />
+              ) : (
+                profile.languageUsage.map((language) => (
+                  <ListItem>
+                    <ListItemIcon>
+                      <TbPointFilled />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`${getLanguageNameById(language)}`}
+                    />
+                  </ListItem>
+                ))
+              )}
+            </Box>
+          </List>
+        </Box>
+      </Box>
     </Card>
   );
 };
