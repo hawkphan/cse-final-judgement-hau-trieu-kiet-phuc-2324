@@ -4,13 +4,14 @@ import { stripHtml } from "string-strip-html";
 import {
   Breadcrumbs,
   Button,
+  Checkbox,
   Form,
   Grid,
   LoadingCommon,
   MuiInput,
-  MuiMultiSelect,
   PermissionRestrict,
   Toastify,
+  isEmpty,
 } from "../../../shared";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -127,6 +128,13 @@ const ProblemForm = () => {
       Toastify.error(ValidationMessage.EXISTING_CODE);
       setError(ProblemProperties.CODE, {
         message: ValidationMessage.EXISTING_CODE,
+      });
+      return;
+    }
+
+    if (isEmpty(selectedLanguages)) {
+      setError(ProblemProperties.VALID_LANGUAGES, {
+        message: "You must choose at least one language",
       });
       return;
     }
@@ -305,13 +313,12 @@ const ProblemForm = () => {
                 name={ProblemProperties.VALID_LANGUAGES}
                 control={control}
                 render={({ fieldState }) => (
-                  <MuiMultiSelect
-                    label="Languages"
-                    placeholder="Valid languages"
+                  <Checkbox.Group
+                    label="Allowed Languages in Solutions"
                     options={languageOptions}
-                    value={selectedLanguages}
                     onChange={handleChangeLanguages}
-                    size="small"
+                    value={selectedLanguages}
+                    columns={3}
                     errorMessage={fieldState.error?.message}
                   />
                 )}

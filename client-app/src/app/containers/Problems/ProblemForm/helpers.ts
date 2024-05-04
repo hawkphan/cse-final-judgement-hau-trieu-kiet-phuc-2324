@@ -47,6 +47,7 @@ export const mapFormData = (
   formData.append(ProblemProperties.TITLE, data.title);
   formData.append(ProblemProperties.DESCRIPTION, data.description);
   formData.append(ProblemProperties.TIME_LIMIT, data.timeLimit.toString());
+  formData.append(ProblemProperties.MEMORY_LIMIT, data.memoryLimit.toString());
   formData.append(ProblemProperties.USER_ID, userId);
   formData.append(
     ProblemProperties.VALID_LANGUAGES,
@@ -84,5 +85,4 @@ export const EditProblemFormSchema = Yup.object().shape({
   [ProblemProperties.TIME_LIMIT]: Yup.string().required(),
   [ProblemProperties.MEMORY_LIMIT]: Yup.string().required(),
   // [ProblemProperties.COMPARE_MODE]: Yup.string().required(),
-  // [ProblemProperties.VALID_LANGUAGES]: Yup.array().defined(),
 });
