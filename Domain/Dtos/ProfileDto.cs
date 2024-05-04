@@ -15,5 +15,17 @@ namespace Domain
         public double Gender { get; set; }
         public string DisplayName { get; set; }
         public string Avatar { get; set; }
+        public ICollection<int> languageUsage { get; set; }
+        public UserActivityRecord activities { get; set; }
+    }
+
+    public class UserActivityRecord
+    {
+        public int Views { get; set; }
+        public int LastWeekViews { get; set; }
+        public int Solutions { get; set; }
+        public int LastWeekSolutions { get; set; }
+        public int SolvedProblems { get; set; }
+        public int LastWeekSolvedProblems { get; set; }
     }
 }

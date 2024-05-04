@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Microsoft.VisualBasic;
+using System.Collections.Generic;
+using System.Linq;
+using Domain.Dtos;
 
 namespace Application.Profiles
 {
@@ -25,15 +28,21 @@ namespace Application.Profiles
         {
             private readonly IMapper _mapper;
             private readonly UserManager<AppUser> _userManager;
+            private readonly DataContext _context;
 
-            public Handler(IMapper mapper, UserManager<AppUser> userManager)
+            public Handler(IMapper mapper, UserManager<AppUser> userManager, DataContext context)
             {
                 _userManager = userManager;
                 _mapper = mapper;
+                _context = context;
             }
             public async Task<ApiResult<ProfileDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.FindByIdAsync(request.UserId);
+                var solutions = _context.Solutions.AsQueryable();
+                Guid? userId = Guid.Parse(request.UserId);
+                solutions = solutions.Where(s => s.UserId == userId);
+                
                 var profile = _mapper.Map<ProfileDto>(user);
                 string avatarPath = Path.Combine(Directory.GetCurrentDirectory(), $"Uploads\\Images\\{user.Id}.jpg");
 
@@ -43,6 +52,31 @@ namespace Application.Profiles
                     string base64Image = Convert.ToBase64String(fileBytes);
                     profile.Avatar = base64Image;
                 }
+
+                var languageUsage = solutions.GroupBy(s => s.LanguageId)
+                .Select(group => group.Key)
+                .ToList();
+                profile.languageUsage = languageUsage;
+
+                DateTime startOfLastWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday).AddDays(-7);
+                DateTime endOfLastWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+
+                var Views = solutions.GroupBy(s => s.ProblemId);
+                var SolvedProblems = View.Where(group => group.Any(solution => solution.Status == 3))
+                if (profile.activities == null)
+                {
+                    profile.activities = new UserActivityRecord();
+                }
+                profile.activities.Views = Views.Count();
+                profile.activities.LastWeekViews = Views.Count(group => group.Any(
+                    solution => (solution.CreatedDate >=  startOfLastWeek && solution.CreatedDate <= endOfLastWeek))); 
+
+                profile.activities.Solutions = solutions.Count();
+                profile.activities.LastWeekSolutions = solutions.Count(solution => (solution.CreatedDate >=  startOfLastWeek && solution.CreatedDate <= endOfLastWeek));
+
+                profile.activities.SolvedProblems = SolvedProblems.Count();
+                profile.activities.LastWeekSolvedProblems = SolvedProblems.Count(group => group.Any(
+                    solution => (solution.CreatedDate >=  startOfLastWeek && solution.CreatedDate <= endOfLastWeek)));
 
                 return ApiResult<ProfileDto>.Success(profile);
             }

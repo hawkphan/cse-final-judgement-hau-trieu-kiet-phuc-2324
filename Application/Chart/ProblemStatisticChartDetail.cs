@@ -46,7 +46,7 @@ namespace Application.Chart
 
 
                 var data = new ProblemStatisticDto();
-                data.TotalProblems = problems.Count();
+                data.TotalProblems = problems.Count(p => p.Solutions.Any(s => (s.UserId == userId)));
                 data.TotalSolvedProblems = problems.Count(p => p.Solutions.Any(s => (s.Status == 3 && s.UserId == userId)));
 
 
@@ -66,7 +66,7 @@ namespace Application.Chart
                         var difficultyStatistic = new DifficultyStatistic
                         {
                             Difficulty = i,
-                            TotalProblems = groupedProblems[i].Count(),
+                            TotalProblems = groupedProblems[i].Count(p => p.Solutions.Any(s => (s.UserId == userId))),
                             TotalSolved = groupedProblems[i].Count(p => p.Solutions.Any(s => s.Status == 3))
                         };
                         difficultyStatistics.Add(difficultyStatistic);

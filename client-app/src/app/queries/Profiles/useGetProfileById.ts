@@ -2,14 +2,14 @@
 /* eslint-disable no-debugger */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { UseQueryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Profile } from "./types";
+import { Profile, UserActivityRecord } from "./types";
 import { API_QUERIES } from "../common/constants";
 import { getProfileById } from "./apis";
 import { responseWrapper } from "../common";
 import { ApiResponseType } from "../../shared";
 
 export function useGetProfileById(
-  options?: UseQueryOptions<ApiResponseType<Profile>, Error, any> & {
+  options?: UseQueryOptions<ApiResponseType<Profile<UserActivityRecord>>, Error, any> & {
     id?: string;
   }
 ) {
@@ -19,11 +19,11 @@ export function useGetProfileById(
     isError,
     isFetching,
     refetch: onGetProfile,
-  } = useQuery<ApiResponseType<Profile>, Error, any>({
+  } = useQuery<ApiResponseType<Profile<UserActivityRecord>>, Error, any>({
     queryKey: [API_QUERIES.GET_PROFILE_BY_ID, { id: options?.id }],
     queryFn: (query) => {
       const [_, ...params] = query.queryKey;
-      return responseWrapper<ApiResponseType<Profile>>(getProfileById, params);
+      return responseWrapper<ApiResponseType<Profile<UserActivityRecord>>>(getProfileById, params);
     },
     enabled: true,
     ...options,

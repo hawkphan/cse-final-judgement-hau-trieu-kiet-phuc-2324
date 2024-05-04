@@ -11,6 +11,7 @@ import {
 import { useGetProblemStatisticChartById } from "../../../../queries/Profiles/useGetProblemStatisticChartById";
 import { API_QUERIES, DifficultyStatistic } from "../../../../queries";
 import { LoadingCommon } from "../../../../shared";
+import { useEffect } from "react";
 
 function CircularProgressWithLabel(
   props: CircularProgressProps & { value: number }
@@ -110,17 +111,36 @@ export interface Props {
 }
 
 export default function UserActivityReport({ id }: Props) {
-  const { problemStatistic, isFetching } = useGetProblemStatisticChartById({
+  const { problemStatistic, isFetching, handleInvalidateStatisticSubmission, onGetProblemStatisticSubmission } = useGetProblemStatisticChartById({
     id,
     queryKey: [API_QUERIES.GET_PROBLEMS_CHART_BY_ID, { id: id }],
   });
 
   function calculateTotalProblemSolvedPercent() {
+    if(problemStatistic.totalProblems == 0){
+      return 0;
+    }
     return (
       (problemStatistic.totalSolvedProblems / problemStatistic.totalProblems) *
       100
     );
   }
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      handleInvalidateStatisticSubmission();
+      onGetProblemStatisticSubmission();
+    }, 30000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [
+    problemStatistic,
+    handleInvalidateStatisticSubmission,
+    isFetching,
+    onGetProblemStatisticSubmission,
+  ]);
 
   if (isFetching) {
     <LoadingCommon />;
@@ -160,7 +180,6 @@ export default function UserActivityReport({ id }: Props) {
               minWidth: "100px",
               width: "100%",
               paddingLeft: "20px",
-              paddingRirth: "20px",
             }}
           >
             <DifficultyStatisticDetail

@@ -33,7 +33,7 @@ export function useGetAnnualChartById(
 
   const queryClient = useQueryClient();
 
-  const handleInvalidateProfile = () =>
+  const handleInvalidateAnnualSubmission = () =>
     queryClient.invalidateQueries({queryKey: [API_QUERIES.GET_ANNUAL_CHART_BY_ID]});
 
   const {data: annualSubmission = []} = data || [];
@@ -44,6 +44,6 @@ export function useGetAnnualChartById(
     isError,
     isFetching,
     onGetAnnualSubmission,
-    handleInvalidateProfile,
+    handleInvalidateAnnualSubmission,
   };
 }

@@ -3,6 +3,7 @@ import Chart, { Props } from "react-apexcharts";
 import { useGetAnnualChartById } from "../../../../queries/Profiles/useGetAnnualChartById";
 import { API_QUERIES } from "../../../../queries";
 import { LoadingCommon } from "../../../../shared";
+import { useEffect } from "react";
 
 const state: Props = {
   options: {
@@ -57,7 +58,7 @@ interface props {
 }
 
 export default function UserAnnualReport({ id }: props) {
-  const { annualSubmission, isFetching } = useGetAnnualChartById({
+  const { annualSubmission, isFetching, handleInvalidateAnnualSubmission, onGetAnnualSubmission } = useGetAnnualChartById({
     id,
     queryKey: [API_QUERIES.GET_ANNUAL_CHART_BY_ID, { id: id }],
   });
@@ -125,16 +126,31 @@ export default function UserAnnualReport({ id }: props) {
 
   state.options.xaxis = { categories: dataMonths };
 
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      handleInvalidateAnnualSubmission();
+      onGetAnnualSubmission();
+    }, 30000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [
+    annualSubmission,
+    handleInvalidateAnnualSubmission,
+    isFetching,
+    onGetAnnualSubmission,
+  ]);
+
   if (isFetching) {
     <LoadingCommon />;
   }
   return (
     <Card
       style={{
-        marginTop: "15px",
+        marginTop: "20px",
         paddingLeft: "20px",
         paddingRight: "20px",
-        minHeight: "500px",
         minWidth: "180px",
       }}
       elevation={4}

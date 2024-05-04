@@ -33,7 +33,7 @@ export function useGetProblemStatisticChartById(
 
   const queryClient = useQueryClient();
 
-  const handleInvalidateProfile = () =>
+  const handleInvalidateStatisticSubmission = () =>
     queryClient.invalidateQueries({queryKey: [API_QUERIES.GET_PROBLEMS_CHART_BY_ID]});
 
   const {data: problemStatistic = []} = data || [];
@@ -44,6 +44,6 @@ export function useGetProblemStatisticChartById(
     isError,
     isFetching,
     onGetProblemStatisticSubmission,
-    handleInvalidateProfile,
+    handleInvalidateStatisticSubmission,
   };
 }

@@ -33,7 +33,7 @@ export function useGetLanguagesUsageById(
 
   const queryClient = useQueryClient();
 
-  const handleInvalidateProfile = () =>
+  const handleInvalidateLanguageUsage = () =>
     queryClient.invalidateQueries({queryKey: [API_QUERIES.GET_LANGUAGES_CHART_BY_ID]});
 
   const {data: languagesUsage = []} = data || [];
@@ -44,6 +44,6 @@ export function useGetLanguagesUsageById(
     isError,
     isFetching,
     onGetLanguagesUsage,
-    handleInvalidateProfile,
+    handleInvalidateLanguageUsage,
   };
 }
