@@ -1,5 +1,8 @@
+using Application.Core;
 using Application.Interfaces;
+using AutoMapper;
 using Domain;
+using Domain.Dtos;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,25 +12,43 @@ namespace Application.Contests
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<ApiResult<ContestDto>>
         {
-            public Domain.Contest Contest { get; set; }
+            public ContestDto Contest { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, ApiResult<ContestDto>>
         {
             private readonly DataContext _context;
             private readonly IUserAccessor _userAccessor;
-            public Handler(DataContext context, IUserAccessor userAccessor)
+            private readonly IMapper _mapper;
+            public Handler(DataContext context, IUserAccessor userAccessor, IMapper mapper)
             {
                 _context = context;
                 _userAccessor = userAccessor;
+                _mapper = mapper;
             }
-            public async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task<ApiResult<ContestDto>> Handle(Command request, CancellationToken cancellationToken)
             {
-                _context.Contests.Add(request.Contest);
+                var problems = request.Contest.Problems;
+                var members = request.Contest.Members;
 
-                await _context.SaveChangesAsync();
+                if (problems == null || members == null || !problems.Any() || !members.Any())
+                {
+                    return ApiResult<ContestDto>.Failure(new string[] { "Contest must have members and a problem set" });
+                }
+
+                try
+                {
+                    var contest = _mapper.Map<Domain.Contest>(request.Contest);
+                    _context.Contests.Add(contest);
+                    await _context.SaveChangesAsync();
+                    return ApiResult<ContestDto>.Success(request.Contest);
+                }
+                catch (Exception e)
+                {
+                    return ApiResult<ContestDto>.Failure(new string[] { e.Message });
+                }
             }
 
         }

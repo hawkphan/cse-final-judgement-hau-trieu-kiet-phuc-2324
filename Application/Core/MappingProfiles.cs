@@ -41,14 +41,27 @@ namespace Application.Core
                 .ForMember(d => d.Birthday, o => o.MapFrom(s => s.Birthday))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.Email))
             ;
-            CreateMap<Domain.Contest, ContestDto>()
+            CreateMap<ContestDto, Domain.Contest>()
               .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
-              .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
+              .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
               .ForMember(d => d.StartTime, o => o.MapFrom(s => s.StartTime))
               .ForMember(d => d.EndTime, o => o.MapFrom(s => s.EndTime))
-              .ForMember(d => d.Members, o => o.MapFrom(s => s.Members))
-              .ForMember(d => d.Description, o => o.MapFrom(s => s.Description))
-              .ForMember(d => d.Problems, o => o.MapFrom(s => s.Problems));
+              .ForMember(d => d.Rule, o => o.MapFrom(s => s.Rule))
+              .ForMember(d => d.Type, o => o.MapFrom(s => s.Rule))
+              .ForMember(d => d.Description, o => o.MapFrom(s => s.Description));
+
+            CreateMap<ContestMemberDto, ContestMember>()
+            .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
+            .ForMember(d => d.ContestId, o => o.MapFrom(s => s.ContestId))
+            .ForMember(d => d.UserId, o => o.MapFrom(s => s.UserId))
+            .ForMember(d => d.Role, o => o.MapFrom(s => s.Role));
+
+            CreateMap<ContestProblemDto, ContestProblem>()
+            .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
+            .ForMember(d => d.ContestId, o => o.MapFrom(s => s.ContestId))
+            .ForMember(d => d.ProblemId, o => o.MapFrom(s => s.ProblemId))
+            .ForMember(d => d.Score, o => o.MapFrom(s => s.Score));
+            
         }
     }
 }

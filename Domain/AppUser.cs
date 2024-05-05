@@ -20,6 +20,8 @@ namespace Domain
         // [JsonIgnore]
         // public ICollection<Language> Languages { get; set; }
         public ICollection<ContestMember> MemberContests { get; set; }
+        public ICollection<Notification> SentNotifications { get; set; }
+        public ICollection<Notification> ReceivedNotifications { get; set; }
     }
 
 }

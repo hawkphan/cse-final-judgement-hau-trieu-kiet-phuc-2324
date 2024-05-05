@@ -1,4 +1,4 @@
-import { Avatar, Box, Menu, MenuItem, Typography } from "@mui/material";
+import { Avatar, Box, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import { Callback } from "../../queries";
 import { Button } from "../../shared";
 
@@ -106,11 +106,17 @@ const NotificationMenu = ({
             </div>
           </MenuItem>
         ))}
-      </Box>
-      <Box textAlign="center">
-        <Button color="primary" onClick={onCloseNotification} isLoading={true}>
-          Load more
-        </Button>
+        <MenuItem>
+          <Stack direction="row" justifyContent="center" alignItems="center">
+            <Button
+              color="primary"
+              onClick={onCloseNotification}
+              isLoading={true}
+            >
+              Load more
+            </Button>
+          </Stack>
+        </MenuItem>
       </Box>
     </Menu>
   );

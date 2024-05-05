@@ -29,10 +29,9 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> CreateContest(Contest newContest)
+        public async Task<ActionResult> CreateContest([FromBody] ContestDto newContest)
         {
-            await Mediator.Send(new Create.Command { Contest = newContest });
-            return Ok();
+            return HandleApiResult(await Mediator.Send(new Create.Command { Contest = newContest }));
         }
         [AllowAnonymous]
         [HttpPut("{id}")]

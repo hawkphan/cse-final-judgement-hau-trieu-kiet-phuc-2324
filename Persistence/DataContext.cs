@@ -19,6 +19,7 @@ namespace Persistence
         public DbSet<Contest> Contests { get; set; }
         public DbSet<ContestMember> ContestMembers { get; set; }
         public DbSet<ContestProblem> ContestProblems { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -30,7 +31,7 @@ namespace Persistence
                 .HasOne(p => p.Problem)
                 .WithMany(pl => pl.ProblemLanguages)
                 .HasForeignKey(plk => plk.ProblemId);
-            
+
 
             // Configure Result entity
             builder.Entity<Result>()
@@ -61,6 +62,11 @@ namespace Persistence
                 .HasOne(s => s.User)
                 .WithMany(u => u.Solutions)
                 .HasForeignKey(s => s.UserId);
+
+            builder.Entity<Solution>()
+                .HasOne(s => s.Contest)
+                .WithMany(u => u.Solutions)
+                .HasForeignKey(s => s.ContestId);
 
             builder.Entity<Solution>()
                 .HasOne(s => s.Problem)
@@ -103,6 +109,16 @@ namespace Persistence
                 .WithMany(c => c.Problems)
                 .HasForeignKey(cm => cm.ContestId);
 
+            builder.Entity<Notification>()
+                .HasOne(cm => cm.Sender)
+                .WithMany(c => c.SentNotifications)
+                .HasForeignKey(cm => cm.SenderId);
+
+            builder.Entity<Notification>()
+            .HasOne(cm => cm.Receiver)
+            .WithMany(c => c.ReceivedNotifications)
+            .HasForeignKey(cm => cm.ReceiverId);
+
             // Configure Contest keys
 
             builder.Entity<Contest>()
@@ -112,6 +128,9 @@ namespace Persistence
             .HasKey(p => p.Id);
 
             builder.Entity<ContestProblem>()
+            .HasKey(p => p.Id);
+
+            builder.Entity<Notification>()
             .HasKey(p => p.Id);
 
             base.OnModelCreating(builder);

@@ -42,7 +42,7 @@ namespace Application.Profiles
                 var solutions = _context.Solutions.AsQueryable();
                 Guid? userId = Guid.Parse(request.UserId);
                 solutions = solutions.Where(s => s.UserId == userId);
-                
+
                 var profile = _mapper.Map<ProfileDto>(user);
                 string avatarPath = Path.Combine(Directory.GetCurrentDirectory(), $"Uploads\\Images\\{user.Id}.jpg");
 
@@ -62,21 +62,21 @@ namespace Application.Profiles
                 DateTime endOfLastWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
 
                 var Views = solutions.GroupBy(s => s.ProblemId);
-                var SolvedProblems = View.Where(group => group.Any(solution => solution.Status == 3))
+                var SolvedProblems = Views.Where(group => group.Any(solution => solution.Status == 3));
                 if (profile.activities == null)
                 {
                     profile.activities = new UserActivityRecord();
                 }
                 profile.activities.Views = Views.Count();
                 profile.activities.LastWeekViews = Views.Count(group => group.Any(
-                    solution => (solution.CreatedDate >=  startOfLastWeek && solution.CreatedDate <= endOfLastWeek))); 
+                    solution => (solution.CreatedDate >= startOfLastWeek && solution.CreatedDate <= endOfLastWeek)));
 
                 profile.activities.Solutions = solutions.Count();
-                profile.activities.LastWeekSolutions = solutions.Count(solution => (solution.CreatedDate >=  startOfLastWeek && solution.CreatedDate <= endOfLastWeek));
+                profile.activities.LastWeekSolutions = solutions.Count(solution => (solution.CreatedDate >= startOfLastWeek && solution.CreatedDate <= endOfLastWeek));
 
                 profile.activities.SolvedProblems = SolvedProblems.Count();
                 profile.activities.LastWeekSolvedProblems = SolvedProblems.Count(group => group.Any(
-                    solution => (solution.CreatedDate >=  startOfLastWeek && solution.CreatedDate <= endOfLastWeek)));
+                    solution => (solution.CreatedDate >= startOfLastWeek && solution.CreatedDate <= endOfLastWeek)));
 
                 return ApiResult<ProfileDto>.Success(profile);
             }

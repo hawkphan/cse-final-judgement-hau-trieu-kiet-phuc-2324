@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -79,10 +79,13 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: true),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     StartTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    EndTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Status = table.Column<double>(type: "REAL", nullable: false),
+                    Rule = table.Column<double>(type: "REAL", nullable: false),
+                    Type = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -196,6 +199,33 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Type = table.Column<double>(type: "REAL", nullable: false),
+                    Content = table.Column<string>(type: "TEXT", nullable: true),
+                    Timestamp = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Status = table.Column<double>(type: "REAL", nullable: false),
+                    ReceiverId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    SenderId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notifications_AspNetUsers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Notifications_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Problems",
                 columns: table => new
                 {
@@ -253,7 +283,8 @@ namespace Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     ContestId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProblemId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    ProblemId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Score = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -298,6 +329,7 @@ namespace Persistence.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ProblemId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ContestId = table.Column<Guid>(type: "TEXT", nullable: true),
                     LanguageId = table.Column<int>(type: "INTEGER", nullable: false),
                     Status = table.Column<double>(type: "REAL", nullable: false),
                     MemoryUsage = table.Column<long>(type: "INTEGER", nullable: false),
@@ -315,6 +347,11 @@ namespace Persistence.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Solutions_Contests_ContestId",
+                        column: x => x.ContestId,
+                        principalTable: "Contests",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Solutions_Problems_ProblemId",
                         column: x => x.ProblemId,
@@ -440,6 +477,16 @@ namespace Persistence.Migrations
                 column: "ProblemId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Notifications_ReceiverId",
+                table: "Notifications",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_SenderId",
+                table: "Notifications",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProblemLanguages_ProblemId",
                 table: "ProblemLanguages",
                 column: "ProblemId");
@@ -469,6 +516,11 @@ namespace Persistence.Migrations
                 name: "IX_Results_TestCaseId",
                 table: "Results",
                 column: "TestCaseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Solutions_ContestId",
+                table: "Solutions",
+                column: "ContestId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Solutions_ProblemId",
@@ -514,6 +566,9 @@ namespace Persistence.Migrations
                 name: "ContestProblems");
 
             migrationBuilder.DropTable(
+                name: "Notifications");
+
+            migrationBuilder.DropTable(
                 name: "ProblemLanguages");
 
             migrationBuilder.DropTable(
@@ -523,13 +578,13 @@ namespace Persistence.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Contests");
-
-            migrationBuilder.DropTable(
                 name: "Solutions");
 
             migrationBuilder.DropTable(
                 name: "TestCases");
+
+            migrationBuilder.DropTable(
+                name: "Contests");
 
             migrationBuilder.DropTable(
                 name: "Problems");

@@ -144,11 +144,20 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Rule")
+                        .HasColumnType("REAL");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Status")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Type")
+                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -191,6 +200,9 @@ namespace Persistence.Migrations
                     b.Property<Guid>("ProblemId")
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("Score")
+                        .HasColumnType("REAL");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ContestId");
@@ -198,6 +210,39 @@ namespace Persistence.Migrations
                     b.HasIndex("ProblemId");
 
                     b.ToTable("ContestProblems");
+                });
+
+            modelBuilder.Entity("Domain.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ReceiverId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("SenderId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Status")
+                        .HasColumnType("REAL");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Type")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Domain.Problem", b =>
@@ -315,6 +360,9 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("ContestId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
@@ -343,6 +391,8 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContestId");
 
                     b.HasIndex("ProblemId");
 
@@ -540,6 +590,21 @@ namespace Persistence.Migrations
                     b.Navigation("Problem");
                 });
 
+            modelBuilder.Entity("Domain.Notification", b =>
+                {
+                    b.HasOne("Domain.AppUser", "Receiver")
+                        .WithMany("ReceivedNotifications")
+                        .HasForeignKey("ReceiverId");
+
+                    b.HasOne("Domain.AppUser", "Sender")
+                        .WithMany("SentNotifications")
+                        .HasForeignKey("SenderId");
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("Domain.Problem", b =>
                 {
                     b.HasOne("Domain.AppUser", "User")
@@ -587,6 +652,10 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Solution", b =>
                 {
+                    b.HasOne("Domain.Contest", "Contest")
+                        .WithMany("Solutions")
+                        .HasForeignKey("ContestId");
+
                     b.HasOne("Domain.Problem", "Problem")
                         .WithMany("Solutions")
                         .HasForeignKey("ProblemId")
@@ -598,6 +667,8 @@ namespace Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Contest");
 
                     b.Navigation("Problem");
 
@@ -672,6 +743,10 @@ namespace Persistence.Migrations
 
                     b.Navigation("Problems");
 
+                    b.Navigation("ReceivedNotifications");
+
+                    b.Navigation("SentNotifications");
+
                     b.Navigation("Solutions");
                 });
 
@@ -680,6 +755,8 @@ namespace Persistence.Migrations
                     b.Navigation("Members");
 
                     b.Navigation("Problems");
+
+                    b.Navigation("Solutions");
                 });
 
             modelBuilder.Entity("Domain.Problem", b =>

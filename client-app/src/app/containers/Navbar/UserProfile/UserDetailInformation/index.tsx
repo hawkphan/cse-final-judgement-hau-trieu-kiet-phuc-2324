@@ -120,8 +120,8 @@ export const UserDetailInformation = ({ id }: Props) => {
                 <FaCheckCircle style={{ color: "#8AFF72" }} />
               </ListItemIcon>
               <ListItemText
-                primary={`Solutions ${profile.activities.solutions}`}
-                secondary={`Last week ${profile.activities.lastWeekSolutions}`}
+                primary={`Solutions ${profile?.activities?.solutions}`}
+                secondary={`Last week ${profile?.activities?.lastWeekSolutions}`}
               />
             </ListItem>
             <ListItem>
@@ -129,8 +129,8 @@ export const UserDetailInformation = ({ id }: Props) => {
                 <FaEye style={{ color: "blue" }} />
               </ListItemIcon>
               <ListItemText
-                primary={`Problems ${profile.activities.views}`}
-                secondary={`Last week ${profile.activities.lastWeekViews}`}
+                primary={`Problems ${profile?.activities?.views}`}
+                secondary={`Last week ${profile?.activities?.lastWeekViews}`}
               />
             </ListItem>
             <ListItem>
@@ -138,8 +138,8 @@ export const UserDetailInformation = ({ id }: Props) => {
                 <FaStar style={{ color: "#EBF068" }} />
               </ListItemIcon>
               <ListItemText
-                primary={`Solved problems ${profile.activities.solvedProblems}`}
-                secondary={`Last week ${profile.activities.lastWeekSolvedProblems}`}
+                primary={`Solved problems ${profile?.activities?.solvedProblems}`}
+                secondary={`Last week ${profile?.activities?.lastWeekSolvedProblems}`}
               />
             </ListItem>
           </List>
@@ -165,11 +165,11 @@ export const UserDetailInformation = ({ id }: Props) => {
               Languages
             </Typography>
             <Box display="flex" flexDirection="column">
-              {profile.languageUsage === null ? (
+              {profile?.languageUsage === null ? (
                 <ListItemText secondary="Not enough data" />
               ) : (
-                profile.languageUsage.map((language) => (
-                  <ListItem>
+                profile?.languageUsage?.map((language) => (
+                  <ListItem key={language}>
                     <ListItemIcon>
                       <TbPointFilled />
                     </ListItemIcon>

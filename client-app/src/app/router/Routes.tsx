@@ -15,6 +15,7 @@ import EditProfile from "../containers/Navbar/UserProfile/EditProfile";
 import ProtectedRoute from "../containers/ProtectedRoute";
 import ContestPage from "../containers/Contests/ContestPage";
 import UserManagement from "../containers/User/UserManagement";
+import ContestManagement from "../containers/Contests/ContestManagement";
 
 export const routes: RouteObject[] = [
   {
@@ -122,6 +123,14 @@ export const routes: RouteObject[] = [
         element: (
           <ProtectedRoute>
             <UserManagement />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: PATHS.contestManagement,
+        element: (
+          <ProtectedRoute>
+            <ContestManagement />
           </ProtectedRoute>
         ),
       },

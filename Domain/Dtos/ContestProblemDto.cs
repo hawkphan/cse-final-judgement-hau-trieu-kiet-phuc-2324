@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Domain
+namespace Domain.Dtos
 {
-    public class ContestProblem
+    public class ContestProblemDto
     {
-        [Key]
         public Guid Id { get; set; }
         public Guid ContestId { get; set; }
-        public Contest Contest { get; set; }
         public Guid ProblemId { get; set; }
-        public Problem Problem { get; set; }
         public double Score { get; set; }
     }
 }

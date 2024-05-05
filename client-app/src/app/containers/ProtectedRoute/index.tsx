@@ -1,7 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { ReactNode, useEffect, useState } from "react";
 import { useStore } from "../../shared/common/stores/store";
-import { LoadingCommon } from "../../shared";
 
 interface Props {
   authRequired?: boolean;
@@ -25,10 +24,13 @@ const ProtectedRoute: React.FC<Props> = ({ children, authRequired = true }) => {
   }, [userStore, userStore.isLoggedIn]);
 
   if (isLoading) {
-    return <LoadingCommon />;
+    return <></>;
   }
 
-  if ((isAuthenticated && authRequired) || (!isAuthenticated && !authRequired)) {
+  if (
+    (isAuthenticated && authRequired) ||
+    (!isAuthenticated && !authRequired)
+  ) {
     return <>{children}</>;
   }
 
