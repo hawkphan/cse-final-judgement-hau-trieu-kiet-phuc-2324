@@ -1,17 +1,15 @@
 import { Card, CardContent, Typography } from "@mui/material";
 import { Suspense, useEffect, useState } from "react";
 import { LoadingCommon } from "../../../../shared";
-import { useGetLanguagesUsageById } from "../../../../queries/Profiles/useGetLanguagesUsageChartById";
-import { API_QUERIES } from "../../../../queries";
+import { API_QUERIES, useGetLanguagesUsageById } from "../../../../queries";
 import Chart from "react-apexcharts";
 import { getLanguageNameById } from "../../../Problems/ProblemDetails/SubmissionTab/helpers";
 
-
-interface props {
+interface Props {
   id: string;
 }
 
-export default function UserLanguagesUsage({ id }: props) {
+export default function UserLanguagesUsage({ id }: Props) {
   const [state, setState] = useState({
     options: {
       labels: [],
@@ -29,7 +27,9 @@ export default function UserLanguagesUsage({ id }: props) {
   });
 
   useEffect(() => {
-    const labels = languagesUsage.map((item) => getLanguageNameById(item.languageId));
+    const labels = languagesUsage.map((item) =>
+      getLanguageNameById(item.languageId)
+    );
     setState((prevState) => ({
       ...prevState,
       options: {
@@ -37,14 +37,13 @@ export default function UserLanguagesUsage({ id }: props) {
         labels,
       },
     }));
-  
+
     const series = languagesUsage.map((item) => item.totalSubmissions);
     setState((prevState) => ({
       ...prevState,
       series,
     }));
   }, [languagesUsage]);
-
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -62,7 +61,11 @@ export default function UserLanguagesUsage({ id }: props) {
     onGetLanguagesUsage,
   ]);
 
-  if (state.options.labels.length < state.series.length || isFetching || state.options.labels.length == 0) {
+  if (
+    state.options.labels.length < state.series.length ||
+    isFetching ||
+    state.options.labels.length == 0
+  ) {
     <LoadingCommon />;
   }
   return (
@@ -85,13 +88,12 @@ export default function UserLanguagesUsage({ id }: props) {
           Languages Usage
         </Typography>
         <Suspense fallback={<LoadingCommon />}>
-       
-            <Chart
-              series={state.series}
-              options={state.options}
-              type="pie"
-              height="100%"
-            />
+          <Chart
+            series={state.series}
+            options={state.options}
+            type="pie"
+            height="100%"
+          />
         </Suspense>
       </CardContent>
     </Card>

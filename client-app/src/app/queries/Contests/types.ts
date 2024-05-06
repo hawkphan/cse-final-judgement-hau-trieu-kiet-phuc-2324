@@ -1,10 +1,9 @@
 import { Problem, User } from "../Problems";
 
-
 export interface Contest {
   id: string;
   code: string;
-  title: string;
+  name: string;
   description: string;
   startTime: string;
   endTime: string;
@@ -15,10 +14,12 @@ export interface Contest {
 }
 
 export interface CreateContestBody {
-  title: string;
+  name: string;
   description: string;
   startTime: string;
   endTime: string;
+  rule: number;
+  type: number;
   members: string[];
   problemIds: string[];
 }
@@ -31,4 +32,13 @@ export interface EditContestBody {
   endTime: string;
   members: User[];
   problems: Problem[];
+}
+export interface ContestProblem {
+  problemId: string;
+  score: number;
+}
+
+export interface ContestMember {
+  userId: string;
+  role: number;
 }

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Accept } from "react-dropzone";
-import { EditProfileBody } from "../../../../queries/Profiles/types";
 import { PATHS } from "../../../../configs/paths";
-import { Yup, isEmpty } from "../../../../shared";
+import { Yup } from "../../../../shared";
+import { EditProfileBody } from "../../../../queries";
 
 export const acceptedFileType: Accept = { "application/zip": [".zip"] };
 

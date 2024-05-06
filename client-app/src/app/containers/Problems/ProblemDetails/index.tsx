@@ -19,7 +19,6 @@ import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import { API_QUERIES } from "../../../queries/common/constants";
-import { useGetProblemById } from "../../../queries/Problems";
 import DescriptionTab from "./DescriptionTab";
 import SubmissionTab from "./SubmissionTab";
 import {
@@ -31,6 +30,7 @@ import {
 } from "./helpers";
 import {
   CreateSolutionBody,
+  useGetProblemById,
   useGetSolutions,
   useSubmitSolution,
 } from "../../../queries";

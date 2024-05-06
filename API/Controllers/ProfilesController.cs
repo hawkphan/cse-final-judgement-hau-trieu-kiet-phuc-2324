@@ -1,5 +1,4 @@
-﻿using Application.Activities;
-using Application.Profiles;
+﻿using Application.Profiles;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -7,21 +6,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using API.DTOS;
-using Application.Solutions;
 using Microsoft.AspNetCore.Identity;
 using API.Services;
+using Application.Core;
+using Application.Solutions;
 
 namespace API.Controllers
 {
-    public class ProfileController : BaseApiController
+    public class ProfilesController : BaseApiController
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly TokenService _tokenServices;
 
-        public ProfileController(UserManager<AppUser> userManager, TokenService tokenServices)
-        {   
+        public ProfilesController(UserManager<AppUser> userManager, TokenService tokenServices)
+        {
             _tokenServices = tokenServices;
             _userManager = userManager;
+        }
+
+        [AllowAnonymous]
+        [HttpGet] //api/profiles
+        public async Task<IActionResult> GetAllProfiles([FromQuery] PagingParams param)
+        {
+            return HandlePagedResult(await Mediator.Send(new Application.Profiles.List.Query { Params = param }));
         }
 
         [AllowAnonymous]
@@ -31,7 +38,7 @@ namespace API.Controllers
             return HandleApiResult(await Mediator.Send(new Detail.Query { UserId = id }));
         }
 
-       
+
         [AllowAnonymous]
         [HttpPut("editProfile")]
         public async Task<ActionResult<UserDto>> EditProfile([FromForm] UpdateDto UpdateDto)

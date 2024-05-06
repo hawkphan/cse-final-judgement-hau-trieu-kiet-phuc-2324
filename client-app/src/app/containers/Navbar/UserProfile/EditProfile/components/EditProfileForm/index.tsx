@@ -12,7 +12,6 @@ import Typography from "@mui/joy/Typography";
 import Card from "@mui/joy/Card";
 import CardActions from "@mui/joy/CardActions";
 import CardOverflow from "@mui/joy/CardOverflow";
-
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { Form, useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
@@ -20,10 +19,11 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useStore } from "../../../../../../shared/common/stores/store";
 import {
+  API_QUERIES,
   EditProfileBody,
+  useEditProfile,
   useGetProfileById,
-} from "../../../../../../queries/Profiles";
-import { API_QUERIES } from "../../../../../../queries";
+} from "../../../../../../queries";
 import {
   EditProfileFormSchema,
   ProfileProperties,
@@ -41,7 +41,6 @@ import {
   isEmpty,
 } from "../../../../../../shared";
 import { PATHS } from "../../../../../../configs/paths";
-import { useEditProfile } from "../../../../../../queries/Profiles/useEditProfile";
 import dayjs from "dayjs";
 import { IMAGES } from "../../../../../../configs/images";
 
@@ -305,7 +304,9 @@ export const EditProfileForm = () => {
                           <MuiDatePicker
                             label="Date of Birth"
                             value={dayjs(value)}
-                            onChange={(value) => onChange(value.toLocaleDateString())}
+                            onChange={(value) =>
+                              onChange(value.toLocaleDateString())
+                            }
                             required
                             errorMessage={error?.message}
                             {...props}
@@ -371,6 +372,6 @@ export const EditProfileForm = () => {
       </Stack>
     </Box>
   );
-}
+};
 
 export default EditProfileForm;

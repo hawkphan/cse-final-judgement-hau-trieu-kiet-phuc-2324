@@ -1,6 +1,6 @@
 import { MRT_ColumnDef } from "material-react-table";
 import { formatDateOrNull, formatValueOrNull } from "../../shared";
-import { Problem } from "../../queries/Problems/types";
+import { Problem } from "../../queries";
 import "material-symbols";
 import RowActions from "../../shared/components/RowActions";
 import { renderDifficultyTag } from "./helpers";

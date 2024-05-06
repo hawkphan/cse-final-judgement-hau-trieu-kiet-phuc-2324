@@ -13,6 +13,7 @@ import { Problem } from "./types";
 import { API_QUERIES } from "../common/constants";
 import { getProblems } from "./apis";
 import { Table2Params } from "../common/types";
+import { SelectOption } from "../../shared/components/common/MuiMultiSelect";
 
 export function useGetProblems(
   options?: UseQueryOptions<PaginationResponseNetType<Problem>, Error> & {
@@ -47,6 +48,11 @@ export function useGetProblems(
 
   const { data: problems = [], pageSize, totalCount, succeeded } = data || {};
 
+  const selectOptions: SelectOption[] = problems.map((item) => ({
+    label: `${item.code} - ${item.title}`,
+    value: `${item.id}`,
+  }));
+
   return {
     problems,
     payloadSize: pageSize,
@@ -55,6 +61,7 @@ export function useGetProblems(
     isFetching,
     succeeded,
     params,
+    selectOptions,
     onGetProblems,
     setParams,
     handleInvalidateProblems,

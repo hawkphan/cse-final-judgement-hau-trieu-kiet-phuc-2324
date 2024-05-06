@@ -8,8 +8,11 @@ import {
   LinearProgress,
   Typography,
 } from "@mui/material";
-import { useGetProblemStatisticChartById } from "../../../../queries/Profiles/useGetProblemStatisticChartById";
-import { API_QUERIES, DifficultyStatistic } from "../../../../queries";
+import {
+  API_QUERIES,
+  DifficultyStatistic,
+  useGetProblemStatisticChartById,
+} from "../../../../queries";
 import { LoadingCommon } from "../../../../shared";
 import { useEffect } from "react";
 
@@ -48,9 +51,9 @@ function CircularProgressWithLabel(
   );
 }
 
-type statistic = { data: DifficultyStatistic[] };
+type StatisticProps = { data: DifficultyStatistic[] };
 
-export function DifficultyStatisticDetail({ data }: statistic) {
+export function DifficultyStatisticDetail({ data }: StatisticProps) {
   function difficultyConvert(difficulty: number): string {
     switch (difficulty) {
       case 0:
@@ -96,7 +99,11 @@ export function DifficultyStatisticDetail({ data }: statistic) {
 
               <LinearProgress
                 variant="determinate"
-                value={stat.totalProblems != 0 ? ((stat.totalSolved / stat.totalProblems) * 100) : 0}
+                value={
+                  stat.totalProblems != 0
+                    ? (stat.totalSolved / stat.totalProblems) * 100
+                    : 0
+                }
                 color="success"
               />
             </Box>
@@ -111,13 +118,18 @@ export interface Props {
 }
 
 export default function UserActivityReport({ id }: Props) {
-  const { problemStatistic, isFetching, handleInvalidateStatisticSubmission, onGetProblemStatisticSubmission } = useGetProblemStatisticChartById({
+  const {
+    problemStatistic,
+    isFetching,
+    handleInvalidateStatisticSubmission,
+    onGetProblemStatisticSubmission,
+  } = useGetProblemStatisticChartById({
     id,
     queryKey: [API_QUERIES.GET_PROBLEMS_CHART_BY_ID, { id: id }],
   });
 
   function calculateTotalProblemSolvedPercent() {
-    if(problemStatistic.totalProblems == 0){
+    if (problemStatistic.totalProblems == 0) {
       return 0;
     }
     return (

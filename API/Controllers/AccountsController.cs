@@ -16,19 +16,18 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountsController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly TokenService _tokenService;
         private readonly DataContext _context;
 
-        public AccountController(UserManager<AppUser> userManager, TokenService tokenService, DataContext context)
+        public AccountsController(UserManager<AppUser> userManager, TokenService tokenService, DataContext context)
         {
             _tokenService = tokenService;
             _userManager = userManager;
             _context = context;
         }
-
 
         [AllowAnonymous]
         [HttpPost("login")]

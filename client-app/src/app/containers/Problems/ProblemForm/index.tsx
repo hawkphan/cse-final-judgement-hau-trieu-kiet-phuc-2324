@@ -14,10 +14,6 @@ import {
   isEmpty,
 } from "../../../shared";
 import { Controller, useForm } from "react-hook-form";
-import {
-  CreateProblemBody,
-  EditProblemBody,
-} from "../../../queries/Problems/types";
 import { useNavigate, useParams } from "react-router-dom";
 import { PATHS } from "../../../configs/paths";
 import { useEffect, useMemo, useState } from "react";
@@ -27,7 +23,10 @@ import {
   useEditProblem,
   useGetProblemById,
   useGetProblems,
-} from "../../../queries/Problems";
+  CreateProblemBody,
+  EditProblemBody,
+  useGetLanguages,
+} from "../../../queries";
 import { useStore } from "../../../shared/common/stores/store";
 import {
   CreateProblemFormSchema,
@@ -39,7 +38,6 @@ import {
 } from "./helpers";
 import { API_QUERIES } from "../../../queries/common/constants";
 import WYSIWYGEditor from "../../../shared/components/common/RichTextEditor";
-import { useGetLanguages } from "../../../queries";
 
 const ProblemForm = () => {
   const [fileSelected, setFileSelected] = useState();

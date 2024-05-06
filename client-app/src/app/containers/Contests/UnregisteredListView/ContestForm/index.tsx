@@ -1,21 +1,23 @@
 import {
   Breadcrumbs,
   Button,
-  CustomTableSearch,
   EmptyTable,
   Form,
   Grid,
-  MuiDatePicker,
+  LoadingCommon,
   MuiInput,
+  MuiSelect,
   Table2,
   Toastify,
+  ViewItem,
+  isEmpty,
 } from "../../../../shared";
 import { Card, Container, InputLabel, Stack, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import {
+  ContestProblem,
   CreateContestBody,
   GetPropertiesParams,
-  Problem,
   useCreateContest,
   useGetProblems,
 } from "../../../../queries";
@@ -25,12 +27,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { allColumns } from "./allColumns";
 import { useCallback, useMemo, useState } from "react";
-import { ProblemFilterQueryKey } from "../../../Problems/helpers";
-import ProblemToolbar from "../../../Problems/ProblemToolbar";
 import { PATHS } from "../../../../configs/paths";
-import { MRT_RowSelectionState } from "material-react-table";
 import { toBreadCrumbs } from "./helpers";
-import BasicTimezoneProp from "./BasicTimeZoneProp";
+import { DateTimePicker } from "@mui/x-date-pickers";
 
 const ContestForm = () => {
   const { id } = useParams();
@@ -38,14 +37,20 @@ const ContestForm = () => {
 
   const isEdit = id && id !== "";
 
-  const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
+  const [problemIdToAdd, setProblemIdToAdd] = useState<string>();
+  const [problemScoreToAdd, setProblemScoreToAdd] = useState<number>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [problemSet, setProblemSet] = useState<any[]>([]);
 
-  const { problems, totalRecords, setParams, isFetching } = useGetProblems();
+  console.log("problemSet", problemSet);
+  const {
+    setParams,
+    isFetching,
+    selectOptions: problemOptions,
+  } = useGetProblems();
   const { isPending, onCreateContest } = useCreateContest({
     onSuccess: () => {
       Toastify.success("Successful!");
-      // handleInvalidateProblems();
-      // handleInvalidateProblem();
       navigate(PATHS.contests);
     },
     onError: (error) => {
@@ -63,10 +68,9 @@ const ContestForm = () => {
 
   const onSubmit = useCallback(
     (data: CreateContestBody) => {
-      data.problemIds = Object.keys(rowSelection);
       onCreateContest(data);
     },
-    [onCreateContest, rowSelection]
+    [onCreateContest]
   );
 
   const handleGetProblems = useCallback(
@@ -76,20 +80,47 @@ const ContestForm = () => {
     [setParams]
   );
 
-  const handleNavigateToDetail = (id: string) => {
-    navigate(`${PATHS.problems}/${id}`);
+  const handleSetProblemSet = () => {
+    const existingProblem = problemSet?.filter(
+      (item) => item.problemId === problemIdToAdd
+    );
+
+    if (
+      isEmpty(problemIdToAdd) ||
+      isEmpty(problemScoreToAdd) ||
+      !isEmpty(existingProblem)
+    ) {
+      Toastify.error("Cannot add the problem!");
+      return;
+    }
+
+    setProblemSet([
+      ...problemSet,
+      { problemId: problemIdToAdd, score: problemScoreToAdd },
+    ]);
+    setProblemIdToAdd("");
   };
+
+  const handleDeleteProblemRow = useCallback(
+    (value: string) => {
+      setProblemSet([...problemSet.filter((item) => item.problemId !== value)]);
+    },
+    [problemSet]
+  );
 
   const breadCrumbsItems = useMemo(
     () => toBreadCrumbs(isEdit, id),
     [id, isEdit]
   );
 
-  const columns = useMemo(() => allColumns(), []);
+  const columns = useMemo(
+    () => allColumns({ problemOptions, handleDeleteProblemRow }),
+    [problemOptions, handleDeleteProblemRow]
+  );
 
-  // if (isFetching) {
-  //   return <LoadingCommon />;
-  // }
+  if (isFetching) {
+    return <LoadingCommon />;
+  }
 
   return (
     <Container maxWidth="xl" style={{ padding: "10px" }}>
@@ -98,20 +129,19 @@ const ContestForm = () => {
         <Typography variant="h5" mb={5} mt={2}>
           {isEdit ? "Edit Contest" : "Create New Contest"}
         </Typography>
-        <BasicTimezoneProp />
         <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
           <Grid.Wrap>
             <Grid.Item xs={4}>
               <Controller
-                name={"title"}
+                name={"name"}
                 control={control}
                 render={({
                   field: { value, onChange, ...props },
                   fieldState: { error },
                 }) => (
                   <MuiInput
-                    label="Title"
-                    placeholder="Title"
+                    label="Name"
+                    placeholder="Name"
                     required
                     value={value}
                     errorMessage={error?.message}
@@ -144,22 +174,77 @@ const ContestForm = () => {
           </Grid.Wrap>
           <Grid.Wrap style={{ marginBottom: "10px" }}>
             <Grid.Item xs={6}>
+              <InputLabel sx={{ fontSize: "14px" }}>Start Time</InputLabel>
               <Controller
                 name={"startTime"}
                 control={control}
                 render={({
                   field: { value, onChange, ...props },
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   fieldState: { error },
                 }) => (
-                  <MuiDatePicker
-                    label="Start Time"
+                  // <MuiDatePicker
+                  //   label="Start Time"
+                  //   value={dayjs(value)}
+                  //   errorMessage={error?.message}
+                  //   onChange={(data) => {
+                  //     onChange(data);
+                  //   }}
+                  //   {...props}
+                  //   required
+                  // />
+
+                  <DateTimePicker
                     value={dayjs(value)}
-                    errorMessage={error?.message}
+                    label=""
                     onChange={(data) => {
                       onChange(data);
                     }}
                     {...props}
+                  />
+                )}
+              />
+            </Grid.Item>
+          </Grid.Wrap>
+          <Grid.Wrap style={{ marginBottom: "10px" }}>
+            <Grid.Item xs={4}>
+              <Controller
+                name={"type"}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <MuiSelect
+                    label="Type"
+                    options={[
+                      { label: "Public", value: "0" },
+                      { label: "Private", value: "1" },
+                    ]}
+                    value={field.value}
+                    onChange={(_, value) => {
+                      field.onChange(value);
+                    }}
                     required
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
+              />
+            </Grid.Item>
+            <Grid.Item xs={4}>
+              <Controller
+                name={"rule"}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <MuiSelect
+                    label="Rule"
+                    options={[
+                      { label: "ACM/ICPC", value: "0" },
+                      { label: "Olympic", value: "1" },
+                    ]}
+                    value={field.value}
+                    onChange={(_, value) => {
+                      field.onChange(value);
+                    }}
+                    required
+                    errorMessage={fieldState.error?.message}
                   />
                 )}
               />
@@ -167,22 +252,33 @@ const ContestForm = () => {
           </Grid.Wrap>
           <Grid.Wrap style={{ marginBottom: "10px" }}>
             <Grid.Item xs={6}>
+              <InputLabel sx={{ fontSize: "14px" }}>End Time</InputLabel>
               <Controller
                 name={"endTime"}
                 control={control}
                 render={({
                   field: { value, onChange, ...props },
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   fieldState: { error },
                 }) => (
-                  <MuiDatePicker
-                    label="End Time"
+                  // <MuiDatePicker
+                  //   label="End Time"
+                  //   value={dayjs(value)}
+                  //   errorMessage={error?.message}
+                  //   onChange={(data) => {
+                  //     onChange(data);
+                  //   }}
+                  //   {...props}
+                  //   required
+                  // />
+
+                  <DateTimePicker
                     value={dayjs(value)}
-                    errorMessage={error?.message}
+                    label=""
                     onChange={(data) => {
                       onChange(data);
                     }}
                     {...props}
-                    required
                   />
                 )}
               />
@@ -191,16 +287,13 @@ const ContestForm = () => {
           <Typography variant="h5" mt={5}>
             Problem Set
           </Typography>
-          <Table2<Problem>
-            rowCount={totalRecords}
+          <Table2<ContestProblem>
             columns={columns}
-            data={problems}
+            data={problemSet}
             onAction={handleGetProblems}
             enableTopToolbar={true}
             recordName="items"
-            enableRowSelection={true}
-            getRowId={(originalRow) => originalRow.id}
-            onRowSelectionChange={setRowSelection}
+            enablePagination={false}
             singularRecordName="item"
             enableDensityToggle={false}
             enableColumnOrdering={false}
@@ -210,31 +303,122 @@ const ContestForm = () => {
             nameColumnPinning="actions"
             state={{
               isLoading: isFetching,
-              rowSelection,
             }}
-            additionalFilterParams={[
-              ProblemFilterQueryKey.FROM_DATE,
-              ProblemFilterQueryKey.TO_DATE,
-              ProblemFilterQueryKey.DIFFICULTY,
-              ProblemFilterQueryKey.KEYWORDS,
-            ]}
-            muiTableBodyRowProps={({ row }) => ({
-              onClick: () => {
-                handleNavigateToDetail(row.original.id);
-              },
-            })}
             renderTopToolbarCustomActions={() => (
-              <Stack direction="row" spacing={1} my={0.5}>
-                <Stack width="328px">
-                  <CustomTableSearch
-                    placeholder="Search by Title"
-                    searchKey="keywords"
-                  />
+              <Stack direction="row" spacing={1} my={0.5} width="100%">
+                <Grid.Wrap>
+                  <Grid.Item xs={8}>
+                    <ViewItem
+                      label="Pick a problem"
+                      value={
+                        <MuiSelect
+                          style={{ minWidth: "520px" }}
+                          size="medium"
+                          options={problemOptions}
+                          value={problemIdToAdd}
+                          onChange={(_, value) => {
+                            setProblemIdToAdd(value);
+                          }}
+                        />
+                      }
+                    />
+                  </Grid.Item>
+                  <Grid.Item xs={4}>
+                    <ViewItem
+                      label="Set a score"
+                      value={
+                        <MuiInput
+                          type="number"
+                          size="medium"
+                          value={problemScoreToAdd}
+                          onChange={(value) => {
+                            setProblemScoreToAdd(+value.target.value);
+                          }}
+                        />
+                      }
+                    />
+                  </Grid.Item>
+                </Grid.Wrap>
+                <Stack justifyContent="flex-end">
+                  <Button onClick={handleSetProblemSet}>Add</Button>
                 </Stack>
               </Stack>
             )}
-            renderToolbarInternalActions={({ table }) => {
-              return <ProblemToolbar table={table} canCreate={false} />;
+            renderToolbarInternalActions={() => {
+              return <></>;
+            }}
+            renderFallbackValue={<EmptyTable />}
+            muiTopToolbarProps={{
+              sx: {
+                backgroundColor: "transparent",
+                mx: "-8px",
+                my: "4px",
+                fontFamily: "Roboto",
+              },
+            }}
+          />
+          <Typography variant="h5" mt={5}>
+            Problem Set
+          </Typography>
+          <Table2<ContestProblem>
+            columns={columns}
+            data={problemSet}
+            onAction={handleGetProblems}
+            enableTopToolbar={true}
+            recordName="items"
+            enablePagination={false}
+            singularRecordName="item"
+            enableDensityToggle={false}
+            enableColumnOrdering={false}
+            enableRowActions
+            paginationDisplayMode="pages"
+            isColumnPinning={false}
+            nameColumnPinning="actions"
+            state={{
+              isLoading: isFetching,
+            }}
+            renderTopToolbarCustomActions={() => (
+              <Stack direction="row" spacing={1} my={0.5} width="100%">
+                <Grid.Wrap>
+                  <Grid.Item xs={8}>
+                    <ViewItem
+                      label="Pick a problem"
+                      value={
+                        <MuiSelect
+                          style={{ minWidth: "520px" }}
+                          size="medium"
+                          options={problemOptions}
+                          value={problemIdToAdd}
+                          onChange={(_, value) => {
+                            setProblemIdToAdd(value);
+                          }}
+                        />
+                      }
+                    />
+                  </Grid.Item>
+                  <Grid.Item xs={4}>
+                    <ViewItem
+                      label="Set a score"
+                      value={
+                        <MuiInput
+                          type="number"
+                          size="medium"
+                          value={problemScoreToAdd}
+                          onChange={(value) => {
+                            setProblemScoreToAdd(+value.target.value);
+                          }}
+                        />
+                      }
+                    />
+                  </Grid.Item>
+                </Grid.Wrap>
+                <Stack justifyContent="flex-end">
+                  <Button onClick={handleSetProblemSet}>Add</Button>
+                </Stack>
+              </Stack>
+            )}
+            renderToolbarInternalActions={() => {
+              return <></>;
             }}
             renderFallbackValue={<EmptyTable />}
             muiTopToolbarProps={{

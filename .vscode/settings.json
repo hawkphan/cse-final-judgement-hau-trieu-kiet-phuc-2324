@@ -12,6 +12,7 @@
         "signup",
         "tanstack",
         "Toastify",
-        "unauthorised"
+        "unauthorised",
+        "xaxis"
     ]
 }

@@ -1,7 +1,6 @@
 import { Box, Card, CardContent } from "@mui/material";
 import Chart, { Props } from "react-apexcharts";
-import { useGetAnnualChartById } from "../../../../queries/Profiles/useGetAnnualChartById";
-import { API_QUERIES } from "../../../../queries";
+import { API_QUERIES, useGetAnnualChartById } from "../../../../queries";
 import { LoadingCommon } from "../../../../shared";
 import { useEffect } from "react";
 
@@ -53,17 +52,24 @@ const state: Props = {
   },
 };
 
-interface props {
+interface UserAnnualReportProps {
   id: string;
 }
 
-export default function UserAnnualReport({ id }: props) {
-  const { annualSubmission, isFetching, handleInvalidateAnnualSubmission, onGetAnnualSubmission } = useGetAnnualChartById({
+export default function UserAnnualReport({
+  id,
+}: Readonly<UserAnnualReportProps>) {
+  const {
+    annualSubmission,
+    isFetching,
+    handleInvalidateAnnualSubmission,
+    onGetAnnualSubmission,
+  } = useGetAnnualChartById({
     id,
     queryKey: [API_QUERIES.GET_ANNUAL_CHART_BY_ID, { id: id }],
   });
 
-  const analyseData = () => {
+  const getAnalysisData = () => {
     const monthNames = [
       "Jan",
       "Feb",
@@ -99,7 +105,7 @@ export default function UserAnnualReport({ id }: props) {
       });
 
       let j = i;
-      dataMonths.map((item, index) => {
+      dataMonths.map((_item, index) => {
         if (i > index) {
           month = month - j;
           if (month < 0) {
@@ -115,7 +121,7 @@ export default function UserAnnualReport({ id }: props) {
     return { dataTotalSubmit, dataMonths };
   };
 
-  const { dataTotalSubmit, dataMonths } = analyseData();
+  const { dataTotalSubmit, dataMonths } = getAnalysisData();
 
   state.series = [
     {

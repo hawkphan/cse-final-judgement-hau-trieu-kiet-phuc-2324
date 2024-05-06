@@ -11,11 +11,11 @@ import { allColumns } from "./allColumns";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../../shared/common/stores/store";
 import {
+  GetPropertiesParams,
   Problem,
   useDeleteProblem,
   useGetProblems,
-} from "../../queries/Problems";
-import { GetPropertiesParams } from "../../queries";
+} from "../../queries";
 import { ProblemFilterQueryKey } from "./helpers";
 import ProblemToolbar from "./ProblemToolbar";
 import ProblemDeleteConfirmDialog from "./ProblemDeleteConfirmDialog";

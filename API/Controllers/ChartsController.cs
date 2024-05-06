@@ -11,26 +11,26 @@ using API.Services;
 
 namespace API.Controllers
 {
-    public class ChartController : BaseApiController
+    public class ChartsController : BaseApiController
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly TokenService _tokenServices;
 
-        public ChartController(UserManager<AppUser> userManager, TokenService tokenServices)
+        public ChartsController(UserManager<AppUser> userManager, TokenService tokenServices)
         {
             _tokenServices = tokenServices;
             _userManager = userManager;
         }
 
         [AllowAnonymous]
-        [HttpGet("annual-chart/{id}")] //api/chart/profile-chart/id
+        [HttpGet("annual-chart/{id}")] //api/charts/profile-chart/id
         public async Task<IActionResult> GetAnnualChart(Guid id)
         {
             return HandleApiResult(await Mediator.Send(new AnnualSubmissionChartDetail.Query { UserId = id }));
         }
 
         [AllowAnonymous]
-        [HttpGet("languages-chart/{id}")] //api/chart/languages-chart/id
+        [HttpGet("languages-chart/{id}")] //api/charts/languages-chart/id
         public async Task<IActionResult> GetLanguagesChart(Guid id)
         {
             return HandleApiResult(await Mediator.Send(new LanguagesUsagesChartDetail.Query { UserId = id }));
