@@ -8,6 +8,7 @@ import {
 } from "../../../shared";
 import RowActions from "../../../shared/components/RowActions";
 import CountdownTimer from "../RegisteredListView/CountdownTimer";
+import { renderContestRule, renderContestTypeTag } from "./helpers";
 
 interface Props {
   handleEditContest: (id: string) => void;
@@ -28,6 +29,22 @@ export const allColumns = ({
       enableSorting: false,
       size: 114,
       Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+    },
+    {
+      accessorKey: "rule",
+      header: "Rule",
+      enableColumnFilterModes: false,
+      enableSorting: false,
+      size: 114,
+      Cell: ({ cell }) => renderContestRule(cell.getValue<number>()),
+    },
+    {
+      accessorKey: "type",
+      header: "Type",
+      enableColumnFilterModes: false,
+      enableSorting: false,
+      size: 114,
+      Cell: ({ cell }) => renderContestTypeTag(cell.getValue<number>()),
     },
     {
       accessorKey: "numOfMembers",
