@@ -32,10 +32,16 @@ namespace Application.Contests
             {
                 var problems = request.Contest.Problems;
                 var members = request.Contest.Members;
+                var startTime = request.Contest.StartTime;
+                var endTime = request.Contest.EndTime;
 
                 if (problems == null || members == null || !problems.Any() || !members.Any())
                 {
                     return ApiResult<ContestDto>.Failure(new string[] { "Contest must have members and a problem set" });
+                }
+                
+                if(endTime < startTime) {
+                    return ApiResult<ContestDto>.Failure(new string[] { "End time must happen after Start time" });
                 }
 
                 try

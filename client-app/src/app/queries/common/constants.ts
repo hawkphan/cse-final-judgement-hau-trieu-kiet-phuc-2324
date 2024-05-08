@@ -13,6 +13,7 @@ export enum API_QUERIES {
   GET_LANGUAGES_CHART_BY_ID = "/get-languages-usage-chart-by-id",
   GET_ANNUAL_CHART_BY_ID = "/get-annual-chart-by-id",
   GET_PROBLEMS_CHART_BY_ID = "/get-problem-chart-by-id",
+  GET_PROFILES = "/get-profiles",
 
   // Solutions
   GET_SOLUTIONS = "/get-solutions",
@@ -22,5 +23,5 @@ export enum API_QUERIES {
 
   // Contests
   GET_REGISTERED_CONTEST = "/get-register-contests",
-  GET_UNREGISTERED_CONTEST = "/get-unregistered-contests"
+  GET_UNREGISTERED_CONTEST = "/get-unregistered-contests",
 }

@@ -1,50 +1,50 @@
 import { MRT_ColumnDef } from "material-react-table";
 import "material-symbols";
-import { Callback, ContestProblem } from "../../../../queries";
+import { Callback, ContestMember } from "../../../../queries";
 import { formatValueOrNull, isEmpty } from "../../../../shared";
 import { SelectOption } from "../../../../shared/components/common/MuiAutoComplete";
-import { PATHS } from "../../../../configs/paths";
 import RowActions from "../../../../shared/components/RowActions";
+import { renderRole } from "./helpers";
 
 interface Props {
-  problemOptions: SelectOption[];
-  handleDeleteProblemRow: Callback;
+  profileOptions: SelectOption[];
+  handleDeleteUserRow: Callback;
+  userId: string;
 }
 
-export const allColumns = ({
-  problemOptions,
-  handleDeleteProblemRow,
-}: Props): MRT_ColumnDef<ContestProblem>[] => {
+export const allColumnsMember = ({
+  profileOptions,
+  handleDeleteUserRow,
+  userId,
+}: Props): MRT_ColumnDef<ContestMember>[] => {
   return [
     {
-      accessorKey: "problemId",
-      header: "Problem",
+      accessorKey: "userId",
+      header: "User",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      // Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
       Cell: ({ cell }) => (
-        <a
-          href={`${PATHS.problems}/${cell.getValue<string>()}`}
-          target="_blank"
-        >
+        <a href={`/profile/${cell.getValue<string>()}`} target="_blank">
           {formatValueOrNull(
-            !isEmpty(problemOptions)
-              ? (problemOptions?.filter(
-                  (item) => item.value === cell.getValue<string>()
-                )[0].label as string)
+            !isEmpty(profileOptions)
+              ? (profileOptions?.filter(
+                  (item) =>
+                    (item?.value as string).toLowerCase() ===
+                    cell.getValue<string>().toLowerCase()
+                )[0]?.label as string)
               : ""
           )}
         </a>
       ),
     },
     {
-      accessorKey: "score",
-      header: "Score",
+      accessorKey: "role",
+      header: "Role",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => renderRole(cell.getValue<number>()),
     },
     {
       accessorKey: "actions",
@@ -58,9 +58,9 @@ export const allColumns = ({
 
       Cell: ({ row }) => (
         <RowActions
-          hideDelete={false}
+          hideDelete={userId?.toLowerCase() === row.original.userId}
           DeleteFunction={() => {
-            handleDeleteProblemRow(row.original.problemId);
+            handleDeleteUserRow(row.original.userId);
           }}
         />
       ),

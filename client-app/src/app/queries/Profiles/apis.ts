@@ -8,6 +8,14 @@ import {
   ProblemStatistic,
 } from "./types";
 import { API_URL } from "../common/constants";
+import { GetPropertiesParams } from "../Languages";
+import { stringify } from "../../shared";
+
+const getProfiles = (params: GetPropertiesParams) => {
+  const queryString = stringify(params);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return axios.get<Profile<any>[]>(`${API_URL}/api/profiles?${queryString}`, {});
+};
 
 const editProfile = (body: EditProfileBody) => {
   return axios.put(`${API_URL}/api/profiles/editProfile`, body, {});
@@ -40,6 +48,7 @@ const getProblemStatisticById = (params: { id: string }) => {
 };
 
 export {
+  getProfiles,
   getProfileById,
   editProfile,
   getLanguagesUsageById,

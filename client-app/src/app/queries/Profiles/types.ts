@@ -2,6 +2,7 @@
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export interface Profile<T> {
+  id?: string;
   userName?: string;
   firstName?: string;
   lastName?: string;
@@ -37,7 +38,7 @@ export interface EditProfileBody {
 }
 
 export interface LanguagesUsage {
-  languagedId?: number;
+  languageId?: number;
   totalSubmission?: number;
 }
 

@@ -22,7 +22,6 @@ export const allColumns = ({
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      // Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
       Cell: ({ cell }) => (
         <a
           href={`${PATHS.problems}/${cell.getValue<string>()}`}
@@ -31,8 +30,10 @@ export const allColumns = ({
           {formatValueOrNull(
             !isEmpty(problemOptions)
               ? (problemOptions?.filter(
-                  (item) => item.value === cell.getValue<string>()
-                )[0].label as string)
+                  (item) =>
+                    (item?.value as string).toLowerCase() ===
+                    cell.getValue<string>().toLowerCase()
+                )[0]?.label as string)
               : ""
           )}
         </a>

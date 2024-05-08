@@ -4,4 +4,5 @@ export * from "./useGetAnnualChartById";
 export * from "./useEditProfile";
 export * from "./useGetLanguagesUsageChartById";
 export * from "./useGetProblemStatisticChartById";
+export * from "./useGetProfiles";
 export * from "./types";

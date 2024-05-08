@@ -10,12 +10,12 @@ import SignUp from "../containers/User/SignUpForm";
 import ProblemDetail from "../containers/Problems/ProblemDetails";
 import ProblemForm from "../containers/Problems/ProblemForm";
 import Contests from "../containers/Contests";
-import ContestForm from "../containers/Contests/UnregisteredListView/ContestForm";
 import EditProfile from "../containers/Navbar/UserProfile/EditProfile";
 import ProtectedRoute from "../containers/ProtectedRoute";
 import ContestPage from "../containers/Contests/ContestPage";
 import UserManagement from "../containers/User/UserManagement";
 import ContestManagement from "../containers/Contests/ContestManagement";
+import ContestForm from "../containers/Contests/ContestManagement/ContestForm";
 
 export const routes: RouteObject[] = [
   {

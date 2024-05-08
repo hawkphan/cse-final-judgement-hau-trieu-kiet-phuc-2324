@@ -20,8 +20,8 @@ export interface CreateContestBody {
   endTime: string;
   rule: number;
   type: number;
-  members: string[];
-  problemIds: string[];
+  problems: ContestProblem[];
+  members: ContestMember[];
 }
 
 export interface EditContestBody {

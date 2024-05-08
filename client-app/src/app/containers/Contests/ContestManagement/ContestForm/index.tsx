@@ -15,21 +15,32 @@ import {
 import { Card, Container, InputLabel, Stack, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import {
+  ContestMember,
   ContestProblem,
   CreateContestBody,
-  GetPropertiesParams,
   useCreateContest,
   useGetProblems,
+  useGetProfiles,
 } from "../../../../queries";
 import WYSIWYGEditor from "../../../../shared/components/common/RichTextEditor";
 import { stripHtml } from "string-strip-html";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { allColumns } from "./allColumns";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { PATHS } from "../../../../configs/paths";
-import { toBreadCrumbs } from "./helpers";
+import {
+  ContestProperties,
+  CreateContestFormSchema,
+  EditContestFormSchema,
+  contestRuleOptions,
+  contestTypeOptions,
+  toBreadCrumbs,
+} from "./helpers";
 import { DateTimePicker } from "@mui/x-date-pickers";
+import { allColumnsMember } from "./allColumnsMember";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useStore } from "../../../../shared/common/stores/store";
 
 const ContestForm = () => {
   const { id } = useParams();
@@ -39,19 +50,27 @@ const ContestForm = () => {
 
   const [problemIdToAdd, setProblemIdToAdd] = useState<string>();
   const [problemScoreToAdd, setProblemScoreToAdd] = useState<number>();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [problemSet, setProblemSet] = useState<any[]>([]);
+  const [problemSet, setProblemSet] = useState<ContestProblem[]>([]);
 
-  console.log("problemSet", problemSet);
+  const [userIdToAdd, setUserIdToAdd] = useState<string>();
+  const [userRoleToAdd, setUserRoleToAdd] = useState<number>();
+  const [userSet, setUserSet] = useState<ContestMember[]>([]);
+
+  const { userStore } = useStore();
   const {
-    setParams,
     isFetching,
     selectOptions: problemOptions,
+    setParams: setProblemsParams,
   } = useGetProblems();
+  const {
+    setParams: setProfilesParams,
+    selectOptions: profileOptions,
+    isFetching: isProfilesFetching,
+  } = useGetProfiles();
   const { isPending, onCreateContest } = useCreateContest({
     onSuccess: () => {
       Toastify.success("Successful!");
-      navigate(PATHS.contests);
+      navigate(PATHS.contestManagement);
     },
     onError: (error) => {
       Toastify.error(error.message);
@@ -59,30 +78,32 @@ const ContestForm = () => {
     },
   });
 
-  const { control, handleSubmit } = useForm<CreateContestBody>({
-    defaultValues: { startTime: null, endTime: null },
-    mode: "onChange",
-    shouldFocusError: true,
-    reValidateMode: "onChange",
-  });
+  const { control, handleSubmit, setValue, watch } = useForm<CreateContestBody>(
+    {
+      defaultValues: { startTime: null, endTime: null },
+      mode: "onChange",
+      shouldFocusError: true,
+      reValidateMode: "onChange",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      resolver: yupResolver<any>(
+        isEdit ? EditContestFormSchema : CreateContestFormSchema
+      ),
+    }
+  );
+
+  const startTime = watch(ContestProperties.START_TIME);
 
   const onSubmit = useCallback(
     (data: CreateContestBody) => {
+      data = { ...data, problems: problemSet, members: userSet };
       onCreateContest(data);
     },
-    [onCreateContest]
-  );
-
-  const handleGetProblems = useCallback(
-    (params: GetPropertiesParams) => {
-      setParams({ ...params });
-    },
-    [setParams]
+    [onCreateContest, problemSet, userSet]
   );
 
   const handleSetProblemSet = () => {
     const existingProblem = problemSet?.filter(
-      (item) => item.problemId === problemIdToAdd
+      (item) => item?.problemId?.toLowerCase() === problemIdToAdd?.toLowerCase()
     );
 
     if (
@@ -101,11 +122,35 @@ const ContestForm = () => {
     setProblemIdToAdd("");
   };
 
+  const handleSetUserSet = () => {
+    const existingUser = userSet?.filter(
+      (item) => item?.userId?.toLowerCase() === userIdToAdd?.toLowerCase()
+    );
+    if (
+      isEmpty(userIdToAdd) ||
+      ![0, 1].includes(userRoleToAdd) ||
+      !isEmpty(existingUser)
+    ) {
+      Toastify.error("Cannot add this user with role!");
+      return;
+    }
+
+    setUserSet([...userSet, { userId: userIdToAdd, role: userRoleToAdd }]);
+    setUserIdToAdd("");
+  };
+
   const handleDeleteProblemRow = useCallback(
     (value: string) => {
       setProblemSet([...problemSet.filter((item) => item.problemId !== value)]);
     },
     [problemSet]
+  );
+
+  const handleDeleteUserRow = useCallback(
+    (value: string) => {
+      setUserSet([...userSet.filter((item) => item.userId !== value)]);
+    },
+    [userSet]
   );
 
   const breadCrumbsItems = useMemo(
@@ -118,7 +163,26 @@ const ContestForm = () => {
     [problemOptions, handleDeleteProblemRow]
   );
 
-  if (isFetching) {
+  const columnsMember = useMemo(
+    () =>
+      allColumnsMember({
+        profileOptions,
+        handleDeleteUserRow,
+        userId: userStore?.user?.id,
+      }),
+    [profileOptions, handleDeleteUserRow, userStore?.user?.id]
+  );
+
+  useEffect(() => {
+    setProfilesParams({ pageSize: -1 });
+    setProblemsParams({ pageSize: -1 });
+
+    if (!isEdit) {
+      setUserSet([{ userId: userStore?.user?.id, role: 0 }]);
+    }
+  }, [isEdit, setProblemsParams, setProfilesParams, userStore?.user?.id]);
+
+  if (isFetching || isProfilesFetching) {
     return <LoadingCommon />;
   }
 
@@ -133,7 +197,7 @@ const ContestForm = () => {
           <Grid.Wrap>
             <Grid.Item xs={4}>
               <Controller
-                name={"name"}
+                name={ContestProperties.NAME}
                 control={control}
                 render={({
                   field: { value, onChange, ...props },
@@ -156,7 +220,7 @@ const ContestForm = () => {
             <Grid.Item xs={12}>
               <InputLabel sx={{ fontSize: "14px" }}>Description</InputLabel>
               <Controller
-                name={"description"}
+                name={ContestProperties.DESCRIPTION}
                 control={control}
                 render={({ field }) => <WYSIWYGEditor {...field} />}
                 rules={{
@@ -173,78 +237,68 @@ const ContestForm = () => {
             </Grid.Item>
           </Grid.Wrap>
           <Grid.Wrap style={{ marginBottom: "10px" }}>
-            <Grid.Item xs={6}>
-              <InputLabel sx={{ fontSize: "14px" }}>Start Time</InputLabel>
+            <Grid.Item xs={3}>
               <Controller
-                name={"startTime"}
+                name={ContestProperties.TYPE}
                 control={control}
-                render={({
-                  field: { value, onChange, ...props },
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  fieldState: { error },
-                }) => (
-                  // <MuiDatePicker
-                  //   label="Start Time"
-                  //   value={dayjs(value)}
-                  //   errorMessage={error?.message}
-                  //   onChange={(data) => {
-                  //     onChange(data);
-                  //   }}
-                  //   {...props}
-                  //   required
-                  // />
-
-                  <DateTimePicker
-                    value={dayjs(value)}
-                    label=""
-                    onChange={(data) => {
-                      onChange(data);
+                render={({ field, fieldState }) => (
+                  <MuiSelect
+                    label="Type"
+                    options={contestTypeOptions}
+                    value={field.value}
+                    onChange={(_, value) => {
+                      field.onChange(value);
                     }}
-                    {...props}
+                    size="small"
+                    required
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
+              />
+            </Grid.Item>
+            <Grid.Item xs={3}>
+              <Controller
+                name={ContestProperties.RULE}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <MuiSelect
+                    label="Rule"
+                    options={contestRuleOptions}
+                    size="small"
+                    value={field.value}
+                    onChange={(_, value) => {
+                      field.onChange(value);
+                    }}
+                    required
+                    errorMessage={fieldState.error?.message}
                   />
                 )}
               />
             </Grid.Item>
           </Grid.Wrap>
           <Grid.Wrap style={{ marginBottom: "10px" }}>
-            <Grid.Item xs={4}>
+            <Grid.Item xs={6}>
+              <InputLabel sx={{ fontSize: "14px" }}>Start Time</InputLabel>
               <Controller
-                name={"type"}
+                name={ContestProperties.START_TIME}
                 control={control}
-                render={({ field, fieldState }) => (
-                  <MuiSelect
-                    label="Type"
-                    options={[
-                      { label: "Public", value: "0" },
-                      { label: "Private", value: "1" },
-                    ]}
-                    value={field.value}
-                    onChange={(_, value) => {
-                      field.onChange(value);
+                render={({
+                  field: { value, onChange, ...props },
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  fieldState: { error },
+                }) => (
+                  <DateTimePicker
+                    value={dayjs(value)}
+                    label=""
+                    minDateTime={dayjs(new Date().toISOString())}
+                    onChange={(data) => {
+                      onChange(data);
+                      setValue(
+                        ContestProperties.END_TIME,
+                        dayjs(data).toISOString()
+                      );
                     }}
-                    required
-                    errorMessage={fieldState.error?.message}
-                  />
-                )}
-              />
-            </Grid.Item>
-            <Grid.Item xs={4}>
-              <Controller
-                name={"rule"}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <MuiSelect
-                    label="Rule"
-                    options={[
-                      { label: "ACM/ICPC", value: "0" },
-                      { label: "Olympic", value: "1" },
-                    ]}
-                    value={field.value}
-                    onChange={(_, value) => {
-                      field.onChange(value);
-                    }}
-                    required
-                    errorMessage={fieldState.error?.message}
+                    {...props}
                   />
                 )}
               />
@@ -254,27 +308,17 @@ const ContestForm = () => {
             <Grid.Item xs={6}>
               <InputLabel sx={{ fontSize: "14px" }}>End Time</InputLabel>
               <Controller
-                name={"endTime"}
+                name={ContestProperties.END_TIME}
                 control={control}
                 render={({
                   field: { value, onChange, ...props },
                   // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   fieldState: { error },
                 }) => (
-                  // <MuiDatePicker
-                  //   label="End Time"
-                  //   value={dayjs(value)}
-                  //   errorMessage={error?.message}
-                  //   onChange={(data) => {
-                  //     onChange(data);
-                  //   }}
-                  //   {...props}
-                  //   required
-                  // />
-
                   <DateTimePicker
                     value={dayjs(value)}
                     label=""
+                    minDateTime={dayjs(startTime)}
                     onChange={(data) => {
                       onChange(data);
                     }}
@@ -290,7 +334,6 @@ const ContestForm = () => {
           <Table2<ContestProblem>
             columns={columns}
             data={problemSet}
-            onAction={handleGetProblems}
             enableTopToolbar={true}
             recordName="items"
             enablePagination={false}
@@ -358,12 +401,11 @@ const ContestForm = () => {
             }}
           />
           <Typography variant="h5" mt={5}>
-            Problem Set
+            Participants
           </Typography>
-          <Table2<ContestProblem>
-            columns={columns}
-            data={problemSet}
-            onAction={handleGetProblems}
+          <Table2<ContestMember>
+            columns={columnsMember}
+            data={userSet}
             enableTopToolbar={true}
             recordName="items"
             enablePagination={false}
@@ -374,23 +416,20 @@ const ContestForm = () => {
             paginationDisplayMode="pages"
             isColumnPinning={false}
             nameColumnPinning="actions"
-            state={{
-              isLoading: isFetching,
-            }}
             renderTopToolbarCustomActions={() => (
               <Stack direction="row" spacing={1} my={0.5} width="100%">
                 <Grid.Wrap>
                   <Grid.Item xs={8}>
                     <ViewItem
-                      label="Pick a problem"
+                      label="Pick a user"
                       value={
                         <MuiSelect
                           style={{ minWidth: "520px" }}
                           size="medium"
-                          options={problemOptions}
-                          value={problemIdToAdd}
+                          options={profileOptions}
+                          value={userIdToAdd}
                           onChange={(_, value) => {
-                            setProblemIdToAdd(value);
+                            setUserIdToAdd(value);
                           }}
                         />
                       }
@@ -398,14 +437,17 @@ const ContestForm = () => {
                   </Grid.Item>
                   <Grid.Item xs={4}>
                     <ViewItem
-                      label="Set a score"
+                      label="Set role"
                       value={
-                        <MuiInput
-                          type="number"
-                          size="medium"
-                          value={problemScoreToAdd}
-                          onChange={(value) => {
-                            setProblemScoreToAdd(+value.target.value);
+                        <MuiSelect
+                          label=""
+                          options={[
+                            { label: "Admin", value: "0" },
+                            { label: "Contestant", value: "1" },
+                          ]}
+                          value={userRoleToAdd + ""}
+                          onChange={(_, value) => {
+                            setUserRoleToAdd(+value);
                           }}
                         />
                       }
@@ -413,7 +455,7 @@ const ContestForm = () => {
                   </Grid.Item>
                 </Grid.Wrap>
                 <Stack justifyContent="flex-end">
-                  <Button onClick={handleSetProblemSet}>Add</Button>
+                  <Button onClick={handleSetUserSet}>Add</Button>
                 </Stack>
               </Stack>
             )}
