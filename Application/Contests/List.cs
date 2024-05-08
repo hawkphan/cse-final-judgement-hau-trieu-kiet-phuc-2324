@@ -35,7 +35,15 @@ namespace Application.Contests
 
             public async Task<Result<PagedList<ContestDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
-               throw new NotImplementedException();
+
+                var contests = _context.Contests.AsQueryable();
+                var query = await contests.ProjectTo<ContestDto>(_mapper.ConfigurationProvider)
+                     .ToListAsync(cancellationToken: cancellationToken);
+                int PageNumber = (request.Params.PageNumber == -1) ? 1 : request.Params.PageNumber;
+                int PageSize = (request.Params.PageNumber == -1) ? query.Count : request.Params.PageSize;
+                return Result<PagedList<ContestDto>>
+                    .Success(PagedList<ContestDto>.CreateAsyncUsingList(query,
+                        PageNumber, PageSize));
             }
         }
     }
