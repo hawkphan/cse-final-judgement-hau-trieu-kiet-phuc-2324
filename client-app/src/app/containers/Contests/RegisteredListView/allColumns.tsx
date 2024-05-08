@@ -51,11 +51,13 @@ export const allColumns = (
         <CountdownTimer
           startTime={convertUTCtoLocal(
             cell.row.original.startTime,
-            "Asia/Ho_Chi_Minh"
+            "Asia/Ho_Chi_Minh",
+            7
           )}
           endTime={convertUTCtoLocal(
             cell.row.original.endTime,
-            "Asia/Ho_Chi_Minh"
+            "Asia/Ho_Chi_Minh",
+            7
           )}
         />
       ),

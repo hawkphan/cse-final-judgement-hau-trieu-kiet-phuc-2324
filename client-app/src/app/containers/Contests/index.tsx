@@ -15,7 +15,7 @@ const Contests = () => {
     >
       <Stack direction="row" justifyContent="flex-end" mt={4} pr={2}>
         <Button
-          label="Manage as Admin"
+          label="Manage"
           onClick={() => navigate(PATHS.contestManagement)}
         />
       </Stack>

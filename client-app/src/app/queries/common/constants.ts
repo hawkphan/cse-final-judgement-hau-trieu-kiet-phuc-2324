@@ -24,4 +24,5 @@ export enum API_QUERIES {
   // Contests
   GET_REGISTERED_CONTEST = "/get-register-contests",
   GET_UNREGISTERED_CONTEST = "/get-unregistered-contests",
+  GET_CONTESTS = "/get-contests",
 }

@@ -5,9 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { ProblemFilterQueryKey } from "./helpers";
 import { useCallback, useMemo, useState } from "react";
 import { useStore } from "../../../shared/common/stores/store";
-import { Contest, GetPropertiesParams } from "../../../queries";
-import { contests } from "./data.mock";
-import { CustomTableSearch, EmptyTable, MuiSwitch, Table2 } from "../../../shared";
+import { Contest, GetPropertiesParams, useGetContests } from "../../../queries";
+import { CustomTableSearch, EmptyTable, Table2 } from "../../../shared";
 import ContestDeleteConfirmDialog from "./ContestDeleteConfirmDialog";
 import ContestToolbar from "./ContestToolbar";
 
@@ -16,17 +15,11 @@ const ContestManagement = () => {
   const navigate = useNavigate();
   const user = userStore.user;
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [isOnlyDedication, setIsOnlyDedication] = useState(false);
   const [deleteId, setDeleteId] = useState("");
 
-  const onDeleteContest = () => {}
+  const { contests, setParams, isFetching, totalRecords } = useGetContests();
 
-  const handleGetContests = useCallback(
-    (params: GetPropertiesParams) => {
-      // setParams({ ...params, isOnly: isOnlyDedication, userId: user?.id });
-    },
-    [isOnlyDedication,  user?.id]
-  );
+  const onDeleteContest = () => {};
 
   const handleClickOpenDeleteDialog = () => {
     setOpenDeleteDialog(true);
@@ -46,7 +39,7 @@ const ContestManagement = () => {
 
   const handleEditContest = useCallback(
     (id: string) => {
-      // navigate(`/problems/${id}/edit`);
+      navigate(`/contests/${id}/edit`);
     },
     [navigate]
   );
@@ -56,21 +49,31 @@ const ContestManagement = () => {
       allColumns({
         handleEditContest,
         handleClickOpenDeleteDialog,
-        handleSetDeleteId
+        handleSetDeleteId,
       }),
     [handleEditContest]
+  );
+
+  const handleGetContests = useCallback(
+    (params: GetPropertiesParams) => {
+      setParams({ ...params, userId: user?.id });
+    },
+    [setParams, user?.id]
   );
 
   return (
     <Container maxWidth="xl">
       <Table2<Contest>
-        rowCount={10}
+        rowCount={totalRecords}
         columns={columns}
         data={contests}
         onAction={handleGetContests}
         enableTopToolbar={true}
         recordName="items"
         singularRecordName="item"
+        state={{
+          isLoading: isFetching,
+        }}
         enableDensityToggle={false}
         enableColumnOrdering={false}
         enableRowActions
@@ -96,11 +99,6 @@ const ContestManagement = () => {
                 searchKey="keywords"
               />
             </Stack>
-            <MuiSwitch
-              label="Only own posts"
-              isShowDescription={false}
-              checked={isOnlyDedication}
-            />
           </Stack>
         )}
         renderToolbarInternalActions={({ table }) => {

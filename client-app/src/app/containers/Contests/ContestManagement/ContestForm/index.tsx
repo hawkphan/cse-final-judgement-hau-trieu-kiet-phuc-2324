@@ -19,6 +19,7 @@ import {
   ContestProblem,
   CreateContestBody,
   useCreateContest,
+  useGetContests,
   useGetProblems,
   useGetProfiles,
 } from "../../../../queries";
@@ -67,10 +68,12 @@ const ContestForm = () => {
     selectOptions: profileOptions,
     isFetching: isProfilesFetching,
   } = useGetProfiles();
+  const { handleInvalidateContests } = useGetContests();
   const { isPending, onCreateContest } = useCreateContest({
     onSuccess: () => {
       Toastify.success("Successful!");
       navigate(PATHS.contestManagement);
+      handleInvalidateContests();
     },
     onError: (error) => {
       Toastify.error(error.message);

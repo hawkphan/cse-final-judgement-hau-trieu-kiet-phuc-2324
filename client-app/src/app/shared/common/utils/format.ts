@@ -135,9 +135,11 @@ export const parseJSONString = (input: string) => {
 
 export const convertUTCtoLocal = (
   utcDateString: string,
-  timeZone: string
+  timeZone: string,
+  hoursToAdd: number
 ) => {
   const utcDate = new Date(utcDateString);
+  utcDate.setHours(utcDate.getHours() + hoursToAdd);
   const options = { timeZone };
   const localDateString = utcDate.toLocaleString(undefined, options);
   return new Date(localDateString).toISOString();
