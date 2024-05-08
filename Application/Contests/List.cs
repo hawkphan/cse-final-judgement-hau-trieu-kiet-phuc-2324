@@ -30,8 +30,17 @@ namespace Application.Contests
 
             public async Task<Result<PagedList<ContestDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
+                string key = request.Params.Keywords;
 
                 var contests = _context.Contests.AsQueryable();
+
+                if (!string.IsNullOrEmpty(key))
+                {
+                    contests = _context.Contests.
+                    Where(contest =>
+                    contest.Name.Contains(key));
+                }
+
                 var query = await contests.ProjectTo<ContestDto>(_mapper.ConfigurationProvider)
                      .ToListAsync(cancellationToken: cancellationToken);
                 int PageNumber = (request.Params.PageNumber == -1) ? 1 : request.Params.PageNumber;
