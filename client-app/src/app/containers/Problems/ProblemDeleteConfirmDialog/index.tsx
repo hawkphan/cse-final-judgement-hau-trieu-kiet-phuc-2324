@@ -12,21 +12,21 @@ import { forwardRef } from "react";
 import { Callback } from "../../../queries";
 import { Button } from "../../../shared";
 
+const Transition = forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const ProblemDeleteConfirmDialog: React.FC<Props> = ({
   openDeleteDialog,
   deleteId,
   handleCloseDeleteDialog,
   onDeleteProblem,
 }) => {
-  const Transition = forwardRef(function Transition(
-    props: TransitionProps & {
-      children: React.ReactElement<any, any>;
-    },
-    ref: React.Ref<unknown>
-  ) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
-
   return (
     <Dialog
       open={openDeleteDialog}
@@ -40,8 +40,8 @@ const ProblemDeleteConfirmDialog: React.FC<Props> = ({
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          All related records of test cases and submissions in the system will be
-          removed after this deletion. The action can not be undone.
+          All related records of test cases and submissions in the system will
+          be removed after this deletion. The action can not be undone.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
