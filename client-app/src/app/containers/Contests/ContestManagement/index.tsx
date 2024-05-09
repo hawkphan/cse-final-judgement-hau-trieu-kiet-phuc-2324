@@ -2,13 +2,22 @@
 import { Container, Stack } from "@mui/material";
 import { allColumns } from "./allColumns";
 import { useNavigate } from "react-router-dom";
-import { ProblemFilterQueryKey } from "./helpers";
 import { useCallback, useMemo, useState } from "react";
 import { useStore } from "../../../shared/common/stores/store";
-import { Contest, GetPropertiesParams, useGetContests } from "../../../queries";
-import { CustomTableSearch, EmptyTable, Table2 } from "../../../shared";
+import {
+  Contest,
+  GetPropertiesParams,
+  useDeleteContest,
+  useGetContests,
+} from "../../../queries";
+import {
+  CustomTableSearch,
+  EmptyTable,
+  Table2,
+  Toastify,
+} from "../../../shared";
 import ContestDeleteConfirmDialog from "./ContestDeleteConfirmDialog";
-import ContestToolbar from "./ContestToolbar";
+import { ContestFilterQueryKey } from "./helpers";
 
 const ContestManagement = () => {
   const { userStore } = useStore();
@@ -17,9 +26,23 @@ const ContestManagement = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteId, setDeleteId] = useState("");
 
-  const { contests, setParams, isFetching, totalRecords } = useGetContests();
+  const {
+    contests,
+    setParams,
+    isFetching,
+    totalRecords,
+    handleInvalidateContests,
+  } = useGetContests();
 
-  const onDeleteContest = () => {};
+  const { onDeleteContest } = useDeleteContest({
+    onSuccess: () => {
+      Toastify.success("Successfully");
+      handleInvalidateContests();
+    },
+    onError: (error) => {
+      Toastify.error(error.toString());
+    },
+  });
 
   const handleClickOpenDeleteDialog = () => {
     setOpenDeleteDialog(true);
@@ -27,10 +50,6 @@ const ContestManagement = () => {
 
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
-  };
-
-  const handleNavigateToDetail = (id: string) => {
-    navigate(id);
   };
 
   const handleSetDeleteId = (id: string) => {
@@ -80,17 +99,7 @@ const ContestManagement = () => {
         paginationDisplayMode="pages"
         isColumnPinning={false}
         nameColumnPinning="actions"
-        additionalFilterParams={[
-          ProblemFilterQueryKey.FROM_DATE,
-          ProblemFilterQueryKey.TO_DATE,
-          ProblemFilterQueryKey.DIFFICULTY,
-          ProblemFilterQueryKey.KEYWORDS,
-        ]}
-        muiTableBodyRowProps={({ row }) => ({
-          onClick: () => {
-            handleNavigateToDetail(row.original.id);
-          },
-        })}
+        additionalFilterParams={[ContestFilterQueryKey.KEYWORDS]}
         renderTopToolbarCustomActions={() => (
           <Stack direction="row" spacing={1} my={0.5}>
             <Stack width="328px">
@@ -101,8 +110,9 @@ const ContestManagement = () => {
             </Stack>
           </Stack>
         )}
-        renderToolbarInternalActions={({ table }) => {
-          return <ContestToolbar table={table} />;
+        renderToolbarInternalActions={() => {
+          // return <ContestToolbar table={table} />;
+          return <></>;
         }}
         renderFallbackValue={<EmptyTable />}
         muiTopToolbarProps={{

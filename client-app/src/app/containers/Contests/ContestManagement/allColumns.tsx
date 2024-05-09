@@ -104,15 +104,13 @@ export const allColumns = ({
 
       Cell: ({ row }) => (
         <RowActions
-          hideEdit={row.original.hasStarted}
-          hideDelete={row.original.hasStarted}
-          hideDetail={false}
+          hideEdit={false}
+          hideDelete={false}
           DeleteFunction={() => {
             handleSetDeleteId(row.original.id);
             handleClickOpenDeleteDialog();
           }}
           EditFunction={() => handleEditContest(row.original.id)}
-          DetailFunction={() => {}}
         />
       ),
     },

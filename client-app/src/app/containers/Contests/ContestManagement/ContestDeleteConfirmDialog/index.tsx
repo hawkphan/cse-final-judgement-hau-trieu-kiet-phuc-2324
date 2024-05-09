@@ -12,21 +12,21 @@ import { forwardRef } from "react";
 import { Button } from "../../../../shared";
 import { Callback } from "../../../../queries";
 
+const Transition = forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const ContestDeleteConfirmDialog: React.FC<Props> = ({
   openDeleteDialog,
   deleteId,
   handleCloseDeleteDialog,
   onDeleteContest,
 }) => {
-  const Transition = forwardRef(function Transition(
-    props: TransitionProps & {
-      children: React.ReactElement<any, any>;
-    },
-    ref: React.Ref<unknown>
-  ) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
-
   return (
     <Dialog
       open={openDeleteDialog}
@@ -36,11 +36,11 @@ const ContestDeleteConfirmDialog: React.FC<Props> = ({
       aria-describedby="alert-dialog-slide-description"
     >
       <DialogTitle fontWeight={"bold"}>
-        Are you sure to delete this problem?
+        Are you sure to delete this contest?
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          All related records of test cases and submission in the system will be
+          All related records of problems and members in the system will be
           removed after this deletion. The action can not be undone.
         </DialogContentText>
       </DialogContent>

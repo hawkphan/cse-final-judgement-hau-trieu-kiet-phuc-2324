@@ -59,9 +59,6 @@ export const renderContestRule = (value: number) => {
   }
 };
 
-export enum ProblemFilterQueryKey {
-  DIFFICULTY = "difficulty",
-  FROM_DATE = "fromDate",
-  TO_DATE = "toDate",
+export enum ContestFilterQueryKey {
   KEYWORDS = "keywords",
 }

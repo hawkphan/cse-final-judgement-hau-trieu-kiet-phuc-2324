@@ -26,10 +26,15 @@ const editContests = (body: EditContestBody) => {
   return axios.put(`${API_URL}/api/contests/${id}`, body, {});
 };
 
+const deleteContest = (id: string) => {
+  return axios.delete(`${API_URL}/api/contests/${id}`, {});
+};
+
 export {
   getRegisteredContests,
   getUnregisteredContests,
   getContests,
   createContest,
+  deleteContest,
   editContests,
 };

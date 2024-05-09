@@ -4,3 +4,4 @@ export * from "./useGetRegisteredContests";
 export * from "./useGetUnregisteredContests";
 export * from "./useGetContests";
 export * from "./useCreateContest";
+export * from "./useDeleteContest";

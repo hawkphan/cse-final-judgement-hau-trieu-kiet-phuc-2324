@@ -40,7 +40,7 @@ const ProblemDeleteConfirmDialog: React.FC<Props> = ({
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          All related records of test cases and submission in the system will be
+          All related records of test cases and submissions in the system will be
           removed after this deletion. The action can not be undone.
         </DialogContentText>
       </DialogContent>
