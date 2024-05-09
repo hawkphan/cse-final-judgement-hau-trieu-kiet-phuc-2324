@@ -1,12 +1,18 @@
 import { MRT_TableInstance } from "material-react-table";
 import { IconButton, Stack, Tooltip } from "@mui/material";
-import { ProblemFilterQueryKey } from "../helpers";
 import { IoMdRefresh } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import PostAddRoundedIcon from "@mui/icons-material/PostAddRounded";
-import { Contest, useGetRegisteredContest } from "../../../../queries";
-import { Button, COLOR_CODE, CustomTableColumnOptions, CustomTableColumnOptionsModal, CustomTableFilterContainer } from "../../../../shared";
-import ContestFilter from "./ContestFilter";
+import {
+  Contest,
+  useGetContests,
+} from "../../../../queries";
+import {
+  Button,
+  COLOR_CODE,
+  CustomTableColumnOptions,
+  CustomTableColumnOptionsModal,
+} from "../../../../shared";
 import { PATHS } from "../../../../configs/paths";
 
 type Props = {
@@ -16,7 +22,7 @@ type Props = {
 
 const ContestToolbar = ({ table, canCreate = true }: Props) => {
   const navigate = useNavigate();
-  const { handleInvalidateRegisteredContest } = useGetRegisteredContest();
+  const { handleInvalidateContests } = useGetContests();
 
   return (
     <Stack direction="column" mb={1}>
@@ -33,34 +39,31 @@ const ContestToolbar = ({ table, canCreate = true }: Props) => {
                   backgroundColor: COLOR_CODE.BG_SURFACE_HOVER,
                 },
               }}
-              onClick={handleInvalidateRegisteredContest}
+              onClick={handleInvalidateContests}
             >
               <IoMdRefresh size={20} color={COLOR_CODE.GREY_800} />
             </IconButton>
           </Tooltip>
-          <CustomTableFilterContainer
-            filterParamsKeys={[
-              ProblemFilterQueryKey.FROM_DATE,
-              ProblemFilterQueryKey.TO_DATE,
-              ProblemFilterQueryKey.DIFFICULTY,
-              ProblemFilterQueryKey.KEYWORDS,
-            ]}
+          {/* <CustomTableFilterContainer
+            filterParamsKeys={[ContestFilterQueryKey.KEYWORDS]}
           >
             <ContestFilter />
-          </CustomTableFilterContainer>
+          </CustomTableFilterContainer> */}
           <CustomTableColumnOptions>
             <Tooltip title="Column Options" arrow placement="top">
               <CustomTableColumnOptionsModal table={table} />
             </Tooltip>
           </CustomTableColumnOptions>
-          {canCreate && <Button
-            className="btn btn-primary"
-            icon={<PostAddRoundedIcon fontSize="medium" />}
-            style={{ fontFamily: "Roboto", marginTop: "6px" }}
-            onClick={() => navigate(PATHS.createContest)}
-          >
-            New
-          </Button>}
+          {canCreate && (
+            <Button
+              className="btn btn-primary"
+              icon={<PostAddRoundedIcon fontSize="medium" />}
+              style={{ fontFamily: "Roboto", marginTop: "6px" }}
+              onClick={() => navigate(PATHS.createContest)}
+            >
+              New
+            </Button>
+          )}
         </Stack>
       </Stack>
     </Stack>

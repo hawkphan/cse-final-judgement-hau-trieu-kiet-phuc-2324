@@ -18,6 +18,7 @@ import {
 } from "../../../shared";
 import ContestDeleteConfirmDialog from "./ContestDeleteConfirmDialog";
 import { ContestFilterQueryKey } from "./helpers";
+import ContestToolbar from "./ContestToolbar";
 
 const ContestManagement = () => {
   const { userStore } = useStore();
@@ -110,9 +111,8 @@ const ContestManagement = () => {
             </Stack>
           </Stack>
         )}
-        renderToolbarInternalActions={() => {
-          // return <ContestToolbar table={table} />;
-          return <></>;
+        renderToolbarInternalActions={({ table }) => {
+          return <ContestToolbar table={table} />;
         }}
         renderFallbackValue={<EmptyTable />}
         muiTopToolbarProps={{
