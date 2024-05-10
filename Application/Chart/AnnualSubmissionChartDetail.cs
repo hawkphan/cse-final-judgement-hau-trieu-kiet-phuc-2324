@@ -42,12 +42,8 @@ namespace Application.Chart
                     solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);
                 }
 
-
-                // Filter the last 12 months
-
                 solutions = solutions
                 .Where(s => s.CreatedDate.Year == DateTime.Now.Year && s.CreatedDate.Month >= DateTime.Now.Month - 11);
-
 
                 var data = solutions.GroupBy(s => new { s.CreatedDate.Year, s.CreatedDate.Month })
                 .Select(group => new InMonthSubmitDto
@@ -59,7 +55,6 @@ namespace Application.Chart
                 .OrderBy(group => group.Year)
                 .ThenBy(group => group.Month)
                 .ToList();
-
 
                 return ApiResult<ICollection<InMonthSubmitDto>>.Success(data);
             }

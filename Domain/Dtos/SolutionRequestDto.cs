@@ -8,9 +8,9 @@ namespace Domain
 {
     public class SolutionRequestDto
     {
-        public Guid userId { get; set; }
-        public Guid problemId { get; set; }
-        public int languageId { get; set; }
-        public String solution { get; set; }
+        public Guid UserId { get; set; }
+        public Guid ProblemId { get; set; }
+        public int LanguageId { get; set; }
+        public String Solution { get; set; }
     }
 }
