@@ -24,7 +24,7 @@ namespace Domain
         public DateTime CreatedDate { get; set; }
         public ICollection<Result> Results { get; set; }
         public double Score { get; set; }
-        public double Rating { get; set; }
+        public int GradingStatus { get; set; }
     }
 
 }

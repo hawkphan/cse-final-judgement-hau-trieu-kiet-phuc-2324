@@ -1,3 +1,4 @@
+using Application.Activities;
 using Application.Core;
 using Application.Interfaces;
 using AutoMapper;
@@ -40,18 +41,66 @@ namespace Application.Solutions
 
                 foreach (var result in results)
                 {
+                    // update solution result
                     if (result.Status < 3)
                     {
                         string initialResult = await judge0.SendGetRequest($"submissions/{result.Token}");
                         ResultDto resultDto = JsonConvert.DeserializeObject<ResultDto>(initialResult);
-                        var newResult = _mapper.Map<Result>(resultDto);
 
+                        var newResult = _mapper.Map<Result>(resultDto);
                         newResult.Id = result.Id;
                         newResult.TestCaseId = result.TestCaseId;
                         newResult.SolutionId = result.SolutionId;
-
                         _mapper.Map(newResult, result);
                         await _context.SaveChangesAsync();
+                    }
+                }
+                //check if solution is graded
+                var UnGradeSolution = _context.Solutions.Where(s => s.GradingStatus == 0).Include(s => s.Results).Include(s => s.Problem);
+                foreach (Solution solution in UnGradeSolution)
+                {
+                    if (solution.Score == 0)
+                    {
+                        Boolean AllGraded = true;
+                        double score = 0;
+                        foreach (var res in solution.Results)
+                        {
+                            if (res.Status < 3)
+                            {
+                                AllGraded = false;
+                                solution.GradingStatus = 0;
+                                score = 0;
+                                break;
+                            }
+                            if (res.Status == 3)
+                            {
+                                score += 1;
+                            }
+                        }
+                        if (AllGraded)
+                        {
+                            var size = _context.TestCases.Count(t => t.ProblemId.Equals(solution.ProblemId));
+
+                            solution.Score = (double)score / size;
+                            solution.GradingStatus = 1;
+                        }
+                        else
+                            continue;
+
+                        //Rating Section Here
+                        var user = await _context.Users.FindAsync(solution.UserId);
+                        Problem problem = await _context.Problems.FindAsync(solution.ProblemId);
+
+                        //update elo here
+
+                        double ExpectCompletionRate = 1 / (1 + Math.Pow(10, (problem.Difficulty - user.Rating) / 400));
+
+                        user.Rating = user.Rating + 100 * (solution.Score - ExpectCompletionRate);
+                        problem.Difficulty = problem.Difficulty + problem.MaximumDiff * (solution.Score - ExpectCompletionRate);
+
+                        
+                        await _context.SaveChangesAsync();
+
                     }
                 }
 
@@ -88,9 +137,6 @@ namespace Application.Solutions
                     solution.MemoryUsage = memory;
                     solution.Status = sevStatus;
                 }
-
-                await _context.SaveChangesAsync();
-
                 if (userId != null)
                 {
                     solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);
@@ -106,7 +152,7 @@ namespace Application.Solutions
                 .ToListAsync(cancellationToken: cancellationToken);
 
                 FileManager fileManager = new FileManager();
-                
+
                 foreach (var solution in queryList)
                 {
                     if (Directory.Exists(Path.Combine(fileManager.SolutionsPath, solution.Id.ToString())))

@@ -12,6 +12,7 @@ public class Problem
     public string Code { get; set; }
     public string Title { get; set; }
     public double Difficulty { get; set; }
+    public double MaximumDiff { get; set; }
     public string Description { get; set; }
     public DateTime Date { get; set; }
     //kilobyte Limit address space of the program in kilobytes.	

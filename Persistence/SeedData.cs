@@ -40,6 +40,7 @@ namespace Persistence
 
                 var users = new List<AppUser>{
                     new AppUser{
+                        Rating = 1000,
                         DisplayName = "Kiet Tran",
                         UserName = "kiet",
                         Email = "kiet.tran.cit19@eiu.edu.vn",
@@ -48,6 +49,7 @@ namespace Persistence
                         Birthday = new DateTime(2001, 7, 5, 16, 23, 42, DateTimeKind.Utc),
                     },
                     new AppUser{
+                        Rating = 1000,
                         DisplayName = "Trieu Le",
                         UserName = "trieu",
                         Email = "trieu.le.cit19@eiu.edu.vn",
@@ -56,6 +58,7 @@ namespace Persistence
                         Birthday = new DateTime(2001, 7, 5, 16, 23, 42, DateTimeKind.Utc),
                     },
                     new AppUser{
+                        Rating = 1000,
                         DisplayName = "Hau Phan",
                         UserName = "hau",
                         Email = "hau.phantrung.set19@eiu.edu.vn",

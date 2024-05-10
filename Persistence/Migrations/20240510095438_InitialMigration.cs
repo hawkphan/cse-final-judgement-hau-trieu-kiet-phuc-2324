@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -234,6 +234,7 @@ namespace Persistence.Migrations
                     Code = table.Column<string>(type: "TEXT", nullable: true),
                     Title = table.Column<string>(type: "TEXT", nullable: true),
                     Difficulty = table.Column<double>(type: "REAL", nullable: false),
+                    MaximumDiff = table.Column<double>(type: "REAL", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MemoryLimit = table.Column<int>(type: "INTEGER", nullable: false),
@@ -336,7 +337,7 @@ namespace Persistence.Migrations
                     ExecutionTime = table.Column<double>(type: "REAL", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Score = table.Column<double>(type: "REAL", nullable: false),
-                    Rating = table.Column<double>(type: "REAL", nullable: false)
+                    GradingStatus = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
