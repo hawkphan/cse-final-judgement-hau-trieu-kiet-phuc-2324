@@ -36,10 +36,10 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpPut("{id}")]
-        public async Task<ActionResult> Edit([FromRoute] Guid id, [FromForm] Problem Problem, [FromForm] String allowedLanguages, [FromForm] IFormFile? file)
+        public async Task<ActionResult> Edit([FromRoute] Guid id, [FromForm] Problem problem, [FromForm] String allowedLanguages, [FromForm] IFormFile? file)
         {
-            Problem.Id = id;
-            return HandleApiResult(await Mediator.Send(new Edit.Command { Problem = Problem, TestCaseZip = file, AllowedLanguages = allowedLanguages }));
+            problem.Id = id;
+            return HandleApiResult(await Mediator.Send(new Edit.Command { Problem = problem, TestCaseZip = file, AllowedLanguages = allowedLanguages }));
         }
         [AllowAnonymous]
         [HttpDelete("{id}")]

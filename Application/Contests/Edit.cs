@@ -6,6 +6,7 @@ using Domain.Dtos;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Contests
@@ -14,7 +15,7 @@ namespace Application.Contests
     {
         public class Command : IRequest<ApiResult<ContestDto>>
         {
-            public Domain.Contest Contest { get; set; }
+            public ContestDto Contest { get; set; }
         }
         public class Handler : IRequestHandler<Command, ApiResult<ContestDto>>
         {
@@ -29,7 +30,24 @@ namespace Application.Contests
 
             public async Task<ApiResult<ContestDto>> Handle(Command request, CancellationToken cancellationToken)
             {
-                throw new NotImplementedException();
+                try
+                {
+                    var contest = await _context.Contests.Include(c => c.Members).Include(c => c.Problems).FirstOrDefaultAsync(c => c.Id.Equals(request.Contest.Id));
+
+                    if (contest == null) return ApiResult<ContestDto>.Failure(new string[] { "Failed to Edit" });
+
+                    _mapper.Map(request.Contest, contest);
+
+                    await _context.SaveChangesAsync();
+
+                    var newContestDto = _mapper.Map<ContestDto>(request.Contest);
+
+                    return ApiResult<ContestDto>.Success(newContestDto);
+                }
+                catch
+                {
+                    return ApiResult<ContestDto>.Failure(new string[] { "Failed to Edit" });
+                }
             }
         }
     }

@@ -5,3 +5,5 @@ export * from "./useGetUnregisteredContests";
 export * from "./useGetContests";
 export * from "./useCreateContest";
 export * from "./useDeleteContest";
+export * from "./useGetContestById";
+export * from "./useEditContest";

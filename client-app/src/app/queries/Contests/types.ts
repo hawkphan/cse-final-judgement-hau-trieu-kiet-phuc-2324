@@ -1,16 +1,13 @@
-import { Problem, User } from "../Problems";
-
 export interface Contest {
   id: string;
-  code: string;
   name: string;
   description: string;
   startTime: string;
   endTime: string;
-  hasStarted?: boolean;
-  numOfMembers?: number;
-  members: User[];
-  problems: Problem[];
+  rule: number;
+  type: number;
+  problems: ContestProblem[];
+  members: ContestMember[];
 }
 
 export interface CreateContestBody {
@@ -25,13 +22,15 @@ export interface CreateContestBody {
 }
 
 export interface EditContestBody {
-  id: string;
-  title: string;
+  id?: string;
+  name: string;
   description: string;
   startTime: string;
   endTime: string;
-  members: User[];
-  problems: Problem[];
+  rule: number;
+  type: number;
+  problems: ContestProblem[];
+  members: ContestMember[];
 }
 export interface ContestProblem {
   problemId: string;

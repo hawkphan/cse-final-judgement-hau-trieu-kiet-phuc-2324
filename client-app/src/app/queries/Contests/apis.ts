@@ -21,9 +21,13 @@ const createContest = (body: CreateContestBody) => {
   return axios.post(`${API_URL}/api/contests`, body, {});
 };
 
-const editContests = (body: EditContestBody) => {
+const editContest = (body: EditContestBody) => {
   const { id } = body;
   return axios.put(`${API_URL}/api/contests/${id}`, body, {});
+};
+
+const getContestById = (params: { id: string }) => {
+  return axios.get<Contest>(`${API_URL}/api/contests/${params.id}`, {});
 };
 
 const deleteContest = (id: string) => {
@@ -36,5 +40,6 @@ export {
   getContests,
   createContest,
   deleteContest,
-  editContests,
+  editContest,
+  getContestById,
 };

@@ -15,10 +15,14 @@ import {
 import { Card, Container, InputLabel, Stack, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import {
+  API_QUERIES,
   ContestMember,
   ContestProblem,
   CreateContestBody,
+  EditContestBody,
   useCreateContest,
+  useEditContest,
+  useGetContestById,
   useGetContests,
   useGetProblems,
   useGetProfiles,
@@ -68,12 +72,33 @@ const ContestForm = () => {
     selectOptions: profileOptions,
     isFetching: isProfilesFetching,
   } = useGetProfiles();
+  const {
+    contest,
+    isFetching: isContestFetching,
+    handleInvalidateContest,
+  } = useGetContestById({
+    id,
+    queryKey: [API_QUERIES.GET_CONTEST_BY_ID, { id: id }],
+  });
   const { handleInvalidateContests } = useGetContests();
   const { isPending, onCreateContest } = useCreateContest({
     onSuccess: () => {
       Toastify.success("Successful!");
       navigate(PATHS.contestManagement);
       handleInvalidateContests();
+      handleInvalidateContest();
+    },
+    onError: (error) => {
+      Toastify.error(error.message);
+      console.log("Error", error);
+    },
+  });
+  const { onEditContest, isPending: isEditPending } = useEditContest({
+    onSuccess: () => {
+      Toastify.success("Successful!");
+      handleInvalidateContests();
+      handleInvalidateContest();
+      navigate(PATHS.contestManagement);
     },
     onError: (error) => {
       Toastify.error(error.message);
@@ -81,27 +106,31 @@ const ContestForm = () => {
     },
   });
 
-  const { control, handleSubmit, setValue, watch } = useForm<CreateContestBody>(
-    {
-      defaultValues: { startTime: null, endTime: null },
-      mode: "onChange",
-      shouldFocusError: true,
-      reValidateMode: "onChange",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      resolver: yupResolver<any>(
-        isEdit ? EditContestFormSchema : CreateContestFormSchema
-      ),
-    }
-  );
+  const { control, handleSubmit, setValue, watch, reset } = useForm<
+    CreateContestBody | EditContestBody
+  >({
+    defaultValues: isEdit ? { ...contest } : { startTime: null, endTime: null },
+    mode: "onChange",
+    shouldFocusError: true,
+    reValidateMode: "onChange",
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: yupResolver<any>(
+      isEdit ? EditContestFormSchema : CreateContestFormSchema
+    ),
+  });
 
   const startTime = watch(ContestProperties.START_TIME);
 
   const onSubmit = useCallback(
-    (data: CreateContestBody) => {
+    (data: CreateContestBody | EditContestBody) => {
       data = { ...data, problems: problemSet, members: userSet };
-      onCreateContest(data);
+      if (!isEdit) {
+        onCreateContest(data);
+      } else {
+        onEditContest(data);
+      }
     },
-    [onCreateContest, problemSet, userSet]
+    [isEdit, onCreateContest, onEditContest, problemSet, userSet]
   );
 
   const handleSetProblemSet = () => {
@@ -177,6 +206,14 @@ const ContestForm = () => {
   );
 
   useEffect(() => {
+    reset({ ...contest });
+    if (!isEmpty(contest)) {
+      setProblemSet(contest?.problems);
+      setUserSet(contest?.members);
+    }
+  }, [contest, reset]);
+
+  useEffect(() => {
     setProfilesParams({ pageSize: -1 });
     setProblemsParams({ pageSize: -1 });
 
@@ -185,7 +222,7 @@ const ContestForm = () => {
     }
   }, [isEdit, setProblemsParams, setProfilesParams, userStore?.user?.id]);
 
-  if (isFetching || isProfilesFetching) {
+  if (isFetching || isProfilesFetching || isContestFetching) {
     return <LoadingCommon />;
   }
 
@@ -248,7 +285,7 @@ const ContestForm = () => {
                   <MuiSelect
                     label="Type"
                     options={contestTypeOptions}
-                    value={field.value}
+                    value={field.value + ""}
                     onChange={(_, value) => {
                       field.onChange(value);
                     }}
@@ -268,7 +305,7 @@ const ContestForm = () => {
                     label="Rule"
                     options={contestRuleOptions}
                     size="small"
-                    value={field.value}
+                    value={field.value + ""}
                     onChange={(_, value) => {
                       field.onChange(value);
                     }}
@@ -476,7 +513,11 @@ const ContestForm = () => {
             }}
           />
           <Stack direction="row" justifyContent="flex-end" mt={4}>
-            <Button type="submit" label={"Save"} isLoading={isPending} />
+            <Button
+              type="submit"
+              label={"Save"}
+              isLoading={isPending || isEditPending}
+            />
           </Stack>
         </Form>
       </Card>

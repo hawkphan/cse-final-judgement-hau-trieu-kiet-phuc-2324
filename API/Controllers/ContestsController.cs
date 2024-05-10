@@ -41,11 +41,10 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpPut("{id}")]
-        public async Task<ActionResult> EditContest([FromRoute] Guid id, [FromForm] Contest contest)
+        public async Task<ActionResult> EditContest([FromRoute] Guid id, [FromBody] ContestDto contest)
         {
-            // Problem.Id = id;
-            // return HandleApiResult(await Mediator.Send(new Edit.Command { Problem = Problem, TestCaseZip = file }));
-            throw new NotImplementedException();
+            contest.Id = id;
+            return HandleApiResult(await Mediator.Send(new Edit.Command { Contest = contest }));
         }
         [AllowAnonymous]
         [HttpDelete("{id}")]
