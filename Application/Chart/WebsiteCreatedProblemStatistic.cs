@@ -91,7 +91,17 @@ namespace Application.Chart
                 }
                 else if (totalDaysOfMonth > 30)
                 {
-                    if (groupedProblems[groupedProblems.Count - 1].Key.Day == 31)
+                    if (groupedProblems.Count == 0)
+                    {
+                        data.Values.Add(0);
+                        data.Times.Add(new DateTime(request.dateTime.Year,
+                                                        request.dateTime.Month,
+                                                        31,
+                                                        0, 0, 0,
+                                                        DateTimeKind.Utc));
+
+                    }
+                    else if (groupedProblems[groupedProblems.Count - 1].Key.Day == 31)
                     {
                         data.Values.Add(groupedProblems[groupIndex].Count());
                     }
@@ -99,8 +109,8 @@ namespace Application.Chart
                     {
                         data.Values.Add(0);
                     }
-                    data.Times.Add(new DateTime(groupedProblems[0].Key.Year,
-                                                        groupedProblems[0].Key.Month,
+                    data.Times.Add(new DateTime(request.dateTime.Year,
+                                                        request.dateTime.Month,
                                                         31,
                                                         0, 0, 0,
                                                         DateTimeKind.Utc));
