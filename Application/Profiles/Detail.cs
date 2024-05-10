@@ -56,26 +56,26 @@ namespace Application.Profiles
                 var languageUsage = solutions.GroupBy(s => s.LanguageId)
                 .Select(group => group.Key)
                 .ToList();
-                profile.languageUsage = languageUsage;
+                profile.LanguageUsage = languageUsage;
 
                 DateTime startOfLastWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday).AddDays(-7);
                 DateTime endOfLastWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
 
                 var Views = solutions.GroupBy(s => s.ProblemId);
                 var SolvedProblems = Views.Where(group => group.Any(solution => solution.Status == 3));
-                if (profile.activities == null)
+                if (profile.Activities == null)
                 {
-                    profile.activities = new UserActivityRecord();
+                    profile.Activities = new UserActivityRecord();
                 }
-                profile.activities.Views = Views.Count();
-                profile.activities.LastWeekViews = Views.Count(group => group.Any(
+                profile.Activities.Views = Views.Count();
+                profile.Activities.LastWeekViews = Views.Count(group => group.Any(
                     solution => (solution.CreatedDate >= startOfLastWeek && solution.CreatedDate <= endOfLastWeek)));
 
-                profile.activities.Solutions = solutions.Count();
-                profile.activities.LastWeekSolutions = solutions.Count(solution => (solution.CreatedDate >= startOfLastWeek && solution.CreatedDate <= endOfLastWeek));
+                profile.Activities.Solutions = solutions.Count();
+                profile.Activities.LastWeekSolutions = solutions.Count(solution => (solution.CreatedDate >= startOfLastWeek && solution.CreatedDate <= endOfLastWeek));
 
-                profile.activities.SolvedProblems = SolvedProblems.Count();
-                profile.activities.LastWeekSolvedProblems = SolvedProblems.Count(group => group.Any(
+                profile.Activities.SolvedProblems = SolvedProblems.Count();
+                profile.Activities.LastWeekSolvedProblems = SolvedProblems.Count(group => group.Any(
                     solution => (solution.CreatedDate >= startOfLastWeek && solution.CreatedDate <= endOfLastWeek)));
 
                 return ApiResult<ProfileDto>.Success(profile);

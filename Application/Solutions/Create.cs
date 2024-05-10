@@ -28,13 +28,13 @@ namespace Application.Solutions
             }
             public async Task<ApiResult<Solution>> Handle(Command request, CancellationToken cancellationToken)
             {
-                Problem problem = await _context.Problems.FirstOrDefaultAsync(p => p.Id == request.SolutionRequestDto.problemId);
+                Problem problem = await _context.Problems.FirstOrDefaultAsync(p => p.Id == request.SolutionRequestDto.ProblemId);
                 Judge0 judge0 = new Judge0();
                 FileManager _fileManager = new FileManager();
                 Solution solution = _mapper.Map<Solution>(request.SolutionRequestDto);
                 solution.Results = new List<Result>();
                 List<TestCase> testCases = _context.TestCases
-                .Where(tc => tc.ProblemId == request.SolutionRequestDto.problemId)
+                .Where(tc => tc.ProblemId == request.SolutionRequestDto.ProblemId)
                 .ToList();
                 foreach (TestCase testCase in testCases)
                 {
@@ -43,7 +43,7 @@ namespace Application.Solutions
                         return ApiResult<Solution>.Failure(new string[] { "Test case not exist in server" });
                     }
                 }
-                var content = request.SolutionRequestDto.solution;
+                var content = request.SolutionRequestDto.Solution;
 
                 Guid solutionId = Guid.NewGuid();
                 solution.Id = solutionId;
@@ -56,8 +56,8 @@ namespace Application.Solutions
                     // memory relating is kilobytes
                     requestDto = new Judge0ResultDto
                     {
-                        Content = request.SolutionRequestDto.solution,
-                        LanguageId = request.SolutionRequestDto.languageId,
+                        Content = request.SolutionRequestDto.Solution,
+                        LanguageId = request.SolutionRequestDto.LanguageId,
                         Input = _fileManager.getTestCaseContent(testCase.Input),
                         ExpectedOutput = _fileManager.getTestCaseContent(testCase.Output),
 
@@ -88,7 +88,7 @@ namespace Application.Solutions
                     solution.Results.Add(result);
                 }
 
-                solution.LanguageId = request.SolutionRequestDto.languageId;
+                solution.LanguageId = request.SolutionRequestDto.LanguageId;
                 solution.CreatedDate = DateTime.Now;
                 _context.Solutions.Add(solution);
                 await _context.SaveChangesAsync();

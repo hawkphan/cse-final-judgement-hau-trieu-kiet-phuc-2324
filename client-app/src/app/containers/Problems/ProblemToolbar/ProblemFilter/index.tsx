@@ -74,6 +74,7 @@ const ProblemFilter = () => {
   const selectedFromDate = useMemo(() => {
     return searchParams.get(ProblemFilterQueryKey.FROM_DATE) ?? "";
   }, [searchParams]);
+  
   const selectedToDate = useMemo(() => {
     return searchParams.get(ProblemFilterQueryKey.TO_DATE) ?? "";
   }, [searchParams]);

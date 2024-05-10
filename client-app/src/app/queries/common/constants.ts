@@ -26,4 +26,9 @@ export enum API_QUERIES {
   GET_UNREGISTERED_CONTEST = "/get-unregistered-contests",
   GET_CONTESTS = "/get-contests",
   GET_CONTEST_BY_ID = "/get-contest-by-id",
+
+  //Management
+  GET_OVERAL_STATISTIC = "/get-overal-statistic",
+  GET_SOLLUTIONS_STATISTIC = "/get-solutions-statistic",
+  GET_PROBLEMS_STATISTIC = "/get-problems-statistic",
 }

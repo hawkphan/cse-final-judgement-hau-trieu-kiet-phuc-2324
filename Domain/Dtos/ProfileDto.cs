@@ -16,8 +16,8 @@ namespace Domain
         public double Gender { get; set; }
         public string DisplayName { get; set; }
         public string Avatar { get; set; }
-        public ICollection<int> languageUsage { get; set; }
-        public UserActivityRecord activities { get; set; }
+        public ICollection<int> LanguageUsage { get; set; }
+        public UserActivityRecord Activities { get; set; }
     }
 
     public class UserActivityRecord
