@@ -22,32 +22,32 @@ const RegisteredListView = () => {
   // const { registeredContests, isFetching, setParams, totalRecords } = useGetRegisteredContest();
   const [isTimerExpired, setIsTimerExpired] = useState(false);
 
-  const registeredContests: Contest[] = [
-    {
-      id: "1",
-      code: "T1CON",
-      title: "T1 Con",
-      description: "Description",
-      startTime: "2024-04-10T10:10:30.000Z",
-      endTime: "2024-04-11T13:30:00.000Z",   
-      hasStarted: false,
-      numOfMembers: 2,
-      members: [],
-      problems: [],
-    },
-    {
-      id: "1",
-      code: "T1CON",
-      title: "T1 Con",
-      description: "Description",
-      startTime: "2024-04-10T09:10:30.000Z",
-      endTime: "2024-04-10T13:30:00.000Z",
-      hasStarted: true,
-      numOfMembers: 2,
-      members: [],
-      problems: [],
-    },
-  ];
+  // const registeredContests: Contest[] = [
+  //   {
+  //     id: "1",
+  //     code: "T1CON",
+  //     title: "T1 Con",
+  //     description: "Description",
+  //     startTime: "2024-04-10T10:10:30.000Z",
+  //     endTime: "2024-04-11T13:30:00.000Z",   
+  //     hasStarted: false,
+  //     numOfMembers: 2,
+  //     members: [],
+  //     problems: [],
+  //   },
+  //   {
+  //     id: "1",
+  //     code: "T1CON",
+  //     title: "T1 Con",
+  //     description: "Description",
+  //     startTime: "2024-04-10T09:10:30.000Z",
+  //     endTime: "2024-04-10T13:30:00.000Z",
+  //     hasStarted: true,
+  //     numOfMembers: 2,
+  //     members: [],
+  //     problems: [],
+  //   },
+  // ];
 
   const columns = useMemo(
     () => allColumns(isTimerExpired, setIsTimerExpired),
@@ -62,7 +62,7 @@ const RegisteredListView = () => {
             <Table2<Contest>
               rowCount={0}
               columns={columns}
-              data={registeredContests}
+              data={[]}
               recordName="items"
               onAction={() => {}}
               enableDensityToggle={false}

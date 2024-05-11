@@ -7,7 +7,11 @@ import {
   Table2,
   Text,
 } from "../../../shared";
-import { Contest, GetPropertiesParams, useGetUnregisteredContest } from "../../../queries";
+import {
+  Contest,
+  GetPropertiesParams,
+  useGetUnregisteredContest,
+} from "../../../queries";
 import { useCallback, useMemo } from "react";
 import { allColumns } from "./allColumns";
 import UnregisteredListToolbar from "./UnregisteredListToolbar";
@@ -15,44 +19,44 @@ import UnregisteredListToolbar from "./UnregisteredListToolbar";
 const UnregisteredListView = () => {
   // const { unregisteredContests, isFetching, setParams, totalRecords } = useGetUnregisteredContest();
 
-  const unregisteredContests: Contest[] = [
-    {
-      id: "2",
-      code: "TLietCON",
-      title: "TLiet Con",
-      description: "Description",
-      startTime: "2024-04-11T10:30:00.000Z",
-      endTime: "2024-04-11T13:30:00.000Z",
-      hasStarted: false,
-      numOfMembers: 2,
-      members: [],
-      problems: [],
-    },
-    {
-      id: "3",
-      code: "TLietCON",
-      title: "TLiet Con",
-      description: "Description",
-      startTime: "2024-04-11T10:30:00.000Z",
-      endTime: "2024-04-11T13:30:00.000Z",
-      hasStarted: false,
-      numOfMembers: 2,
-      members: [],
-      problems: [],
-    },
-    {
-      id: "4",
-      code: "TLietCON",
-      title: "TLiet Con",
-      description: "Description",
-      startTime: "2024-04-10T10:30:00.000Z",
-      endTime: "2024-04-11T13:30:00.000Z",
-      hasStarted: false,
-      numOfMembers: 2,
-      members: [],
-      problems: [],
-    },
-  ];
+  // const unregisteredContests: Contest[] = [
+  //   {
+  //     id: "2",
+  //     code: "TLietCON",
+  //     title: "TLiet Con",
+  //     description: "Description",
+  //     startTime: "2024-04-11T10:30:00.000Z",
+  //     endTime: "2024-04-11T13:30:00.000Z",
+  //     hasStarted: false,
+  //     numOfMembers: 2,
+  //     members: [],
+  //     problems: [],
+  //   },
+  //   {
+  //     id: "3",
+  //     code: "TLietCON",
+  //     title: "TLiet Con",
+  //     description: "Description",
+  //     startTime: "2024-04-11T10:30:00.000Z",
+  //     endTime: "2024-04-11T13:30:00.000Z",
+  //     hasStarted: false,
+  //     numOfMembers: 2,
+  //     members: [],
+  //     problems: [],
+  //   },
+  //   {
+  //     id: "4",
+  //     code: "TLietCON",
+  //     title: "TLiet Con",
+  //     description: "Description",
+  //     startTime: "2024-04-10T10:30:00.000Z",
+  //     endTime: "2024-04-11T13:30:00.000Z",
+  //     hasStarted: false,
+  //     numOfMembers: 2,
+  //     members: [],
+  //     problems: [],
+  //   },
+  // ];
 
   const columns = useMemo(() => allColumns(), []);
 
@@ -64,7 +68,7 @@ const UnregisteredListView = () => {
             <Table2<Contest>
               rowCount={0}
               columns={columns}
-              data={unregisteredContests}
+              data={[]}
               recordName="items"
               onAction={() => {}}
               enableDensityToggle={false}

@@ -96,9 +96,9 @@ namespace Application.Solutions
                         double ExpectCompletionRate = 1 / (1 + Math.Pow(10, (problem.Difficulty - user.Rating) / 400));
 
                         user.Rating = user.Rating + 100 * (solution.Score - ExpectCompletionRate);
-                        problem.Difficulty = problem.Difficulty + problem.MaximumDiff * (solution.Score - ExpectCompletionRate);
+                        problem.Difficulty = problem.Difficulty + 100 * (solution.Score - ExpectCompletionRate);
 
-                        
+
                         await _context.SaveChangesAsync();
 
                     }
@@ -137,6 +137,9 @@ namespace Application.Solutions
                     solution.MemoryUsage = memory;
                     solution.Status = sevStatus;
                 }
+
+                await _context.SaveChangesAsync();
+
                 if (userId != null)
                 {
                     solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);

@@ -61,8 +61,6 @@ namespace Application.Problems
                 request.Problem.Date = DateTime.UtcNow;
                 request.Problem.Difficulty = Math.Max(1000, request.Problem.Difficulty);
 
-                request.Problem.MaximumDiff = 50;
-
 
                 FileManager fileManager = new FileManager();
                 await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);

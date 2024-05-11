@@ -11,8 +11,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240510095438_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240511034952_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -268,9 +268,6 @@ namespace Persistence.Migrations
 
                     b.Property<int>("GradeMode")
                         .HasColumnType("INTEGER");
-
-                    b.Property<double>("MaximumDiff")
-                        .HasColumnType("REAL");
 
                     b.Property<int>("MemoryLimit")
                         .HasColumnType("INTEGER");

@@ -266,9 +266,6 @@ namespace Persistence.Migrations
                     b.Property<int>("GradeMode")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("MaximumDiff")
-                        .HasColumnType("REAL");
-
                     b.Property<int>("MemoryLimit")
                         .HasColumnType("INTEGER");
 
