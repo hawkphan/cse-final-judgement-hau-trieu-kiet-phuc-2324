@@ -90,9 +90,7 @@ const SubmissionTab = ({
           isColumnPinning={false}
           additionalFilterParams={["keywords"]}
           nameColumnPinning="actions"
-          state={{
-            isLoading: isFetching,
-          }}
+          isLoading={isFetching}
           muiTableBodyRowProps={({ row }) => ({
             onClick: () => {
               if (![1, 2].includes(row.original.status)) {
