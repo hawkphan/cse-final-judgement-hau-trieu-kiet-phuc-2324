@@ -11,8 +11,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240504062022_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240510095438_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -269,6 +269,9 @@ namespace Persistence.Migrations
                     b.Property<int>("GradeMode")
                         .HasColumnType("INTEGER");
 
+                    b.Property<double>("MaximumDiff")
+                        .HasColumnType("REAL");
+
                     b.Property<int>("MemoryLimit")
                         .HasColumnType("INTEGER");
 
@@ -372,6 +375,9 @@ namespace Persistence.Migrations
                     b.Property<double>("ExecutionTime")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("GradingStatus")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("LanguageId")
                         .HasColumnType("INTEGER");
 
@@ -380,9 +386,6 @@ namespace Persistence.Migrations
 
                     b.Property<Guid>("ProblemId")
                         .HasColumnType("TEXT");
-
-                    b.Property<double>("Rating")
-                        .HasColumnType("REAL");
 
                     b.Property<double>("Score")
                         .HasColumnType("REAL");

@@ -90,6 +90,8 @@ namespace Application.Solutions
 
                 solution.LanguageId = request.SolutionRequestDto.LanguageId;
                 solution.CreatedDate = DateTime.Now;
+                solution.Score = 0;
+                
                 _context.Solutions.Add(solution);
                 await _context.SaveChangesAsync();
                 return ApiResult<Solution>.Success(solution);

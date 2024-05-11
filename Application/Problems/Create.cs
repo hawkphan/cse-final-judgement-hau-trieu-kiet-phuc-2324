@@ -59,7 +59,9 @@ namespace Application.Problems
                 request.Problem.ProblemLanguages = problemLanguages;
                 request.Problem.User = user;
                 request.Problem.Date = DateTime.UtcNow;
-                request.Problem.Difficulty = 0;
+                request.Problem.Difficulty = Math.Max(1000, request.Problem.Difficulty);
+
+                request.Problem.MaximumDiff = 50;
 
 
                 FileManager fileManager = new FileManager();
