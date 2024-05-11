@@ -313,8 +313,8 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<double?>("Error")
-                        .HasColumnType("REAL");
+                    b.Property<string>("Error")
+                        .HasColumnType("TEXT");
 
                     b.Property<double?>("ExecutionTime")
                         .HasColumnType("REAL");

@@ -19,7 +19,7 @@ namespace Domain
                 public String? Output { get; set; }
                 public Double? ExecutionTime { get; set; }
                 public long? MemoryUsage { get; set; }
-                public Double? Error { get; set; }
+                public String Error { get; set; }
                 public double Status { get; set; }
                 public String StatusMessage { get; set; }
                 public String Token { get; set; }

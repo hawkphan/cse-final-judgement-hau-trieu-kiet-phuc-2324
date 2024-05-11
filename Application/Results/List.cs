@@ -39,19 +39,28 @@ namespace Application.Results
 
                 foreach (var result in notCompletedResults)
                 {
-                    if (result.Status < 3)
+                    string initialResult = await judge0.SendGetRequest($"submissions/{result.Token}");
+                    ResultDto resultDto = JsonConvert.DeserializeObject<ResultDto>(initialResult);
+                    var newResult = _mapper.Map<Result>(resultDto);
+
+                    newResult.Id = result.Id;
+                    newResult.TestCaseId = result.TestCaseId;
+                    newResult.SolutionId = result.SolutionId;
+
+                    if (resultDto.Stderr != null)
                     {
-                        string initialResult = await judge0.SendGetRequest($"submissions/{result.Token}");
-                        ResultDto resultDto = JsonConvert.DeserializeObject<ResultDto>(initialResult);
-                        var newResult = _mapper.Map<Result>(resultDto);
-
-                        newResult.Id = result.Id;
-                        newResult.TestCaseId = result.TestCaseId;
-                        newResult.SolutionId = result.SolutionId;
-
-                        _mapper.Map(newResult, result);
-                        await _context.SaveChangesAsync();
+                        newResult.Error = resultDto.Stderr;
                     }
+                    else if (resultDto.CompileOutput != null)
+                    {
+                        newResult.Error = resultDto.CompileOutput;
+                    }
+                    else
+                    {
+                        newResult.Error = "None";
+                    }
+                    _mapper.Map(newResult, result);
+                    await _context.SaveChangesAsync();
                 }
 
                 int PageNumber = (request.Params.PageNumber == -1) ? 1 : request.Params.PageNumber;
