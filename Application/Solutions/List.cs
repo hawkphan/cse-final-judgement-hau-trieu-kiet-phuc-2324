@@ -42,18 +42,29 @@ namespace Application.Solutions
                 foreach (var result in results)
                 {
                     // update solution result
-                    if (result.Status < 3)
-                    {
-                        string initialResult = await judge0.SendGetRequest($"submissions/{result.Token}");
-                        ResultDto resultDto = JsonConvert.DeserializeObject<ResultDto>(initialResult);
 
-                        var newResult = _mapper.Map<Result>(resultDto);
-                        newResult.Id = result.Id;
-                        newResult.TestCaseId = result.TestCaseId;
-                        newResult.SolutionId = result.SolutionId;
-                        _mapper.Map(newResult, result);
-                        await _context.SaveChangesAsync();
+                    string initialResult = await judge0.SendGetRequest($"submissions/{result.Token}");
+                    ResultDto resultDto = JsonConvert.DeserializeObject<ResultDto>(initialResult);
+
+                    var newResult = _mapper.Map<Result>(resultDto);
+                    newResult.Id = result.Id;
+                    newResult.TestCaseId = result.TestCaseId;
+                    newResult.SolutionId = result.SolutionId;
+                    if (resultDto.Stderr != null)
+                    {
+                        newResult.Error = resultDto.Stderr;
                     }
+                    else if (resultDto.CompileOutput != null)
+                    {
+                        newResult.Error = resultDto.CompileOutput;
+                    }
+                    else
+                    {
+                        newResult.Error = "None";
+                    }
+                    _mapper.Map(newResult, result);
+                    await _context.SaveChangesAsync();
+
                 }
                 //check if solution is graded
                 var UnGradeSolution = _context.Solutions.Where(s => s.GradingStatus == 0).Include(s => s.Results).Include(s => s.Problem);

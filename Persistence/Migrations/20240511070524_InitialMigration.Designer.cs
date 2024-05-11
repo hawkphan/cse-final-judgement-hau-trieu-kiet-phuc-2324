@@ -11,8 +11,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240511034952_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240511070524_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -316,8 +316,8 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<double?>("Error")
-                        .HasColumnType("REAL");
+                    b.Property<string>("Error")
+                        .HasColumnType("TEXT");
 
                     b.Property<double?>("ExecutionTime")
                         .HasColumnType("REAL");
