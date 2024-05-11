@@ -96,7 +96,7 @@ namespace Application.Solutions
                         double ExpectCompletionRate = 1 / (1 + Math.Pow(10, (problem.Difficulty - user.Rating) / 400));
 
                         user.Rating = user.Rating + 100 * (solution.Score - ExpectCompletionRate);
-                        problem.Difficulty = problem.Difficulty + 100 * (solution.Score - ExpectCompletionRate);
+                        problem.Difficulty = problem.Difficulty - 100 * (solution.Score - ExpectCompletionRate);
 
 
                         await _context.SaveChangesAsync();

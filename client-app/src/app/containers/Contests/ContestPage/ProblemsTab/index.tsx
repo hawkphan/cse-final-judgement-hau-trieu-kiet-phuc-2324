@@ -1,10 +1,10 @@
 import { Box, CardContent, Typography } from "@mui/material";
 import parse from "html-react-parser";
 import "./styles.scss";
-import { renderDifficultyTag } from "./helpers";
 import { Problem } from "../../../../queries";
 import { Accordion, formatDateOrNull, Text } from "../../../../shared";
 import { ContestProblemsData } from "../data.mock";
+import { renderDifficultyTag } from "../../../Problems/helpers";
 
 const ProblemDetail = ({ problem }: Props) => {
   const descriptions = problem.description.split("\n\n");

@@ -64,7 +64,7 @@ namespace API.Controllers
                 DisplayName = registerDto.DisplayName,
                 Email = registerDto.Email,
                 UserName = registerDto.UserName,
-                Rating = 1500,
+                Rating = 1000,
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
