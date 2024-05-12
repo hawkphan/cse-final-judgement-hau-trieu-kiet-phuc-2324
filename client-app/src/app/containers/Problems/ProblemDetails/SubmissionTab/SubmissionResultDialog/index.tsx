@@ -8,10 +8,7 @@ import {
   Result,
   useGetResults,
 } from "../../../../../queries";
-import {
-  EmptyTable,
-  Table2,
-} from "../../../../../shared";
+import { EmptyTable, Table2 } from "../../../../../shared";
 import { allColumns } from "./allColumns";
 import ModalClose from "@mui/joy/ModalClose";
 
@@ -29,8 +26,7 @@ const SubmissionResultDialog: React.FC<Props> = ({
   handleCloseDeleteDialog,
   solutionId,
 }) => {
-  const { results, setParams, totalRecords, isFetching } =
-    useGetResults();
+  const { results, setParams, totalRecords, isFetching } = useGetResults();
   const columns = useMemo(() => allColumns(), []);
 
   useEffect(() => {

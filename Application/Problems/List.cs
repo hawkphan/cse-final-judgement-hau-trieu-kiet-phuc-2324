@@ -18,7 +18,6 @@ namespace Application.Problems
             public Guid? UserId { get; set; }
             public DateTime? FromDate { get; set; }
             public DateTime? ToDate { get; set; }
-            public ICollection<double> Difficulties { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, Result<PagedList<ProblemDto>>>
@@ -34,11 +33,11 @@ namespace Application.Problems
             public async Task<Result<PagedList<ProblemDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 string key = request.Params.Keywords;
+                string order = request.Params.Order;
                 bool? isOnly = request.IsOnly;
                 Guid? userId = request.UserId;
                 DateTime? fromDate = request.FromDate;
                 DateTime? toDate = request.ToDate;
-                ICollection<double> difficulties = request.Difficulties;
 
                 var problems = _context.Problems.AsQueryable();
 
@@ -65,8 +64,13 @@ namespace Application.Problems
                     problems = problems.Where(problem => problem.Date <= toDate);
                 }
 
-                if(difficulties != null && difficulties.Any()) {
-                    problems = problems.Where(problem => difficulties.Contains(problem.Difficulty));
+                if (!String.IsNullOrEmpty(order) && order.Contains("difficulty") && order.Contains("desc"))
+                {
+                    problems = problems.OrderByDescending(problem => problem.Difficulty);
+                }
+                if (!String.IsNullOrEmpty(order) && order.Contains("difficulty") && order.Contains("asc"))
+                {
+                    problems = problems.OrderBy(problem => problem.Difficulty);
                 }
 
                 var query = await problems.ProjectTo<ProblemDto>(_mapper.ConfigurationProvider)

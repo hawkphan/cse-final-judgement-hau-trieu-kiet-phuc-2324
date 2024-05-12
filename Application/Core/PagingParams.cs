@@ -11,9 +11,9 @@ namespace Application.Core
         private const int MaxPageSize = 50;
         [FromQuery(Name = "pageNo")]
         public int PageNumber { get; set; } = 1;
-        public string Keywords { get; set;} = "";
+        public string Keywords { get; set; } = "";
         private int _pageSize = 10;
-
+        public string Order { get; set; }
         public int PageSize
         {
             get => _pageSize;

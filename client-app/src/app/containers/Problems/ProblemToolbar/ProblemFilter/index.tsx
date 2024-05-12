@@ -1,27 +1,19 @@
 import { Container, Stack, Typography } from "@mui/material";
-import { SelectOption } from "../../../../shared/components/common/MuiAutoComplete";
 import { useSearchParams } from "react-router-dom";
 import { ProblemFilterQueryKey } from "../../helpers";
 import { useCallback, useMemo } from "react";
 import dayjs from "dayjs";
-import {
-  Button,
-  COLOR_CODE,
-  Grid,
-  MuiDatePicker,
-  MuiMultiSelect,
-} from "../../../../shared";
-
+import { Button, COLOR_CODE, Grid, MuiDatePicker } from "../../../../shared";
 
 const ProblemFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const difficultyOptions: SelectOption[] = [
-    { label: "New", value: "0" },
-    { label: "Easy", value: "1" },
-    { label: "Medium", value: "2" },
-    { label: "Hard", value: "3" },
-  ];
+  // const difficultyOptions: SelectOption[] = [
+  //   { label: "New", value: "0" },
+  //   { label: "Easy", value: "1" },
+  //   { label: "Medium", value: "2" },
+  //   { label: "Hard", value: "3" },
+  // ];
 
   const handleClearAll = () => {
     searchParams.delete(ProblemFilterQueryKey.FROM_DATE);
@@ -30,17 +22,17 @@ const ProblemFilter = () => {
     setSearchParams(searchParams);
   };
 
-  const handleChangeDifficulties = useCallback(
-    (_name: string, difficulties: string[]) => {
-      searchParams.delete(ProblemFilterQueryKey.DIFFICULTY);
-      difficulties.forEach((item) =>
-        searchParams.append(ProblemFilterQueryKey.DIFFICULTY, item)
-      );
+  // const handleChangeDifficulties = useCallback(
+  //   (_name: string, difficulties: string[]) => {
+  //     searchParams.delete(ProblemFilterQueryKey.DIFFICULTY);
+  //     difficulties.forEach((item) =>
+  //       searchParams.append(ProblemFilterQueryKey.DIFFICULTY, item)
+  //     );
 
-      setSearchParams(searchParams);
-    },
-    [setSearchParams, searchParams]
-  );
+  //     setSearchParams(searchParams);
+  //   },
+  //   [setSearchParams, searchParams]
+  // );
 
   const handleChangeFromDate = useCallback(
     (_name: Date) => {
@@ -67,19 +59,19 @@ const ProblemFilter = () => {
     [setSearchParams, searchParams]
   );
 
-  const selectedDifficulties = useMemo(() => {
-    return searchParams.getAll(ProblemFilterQueryKey.DIFFICULTY) ?? [];
-  }, [searchParams]);
+  // const selectedDifficulties = useMemo(() => {
+  //   return searchParams.getAll(ProblemFilterQueryKey.DIFFICULTY) ?? [];
+  // }, [searchParams]);
 
   const selectedFromDate = useMemo(() => {
     return searchParams.get(ProblemFilterQueryKey.FROM_DATE) ?? "";
   }, [searchParams]);
-  
+
   const selectedToDate = useMemo(() => {
     return searchParams.get(ProblemFilterQueryKey.TO_DATE) ?? "";
   }, [searchParams]);
 
-  const difficultyQuery = searchParams.has(ProblemFilterQueryKey.DIFFICULTY);
+  // const difficultyQuery = searchParams.has(ProblemFilterQueryKey.DIFFICULTY);
 
   return (
     <Container maxWidth="xs" sx={{ p: 2, width: 360 }}>
@@ -108,7 +100,7 @@ const ProblemFilter = () => {
       </Stack>
 
       <Grid.Wrap spacing={2}>
-        <Grid.Item xs={12}>
+        {/* <Grid.Item xs={12}>
           <MuiMultiSelect
             label="Difficulty"
             placeholder={!difficultyQuery && "All"}
@@ -117,7 +109,7 @@ const ProblemFilter = () => {
             onChange={handleChangeDifficulties}
             size="small"
           />
-        </Grid.Item>
+        </Grid.Item> */}
         <Grid.Item xs={12}>
           <MuiDatePicker
             label="Date after"

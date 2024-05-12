@@ -39,7 +39,7 @@ export const allColumns = ({
       accessorKey: "difficulty",
       header: "Difficulty",
       enableColumnFilterModes: false,
-      enableSorting: false,
+      enableSorting: true,
       size: 114,
       muiTableBodyCellProps: {
         align: "center",

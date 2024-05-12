@@ -4,6 +4,7 @@ import "material-symbols";
 import { Result } from "../../../../../queries";
 import { formatValueOrNull } from "../../../../../shared";
 import { renderStatusTag } from "../helpers";
+import { Tooltip } from "@mui/material";
 
 export const allColumns = (): MRT_ColumnDef<Result>[] => {
   return [
@@ -21,7 +22,14 @@ export const allColumns = (): MRT_ColumnDef<Result>[] => {
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 20,
-      Cell: ({ cell }) => renderStatusTag(cell.getValue<number>()),
+      Cell: ({ cell }) =>
+        cell.row.original.error !== "None" ? (
+          <Tooltip title={cell.row.original.error}>
+            {renderStatusTag(cell.getValue<number>())}
+          </Tooltip>
+        ) : (
+          renderStatusTag(cell.getValue<number>())
+        ),
     },
     {
       accessorKey: "executionTime",

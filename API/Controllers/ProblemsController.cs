@@ -18,9 +18,9 @@ namespace API.Controllers
     {
         [AllowAnonymous]
         [HttpGet] //api/problems
-        public async Task<IActionResult> GetProblems([FromQuery] PagingParams param, [FromQuery] bool isOnly, [FromQuery] Guid userId, [FromQuery] List<double> difficulty, [FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
+        public async Task<IActionResult> GetProblems([FromQuery] PagingParams param, [FromQuery] bool isOnly, [FromQuery] Guid userId, [FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
         {
-            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param, IsOnly = isOnly, UserId = userId, Difficulties = difficulty, FromDate = fromDate, ToDate = toDate }));
+            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param, IsOnly = isOnly, UserId = userId, FromDate = fromDate, ToDate = toDate }));
         }
         [AllowAnonymous]
         [HttpGet("{id}")]

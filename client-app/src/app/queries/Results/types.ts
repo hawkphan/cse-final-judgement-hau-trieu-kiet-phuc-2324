@@ -5,4 +5,5 @@ export interface Result {
   executionTime: number;
   memoryUsage: number;
   status: number;
+  error: string;
 }
