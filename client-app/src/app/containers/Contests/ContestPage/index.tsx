@@ -1,29 +1,36 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, Card, Container, Stack } from "@mui/material";
+import { Tab, getTabList } from "./helpers";
 import {
-  Tab,
-  tabsList
-} from "./helpers";
-import { AnimatedTabPanel, Grid, LoadingCommon, TabsBar } from "../../../shared";
-import {  useState } from "react";
+  AnimatedTabPanel,
+  Grid,
+  LoadingCommon,
+  TabsBar,
+} from "../../../shared";
+import { useState } from "react";
 import SubmitCodeTab from "./SubmitCodeTab";
 import StandingsTab from "./StandingsTab";
 import MySubmissionTab from "./MySubmissionsTab";
 import ProblemsTab from "./ProblemsTab";
+import { useParams } from "react-router-dom";
 
 const ContestPage = () => {
-  const [tab, setTab] = useState(Tab.PROBLEMS);
+  const isAdmin = false;
+
+  const [tab, setTab] = useState(isAdmin ? Tab.MONITORING : Tab.PROBLEMS);
+
+  const { id } = useParams();
 
   const renderTab = () => {
     switch (tab) {
       case Tab.PROBLEMS:
         return <ProblemsTab />;
-      case Tab.SUBMITCODE:
-        return <SubmitCodeTab/>;
-      case Tab.MYSUBMISSIONS:
-        return <MySubmissionTab/>;
+      case Tab.SUBMIT_CODE:
+        return <SubmitCodeTab />;
+      case Tab.MY_SUBMISSIONS:
+        return <MySubmissionTab />;
       case Tab.STANDINGS:
-        return <StandingsTab/>;
+        return <StandingsTab />;
       default:
         <LoadingCommon />;
     }
@@ -38,7 +45,7 @@ const ContestPage = () => {
               <Box>
                 <Stack>
                   <TabsBar
-                    tabsList={tabsList}
+                    tabsList={getTabList(isAdmin)}
                     value={tab}
                     onChange={(_, value) => {
                       setTab(value);
@@ -53,7 +60,7 @@ const ContestPage = () => {
                 </Stack>
               </Box>
             </Card>
-          </Grid.Item>    
+          </Grid.Item>
         </Grid.Wrap>
       </Stack>
     </Container>

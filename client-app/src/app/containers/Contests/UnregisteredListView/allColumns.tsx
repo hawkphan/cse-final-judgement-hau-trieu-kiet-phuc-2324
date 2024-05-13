@@ -1,25 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { MRT_ColumnDef } from "material-react-table";
 import "material-symbols";
-import { Contest } from "../../../queries";
-import { DateFormatDisplayMinute, formatDateOrNull, formatDateUtc, formatUTCToLocale, formatValueOrNull } from "../../../shared";
+import { Callback, Contest } from "../../../queries";
+import { formatUTCToLocale, formatValueOrNull } from "../../../shared";
 import RowActions from "../../../shared/components/RowActions";
 
-interface Props {}
+interface Props {
+  onDetail: Callback;
+}
 
-export const allColumns = (): MRT_ColumnDef<Contest>[] => {
+export const allColumns = ({ onDetail }: Props): MRT_ColumnDef<Contest>[] => {
   return [
     {
-      accessorKey: "code",
-      header: "Code",
-      enableColumnFilterModes: false,
-      enableSorting: false,
-      size: 114,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
-    },
-    {
-      accessorKey: "title",
-      header: "Title",
+      accessorKey: "name",
+      header: "Name",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
@@ -31,7 +25,8 @@ export const allColumns = (): MRT_ColumnDef<Contest>[] => {
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatUTCToLocale(cell.getValue<string>(), 'Asia/Ho_Chi_Minh'),
+      Cell: ({ cell }) =>
+        formatUTCToLocale(cell.getValue<string>(), "Asia/Ho_Chi_Minh"),
     },
     {
       accessorKey: "endTime",
@@ -45,7 +40,8 @@ export const allColumns = (): MRT_ColumnDef<Contest>[] => {
       muiTableHeadCellProps: {
         align: "center",
       },
-      Cell: ({ cell }) => formatUTCToLocale(cell.getValue<string>(), 'Asia/Ho_Chi_Minh'),
+      Cell: ({ cell }) =>
+        formatUTCToLocale(cell.getValue<string>(), "Asia/Ho_Chi_Minh"),
     },
     {
       accessorKey: "numOfMembers",
@@ -65,12 +61,12 @@ export const allColumns = (): MRT_ColumnDef<Contest>[] => {
       enableSorting: false,
       size: 0,
 
-      Cell: ({ row }) =>
-          <RowActions
-            hideDetail={false}
-            DetailFunction={() => {}}
-          />
-        
+      Cell: ({ row }) => (
+        <RowActions
+          hideDetail={false}
+          DetailFunction={() => onDetail(row.original)}
+        />
+      ),
     },
   ];
 };

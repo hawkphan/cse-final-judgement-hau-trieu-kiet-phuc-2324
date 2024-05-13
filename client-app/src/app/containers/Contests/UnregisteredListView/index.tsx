@@ -6,59 +6,87 @@ import {
   EmptyTable,
   Table2,
   Text,
+  Toastify,
 } from "../../../shared";
 import {
+  API_QUERIES,
   Contest,
   GetPropertiesParams,
+  useEditContest,
+  useGetContestById,
+  useGetContests,
+  useGetRegisteredContest,
   useGetUnregisteredContest,
 } from "../../../queries";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { allColumns } from "./allColumns";
 import UnregisteredListToolbar from "./UnregisteredListToolbar";
+import { useStore } from "../../../shared/common/stores/store";
+import ContestDialog from "../ContestDialog";
 
 const UnregisteredListView = () => {
-  // const { unregisteredContests, isFetching, setParams, totalRecords } = useGetUnregisteredContest();
+  const { userStore } = useStore();
+  const user = userStore.user;
 
-  // const unregisteredContests: Contest[] = [
-  //   {
-  //     id: "2",
-  //     code: "TLietCON",
-  //     title: "TLiet Con",
-  //     description: "Description",
-  //     startTime: "2024-04-11T10:30:00.000Z",
-  //     endTime: "2024-04-11T13:30:00.000Z",
-  //     hasStarted: false,
-  //     numOfMembers: 2,
-  //     members: [],
-  //     problems: [],
-  //   },
-  //   {
-  //     id: "3",
-  //     code: "TLietCON",
-  //     title: "TLiet Con",
-  //     description: "Description",
-  //     startTime: "2024-04-11T10:30:00.000Z",
-  //     endTime: "2024-04-11T13:30:00.000Z",
-  //     hasStarted: false,
-  //     numOfMembers: 2,
-  //     members: [],
-  //     problems: [],
-  //   },
-  //   {
-  //     id: "4",
-  //     code: "TLietCON",
-  //     title: "TLiet Con",
-  //     description: "Description",
-  //     startTime: "2024-04-10T10:30:00.000Z",
-  //     endTime: "2024-04-11T13:30:00.000Z",
-  //     hasStarted: false,
-  //     numOfMembers: 2,
-  //     members: [],
-  //     problems: [],
-  //   },
-  // ];
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [selectedContestData, setSelectedContestData] = useState<Contest>();
 
-  const columns = useMemo(() => allColumns(), []);
+  const {
+    unregisteredContests,
+    isFetching,
+    setParams,
+    totalRecords,
+    handleInvalidateUnregisteredContest,
+  } = useGetUnregisteredContest();
+
+  const { contest, handleInvalidateContest } = useGetContestById({
+    id: selectedContestData?.id,
+    queryKey: [API_QUERIES.GET_CONTEST_BY_ID, { id: selectedContestData?.id }],
+  });
+
+  const { handleInvalidateContests } = useGetContests();
+  const { handleInvalidateRegisteredContest } = useGetRegisteredContest();
+
+  const { onEditContest, isPending: isEditPending } = useEditContest({
+    onSuccess: () => {
+      Toastify.success("Successful!");
+      handleInvalidateContests();
+      handleInvalidateContest();
+      handleInvalidateUnregisteredContest();
+      handleInvalidateRegisteredContest();
+      setOpenDetailDialog(false);
+    },
+    onError: (error) => {
+      Toastify.error(error.message);
+      console.log("Error", error);
+    },
+  });
+
+  const handleClickCloseDetailsDialog = () => {
+    setOpenDetailDialog(false);
+  };
+
+  const handleClickOpenDetailsDialog = (data: Contest) => {
+    setOpenDetailDialog(true);
+    setSelectedContestData(data);
+  };
+
+  const handleRegisterContest = () => {
+    contest.members = [...contest.members, { role: 1, userId: user?.id }];
+    onEditContest(contest);
+  };
+
+  const columns = useMemo(
+    () => allColumns({ onDetail: handleClickOpenDetailsDialog }),
+    []
+  );
+
+  const handleGetContests = useCallback(
+    (params: GetPropertiesParams) => {
+      setParams({ ...params, userId: user?.id });
+    },
+    [setParams, user?.id]
+  );
 
   return (
     <Stack marginTop={2}>
@@ -66,11 +94,11 @@ const UnregisteredListView = () => {
         <Box padding={2}>
           <Card sx={{ paddingLeft: 2, paddingRight: 2, paddingTop: 0 }}>
             <Table2<Contest>
-              rowCount={0}
+              rowCount={totalRecords}
               columns={columns}
-              data={[]}
+              data={unregisteredContests}
               recordName="items"
-              onAction={() => {}}
+              onAction={handleGetContests}
               enableDensityToggle={false}
               enableColumnOrdering={false}
               enableRowActions
@@ -84,7 +112,7 @@ const UnregisteredListView = () => {
               }}
               additionalFilterParams={["keywords"]}
               state={{
-                isLoading: false,
+                isLoading: isFetching,
               }}
               renderTopToolbarCustomActions={() => (
                 <Stack direction="row" spacing={1} my={0.5}>
@@ -112,6 +140,13 @@ const UnregisteredListView = () => {
           </Card>
         </Box>
       </Accordion>
+      <ContestDialog
+        onClose={handleClickCloseDetailsDialog}
+        data={selectedContestData}
+        open={openDetailDialog}
+        onRegister={handleRegisterContest}
+        isButtonLoading={isEditPending}
+      />
     </Stack>
   );
 };

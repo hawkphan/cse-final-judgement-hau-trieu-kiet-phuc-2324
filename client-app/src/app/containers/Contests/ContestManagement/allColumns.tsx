@@ -2,8 +2,9 @@ import { MRT_ColumnDef } from "material-react-table";
 import "material-symbols";
 import { Contest } from "../../../queries";
 import {
+  DateFormatDisplayMinute,
   convertUTCtoLocal,
-  formatDateOrNull,
+  formatDate,
   formatValueOrNull,
 } from "../../../shared";
 import RowActions from "../../../shared/components/RowActions";
@@ -61,7 +62,8 @@ export const allColumns = ({
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatDateOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) =>
+        formatDate(cell.getValue<string>(), DateFormatDisplayMinute),
     },
     {
       accessorKey: "endTime",
@@ -69,7 +71,8 @@ export const allColumns = ({
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatDateOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) =>
+        formatDate(cell.getValue<string>(), DateFormatDisplayMinute),
     },
     {
       accessorKey: "status",

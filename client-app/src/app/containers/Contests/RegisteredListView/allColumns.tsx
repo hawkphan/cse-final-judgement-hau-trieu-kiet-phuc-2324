@@ -1,32 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { MRT_ColumnDef } from "material-react-table";
 import "material-symbols";
-import { Contest } from "../../../queries";
+import { Callback, Contest } from "../../../queries";
 import {
   convertUTCtoLocal,
   formatUTCToLocale,
   formatValueOrNull,
-  isTimeInPast,
 } from "../../../shared";
 import RowActions from "../../../shared/components/RowActions";
 import CountdownTimer from "./CountdownTimer";
 
-export const allColumns = (
-  isTimerExpired: boolean,
-  setIsTimerExpired: (boolean) => void
-): MRT_ColumnDef<Contest>[] => {
+interface Props {
+  onDetail: Callback;
+}
+
+export const allColumns = ({ onDetail }: Props): MRT_ColumnDef<Contest>[] => {
   return [
     {
-      accessorKey: "code",
-      header: "Code",
-      enableColumnFilterModes: false,
-      enableSorting: false,
-      size: 114,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
-    },
-    {
-      accessorKey: "title",
-      header: "Title",
+      accessorKey: "name",
+      header: "Name",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
@@ -68,7 +60,8 @@ export const allColumns = (
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) =>
+        formatValueOrNull(cell?.row?.original?.members?.length + ""),
     },
     {
       accessorKey: "actions",
@@ -82,11 +75,8 @@ export const allColumns = (
 
       Cell: ({ row }) => (
         <RowActions
-          hideEnter={false}
           hideDetail={false}
-          disableEnter={!row.original.hasStarted} // Use state value
-          DetailFunction={() => {}}
-          EnterFunction={() => {}}
+          DetailFunction={() => onDetail(row.original)}
         />
       ),
     },

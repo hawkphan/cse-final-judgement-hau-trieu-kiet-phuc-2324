@@ -10,6 +10,8 @@ namespace Domain.Dtos
         public Guid Id { get; set; }
         public Guid ContestId { get; set; }
         public Guid ProblemId { get; set; }
+        public Problem Problem { get; set; }
+        public Contest Contest { get; set; }
         public double Score { get; set; }
     }
 }

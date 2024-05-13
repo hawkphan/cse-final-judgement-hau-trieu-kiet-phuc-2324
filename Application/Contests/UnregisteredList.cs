@@ -30,15 +30,54 @@ namespace Application.Contests
 
             public async Task<Result<PagedList<ContestDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
-               var query = await _context.Contests
-                    .ProjectTo<ContestDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync();
-                int PageNumber = (request.Params.PageSize == -1) ? 1 : request.Params.PageNumber;
-                int PageSize = (request.Params.PageSize == -1) ? query.Count : request.Params.PageSize;
+                string key = request.Params.Keywords;
+                Guid? userId = request.UserId;
+
+                var contestIds = new List<Guid>();
+
+                var contestMembers = _context.ContestMembers.Include(c => c.Contest).AsQueryable();
+
+                if (userId != null)
+                {
+                    contestMembers = contestMembers.Where(m => m.UserId.Equals(userId)).AsQueryable();
+                }
+
+                foreach (var item in contestMembers)
+                {
+                    contestIds.Add(item.ContestId);
+                }
+
+                var contests = _context.Contests.Where(c => Math.Abs(c.Type - 0) < 0.0000001).AsQueryable();
+
+                if (!string.IsNullOrEmpty(key))
+                {
+                    contests = contests.
+                    Where(contest => contest.Name.Contains(key));
+                }
+
+                if (userId != null)
+                {
+                    contests = contests.
+                    Where(contest =>
+                    !contestIds.Contains(contest.Id));
+                }
+
+                var query = await contests.ProjectTo<ContestDto>(_mapper.ConfigurationProvider)
+                    .ToListAsync(cancellationToken: cancellationToken);
+
+                foreach (var item in query)
+                {
+                    item.StartTime = item.StartTime.AddHours(7);
+                    item.EndTime = item.EndTime.AddHours(7);
+                }
+                int PageNumber = (request.Params.PageNumber == -1) ? 1 : request.Params.PageNumber;
+                int PageSize = (request.Params.PageNumber == -1) ? query.Count : request.Params.PageSize;
                 return Result<PagedList<ContestDto>>
                     .Success(PagedList<ContestDto>.CreateAsyncUsingList(query,
                         PageNumber, PageSize));
             }
+
+
         }
     }
 }

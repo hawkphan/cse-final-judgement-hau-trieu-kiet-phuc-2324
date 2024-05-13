@@ -1,57 +1,54 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, Card, Stack } from "@mui/material";
-import {
-  Accordion,
-  CustomTableSearch,
-  EmptyTable,
-  Table2,
-  Text,
-} from "../../../shared";
+import { Accordion, EmptyTable, Table2, Text } from "../../../shared";
 import {
   Contest,
   GetPropertiesParams,
   useGetRegisteredContest,
-  useGetUnregisteredContest,
 } from "../../../queries";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { allColumns } from "./allColumns";
 import RegisteredListToolbar from "./RegisteredListToolbar";
+import { useStore } from "../../../shared/common/stores/store";
+import ContestDialog from "../ContestDialog";
+import { useNavigate } from "react-router-dom";
+import { PATHS } from "../../../configs/paths";
 
 const RegisteredListView = () => {
-  // const { registeredContests, isFetching, setParams, totalRecords } = useGetRegisteredContest();
-  const [isTimerExpired, setIsTimerExpired] = useState(false);
+  const { userStore } = useStore();
+  const user = userStore.user;
+  const navigate = useNavigate();
 
-  // const registeredContests: Contest[] = [
-  //   {
-  //     id: "1",
-  //     code: "T1CON",
-  //     title: "T1 Con",
-  //     description: "Description",
-  //     startTime: "2024-04-10T10:10:30.000Z",
-  //     endTime: "2024-04-11T13:30:00.000Z",   
-  //     hasStarted: false,
-  //     numOfMembers: 2,
-  //     members: [],
-  //     problems: [],
-  //   },
-  //   {
-  //     id: "1",
-  //     code: "T1CON",
-  //     title: "T1 Con",
-  //     description: "Description",
-  //     startTime: "2024-04-10T09:10:30.000Z",
-  //     endTime: "2024-04-10T13:30:00.000Z",
-  //     hasStarted: true,
-  //     numOfMembers: 2,
-  //     members: [],
-  //     problems: [],
-  //   },
-  // ];
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [selectedContestData, setSelectedContestData] = useState<Contest>();
+
+  const { registeredContests, isFetching, setParams, totalRecords } =
+    useGetRegisteredContest();
+
+  const handleGetContests = useCallback(
+    (params: GetPropertiesParams) => {
+      setParams({ ...params, userId: user?.id, pageSize: -1 });
+    },
+    [setParams, user?.id]
+  );
+
+  const handleClickOpenDetailsDialog = (data: Contest) => {
+    setOpenDetailDialog(true);
+    setSelectedContestData(data);
+  };
+
+  const handleClickCloseDetailsDialog = () => {
+    setOpenDetailDialog(false);
+  };
+
+  const handleJoinContest = (id: string) => {
+    navigate(PATHS.contestPage.replace(":id", id));
+  };
 
   const columns = useMemo(
-    () => allColumns(isTimerExpired, setIsTimerExpired),
-    [isTimerExpired, setIsTimerExpired]
+    () => allColumns({ onDetail: handleClickOpenDetailsDialog }),
+    []
   );
 
   return (
@@ -60,25 +57,25 @@ const RegisteredListView = () => {
         <Box padding={2}>
           <Card sx={{ paddingLeft: 2, paddingRight: 2, paddingTop: 0 }}>
             <Table2<Contest>
-              rowCount={0}
+              rowCount={totalRecords}
               columns={columns}
-              data={[]}
+              data={registeredContests}
               recordName="items"
-              onAction={() => {}}
+              onAction={handleGetContests}
               enableDensityToggle={false}
               enableColumnOrdering={false}
               enableRowActions
               isColumnPinning={true}
               nameColumnPinning="action"
+              enablePagination={false}
               enableExpanding={true}
               initialState={{
                 columnVisibility: {
                   "mrt-row-expand": false,
                 },
               }}
-              additionalFilterParams={["keywords"]}
               state={{
-                isLoading: false,
+                isLoading: isFetching,
               }}
               renderToolbarInternalActions={({ table }) => {
                 return <RegisteredListToolbar table={table} />;
@@ -93,6 +90,13 @@ const RegisteredListView = () => {
           </Card>
         </Box>
       </Accordion>
+      <ContestDialog
+        onClose={handleClickCloseDetailsDialog}
+        data={selectedContestData}
+        open={openDetailDialog}
+        isJoining
+        onJoin={handleJoinContest}
+      />
     </Stack>
   );
 };

@@ -25,8 +25,13 @@ namespace Application.Contests
             }
             public async Task<ContestDto> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Contests.ProjectTo<ContestDto>(_mapper.ConfigurationProvider)
+                ContestDto contestDto = await _context.Contests.ProjectTo<ContestDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(p => p.Id == request.Id);
+
+                contestDto.StartTime = contestDto.StartTime.AddHours(7);
+                contestDto.EndTime = contestDto.EndTime.AddHours(7);
+
+                return contestDto;
             }
         }
     }

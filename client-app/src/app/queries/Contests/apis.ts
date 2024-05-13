@@ -4,12 +4,20 @@ import { Contest, CreateContestBody, EditContestBody } from "./types";
 import { GetPropertiesParams } from "../Languages";
 import { stringify } from "../../shared";
 
-const getRegisteredContests = () => {
-  return axios.get<Contest[]>(`${API_URL}/api/contests/registered`, {});
+const getRegisteredContests = (params: GetPropertiesParams) => {
+  const queryString = stringify(params);
+  return axios.get<Contest[]>(
+    `${API_URL}/api/contests/registered?${queryString}`,
+    {}
+  );
 };
 
-const getUnregisteredContests = () => {
-  return axios.get<Contest[]>(`${API_URL}/api/contests/unregistered`, {});
+const getUnregisteredContests = (params: GetPropertiesParams) => {
+  const queryString = stringify(params);
+  return axios.get<Contest[]>(
+    `${API_URL}/api/contests/unregistered?${queryString}`,
+    {}
+  );
 };
 
 const getContests = (params: GetPropertiesParams) => {

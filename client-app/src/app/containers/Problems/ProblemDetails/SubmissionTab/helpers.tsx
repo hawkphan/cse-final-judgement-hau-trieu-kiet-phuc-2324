@@ -20,17 +20,17 @@ export const renderStatusTag = (value: number) => {
     case 3: // Accepted
       backgroundColor = "#4CAF50";
       color = "#FFFFFF";
-      description = "Accepted (AC)";
+      description = "Accepted";
       break;
     case 4: // Wrong Answer
       backgroundColor = "#F44336";
       color = "#FFFFFF";
-      description = "Wrong Answer (WA)";
+      description = "Wrong Answer";
       break;
     case 5: // Time Limit Exceeded
       backgroundColor = "#FFC107";
       color = "#FFFFFF";
-      description = "Time Limit Exceeded (TLE)";
+      description = "Time Limit Exceeded";
       break;
     case 6: // Compilation Error
       backgroundColor = "#FF9800";
