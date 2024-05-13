@@ -5,11 +5,12 @@ export interface DataStatistic {
 
 export interface OveralStatistic {
   solutionStatistic?: SolutionSubmitedStatistic;
-  userLogInStatistic?: UserLogInStatistic;
   processingSubmissions?: number;
   inQueueSubmissions?: number;
   totalProblems?: number;
   thisMonthCreatedProblems?: number;
+  totalContests?: number;
+  thisMonthStartContests?: number;
 }
 
 export interface SolutionSubmitedStatistic {
@@ -19,10 +20,4 @@ export interface SolutionSubmitedStatistic {
   thisMonthRejected?: number;
   thisYearAccepted?: number;
   thisYearRejected?: number;
-}
-
-export interface UserLogInStatistic {
-  totalUser?: number;
-  loggingIn?: number;
-  loggingOut?: number;
 }

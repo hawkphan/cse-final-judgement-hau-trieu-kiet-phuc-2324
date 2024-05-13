@@ -2,55 +2,7 @@ import { Box, Card, CardContent } from "@mui/material";
 import Chart, { Props } from "react-apexcharts";
 import { API_QUERIES, useGetAnnualChartById } from "../../../../queries";
 import { LoadingCommon } from "../../../../shared";
-import { useEffect } from "react";
-
-const state: Props = {
-  options: {
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "straight",
-      width: 2,
-    },
-    grid: {
-      padding: {
-        right: 30,
-        left: 20,
-      },
-    },
-
-    title: {
-      text: "Activity History",
-      align: "left",
-      style: {
-        fontSize: "20px",
-        fontFamily: "Roboto",
-      },
-    },
-    xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
-    },
-    legend: {
-      markers: {
-        radius: 0,
-      },
-    },
-  },
-};
+import { useEffect, useState } from "react";
 
 interface UserAnnualReportProps {
   id: string;
@@ -59,6 +11,46 @@ interface UserAnnualReportProps {
 export default function UserAnnualReport({
   id,
 }: Readonly<UserAnnualReportProps>) {
+  const [state, setState] = useState<Props>({
+    options: {
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "straight",
+        width: 2,
+      },
+      grid: {
+        padding: {
+          right: 30,
+          left: 20,
+        },
+      },
+
+      title: {
+        text: "Activity History",
+        align: "left",
+        style: {
+          fontSize: "20px",
+          fontFamily: "Roboto",
+        },
+      },
+      xaxis: {
+        categories: [],
+      },
+      legend: {
+        markers: {
+          radius: 0,
+        },
+      },
+    },
+    series: [
+      {
+        name: "",
+        data: [],
+      },
+    ],
+  });
   const {
     annualSubmission,
     isFetching,
@@ -69,68 +61,58 @@ export default function UserAnnualReport({
     queryKey: [API_QUERIES.GET_ANNUAL_CHART_BY_ID, { id: id }],
   });
 
-  const getAnalysisData = () => {
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const dataTotalSubmit = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    const dataMonths = ["", "", "", "", "", "", "", "", "", "", "", ""];
+  useEffect(() => {
+    const getAnalysisData = () => {
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "June",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      const dataTotalSubmit = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      const dataMonths = ["", "", "", "", "", "", "", "", "", "", "", ""];
 
-    if (annualSubmission.length == 12) {
       annualSubmission.map((item, index) => {
         dataTotalSubmit[index] = item.totalSubmissions;
         dataMonths[index] = monthNames[item.month - 1];
       });
-    } else {
-      let i = -1;
-      let month: number = -1;
-      annualSubmission.map((item, index) => {
-        i = i == -1 ? 12 - annualSubmission.length : i;
-        month = month == -1 ? item.month : month;
-        dataTotalSubmit[12 - annualSubmission.length + index] =
-          item.totalSubmissions;
-        dataMonths[12 - annualSubmission.length + index] =
-          monthNames[item.month - 1];
-      });
 
-      let j = i;
-      dataMonths.map((_item, index) => {
-        if (i > index) {
-          month = month - j;
-          if (month < 0) {
-            month += 12;
-          }
-          j -= 1;
+      return { dataTotalSubmit, dataMonths };
+    };
 
-          dataMonths[index] = monthNames[month - 1];
-        }
-      });
-    }
+    const { dataTotalSubmit, dataMonths } = getAnalysisData();
 
-    return { dataTotalSubmit, dataMonths };
-  };
+    const series = [
+      {
+        name: "Submissions",
+        data: dataTotalSubmit,
+      },
+    ];
+    setState((prevState) => ({
+      ...prevState,
+      series,
+    }));
 
-  const { dataTotalSubmit, dataMonths } = getAnalysisData();
-
-  state.series = [
-    {
-      name: "submissions",
-      data: dataTotalSubmit,
-    },
-  ];
-
-  state.options.xaxis = { categories: dataMonths };
+    const xaxis = {
+      type: "datetime",
+      categories: dataMonths,
+    };
+    setState((prevState) => ({
+      ...prevState,
+      options: {
+        ...prevState.options,
+        xaxis,
+      },
+    }));
+  }, [annualSubmission]);
 
   useEffect(() => {
     const timerId = setTimeout(() => {

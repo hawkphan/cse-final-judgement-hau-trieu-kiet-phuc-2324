@@ -43,33 +43,32 @@ namespace Application.Chart
             {
                 Guid? userId = request.UserId;
                 var problems = _context.Problems.Include(p => p.Solutions);
-
+                var userSolvedProblems = problems.Where(p => p.Solutions.Any(s => s.UserId == userId)).ToList();
 
                 var data = new ProblemStatisticDto();
-                data.TotalProblems = problems.Count(p => p.Solutions.Any(s => (s.UserId == userId)));
-                data.TotalSolvedProblems = problems.Count(p => p.Solutions.Any(s => (s.Status == 3 && s.UserId == userId)));
+                data.TotalProblems = problems.Count();
+                data.TotalSolvedProblems = userSolvedProblems.Count(p => p.Solutions.Any(s => (s.Status == 3)));
 
 
                 var difficultyStatistics = new List<DifficultyStatistic>();
 
-                var groupedProblems = problems.GroupBy(p =>
-                    (p.Difficulty >= 0 && p.Difficulty <= 1000) ? 0 :
-                    (p.Difficulty > 1000 && p.Difficulty <= 2000) ? 1 : 2
-                ).ToList();
+                var groupedProblems = userSolvedProblems.GroupBy(p =>
+                    (p.Difficulty <= 1000) ? 0 :
+                    (p.Difficulty <= 2000) ? 1 : 2
+                ).Select(g => new DifficultyStatistic
+                {
+                    Difficulty = g.Key,
+                    TotalProblems = g.Count(),
+                    TotalSolved = g.Count(p => p.Solutions.Any(s => s.Status == 3))
+                }).ToList();
 
                 var index = 0;
                 for (int i = 0; i < 3; i++)
                 {
 
-                    if (index == i && groupedProblems.Count > index && groupedProblems[index].Key.Equals(i))
+                    if (groupedProblems.Count > index && groupedProblems[index].Difficulty.Equals(i))
                     {
-                        var difficultyStatistic = new DifficultyStatistic
-                        {
-                            Difficulty = i,
-                            TotalProblems = groupedProblems[i].Count(p => p.Solutions.Any(s => (s.UserId == userId))),
-                            TotalSolved = groupedProblems[i].Count(p => p.Solutions.Any(s => s.Status == 3))
-                        };
-                        difficultyStatistics.Add(difficultyStatistic);
+                        difficultyStatistics.Add(groupedProblems[index]);
                         index = (index + 1 < groupedProblems.Count) ? index + 1 : 0;
                     }
                     else

@@ -91,8 +91,14 @@ namespace Application.Solutions
                         if (AllGraded)
                         {
                             var size = _context.TestCases.Count(t => t.ProblemId.Equals(solution.ProblemId));
-
-                            solution.Score = (double)score / size;
+                            if (size != 0)
+                            {
+                                solution.Score = (double)score / size;
+                            }
+                            else
+                            {
+                                solution.Score = 0;
+                            }
                             solution.GradingStatus = 1;
                         }
                         else
