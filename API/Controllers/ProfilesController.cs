@@ -37,6 +37,13 @@ namespace API.Controllers
         {
             return HandleApiResult(await Mediator.Send(new Detail.Query { UserId = id }));
         }
+        [AllowAnonymous]
+        [HttpGet("ranking")]
+        public async Task<IActionResult> GetLeaderBoards([FromQuery]PagingParams pagingParams)
+        {
+            return HandlePagedResult(await Mediator.Send(new Leaderboard.Query { Params = pagingParams }));
+        }
+
 
 
         [AllowAnonymous]
