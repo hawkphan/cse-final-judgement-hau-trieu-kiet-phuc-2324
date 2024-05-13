@@ -69,21 +69,21 @@ namespace Application.Core
               .ForMember(d => d.EndTime, o => o.MapFrom(s => s.EndTime))
               .ForMember(d => d.Rule, o => o.MapFrom(s => s.Rule))
               .ForMember(d => d.Type, o => o.MapFrom(s => s.Rule))
-              .ForMember(d => d.Description, o => o.MapFrom(s => s.Description));
+              .ForMember(d => d.Description, o => o.MapFrom(s => s.Description))
+              .ForMember(d => d.Problems, o => o.MapFrom(s => s.Problems))
+              .ForMember(d => d.Members, o => o.MapFrom(s => s.Members));
 
             CreateMap<ContestMember, ContestMemberDto>()
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.ContestId, o => o.MapFrom(s => s.ContestId))
             .ForMember(d => d.UserId, o => o.MapFrom(s => s.UserId))
-            .ForMember(d => d.Role, o => o.MapFrom(s => s.Role))
-            .ForMember(d => d.User, o => o.MapFrom(s => s.User));
+            .ForMember(d => d.Role, o => o.MapFrom(s => s.Role));
 
             CreateMap<ContestProblem, ContestProblemDto>()
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.ContestId, o => o.MapFrom(s => s.ContestId))
             .ForMember(d => d.ProblemId, o => o.MapFrom(s => s.ProblemId))
-            .ForMember(d => d.Score, o => o.MapFrom(s => s.Score))
-            .ForMember(d => d.Problem, o => o.MapFrom(s => s.Problem));
+            .ForMember(d => d.Score, o => o.MapFrom(s => s.Score));
 
         }
     }

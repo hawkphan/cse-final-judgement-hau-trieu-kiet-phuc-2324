@@ -34,12 +34,6 @@ export const allColumns = ({ onDetail }: Props): MRT_ColumnDef<Contest>[] => {
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      muiTableBodyCellProps: {
-        align: "center",
-      },
-      muiTableHeadCellProps: {
-        align: "center",
-      },
       Cell: ({ cell }) =>
         formatUTCToLocale(cell.getValue<string>(), "Asia/Ho_Chi_Minh"),
     },
@@ -49,7 +43,8 @@ export const allColumns = ({ onDetail }: Props): MRT_ColumnDef<Contest>[] => {
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) =>
+        formatValueOrNull(cell?.row?.original?.members?.length + ""),
     },
     {
       accessorKey: "actions",

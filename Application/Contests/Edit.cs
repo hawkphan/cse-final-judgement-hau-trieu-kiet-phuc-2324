@@ -44,9 +44,9 @@ namespace Application.Contests
 
                     return ApiResult<ContestDto>.Success(newContestDto);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return ApiResult<ContestDto>.Failure(new string[] { "Failed to Edit" });
+                    return ApiResult<ContestDto>.Failure(new string[] { ex.Message });
                 }
             }
         }

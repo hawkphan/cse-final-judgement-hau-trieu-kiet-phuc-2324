@@ -10,8 +10,6 @@ namespace Domain.Dtos
         public Guid Id { get; set; }
         public double Role { get; set; } // 0 for Contest Admin, 1 for Contestant
         public Guid UserId { get; set; }
-        public AppUser User { get; set; }
         public Guid ContestId { get; set; }
-        public Contest Contest { get; set; }
     }
 }

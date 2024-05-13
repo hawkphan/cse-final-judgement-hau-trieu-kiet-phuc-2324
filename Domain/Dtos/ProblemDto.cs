@@ -11,7 +11,7 @@ public class ProblemDto
 
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
-        public AppUser User { get; set; }
+        public ProfileDto User { get; set; }
         public string Code { get; set; }
         public string Title { get; set; }
         public double Difficulty { get; set; }
@@ -19,9 +19,6 @@ public class ProblemDto
         public DateTime Date { get; set; }
         public int TimeLimit { get; set; }
         public int MemoryLimit { get; set; }
-        // public ICollection<TestCase> TestCases { get; set; }
-        // public ICollection<Result> Results { get; set; }
-        // public ICollection<Solution> UserSolutions { get; set; }
         public ICollection<ProblemLanguageDto> ProblemLanguages { get; set; }
     }
 }
