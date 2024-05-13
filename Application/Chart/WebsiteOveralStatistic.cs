@@ -42,14 +42,15 @@ namespace Application.Chart
             {
                 var problems = _context.Problems.Include(p => p.Solutions);
                 var solutions = _context.Solutions.AsQueryable();
-                var users = _context.Users.AsQueryable();
+                var contests = _context.Contests.AsQueryable();
 
                 var data = new WebsiteOveralStatisticDto();
                 var solutionsStatistic = new SolutionSubmitedStatistic();
-                var userLogInStatistic = new UserLogInStatistic();
 
                 data.TotalProblems = problems.Count();
                 data.ThisMonthCreatedProblems = problems.Where(p => p.Date.Month == DateTime.Now.Month).Count();
+                data.TotalContests = contests.Count();
+                data.ThisMonthStartContests = contests.Where(p => p.StartTime.Month == DateTime.Now.Month).Count();
 
 
                 var processingSubmmissions = solutions.Where(s => s.Status == 2).Count();
@@ -64,11 +65,10 @@ namespace Application.Chart
                 solutionsStatistic.TodayRejected = todaySubmission.Count() - solutionsStatistic.TodayAccepted - processingSubmmissions - inQueueSubmissions;
                 solutionsStatistic.ThisMonthRejected = thisMonthSubmission.Count() - solutionsStatistic.ThisMonthAccepted - processingSubmmissions - inQueueSubmissions;
                 solutionsStatistic.ThisYearRejected = thisYearSubmission.Count() - solutionsStatistic.ThisYearAccepted - processingSubmmissions - inQueueSubmissions;
-                userLogInStatistic.TotalUser = users.Count();
+                
 
 
                 data.SolutionStatistic = solutionsStatistic;
-                data.UserLogInStatistic = userLogInStatistic;
                 data.ProcessingSubmissions = processingSubmmissions;
                 data.InQueueSubmissions = inQueueSubmissions;
                 

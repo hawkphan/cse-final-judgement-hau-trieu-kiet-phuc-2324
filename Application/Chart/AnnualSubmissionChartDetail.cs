@@ -45,7 +45,7 @@ namespace Application.Chart
                 solutions = solutions
                 .Where(s => s.CreatedDate.Year == DateTime.Now.Year && s.CreatedDate.Month >= DateTime.Now.Month - 11);
 
-                var data = solutions.GroupBy(s => new { s.CreatedDate.Year, s.CreatedDate.Month })
+                var groupedSolutions = solutions.GroupBy(s => new { s.CreatedDate.Year, s.CreatedDate.Month })
                 .Select(group => new InMonthSubmitDto
                 {
                     Year = group.Key.Year,
@@ -56,8 +56,65 @@ namespace Application.Chart
                 .ThenBy(group => group.Month)
                 .ToList();
 
+                var data = new List<InMonthSubmitDto>();
+                groupedSolutions.Reverse();
+                var month = groupedSolutions.Count > 0 ? groupedSolutions[0].Month : 0;
+                var year = DateTime.Now.Year;
+                var groupedSolutionsIndex = month != 0 ? 0 : -1;
+
+                for (int i = 0; i < 12; i++)
+                {
+                    if (month != 0 && groupedSolutionsIndex != -1 && groupedSolutions[groupedSolutionsIndex].Month == month)
+                    {
+                        data.Add(createMonthSubmitDto(year, month, groupedSolutions[groupedSolutionsIndex].TotalSubmissions));
+                        if (month - 1 == 0)
+                        {
+                            month = 12;
+                            year--;
+                        }else{
+                            month--;
+                        }
+
+                        groupedSolutionsIndex = (groupedSolutionsIndex + 1) < groupedSolutions.Count() ? groupedSolutionsIndex + 1 : -1;
+                    }
+                    else
+                    {
+                        data.Add(createMonthSubmitDto(year, month));
+                        if (month - 1 == 0)
+                        {
+                            month = 12;
+                            year--;
+                        }else{
+                            month--;
+                        }
+
+                    }
+
+                }
+                data.Reverse();
                 return ApiResult<ICollection<InMonthSubmitDto>>.Success(data);
             }
+        }
+
+        private static InMonthSubmitDto createMonthSubmitDto(int year, int month)
+        {
+            return new InMonthSubmitDto
+            {
+                Year = year,
+                Month = month,
+                TotalSubmissions = 0,
+            };
+        }
+
+        private static InMonthSubmitDto createMonthSubmitDto(int year, int month, int totalSubmissions)
+        {
+            return new InMonthSubmitDto
+            {
+                Year = year,
+                Month = month,
+                TotalSubmissions = totalSubmissions,
+            };
+
         }
     }
 }

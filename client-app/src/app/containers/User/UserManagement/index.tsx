@@ -4,14 +4,10 @@ import {
   CardContent,
   CardHeader,
   Grid,
-  IconButton,
-  Menu,
-  MenuItem,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import Chart, { Props } from "react-apexcharts";
-import { BsListUl } from "react-icons/bs";
 import { MuiDatePicker } from "../../../shared";
 import { API_QUERIES } from "../../../queries";
 import {
@@ -20,7 +16,7 @@ import {
   useGetSolutionsStatistic,
 } from "../../../queries/Management";
 import dayjs from "dayjs";
-function CalculateTotal(array : number[]) {
+function CalculateTotal(array: number[]) {
   let sum = 0;
   for (let i = 0; i < array.length; i++) {
     sum += array[i];
@@ -118,9 +114,6 @@ const UserManagement = () => {
     },
     series: [],
   });
-  const [anchor, setAnchor] = useState(null);
-  const onClick = (e) => setAnchor(e.currentTarget);
-  const onClose = () => setAnchor(null);
 
   const {
     overalStatistic,
@@ -192,12 +185,12 @@ const UserManagement = () => {
   useEffect(() => {
     handleInvalidateProblemsStatistic();
     onGetProblemsStatistic();
-  }, [selectedProblemsStatisticDate]);
+  }, [selectedProblemsStatisticDate, handleInvalidateProblemsStatistic]);
 
   useEffect(() => {
     handleInvalidateSolutionsStatistic();
     onGetSolutionStatistic();
-  }, [selectedSolutionStatisticDate]);
+  }, [selectedSolutionStatisticDate, handleInvalidateSolutionsStatistic]);
 
   useEffect(() => {
     const xaxis = {
@@ -259,31 +252,8 @@ const UserManagement = () => {
         <Card sx={{ height: "200px" }} elevation={4}>
           <CardHeader
             sx={{ height: "50px" }}
-            action={
-              <Box>
-                <IconButton aria-label="settings">
-                  <BsListUl onClick={onClick} key={1} />
-                </IconButton>
-                <Menu
-                  anchorEl={anchor}
-                  open={!!anchor}
-                  onClose={onClose}
-                  key={1}
-                >
-                  <MenuItem value={0} onClick={onClose}>
-                    Today
-                  </MenuItem>
-                  <MenuItem value={1} onClick={onClose}>
-                    This Week
-                  </MenuItem>
-                  <MenuItem value={2} onClick={onClose}>
-                    This Month
-                  </MenuItem>
-                </Menu>
-              </Box>
-            }
             title="Solutions"
-            subheader="Today: September 14, 2016"
+            subheader={`Today: ${new Date().toLocaleDateString()}`}
           />
           <CardContent>
             <Box
@@ -330,7 +300,7 @@ const UserManagement = () => {
           <CardHeader
             sx={{ height: "50px" }}
             title="Processing Submissions"
-            subheader="Today: September 14, 2016"
+            subheader={`Today: ${new Date().toLocaleDateString()}`}
           />
           <CardContent>
             <Box
@@ -376,8 +346,8 @@ const UserManagement = () => {
         <Card sx={{ height: "200px" }} elevation={4}>
           <CardHeader
             sx={{ height: "50px" }}
-            title="User Statistic"
-            subheader="Today: September 14, 2016"
+            title="Contest Statistic"
+            subheader={`Today: ${new Date().toLocaleDateString()}`}
           />
           <CardContent>
             <Box
@@ -397,7 +367,7 @@ const UserManagement = () => {
                   Total:
                 </Typography>
                 <Typography variant="h6" component="div" color="text.secondary">
-                  {overalStatistic?.userLogInStatistic?.totalUser ?? 0}
+                  {overalStatistic?.totalContests ?? 0}
                 </Typography>
               </Box>
               <Box
@@ -408,24 +378,10 @@ const UserManagement = () => {
                 }}
               >
                 <Typography variant="h6" component="div" color="text.primary">
-                  Log In:
+                  Start This Month:
                 </Typography>
                 <Typography variant="h6" component="div" color="text.secondary">
-                  {overalStatistic?.userLogInStatistic?.loggingIn ?? 0}
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography variant="h6" component="div" color="text.primary">
-                  Log Out:
-                </Typography>
-                <Typography variant="h6" component="div" color="text.secondary">
-                  {overalStatistic?.userLogInStatistic?.loggingOut ?? 0}
+                  {overalStatistic?.thisMonthStartContests ?? 0}
                 </Typography>
               </Box>
             </Box>
@@ -435,7 +391,11 @@ const UserManagement = () => {
 
       <Grid item xs={3}>
         <Card sx={{ height: "200px" }} elevation={4}>
-          <CardHeader sx={{ height: "50px" }} title="Problem Statistic" />
+          <CardHeader
+            sx={{ height: "50px" }}
+            title="Problem Statistic"
+            subheader={`Today: ${new Date().toLocaleDateString()}`}
+          />
           <CardContent>
             <Box
               sx={{
