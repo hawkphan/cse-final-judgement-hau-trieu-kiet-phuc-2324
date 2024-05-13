@@ -73,6 +73,20 @@ namespace Application.Problems
                     problems = problems.OrderBy(problem => problem.Difficulty);
                 }
 
+                if (!String.IsNullOrEmpty(order) && order.Contains("date") && order.Contains("desc"))
+                {
+                    problems = problems.OrderByDescending(problem => problem.Date);
+                }
+                if (!String.IsNullOrEmpty(order) && order.Contains("date") && order.Contains("asc"))
+                {
+                    problems = problems.OrderBy(problem => problem.Date);
+                }
+
+                if (String.IsNullOrEmpty(order))
+                {
+                    problems = problems.OrderByDescending(problem => problem.Date);
+                }
+
                 var query = await problems.ProjectTo<ProblemDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken: cancellationToken);
                 int PageNumber = (request.Params.PageNumber == -1) ? 1 : request.Params.PageNumber;

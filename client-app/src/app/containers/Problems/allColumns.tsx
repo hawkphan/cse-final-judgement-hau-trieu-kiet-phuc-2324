@@ -53,7 +53,7 @@ export const allColumns = ({
       accessorKey: "date",
       header: "Date Published",
       enableColumnFilterModes: false,
-      enableSorting: false,
+      enableSorting: true,
       size: 114,
       Cell: ({ cell }) => formatDateOrNull(cell.getValue<string>()),
     },

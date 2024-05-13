@@ -117,7 +117,6 @@ const Problems = () => {
         additionalFilterParams={[
           ProblemFilterQueryKey.FROM_DATE,
           ProblemFilterQueryKey.TO_DATE,
-          ProblemFilterQueryKey.DIFFICULTY,
           ProblemFilterQueryKey.KEYWORDS,
         ]}
         muiTableBodyRowProps={({ row }) => ({
