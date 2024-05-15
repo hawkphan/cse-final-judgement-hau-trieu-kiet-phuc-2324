@@ -18,6 +18,7 @@ namespace Domain
         public string Avatar { get; set; }
         public ICollection<int> LanguageUsage { get; set; }
         public UserActivityRecord Activities { get; set; }
+        public double Rating { get; set; } = 0;
     }
 
     public class UserActivityRecord

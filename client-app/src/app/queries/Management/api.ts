@@ -1,9 +1,9 @@
 import axios from "axios";
-import { DataStatistic, OveralStatistic } from "./types";
+import { DataStatistic, OverallStatistic } from "./types";
 import { API_URL } from "../common/constants";
 
-const getOveralStatistic = () => {
-  return axios.get<OveralStatistic>(`${API_URL}/api/management/overal-statistic`, {});
+const getOverallStatistic = () => {
+  return axios.get<OverallStatistic>(`${API_URL}/api/management/overall-statistic`, {});
 };
 
 const getSolutionsStatistic = (params: string ) => {
@@ -20,4 +20,4 @@ const getProblemsStatistic = (params: string ) => {
   );
 };
 
-export { getOveralStatistic, getSolutionsStatistic, getProblemsStatistic };
+export { getOverallStatistic, getSolutionsStatistic, getProblemsStatistic };

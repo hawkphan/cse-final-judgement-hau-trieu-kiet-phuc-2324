@@ -23,14 +23,14 @@ using Persistence;
 
 namespace Application.Chart
 {
-    public class WebsiteOveralStatistic
+    public class WebsiteOverallStatistic
     {
-        public class Query : IRequest<ApiResult<WebsiteOveralStatisticDto>>
+        public class Query : IRequest<ApiResult<WebsiteOverallStatisticDto>>
         {
             public Guid? UserId { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, ApiResult<WebsiteOveralStatisticDto>>
+        public class Handler : IRequestHandler<Query, ApiResult<WebsiteOverallStatisticDto>>
         {
             private readonly DataContext _context;
 
@@ -38,13 +38,13 @@ namespace Application.Chart
             {
                 _context = context;
             }
-            public async Task<ApiResult<WebsiteOveralStatisticDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<ApiResult<WebsiteOverallStatisticDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var problems = _context.Problems.Include(p => p.Solutions);
                 var solutions = _context.Solutions.AsQueryable();
                 var contests = _context.Contests.AsQueryable();
 
-                var data = new WebsiteOveralStatisticDto();
+                var data = new WebsiteOverallStatisticDto();
                 var solutionsStatistic = new SolutionSubmitedStatistic();
 
                 data.TotalProblems = problems.Count();
@@ -74,7 +74,7 @@ namespace Application.Chart
                 
 
 
-                return ApiResult<WebsiteOveralStatisticDto>.Success(data);
+                return ApiResult<WebsiteOverallStatisticDto>.Success(data);
             }
         }
     }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Dtos
 {
-    public class WebsiteOveralStatisticDto
+    public class WebsiteOverallStatisticDto
     {
         public SolutionSubmitedStatistic SolutionStatistic { get; set; }
         public int ProcessingSubmissions { get; set; } = 0;

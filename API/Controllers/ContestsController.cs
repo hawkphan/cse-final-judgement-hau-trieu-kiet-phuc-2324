@@ -53,5 +53,6 @@ namespace API.Controllers
             await Mediator.Send(new Delete.Command { Id = id });
             return Ok();
         }
+
     }
 }

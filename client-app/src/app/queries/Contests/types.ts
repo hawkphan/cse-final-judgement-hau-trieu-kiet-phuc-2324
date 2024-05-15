@@ -1,13 +1,13 @@
 export interface Contest {
-  id: string;
-  name: string;
-  description: string;
-  startTime: string;
-  endTime: string;
-  rule: number;
-  type: number;
-  problems: ContestProblem[];
-  members: ContestMember[];
+  id?: string;
+  name?: string;
+  description?: string;
+  startTime?: string;
+  endTime?: string;
+  rule?: number;
+  type?: number;
+  problems?: ContestProblem[];
+  members?: ContestMember[];
 }
 
 export interface CreateContestBody {

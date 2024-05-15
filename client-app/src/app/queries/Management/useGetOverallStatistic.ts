@@ -2,14 +2,14 @@
 /* eslint-disable no-debugger */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { UseQueryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
-import { OveralStatistic } from "./types";
+import { OverallStatistic } from "./types";
 import { API_QUERIES } from "../common/constants";
 import { responseWrapper } from "../common";
 import { ApiResponseType } from "../../shared";
-import { getOveralStatistic } from "./api";
+import { getOverallStatistic } from "./api";
 
-export function useGetOveralStatistic(
-  options?: UseQueryOptions<ApiResponseType<OveralStatistic[]>, Error, any> & {
+export function useGetOverallStatistic(
+  options?: UseQueryOptions<ApiResponseType<OverallStatistic[]>, Error, any> & {
     id?: string;
   }
 ) {
@@ -18,14 +18,14 @@ export function useGetOveralStatistic(
     error,
     isError,
     isFetching,
-    refetch: onGetOveralStatistic,
-  } = useQuery<ApiResponseType<OveralStatistic[]>, Error, any>({
-    queryKey: [API_QUERIES.GET_OVERAL_STATISTIC],
+    refetch: onGetOverallStatistic,
+  } = useQuery<ApiResponseType<OverallStatistic[]>, Error, any>({
+    queryKey: [API_QUERIES.GET_OVERALL_STATISTIC],
     queryFn: (query) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
       const [_, ...params] = query.queryKey;
-      return responseWrapper<ApiResponseType<OveralStatistic[]>>(getOveralStatistic, params);
+      return responseWrapper<ApiResponseType<OverallStatistic[]>>(getOverallStatistic, params);
     },
     enabled: true,
     ...options,
@@ -33,17 +33,17 @@ export function useGetOveralStatistic(
 
   const queryClient = useQueryClient();
 
-  const handleInvalidateOveralStatistic = () =>
-    queryClient.invalidateQueries({queryKey: [API_QUERIES.GET_OVERAL_STATISTIC]});
+  const handleInvalidateOverallStatistic = () =>
+    queryClient.invalidateQueries({queryKey: [API_QUERIES.GET_OVERALL_STATISTIC]});
 
-  const {data: overalStatistic = []} = data || [];
+  const {data: overallStatistic = []} = data || [];
 
   return {
-    overalStatistic,
+    overallStatistic,
     error,
     isError,
     isFetching,
-    onGetOveralStatistic,
-    handleInvalidateOveralStatistic,
+    onGetOverallStatistic,
+    handleInvalidateOverallStatistic,
   };
 }

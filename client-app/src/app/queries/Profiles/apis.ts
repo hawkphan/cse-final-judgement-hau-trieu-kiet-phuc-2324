@@ -6,6 +6,7 @@ import {
   LanguagesUsage,
   Profile,
   ProblemStatistic,
+  Ranking,
 } from "./types";
 import { API_URL } from "../common/constants";
 import { GetPropertiesParams } from "../Languages";
@@ -47,6 +48,12 @@ const getProblemStatisticById = (params: { id: string }) => {
   );
 };
 
+const getRankings = () => {
+  return axios.get<Ranking[]>(
+    `${API_URL}/api/profiles/ranking`,
+    {}
+  );
+}
 export {
   getProfiles,
   getProfileById,
@@ -54,4 +61,5 @@ export {
   getLanguagesUsageById,
   getAnnualSubmissionById,
   getProblemStatisticById,
+  getRankings
 };
