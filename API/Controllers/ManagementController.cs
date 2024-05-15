@@ -23,10 +23,10 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("overal-statistic")] //api/management/overal-statistic
-        public async Task<IActionResult> GetOveralStatistic()
+        [HttpGet("overall-statistic")] //api/management/overal-statistic
+        public async Task<IActionResult> GetOverallStatistic()
         {
-            return HandleApiResult(await Mediator.Send(new WebsiteOveralStatistic.Query { }));
+            return HandleApiResult(await Mediator.Send(new WebsiteOverallStatistic.Query { }));
         }
 
         [AllowAnonymous]

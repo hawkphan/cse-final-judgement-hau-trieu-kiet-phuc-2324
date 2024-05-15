@@ -29,7 +29,7 @@ export const PATHS = {
   editContest: "/contests/:id/edit",
   contestPage: "/contest-page/:id",
   contestManagement: "/contest-management",
-  
+  ranking: "/ranking",
 };
 
 export const HIDE_NAV_PATHS: string | string[] = [];

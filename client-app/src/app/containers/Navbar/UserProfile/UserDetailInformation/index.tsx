@@ -8,6 +8,7 @@ import {
   ListItemIcon,
   ListItemText,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { FaEye, FaCheckCircle, FaStar } from "react-icons/fa";
@@ -15,9 +16,10 @@ import { TbPointFilled } from "react-icons/tb";
 import { Button, LoadingCommon, formatDate, isEmpty } from "../../../../shared";
 import { useCallback } from "react";
 import { API_QUERIES, useGetProfileById } from "../../../../queries";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useStore } from "../../../../shared/common/stores/store";
 import { getLanguageNameById } from "../../../Problems/ProblemDetails/SubmissionTab/helpers";
+import { PATHS } from "../../../../configs/paths";
 
 interface Props {
   id: string;
@@ -78,6 +80,17 @@ export const UserDetailInformation = ({ id }: Props) => {
               <h3>
                 <strong>DOB: </strong>
                 {formatDate(profile?.birthday)}
+              </h3>
+
+              <h3>
+                {"Rating: "}
+                <Tooltip
+                  title="Click to navigate to the ranking table"
+                  arrow
+                  placement="right"
+                >
+                  <Link to={PATHS.ranking}>{`${Math.floor(profile?.rating)}`}</Link>
+                </Tooltip>
               </h3>
             </Stack>
           </Stack>

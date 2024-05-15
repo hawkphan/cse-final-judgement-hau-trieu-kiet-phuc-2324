@@ -13,6 +13,7 @@ export interface Profile<T> {
   avatar?: string;
   languageUsage?: number[];
   activities?: T;
+  rating?: number;
 }
 
 export interface UserActivityRecord {
@@ -58,4 +59,11 @@ export interface DifficultyStatistic {
   difficulty: number;
   totalProblems: number;
   totalSolved: number;
+}
+
+export interface Ranking{
+  rank?: number;
+  id?: string;
+  displayName?: string;
+  elo?: number;
 }

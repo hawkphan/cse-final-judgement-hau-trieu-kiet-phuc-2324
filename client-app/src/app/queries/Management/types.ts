@@ -3,7 +3,7 @@ export interface DataStatistic {
   values: number[];
 }
 
-export interface OveralStatistic {
+export interface OverallStatistic {
   solutionStatistic?: SolutionSubmitedStatistic;
   processingSubmissions?: number;
   inQueueSubmissions?: number;

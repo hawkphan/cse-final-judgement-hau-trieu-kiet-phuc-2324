@@ -11,7 +11,7 @@ import Chart, { Props } from "react-apexcharts";
 import { MuiDatePicker } from "../../../shared";
 import { API_QUERIES } from "../../../queries";
 import {
-  useGetOveralStatistic,
+  useGetOverallStatistic,
   useGetProblemsStatistic,
   useGetSolutionsStatistic,
 } from "../../../queries/Management";
@@ -116,12 +116,12 @@ const UserManagement = () => {
   });
 
   const {
-    overalStatistic,
-    onGetOveralStatistic,
-    handleInvalidateOveralStatistic,
-    isFetching: isOveralStatisticFetching,
-  } = useGetOveralStatistic({
-    queryKey: [API_QUERIES.GET_OVERAL_STATISTIC],
+    overallStatistic,
+    onGetOverallStatistic,
+    handleInvalidateOverallStatistic,
+    isFetching: isOverallStatisticFetching,
+  } = useGetOverallStatistic({
+    queryKey: [API_QUERIES.GET_OVERALL_STATISTIC],
   });
 
   const {
@@ -152,24 +152,24 @@ const UserManagement = () => {
 
   useEffect(() => {
     const timerId = setTimeout(() => {
-      handleInvalidateOveralStatistic();
-      onGetOveralStatistic();
+      handleInvalidateOverallStatistic();
+      onGetOverallStatistic();
 
       handleInvalidateProblemsStatistic();
       onGetProblemsStatistic();
 
       handleInvalidateSolutionsStatistic();
       onGetSolutionStatistic();
-    }, 100000);
+    }, 1000);
 
     return () => {
       clearTimeout(timerId);
     };
   }, [
-    overalStatistic,
-    handleInvalidateOveralStatistic,
-    isOveralStatisticFetching,
-    onGetOveralStatistic,
+    overallStatistic,
+    handleInvalidateOverallStatistic,
+    isOverallStatisticFetching,
+    onGetOverallStatistic,
 
     problemsStatistic,
     handleInvalidateProblemsStatistic,
@@ -185,12 +185,12 @@ const UserManagement = () => {
   useEffect(() => {
     handleInvalidateProblemsStatistic();
     onGetProblemsStatistic();
-  }, [selectedProblemsStatisticDate, handleInvalidateProblemsStatistic]);
+  }, [selectedProblemsStatisticDate]);
 
   useEffect(() => {
     handleInvalidateSolutionsStatistic();
     onGetSolutionStatistic();
-  }, [selectedSolutionStatisticDate, handleInvalidateSolutionsStatistic]);
+  }, [selectedSolutionStatisticDate]);
 
   useEffect(() => {
     const xaxis = {
@@ -273,7 +273,7 @@ const UserManagement = () => {
                   Accepted:
                 </Typography>
                 <Typography variant="h6" component="div" color="text.secondary">
-                  {overalStatistic?.solutionStatistic?.todayAccepted ?? 0}
+                  {overallStatistic?.solutionStatistic?.todayAccepted ?? 0}
                 </Typography>
               </Box>
               <Box
@@ -287,7 +287,7 @@ const UserManagement = () => {
                   Failed:
                 </Typography>
                 <Typography variant="h6" component="div" color="text.secondary">
-                  {overalStatistic?.solutionStatistic?.todayRejected ?? 0}
+                  {overallStatistic?.solutionStatistic?.todayRejected ?? 0}
                 </Typography>
               </Box>
             </Box>
@@ -320,7 +320,7 @@ const UserManagement = () => {
                   Processing:
                 </Typography>
                 <Typography variant="h6" component="div" color="text.secondary">
-                  {overalStatistic?.processingSubmissions ?? 0}
+                  {overallStatistic?.processingSubmissions ?? 0}
                 </Typography>
               </Box>
               <Box
@@ -334,7 +334,7 @@ const UserManagement = () => {
                   In Queue:
                 </Typography>
                 <Typography variant="h6" component="div" color="text.secondary">
-                  {overalStatistic?.inQueueSubmissions ?? 0}
+                  {overallStatistic?.inQueueSubmissions ?? 0}
                 </Typography>
               </Box>
             </Box>
@@ -367,7 +367,7 @@ const UserManagement = () => {
                   Total:
                 </Typography>
                 <Typography variant="h6" component="div" color="text.secondary">
-                  {overalStatistic?.totalContests ?? 0}
+                  {overallStatistic?.totalContests ?? 0}
                 </Typography>
               </Box>
               <Box
@@ -381,7 +381,7 @@ const UserManagement = () => {
                   Start This Month:
                 </Typography>
                 <Typography variant="h6" component="div" color="text.secondary">
-                  {overalStatistic?.thisMonthStartContests ?? 0}
+                  {overallStatistic?.thisMonthStartContests ?? 0}
                 </Typography>
               </Box>
             </Box>
@@ -414,7 +414,7 @@ const UserManagement = () => {
                   Total:
                 </Typography>
                 <Typography variant="h6" component="div" color="text.secondary">
-                  {overalStatistic?.totalProblems ?? 0}
+                  {overallStatistic?.totalProblems ?? 0}
                 </Typography>
               </Box>
               <Box
@@ -428,7 +428,7 @@ const UserManagement = () => {
                   Created This Month:
                 </Typography>
                 <Typography variant="h6" component="div" color="text.secondary">
-                  {overalStatistic?.thisMonthCreatedProblems ?? 0}
+                  {overallStatistic?.thisMonthCreatedProblems ?? 0}
                 </Typography>
               </Box>
             </Box>

@@ -6,7 +6,7 @@ export interface Problem {
   difficulty?: number;
   description?: string;
   date?: string;
-  user: User;
+  user?: User;
   userId?: string;
   testCasesFiles?: any;
   problemLanguages?: any;

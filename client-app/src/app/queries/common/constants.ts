@@ -14,6 +14,7 @@ export enum API_QUERIES {
   GET_ANNUAL_CHART_BY_ID = "/get-annual-chart-by-id",
   GET_PROBLEMS_CHART_BY_ID = "/get-problem-chart-by-id",
   GET_PROFILES = "/get-profiles",
+  GET_RANKING = "/get-ranking",
 
   // Solutions
   GET_SOLUTIONS = "/get-solutions",
@@ -28,7 +29,7 @@ export enum API_QUERIES {
   GET_CONTEST_BY_ID = "/get-contest-by-id",
 
   //Management
-  GET_OVERAL_STATISTIC = "/get-overal-statistic",
+  GET_OVERALL_STATISTIC = "/get-overall-statistic",
   GET_SOLLUTIONS_STATISTIC = "/get-solutions-statistic",
   GET_PROBLEMS_STATISTIC = "/get-problems-statistic",
 }
