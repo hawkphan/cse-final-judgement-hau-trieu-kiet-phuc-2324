@@ -1,25 +1,41 @@
 import { Box, Card, CardContent, Stack } from "@mui/material";
-import { Button, MuiSelect, isEmpty } from "../../../../shared";
+import { Button, Form, MuiSelect, Toastify, isEmpty } from "../../../../shared";
 import { Editor } from "@monaco-editor/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { CompilerEnv, ThemeMode } from "../helpers";
-import { LanguageOption, useGetLanguages } from "../../../../queries";
-import { problemsOpt } from "../data.mock";
+import {
+  Contest,
+  CreateSolutionBody,
+  Problem,
+  useGetSolutions,
+  useSubmitSolution,
+} from "../../../../queries";
+import { getLanguageNameById } from "../../../Problems/ProblemDetails/SubmissionTab/helpers";
+import { SelectOption } from "../../../../shared/components/common/MuiAutoComplete";
+import { useStore } from "../../../../shared/common/stores/store";
+import { useForm } from "react-hook-form";
 
-export default function SubmitCodeTab() {
-  const [currentLanguageId, setCurrentLanguageId] = useState();
-  const [currentProblemId, setCurrentProblemId] = useState();
-  const { languages, setParams } = useGetLanguages();
+interface Props {
+  contest: Contest;
+  problemList: Problem[];
+}
+
+export default function SubmitCodeTab(props: Props) {
+  const { contest, problemList } = props;
+  const [currentLanguageId, setCurrentLanguageId] = useState("");
+  const [currentProblemId, setCurrentProblemId] = useState("");
   const [darkOrLight, setDarkOrLight] = useState(ThemeMode.DARK);
-
+  const [problemOptions, setProblemOptions] = useState<SelectOption[]>([]);
+  const [languageOptions, setLanguageOptions] = useState<SelectOption[]>([]);
+  const { userStore } = useStore();
+  const user = userStore.user;
   const editorRef = useRef(null);
-  type Monaco = typeof monaco;
+
   const handleComponentDidMount = (
-    editor: monaco.editor.IStandaloneCodeEditor,
-    monaco: Monaco
+    editor: monaco.editor.IStandaloneCodeEditor
   ) => {
     editorRef.current = editor;
   };
@@ -29,10 +45,32 @@ export default function SubmitCodeTab() {
     );
   };
 
-  const languageOptions: LanguageOption[] = useMemo(
-    () => languages.map((item) => ({ label: item.name, value: item.id })),
-    [languages]
-  );
+  useEffect(() => {
+    problemList?.map((p) => {
+      const option: SelectOption = {
+        value: p.id,
+        label: p.code + " - " + p.title,
+      };
+      setProblemOptions((prevOptions) => [...prevOptions, option]);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (currentProblemId != "" && problemOptions) {
+      setLanguageOptions([]);
+      setCurrentLanguageId("");
+      const problem: Problem = problemList.filter(
+        (p) => p.id == currentProblemId
+      )[0];
+      problem?.problemLanguages?.map((l) => {
+        const option: SelectOption = {
+          label: getLanguageNameById(l.languageId),
+          value: l.languageId,
+        };
+        setLanguageOptions((prevList) => [...prevList, option]);
+      });
+    }
+  }, [currentProblemId]);
 
   const file = CompilerEnv["Python"];
 
@@ -62,91 +100,127 @@ export default function SubmitCodeTab() {
     },
   };
 
-  useEffect(() => {
-    setParams({ pageSize: -1 });
-  }, [setParams]);
+  const { handleInvalidateSolutions, setParams: setSolutionParams } =
+    useGetSolutions();
+  const { handleSubmit } = useForm<CreateSolutionBody>({
+    defaultValues: {},
+    mode: "onChange",
+    shouldFocusError: true,
+    reValidateMode: "onChange",
+  });
+  const { onSubmitSolution, isPending } = useSubmitSolution({
+    onSuccess: () => {
+      Toastify.success("Successful!");
+      handleInvalidateSolutions();
+    },
+    onError: (error) => {
+      Toastify.error(error.message);
+      handleInvalidateSolutions();
+      console.log("Error", error);
+    },
+  });
 
+  const getEditorValue = () => {
+    return editorRef.current.getValue();
+  };
+  const getUserId = useMemo(() => {
+    return user?.id;
+  }, [user?.id]);
+
+  const onSubmit = async (data: CreateSolutionBody) => {
+    data.userId = getUserId;
+    data.problemId = currentProblemId;
+    data.contestId = contest.id;
+    data.solution = getEditorValue();
+    data.languageId = currentLanguageId;
+    onSubmitSolution(data);
+  };
+  useEffect(() => {
+    setSolutionParams({ problemId: currentProblemId, userId: user?.id });
+  }, [currentProblemId, setSolutionParams, user?.id]);
   return (
     <CardContent>
       <Box overflow={"auto"}>
-        {/* <Form  autoComplete="off"> */}
-        <Card sx={{ height: "550px" }}>
-          <Stack
-            justifyContent="flex-start"
-            direction="row"
-            flexGrow={1}
-            alignItems="center"
-          >
-            <MuiSelect
-              name="language"
-              options={languageOptions}
-              size="small"
-              value={currentLanguageId}
-              placeholder="Select Language"
-              onChange={(_, data) => {
-                setCurrentLanguageId(data);
-              }}
-              style={{ width: "220px" }}
-            />
-
-            <MuiSelect
-              name="language"
-              options={problemsOpt}
-              size="small"
-              value={currentProblemId}
-              placeholder="Select Problem"
-              onChange={(_, data) => {
-                setCurrentProblemId(data);
-              }}
-              style={{ width: "280px" }}
-            />
-            <Button
-              onClick={() => toggleDarkOrLightTheme()}
-              icon={
-                darkOrLight === ThemeMode.DARK ? (
-                  <LightbulbIcon />
-                ) : (
-                  <LightbulbOutlinedIcon />
-                )
-              }
-              style={{
-                borderRadius: "0px",
-                backgroundColor: "gray",
-                marginTop: "5px",
-              }}
-            />
-          </Stack>
-          <Editor
-            height="458px"
-            width="100%"
-            theme={darkOrLight}
-            onMount={handleComponentDidMount}
-            defaultLanguage={file.language}
-            defaultValue={file.value}
-            path={file.name}
-            options={options}
-          />
-          <Stack
-            justifyContent="flex-end"
-            direction="row"
-            flexGrow={1}
-            alignItems="center"
-            sx={{ marginTop: "-1px" }}
-          >
-            <Button
-              style={{
-                borderRadius: "0px",
-                backgroundColor: "green",
-                width: "100%",
-              }}
-              type="submit"
-              disabled={isEmpty(currentLanguageId)}
+        <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+          <Card sx={{ height: "550px" }}>
+            <Stack
+              justifyContent="flex-start"
+              direction="row"
+              flexGrow={1}
+              alignItems="center"
             >
-              Submit
-            </Button>
-          </Stack>
-        </Card>
-        {/* </Form> */}
+              <MuiSelect
+                name="language"
+                options={problemOptions}
+                size="small"
+                value={currentProblemId}
+                placeholder="Select Problem"
+                onChange={(_, data) => {
+                  setCurrentProblemId(data);
+                }}
+                style={{ width: "280px" }}
+              />
+              <MuiSelect
+                sx={{ display: currentProblemId == "" ? "none" : "block" }}
+                name="language"
+                options={languageOptions}
+                size="small"
+                value={currentLanguageId}
+                placeholder="Select Language"
+                onChange={(_, data) => {
+                  setCurrentLanguageId(data);
+                }}
+                style={{ width: "220px" }}
+              />
+
+              <Button
+                onClick={() => toggleDarkOrLightTheme()}
+                icon={
+                  darkOrLight === ThemeMode.DARK ? (
+                    <LightbulbIcon />
+                  ) : (
+                    <LightbulbOutlinedIcon />
+                  )
+                }
+                style={{
+                  borderRadius: "0px",
+                  backgroundColor: "gray",
+                  marginTop: "5px",
+                }}
+              />
+            </Stack>
+            <Editor
+              height="458px"
+              width="100%"
+              theme={darkOrLight}
+              onMount={handleComponentDidMount}
+              defaultLanguage={file.language}
+              defaultValue={file.value}
+              path={file.name}
+              options={options}
+            />
+            <Stack
+              justifyContent="flex-end"
+              direction="row"
+              flexGrow={1}
+              alignItems="center"
+              sx={{ marginTop: "-1px" }}
+            >
+              <Button
+                style={{
+                  borderRadius: "0px",
+                  backgroundColor: "green",
+                  width: "100%",
+                }}
+                type="submit"
+                disabled={isEmpty(currentLanguageId)}
+                isLoading={isPending}
+              >
+                Submit
+              </Button>
+            </Stack>
+          </Card>
+        </Form>
       </Box>
     </CardContent>
   );
