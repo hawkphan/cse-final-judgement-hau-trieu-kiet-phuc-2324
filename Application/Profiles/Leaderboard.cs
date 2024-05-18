@@ -38,11 +38,20 @@ namespace Application.Profiles
                     .OrderByDescending(x => x.Rating)
                     .ProjectTo<RankUserDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken);
-                int i = 1;
-                foreach (var user in users)
+                int currentRank = 1;
+                double previousElo = double.MinValue;
+
+                for (int i = 0; i < users.Count; i++)
                 {
-                    user.Rank = i++;
+                    if (users[i].Elo != previousElo)
+                    {
+                        currentRank = i + 1;
+                        previousElo = users[i].Elo;
+                    }
+
+                    users[i].Rank = currentRank;
                 }
+
                 int pageNumber = (request.Params.PageNumber == -1) ? 1 : request.Params.PageNumber;
                 int pageSize = (request.Params.PageNumber == -1) ? users.Count : request.Params.PageSize;
 

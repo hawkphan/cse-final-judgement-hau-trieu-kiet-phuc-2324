@@ -10,6 +10,7 @@ namespace Domain
     {
         public Guid UserId { get; set; }
         public Guid ProblemId { get; set; }
+        public Guid? ContestId { get; set; }
         public int LanguageId { get; set; }
         public String Solution { get; set; }
     }
