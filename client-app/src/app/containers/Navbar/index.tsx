@@ -26,6 +26,7 @@ import NotificationMenu from "../NotificationMenu";
 function Navbar() {
   const { userStore } = useStore();
   const navigate = useNavigate();
+  const [notifinationNumber, setNotificationCationNumber] = React.useState<number>();
 
   userStore.getUser();
 
@@ -39,33 +40,6 @@ function Navbar() {
       navigate(PATHS.login);
     }
   }, [navigate]);
-
-  const notifications = [
-    {
-      id: 1,
-      type: "New Message",
-      content: "You have a new message from John Doe",
-      timestamp: "2022-10-25 14:30:00",
-      isRead: false,
-      relatedId: 123,
-    },
-    {
-      id: 2,
-      type: "Friend Request",
-      content: "You have a new friend request from Jane Smith",
-      timestamp: "2022-10-24 09:45:00",
-      isRead: true,
-      relatedId: 456,
-    },
-    {
-      id: 3,
-      type: "Mention",
-      content: "You were mentioned in a post by Alan Johnson",
-      timestamp: "2022-10-23 17:15:00",
-      isRead: false,
-      relatedId: 789,
-    },
-  ];
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
@@ -178,11 +152,15 @@ function Navbar() {
               color="inherit"
               sx={{ marginRight: "20px" }}
             >
-              <Badge badgeContent={notifications.length} color="secondary">
+              <Badge badgeContent={notifinationNumber} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <NotificationMenu anchorElNotification={anchorElNotification} onCloseNotification={handleCloseNotification} />
+            <NotificationMenu
+              anchorElNotification={anchorElNotification}
+              onCloseNotification={handleCloseNotification}
+              onSetNumber={setNotificationCationNumber}
+            />
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar

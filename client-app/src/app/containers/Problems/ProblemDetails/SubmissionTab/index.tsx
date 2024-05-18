@@ -47,7 +47,7 @@ const SubmissionTab = ({
       (solution) => solution.status === 1 || solution.status === 2
     );
     const timerId = setTimeout(() => {
-      if (hasPendingStatus) {
+      if (hasPendingStatus && !isFetching) {
         handleInvalidateSolutions();
         onGetSolutions();
       }

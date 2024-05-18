@@ -64,7 +64,7 @@ namespace Persistence
                 .HasForeignKey(s => s.UserId);
 
             builder.Entity<Solution>()
-                .HasOne(s => s.Contest)
+            .HasOne(s => s.Contest)
                 .WithMany(u => u.Solutions)
                 .HasForeignKey(s => s.ContestId);
 

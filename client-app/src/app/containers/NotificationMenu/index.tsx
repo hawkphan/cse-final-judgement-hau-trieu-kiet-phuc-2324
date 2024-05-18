@@ -1,66 +1,74 @@
 import { Avatar, Box, Menu, MenuItem, Stack, Typography } from "@mui/material";
-import { Callback } from "../../queries";
-import { Button } from "../../shared";
+import { Callback, Notification, useGetNotifications } from "../../queries";
+import { Button, LoadingCommon, isEmpty } from "../../shared";
+import { useStore } from "../../shared/common/stores/store";
+import * as signalR from "@microsoft/signalr";
+import { useEffect, useState } from "react";
 
 interface Props {
   onCloseNotification: Callback;
   anchorElNotification: HTMLElement;
+  onSetNumber: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const NotificationMenu = ({
   anchorElNotification,
   onCloseNotification,
+  onSetNumber,
 }: Props) => {
-  const notifications = [
-    {
-      id: 1,
-      type: "New Message",
-      content: "You have a new message from John Doe",
-      timestamp: "2022-10-25 14:30:00",
-      isRead: false,
-      relatedId: 123,
-    },
-    {
-      id: 2,
-      type: "Friend Request",
-      content: "You have a new friend request from Jane Smith",
-      timestamp: "2022-10-24 09:45:00",
-      isRead: true,
-      relatedId: 456,
-    },
-    {
-      id: 3,
-      type: "Mention",
-      content: "You were mentioned in a post by Alan Johnson",
-      timestamp: "2022-10-23 17:15:00",
-      isRead: false,
-      relatedId: 789,
-    },
-    {
-      id: 4,
-      type: "New Notification",
-      content: "This is a new notification",
-      timestamp: "2022-10-22 12:00:00",
-      isRead: false,
-      relatedId: 987,
-    },
-    {
-      id: 5,
-      type: "Reminder",
-      content: "Don't forget to attend the meeting tomorrow",
-      timestamp: "2022-10-21 10:00:00",
-      isRead: true,
-      relatedId: 654,
-    },
-    {
-      id: 6,
-      type: "Event Invitation",
-      content: "You're invited to the company's annual party",
-      timestamp: "2022-10-20 15:30:00",
-      isRead: false,
-      relatedId: 321,
-    },
-  ];
+  const { userStore } = useStore();
+  const user = userStore?.user;
+
+  const { notifications, isFetching, setParams } = useGetNotifications();
+
+  const url = "http://localhost:5000/notificationHub";
+
+  const [connection, setConnection] = useState<signalR.HubConnection | null>(
+    null
+  );
+  const [messages, setMessages] = useState<Notification[]>([]);
+
+  useEffect(() => {
+    const newConnection = new signalR.HubConnectionBuilder()
+      .withUrl(url)
+      .withAutomaticReconnect()
+      .build();
+
+    setConnection(newConnection);
+  }, [url]);
+
+  useEffect(() => {
+    setParams({ userId: user?.id, pageSize: -1 });
+  }, [setParams, user?.id]);
+
+  useEffect(() => {
+    if (connection) {
+      connection
+        .start()
+        .then(() => {
+          console.log("Connected to SignalR hub");
+
+          connection.on("ReceiveNotification", (message: Notification) => {
+            if (message.receiverId != user.id) {
+              return;
+            }
+            setMessages((prevMessages) => [...prevMessages, message]);
+          });
+        })
+        .catch((e) => console.log("Connection failed: ", e));
+    }
+  }, [connection, user.id]);
+
+  useEffect(() => {
+    if (!isEmpty(notifications)) {
+      setMessages(notifications);
+      onSetNumber(notifications.length);
+    }
+  }, [notifications, onSetNumber]);
+
+  if (isFetching) {
+    return <LoadingCommon />;
+  }
 
   return (
     <Menu
@@ -86,20 +94,24 @@ const NotificationMenu = ({
         </MenuItem>
       </Box>
       <Box sx={{ maxHeight: "300px", overflowY: "auto" }}>
-        {notifications.map((notification) => (
+        {messages?.map((notification) => (
           <MenuItem
             key={notification.id}
             onClick={onCloseNotification}
-            style={{ opacity: notification.isRead ? "1" : "0.5" }}
+            style={{ opacity: notification.status == 0 ? "1" : "0.5" }}
           >
             <Avatar
               alt="Avatar"
-              src={`https://i.pravatar.cc/40?u=${notification.relatedId}`}
+              src={
+                notification?.sender?.avatar
+                  ? "data:image/jpeg;base64," + notification?.sender?.avatar
+                  : ""
+              }
               style={{ marginRight: "15px" }}
             />
             <div>
-              <strong>{notification.type}</strong>
-              <br />
+              {/* <strong>{notification.type}</strong>
+              <br /> */}
               <span>{notification.content}</span>
               <br />
               <small>{notification.timestamp}</small>

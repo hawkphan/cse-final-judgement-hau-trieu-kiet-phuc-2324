@@ -6,6 +6,7 @@ using AutoMapper.QueryableExtensions;
 using Domain;
 using Domain.Dtos;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Persistence;
@@ -26,10 +27,12 @@ namespace Application.Solutions
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
-            public Handler(DataContext context, IMapper mapper)
+            private readonly IHubContext<NotificationHub> _hubContext;
+            public Handler(DataContext context, IMapper mapper, IHubContext<NotificationHub> hubContext)
             {
                 _context = context;
                 _mapper = mapper;
+                _hubContext = hubContext;
             }
 
             public async Task<Result<PagedList<SolutionResponseDto>>> Handle(Query request, CancellationToken cancellationToken)
@@ -117,6 +120,16 @@ namespace Application.Solutions
                         user.Rating = Math.Round(user.Rating + 100 * (solution.Score - ExpectCompletionRate), 0);
                         problem.Difficulty = Math.Round(problem.Difficulty - 100 * (solution.Score - ExpectCompletionRate), 0);
 
+                        var newNotification = new Notification
+                        {
+                            ReceiverId = userId,
+                            Content = $"Your solution of {problem.Title} has been judged and graded",
+                            Status = 0,
+                            Timestamp = DateTime.UtcNow
+                        };
+
+                        _context.Notifications.Add(newNotification);
+                        await _hubContext.Clients.All.SendAsync("ReceiveNotification", newNotification);
 
                         await _context.SaveChangesAsync();
 
@@ -187,15 +200,15 @@ namespace Application.Solutions
                 .OrderByDescending(s => s.CreatedDate)
                 .ToListAsync(cancellationToken: cancellationToken);
 
-                // FileManager fileManager = new FileManager();
+                FileManager fileManager = new FileManager();
 
-                // foreach (var solution in queryList)
-                // {
-                //     if (Directory.Exists(Path.Combine(fileManager.SolutionsPath, solution.Id.ToString())))
-                //     {
-                //         solution.Source = fileManager.getSolutionContent(solution.Id.ToString());
-                //     }
-                // }
+                foreach (var solution in queryList)
+                {
+                    if (Directory.Exists(Path.Combine(fileManager.SolutionsPath, solution.Id.ToString())))
+                    {
+                        solution.Source = fileManager.getSolutionContent(solution.Id.ToString());
+                    }
+                }
 
                 int PageNumber = (request.Params.PageSize == -1) ? 1 : request.Params.PageNumber;
                 int PageSize = (request.Params.PageSize == -1) ? queryList.Count : request.Params.PageSize;

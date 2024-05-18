@@ -42,7 +42,7 @@ import WYSIWYGEditor from "../../../shared/components/common/RichTextEditor";
 const ProblemForm = () => {
   const [fileSelected, setFileSelected] = useState();
   // const [compareValue, setCompareValue] = useState("");
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>();
+  const [selectedLanguages, setSelectedLanguages] = useState<number[]>();
 
   const { id } = useParams();
   const { userStore } = useStore();
@@ -155,7 +155,7 @@ const ProblemForm = () => {
     }
   };
 
-  const handleChangeLanguages = (_name: string, languages: string[]) => {
+  const handleChangeLanguages = (_name: string, languages: number[]) => {
     setSelectedLanguages(languages);
   };
 
@@ -164,8 +164,14 @@ const ProblemForm = () => {
   }, [problem, reset]);
 
   useEffect(() => {
-    setSelectedLanguages(problem?.problemLanguages?.map((p) => p.languageId));
-  }, [problem?.problemLanguages]);
+    if (!isEdit) {
+      setSelectedLanguages([
+        75, 76, 48, 52, 49, 53, 50, 54, 51, 62, 63, 70, 71,
+      ]);
+    } else {
+      setSelectedLanguages(problem?.problemLanguages?.map((p) => p.languageId));
+    }
+  }, [isEdit, problem?.problemLanguages]);
 
   useEffect(() => {
     setParams({ pageSize: -1 });

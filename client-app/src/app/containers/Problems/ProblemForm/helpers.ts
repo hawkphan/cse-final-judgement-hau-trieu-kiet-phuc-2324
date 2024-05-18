@@ -31,7 +31,7 @@ export const mapFormData = (
   fileSelected: any,
   userId: string,
   isEdit: boolean,
-  selectedLanguages: string[]
+  selectedLanguages: number[]
 ) => {
   const formData = new FormData();
 

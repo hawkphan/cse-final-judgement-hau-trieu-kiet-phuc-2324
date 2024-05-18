@@ -32,4 +32,6 @@ export enum API_QUERIES {
   GET_OVERALL_STATISTIC = "/get-overall-statistic",
   GET_SOLLUTIONS_STATISTIC = "/get-solutions-statistic",
   GET_PROBLEMS_STATISTIC = "/get-problems-statistic",
+
+  GET_NOTIFICATIONS = "/get-notifications"
 }

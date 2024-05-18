@@ -67,6 +67,7 @@ namespace Persistence
                         Birthday = new DateTime(2001, 7, 5, 16, 23, 42, DateTimeKind.Utc),
                     },
                     new AppUser{
+                        Rating = 1000,
                         DisplayName = "Phuc Nguyen",
                         UserName = "phuc",
                         Email = "phuc.nguyenmanh@eiu.edu.vn",
