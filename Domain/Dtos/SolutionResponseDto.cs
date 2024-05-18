@@ -13,7 +13,7 @@ namespace Domain
         public Guid UserId { get; set; }
         // public AppUser User { get; set; }
         public Guid ProblemId { get; set; }
-        // public Problem Problem { get; set; }
+        public Guid? ContestId { get; set; }
         public string Source { get; set; } = "Not Available, Probably Deleted or not exist";
         public int LanguageId { get; set; }
         public double Status { get; set; }

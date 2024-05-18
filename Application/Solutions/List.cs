@@ -18,6 +18,7 @@ namespace Application.Solutions
         {
             public Guid? UserId { get; set; }
             public Guid? ProblemId { get; set; }
+            public Guid? ContestId { get; set; }
             public PagingParams Params { get; set; }
         }
 
@@ -36,6 +37,7 @@ namespace Application.Solutions
                 Judge0 judge0 = new Judge0();
                 Guid? problemId = request.ProblemId;
                 Guid? userId = request.UserId;
+                Guid? contestId = request.ContestId;
 
                 var results = _context.Results.Where(r => r.Status == 1 || r.Status == 2).ToList();
 
@@ -112,8 +114,8 @@ namespace Application.Solutions
 
                         double ExpectCompletionRate = 1 / (1 + Math.Pow(10, (problem.Difficulty - user.Rating) / 400));
 
-                        user.Rating = user.Rating + 100 * (solution.Score - ExpectCompletionRate);
-                        problem.Difficulty = problem.Difficulty - 100 * (solution.Score - ExpectCompletionRate);
+                        user.Rating = Math.Round(user.Rating + 100 * (solution.Score - ExpectCompletionRate), 0);
+                        problem.Difficulty = Math.Round(problem.Difficulty - 100 * (solution.Score - ExpectCompletionRate), 0);
 
 
                         await _context.SaveChangesAsync();
@@ -121,7 +123,10 @@ namespace Application.Solutions
                     }
                 }
 
-                var solutions = _context.Solutions.Include(s => s.Results).AsQueryable();
+                var solutions = _context.Solutions
+                                        .Include(s => s.Results)
+                                        .Include(s => s.Contest)
+                                        .AsQueryable();
 
                 foreach (var solution in solutions)
                 {
@@ -156,30 +161,41 @@ namespace Application.Solutions
                 }
 
                 await _context.SaveChangesAsync();
-
-                if (userId != null)
+                if (contestId != null)
                 {
-                    solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);
+                    solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.ContestId == contestId);
+
+                    if (userId != null)
+                    {
+                        solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);
+                    }
                 }
-
-                if (problemId != null)
+                else
                 {
-                    solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.ProblemId == problemId);
+                    if (userId != null)
+                    {
+                        solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);
+                    }
+
+                    if (problemId != null)
+                    {
+                        solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.ProblemId == problemId && s.ContestId == null);
+                    }
                 }
 
                 var queryList = await solutions.ProjectTo<SolutionResponseDto>(_mapper.ConfigurationProvider)
                 .OrderByDescending(s => s.CreatedDate)
                 .ToListAsync(cancellationToken: cancellationToken);
 
-                FileManager fileManager = new FileManager();
+                // FileManager fileManager = new FileManager();
 
-                foreach (var solution in queryList)
-                {
-                    if (Directory.Exists(Path.Combine(fileManager.SolutionsPath, solution.Id.ToString())))
-                    {
-                        solution.Source = fileManager.getSolutionContent(solution.Id.ToString());
-                    }
-                }
+                // foreach (var solution in queryList)
+                // {
+                //     if (Directory.Exists(Path.Combine(fileManager.SolutionsPath, solution.Id.ToString())))
+                //     {
+                //         solution.Source = fileManager.getSolutionContent(solution.Id.ToString());
+                //     }
+                // }
 
                 int PageNumber = (request.Params.PageSize == -1) ? 1 : request.Params.PageNumber;
                 int PageSize = (request.Params.PageSize == -1) ? queryList.Count : request.Params.PageSize;
