@@ -13,6 +13,7 @@ export interface Solution {
 
 export interface CreateSolutionBody {
     userId: string;
+    contestId?: string;
     problemId: string;
     languageId: string;
     solution: string;

@@ -35,6 +35,8 @@ export interface EditContestBody {
 export interface ContestProblem {
   problemId: string;
   score: number;
+  code?: string;
+  title?: string;
 }
 
 export interface ContestMember {
