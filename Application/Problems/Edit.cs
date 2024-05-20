@@ -85,31 +85,48 @@ namespace Application.Problems
                     request.Problem.Difficulty = problem.Difficulty;
 
                     var languageIds = request.AllowedLanguages?.Split(',')?.Select(Int32.Parse)?.ToList();
-                    ProblemLanguage language;
-                    List<ProblemLanguage> problemLanguages = new List<ProblemLanguage>();
 
-                    var languagesToDelete = _context.ProblemLanguages.Where(l => l.ProblemId == request.Problem.Id).ToList();
-                    _context.ProblemLanguages.RemoveRange(languagesToDelete);
-
-                    foreach (int i in languageIds)
+                    if (languageIds != null)
                     {
-                        language = new ProblemLanguage();
-                        language.LanguageId = i;
-                        problemLanguages.Add(language);
+                        var languagesToDelete = _context.ProblemLanguages.Where(l => l.ProblemId == request.Problem.Id).ToList();
+                        _context.ProblemLanguages.RemoveRange(languagesToDelete);
+
+                        List<ProblemLanguage> problemLanguages = new List<ProblemLanguage>();
+                        foreach (int languageId in languageIds)
+                        {
+                            var language = new ProblemLanguage
+                            {
+                                LanguageId = languageId,
+                                ProblemId = problem.Id // Set the relationship
+                            };
+                            problemLanguages.Add(language);
+                        }
+                        problem.ProblemLanguages = problemLanguages;
                     }
-                    request.Problem.ProblemLanguages = problemLanguages;
 
                     _mapper.Map(request.Problem, problem);
-                    await _context.SaveChangesAsync();
 
+                    problem.Code = request.Problem.Code;
+                    problem.Description = request.Problem.Description;
+                    problem.Title = request.Problem.Title;
+                    problem.PrivacyStatus = request.Problem.PrivacyStatus;
+                    problem.MemoryLimit = request.Problem.MemoryLimit;
+                    problem.TimeLimit = request.Problem.TimeLimit;
+
+                    var result = await _context.SaveChangesAsync();
+
+                    if (result == 0)
+                    {
+                        return ApiResult<ProblemDto>.Failure(new string[] { "Failed to Edit" });
+                    }
 
                     var newProblemDto = _mapper.Map<ProblemDto>(request.Problem);
 
                     return ApiResult<ProblemDto>.Success(newProblemDto);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return ApiResult<ProblemDto>.Failure(new string[] { "Failed to Edit" });
+                    return ApiResult<ProblemDto>.Failure(new string[] { ex.Message });
                 }
             }
         }

@@ -11,8 +11,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240515195254_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240520033536_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -271,6 +271,9 @@ namespace Persistence.Migrations
 
                     b.Property<int>("MemoryLimit")
                         .HasColumnType("INTEGER");
+
+                    b.Property<double>("PrivacyStatus")
+                        .HasColumnType("REAL");
 
                     b.Property<int>("TimeLimit")
                         .HasColumnType("INTEGER");

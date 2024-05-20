@@ -42,12 +42,10 @@ namespace Application.Solutions
                 Guid? userId = request.UserId;
                 Guid? contestId = request.ContestId;
 
-                var results = _context.Results.Where(r => r.Status == 1 || r.Status == 2).ToList();
+                var results = _context.Results.Where(r => new List<double>() { 1, 2 }.Contains(r.Status)).ToList();
 
                 foreach (var result in results)
                 {
-                    // update solution result
-
                     string initialResult = await judge0.SendGetRequest($"submissions/{result.Token}");
                     ResultDto resultDto = JsonConvert.DeserializeObject<ResultDto>(initialResult);
 
@@ -68,22 +66,19 @@ namespace Application.Solutions
                         newResult.Error = "None";
                     }
                     _mapper.Map(newResult, result);
-                    await _context.SaveChangesAsync();
-
                 }
-                //check if solution is graded
-                var UnGradeSolution = _context.Solutions.Where(s => s.GradingStatus == 0).Include(s => s.Results).Include(s => s.Problem);
-                foreach (Solution solution in UnGradeSolution)
+                var unGradedSolutions = _context.Solutions.Where(s => s.GradingStatus == 0).Include(s => s.Results).Include(s => s.Problem);
+                foreach (Solution solution in unGradedSolutions)
                 {
                     if (solution.Score == 0)
                     {
-                        Boolean AllGraded = true;
+                        Boolean isAllGraded = true;
                         double score = 0;
                         foreach (var res in solution.Results)
                         {
                             if (res.Status < 3)
                             {
-                                AllGraded = false;
+                                isAllGraded = false;
                                 solution.GradingStatus = 0;
                                 score = 0;
                                 break;
@@ -93,12 +88,12 @@ namespace Application.Solutions
                                 score += 1;
                             }
                         }
-                        if (AllGraded)
+                        if (isAllGraded)
                         {
                             var size = _context.TestCases.Count(t => t.ProblemId.Equals(solution.ProblemId));
                             if (size != 0)
                             {
-                                solution.Score = (double)score / size;
+                                solution.Score = score / size;
                             }
                             else
                             {
@@ -115,10 +110,10 @@ namespace Application.Solutions
 
                         //update elo here
 
-                        double ExpectCompletionRate = 1 / (1 + Math.Pow(10, (problem.Difficulty - user.Rating) / 400));
+                        double ExpectedCompletionRate = 1 / (1 + Math.Pow(10, (problem.Difficulty - user.Rating) / 400));
 
-                        user.Rating = Math.Round(user.Rating + 100 * (solution.Score - ExpectCompletionRate), 0);
-                        problem.Difficulty = Math.Round(problem.Difficulty - 100 * (solution.Score - ExpectCompletionRate), 0);
+                        user.Rating = Math.Round(user.Rating + 100 * (solution.Score - ExpectedCompletionRate), 0);
+                        problem.Difficulty = Math.Round(problem.Difficulty - 100 * (solution.Score - ExpectedCompletionRate), 0);
 
                         var newNotification = new Notification
                         {
@@ -129,10 +124,7 @@ namespace Application.Solutions
                         };
 
                         _context.Notifications.Add(newNotification);
-                        await _hubContext.Clients.All.SendAsync("ReceiveNotification", newNotification);
-
-                        await _context.SaveChangesAsync();
-
+                        // await _hubContext.Clients.All.SendAsync("ReceiveNotification", newNotification);
                     }
                 }
 
@@ -174,26 +166,17 @@ namespace Application.Solutions
                 }
 
                 await _context.SaveChangesAsync();
-                if (contestId != null)
-                {
-                    solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.ContestId == contestId);
 
-                    if (userId != null)
-                    {
-                        solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);
-                    }
+                solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.ContestId == contestId);
+
+                if (userId != null)
+                {
+                    solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);
                 }
-                else
-                {
-                    if (userId != null)
-                    {
-                        solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.UserId == userId);
-                    }
 
-                    if (problemId != null)
-                    {
-                        solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.ProblemId == problemId && s.ContestId == null);
-                    }
+                if (problemId != null)
+                {
+                    solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.ProblemId == problemId);
                 }
 
                 var queryList = await solutions.ProjectTo<SolutionResponseDto>(_mapper.ConfigurationProvider)

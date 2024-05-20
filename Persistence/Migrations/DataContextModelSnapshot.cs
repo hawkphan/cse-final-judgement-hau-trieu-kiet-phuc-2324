@@ -269,6 +269,9 @@ namespace Persistence.Migrations
                     b.Property<int>("MemoryLimit")
                         .HasColumnType("INTEGER");
 
+                    b.Property<double>("PrivacyStatus")
+                        .HasColumnType("REAL");
+
                     b.Property<int>("TimeLimit")
                         .HasColumnType("INTEGER");
 

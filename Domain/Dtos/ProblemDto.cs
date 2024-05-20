@@ -15,6 +15,7 @@ public class ProblemDto
         public string Code { get; set; }
         public string Title { get; set; }
         public double Difficulty { get; set; }
+        public double PrivacyStatus { get; set; }
         public string Description { get; set; }
         public DateTime Date { get; set; }
         public int TimeLimit { get; set; }

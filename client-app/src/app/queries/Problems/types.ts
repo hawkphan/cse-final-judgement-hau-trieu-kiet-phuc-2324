@@ -24,6 +24,7 @@ export interface CreateProblemBody {
   compareMode?: number;
   approximateValue?: number;
   allowedLanguages?: string[];
+  privacyStatus?: number;
 }
 
 export interface EditProblemBody {
@@ -40,6 +41,7 @@ export interface EditProblemBody {
   compareMode?: number;
   approximateValue?: number;
   allowedLanguages?: string[];
+  privacyStatus?: number;
 }
 
 export interface User {

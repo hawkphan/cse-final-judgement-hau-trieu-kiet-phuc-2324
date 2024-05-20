@@ -61,7 +61,6 @@ namespace Application.Problems
                 request.Problem.Date = DateTime.UtcNow;
                 request.Problem.Difficulty = Math.Max(1000, request.Problem.Difficulty);
 
-
                 FileManager fileManager = new FileManager();
                 await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);
                 var testCaseLocation = Path.Combine("Uploads\\TestCases", request.Problem.Code);

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -234,6 +234,7 @@ namespace Persistence.Migrations
                     Code = table.Column<string>(type: "TEXT", nullable: true),
                     Title = table.Column<string>(type: "TEXT", nullable: true),
                     Difficulty = table.Column<double>(type: "REAL", nullable: false),
+                    PrivacyStatus = table.Column<double>(type: "REAL", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MemoryLimit = table.Column<int>(type: "INTEGER", nullable: false),

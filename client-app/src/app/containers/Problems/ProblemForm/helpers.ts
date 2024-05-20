@@ -19,6 +19,7 @@ export enum ProblemProperties {
   COMPARE_MODE = "compareMode",
   APPROXIMATE_VALUE = "approximateValue",
   VALID_LANGUAGES = "allowedLanguages",
+  PRIVACY_STATUS = "privacyStatus",
 }
 
 export enum ValidationMessage {
@@ -34,7 +35,7 @@ export const mapFormData = (
   selectedLanguages: number[]
 ) => {
   const formData = new FormData();
-
+  
   if (isEdit && ProblemProperties.ID in data) {
     formData.append(ProblemProperties.ID, data.id);
   }
@@ -49,6 +50,10 @@ export const mapFormData = (
   formData.append(
     ProblemProperties.VALID_LANGUAGES,
     !isEmpty(selectedLanguages) ? selectedLanguages.join(",") : ""
+  );
+  formData.append(
+    ProblemProperties.PRIVACY_STATUS,
+    data.privacyStatus.toString()
   );
 
   return formData;

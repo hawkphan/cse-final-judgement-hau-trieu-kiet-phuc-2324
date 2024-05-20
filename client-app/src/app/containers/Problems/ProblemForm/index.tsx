@@ -1,10 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, Container, InputLabel, Stack, Typography } from "@mui/material";
+import {
+  Card,
+  Container,
+  FormControlLabel,
+  InputLabel,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { stripHtml } from "string-strip-html";
 import {
   Breadcrumbs,
   Button,
-  Checkbox,
+  Checkbox as CustomCheckbox,
   Form,
   Grid,
   LoadingCommon,
@@ -28,6 +35,7 @@ import {
   useGetLanguages,
 } from "../../../queries";
 import { useStore } from "../../../shared/common/stores/store";
+import Checkbox from "@mui/material/Checkbox";
 import {
   CreateProblemFormSchema,
   EditProblemFormSchema,
@@ -312,12 +320,34 @@ const ProblemForm = () => {
             </Grid.Item>
           </Grid.Wrap>
           <Grid.Wrap style={{ marginBottom: "10px" }}>
+            <Grid.Item xs={12}>
+              <Controller
+                name={ProblemProperties.PRIVACY_STATUS}
+                control={control}
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={field.value === 1}
+                        onChange={(e) =>
+                          field.onChange(e.target.checked ? 1 : 0)
+                        }
+                        title="Private for contests"
+                      />
+                    }
+                    label="Private for Contests (This contest cannot be included in any contests)"
+                  />
+                )}
+              />
+            </Grid.Item>
+          </Grid.Wrap>
+          <Grid.Wrap style={{ marginBottom: "10px" }}>
             <Grid.Item xs={6}>
               <Controller
                 name={ProblemProperties.VALID_LANGUAGES}
                 control={control}
                 render={({ fieldState }) => (
-                  <Checkbox.Group
+                  <CustomCheckbox.Group
                     label="Allowed Languages in Solutions"
                     options={languageOptions}
                     onChange={handleChangeLanguages}
