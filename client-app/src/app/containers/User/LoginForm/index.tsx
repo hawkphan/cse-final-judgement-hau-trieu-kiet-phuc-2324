@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useStore } from "../../../shared/common/stores/store";
 import { PATHS } from "../../../configs/paths";
-import { Link } from "../../../shared";
+import { COLOR_CODE, Link } from "../../../shared";
 import { useEffect, useState } from "react";
 
 function Copyright(props: any) {
@@ -163,7 +163,11 @@ export default function LoginSide() {
               />
               <FormControlLabel
                 control={
-                  <Checkbox checked={rememberMeChecked} color="primary" onChange={onChangeCheckbox} />
+                  <Checkbox
+                    checked={rememberMeChecked}
+                    color="primary"
+                    onChange={onChangeCheckbox}
+                  />
                 }
                 label="Remember me"
               />
@@ -175,7 +179,7 @@ export default function LoginSide() {
               >
                 Log in
               </Button>
-              <Typography component="h1" variant="h5">
+              <Typography component="h6" variant="h6" color={COLOR_CODE.DANGER}>
                 {error}
               </Typography>
               <Grid container>

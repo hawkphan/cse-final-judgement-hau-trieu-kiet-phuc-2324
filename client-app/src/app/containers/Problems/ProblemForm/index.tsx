@@ -117,6 +117,7 @@ const ProblemForm = () => {
           [ProblemProperties.TIME_LIMIT]: 1000,
           [ProblemProperties.MEMORY_LIMIT]: 128000,
           [ProblemProperties.APPROXIMATE_VALUE]: 0,
+          [ProblemProperties.PRIVACY_STATUS]: 0,
         },
     mode: "onChange",
     shouldFocusError: true,
