@@ -37,13 +37,9 @@ namespace Application.Solutions
                 .Where(tc => tc.ProblemId == request.SolutionRequestDto.ProblemId)
                 .ToList();
 
-
-
                 var requestContent = JsonConvert.SerializeObject(request.SolutionRequestDto);
                 // write into json file for easy test with postman
                 _fileManager.WriteAndSaveSolutions(requestContent, solution.Id.ToString(), "request.json.txt");
-
-
 
                 foreach (TestCase testCase in testCases)
                 {
@@ -62,13 +58,17 @@ namespace Application.Solutions
                 Judge0ResultDto requestDto;
                 foreach (TestCase testCase in testCases)
                 {
+                    result = new Result();
+                    String Input = _fileManager.getTestCaseContent(testCase.Input);
+                    String ExpectedOutput = _fileManager.getTestCaseContent(testCase.Output);
+
                     // memory relating is kilobytes
                     requestDto = new Judge0ResultDto
                     {
                         Content = request.SolutionRequestDto.Solution,
                         LanguageId = request.SolutionRequestDto.LanguageId,
                         Input = _fileManager.getTestCaseContent(testCase.Input),
-                        ExpectedOutput = _fileManager.getTestCaseContent(testCase.Output),
+                        ExpectedOutput = null,
 
                         TimeLimit = Math.Min(problem.TimeLimit, 15),
                         ExtraTime = (float)0.5,

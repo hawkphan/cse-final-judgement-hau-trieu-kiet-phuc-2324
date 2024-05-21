@@ -20,10 +20,11 @@ public class Problem
     public int TimeLimit { get; set; }
     //0 is without space
     public int GradeMode { get; set; }
-
+    public double ApproximateRate { get; set; }
     public ICollection<TestCase> TestCases { get; set; }
     public ICollection<Result> Results { get; set; }
     public ICollection<Solution> Solutions { get; set; }
     public ICollection<ProblemLanguage> ProblemLanguages { get; set; }
     public ICollection<ContestProblem> ProblemContests { get; set; }
+
 }

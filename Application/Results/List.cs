@@ -35,34 +35,6 @@ namespace Application.Results
 
                 query = query.OrderBy(r => int.Parse(r.TestCase.Name)).ToList();
 
-                var notCompletedResults = query.Where(r => r.Status == 1 || r.Status == 2).ToList();
-
-                foreach (var result in notCompletedResults)
-                {
-                    string initialResult = await judge0.SendGetRequest($"submissions/{result.Token}");
-                    ResultDto resultDto = JsonConvert.DeserializeObject<ResultDto>(initialResult);
-                    var newResult = _mapper.Map<Result>(resultDto);
-
-                    newResult.Id = result.Id;
-                    newResult.TestCaseId = result.TestCaseId;
-                    newResult.SolutionId = result.SolutionId;
-
-                    if (resultDto.Stderr != null)
-                    {
-                        newResult.Error = resultDto.Stderr;
-                    }
-                    else if (resultDto.CompileOutput != null)
-                    {
-                        newResult.Error = resultDto.CompileOutput;
-                    }
-                    else
-                    {
-                        newResult.Error = "None";
-                    }
-                    _mapper.Map(newResult, result);
-                    await _context.SaveChangesAsync();
-                }
-
                 int PageNumber = (request.Params.PageNumber == -1) ? 1 : request.Params.PageNumber;
                 int PageSize = (request.Params.PageNumber == -1) ? query.Count : request.Params.PageSize;
 
