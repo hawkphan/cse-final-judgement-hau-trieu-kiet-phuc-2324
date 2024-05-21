@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Application.Activities;
 using Application.Core;
 using Application.Interfaces;
@@ -41,8 +42,11 @@ namespace Application.Solutions
                 Guid? problemId = request.ProblemId;
                 Guid? userId = request.UserId;
                 Guid? contestId = request.ContestId;
+                FileManager _fileManager = new FileManager();
 
-                var results = _context.Results.Where(r => new List<double>() { 1, 2 }.Contains(r.Status)).ToList();
+                // var results = _context.Results.Where(r => r.Status == 1 || r.Status == 2).Include(r => r.TestCase).Include(r => r.Solution).ThenInclude(s => s.Problem).ToList();
+
+                var results = _context.Results.Where(r => new List<double>() { 1, 2 }.Contains(r.Status)).Include(r => r.TestCase).Include(r => r.Solution).ThenInclude(s => s.Problem).ToList();
 
                 foreach (var result in results)
                 {
@@ -53,6 +57,7 @@ namespace Application.Solutions
                     newResult.Id = result.Id;
                     newResult.TestCaseId = result.TestCaseId;
                     newResult.SolutionId = result.SolutionId;
+
                     if (resultDto.Stderr != null)
                     {
                         newResult.Error = resultDto.Stderr;
@@ -65,7 +70,26 @@ namespace Application.Solutions
                     {
                         newResult.Error = "None";
                     }
+
+                    if (resultDto.Stdout != null && resultDto.Stdout.Length > 0)
+                    {
+                        String ExpectedOutput = _fileManager.getTestCaseContent(result.TestCase.Output);
+                        if (!Grade(result.Solution.Problem.GradeMode, ExpectedOutput, resultDto.Stdout, result.Solution.Problem.ApproximateRate))
+                        {
+                            newResult.Status = 4;
+                            newResult.StatusMessage = "Wrong Answer!";
+                        }
+                        else
+                        {
+                            newResult.Status = 3;
+                            newResult.StatusMessage = "Accepted";
+                        }
+                    }
+
                     _mapper.Map(newResult, result);
+                    _context.Entry(result).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+
                 }
                 var unGradedSolutions = _context.Solutions.Where(s => s.GradingStatus == 0).Include(s => s.Results).Include(s => s.Problem);
                 foreach (Solution solution in unGradedSolutions)
@@ -200,6 +224,96 @@ namespace Application.Solutions
                     .Success(PagedList<SolutionResponseDto>.CreateAsyncUsingList(queryList,
                         PageNumber, PageSize));
             }
+            public static bool Grade(int mode, string expectedOutput, string submittedOutput, double ApproximateRate)
+            {
+                switch (mode)
+                {
+                    //to be working on approximately
+                    case 0:
+                        return ApproximateComparison(expectedOutput, expectedOutput, ApproximateRate);
+                    case 1:
+                    //absolute
+                        return AbsoluteComparison(expectedOutput, submittedOutput);
+                    case 2:
+                    //without space
+                        return AbsoluteComparisonWithoutSpace(expectedOutput, submittedOutput);
+                    default:
+                        return AbsoluteComparison(expectedOutput, submittedOutput);
+
+                }
+            }
+            public static bool AbsoluteComparison(string expectedOutput, string submittedOutput)
+            {
+                string[] file1 = expectedOutput.Split("\n");
+                string[] file2 = submittedOutput.Split("\n");
+                if (file1.Length != file2.Length)
+                    return false;
+                int count = file1.Length;
+                for (int i = 0; i < count; i++)
+                {
+                    if (!file1[i].Equals(file2[i]))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            public static bool AbsoluteComparisonWithoutSpace(string expectedOutput, string submittedOutput)
+            {
+                string[] whitespaceChars = new string[] { Environment.NewLine, " ", "\n", "\r", "\t", "\r\n" };
+                // using the method 
+                String[] file1 = expectedOutput.Split(whitespaceChars, StringSplitOptions.RemoveEmptyEntries);
+                String[] file2 = submittedOutput.Split(whitespaceChars, StringSplitOptions.RemoveEmptyEntries);
+                if (file1.Length != file2.Length)
+                    return false;
+                for (int i = 0; i < file1.Length; i++)
+                {
+                    if (!file1[i].Equals(file2[i]))
+                        return false;
+                }
+                return true;
+            }
+            public static bool ApproximateComparison(string expectedOutput, string submittedOutput, double check)
+            {
+
+                string[] file1 = expectedOutput.Split("\n");
+                string[] file2 = submittedOutput.Split("\n");
+                if (file1.Length != file2.Length)
+                    return false;
+
+                for (int i = 0; i < file1.Length; i++)
+                {
+                    string[] lineSplit1 = file1[i].Split(' ');
+                    string[] lineSplit2 = file2[i].Split(' ');
+                    if (lineSplit1.Length != lineSplit2.Length)
+                        return false;
+                    for (int j = 0; j < lineSplit1.Length; j++)
+                    {
+                        string s1 = lineSplit1[j];
+                        string s2 = lineSplit2[j];
+
+                        if (checkDigit(s1) && checkDigit(s2) && !s1.StartsWith(".") && !s2.StartsWith("."))
+                        {
+
+                            if (Math.Abs(Double.Parse(s1) - Double.Parse(s2)) > check)
+                            {
+                                return false;
+                            }
+                        }
+                        else if (!s1.Equals(s2))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            private static Boolean checkDigit(String s)
+            {
+                return (Double.TryParse(s, out double result));
+            }
+
+
         }
     }
 }
