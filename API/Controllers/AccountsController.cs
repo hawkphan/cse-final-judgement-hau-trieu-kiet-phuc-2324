@@ -64,6 +64,8 @@ namespace API.Controllers
                 DisplayName = registerDto.DisplayName,
                 Email = registerDto.Email,
                 UserName = registerDto.UserName,
+                FirstName = registerDto.FirstName,
+                LastName = registerDto.LastName,
                 Rating = 1000,
             };
 

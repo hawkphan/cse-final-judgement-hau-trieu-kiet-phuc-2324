@@ -10,6 +10,7 @@ export interface Problem {
   userId?: string;
   testCasesFiles?: any;
   problemLanguages?: any;
+  privacyStatus?: number;
 }
 
 export interface CreateProblemBody {

@@ -11,5 +11,6 @@ namespace Domain.Dtos
         public Guid ContestId { get; set; }
         public Guid ProblemId { get; set; }
         public double Score { get; set; }
+        public int Order { get; set; }
     }
 }

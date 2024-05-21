@@ -38,6 +38,8 @@ import {
   ContestProperties,
   CreateContestFormSchema,
   EditContestFormSchema,
+  compareOrder,
+  compareRole,
   contestRuleOptions,
   contestTypeOptions,
   toBreadCrumbs,
@@ -46,6 +48,7 @@ import { DateTimePicker } from "@mui/x-date-pickers";
 import { allColumnsMember } from "./allColumnsMember";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useStore } from "../../../../shared/common/stores/store";
+import { MRT_Row } from "material-react-table";
 
 const ContestForm = () => {
   const { id } = useParams();
@@ -147,10 +150,16 @@ const ContestForm = () => {
       return;
     }
 
-    setProblemSet([
+    const clonedSet = [
       ...problemSet,
       { problemId: problemIdToAdd, score: problemScoreToAdd },
-    ]);
+    ];
+
+    for (let i = 0; i < clonedSet.length; i++) {
+      clonedSet[i].order = i + 1;
+    }
+
+    setProblemSet(clonedSet);
     setProblemIdToAdd("");
   };
 
@@ -373,7 +382,7 @@ const ContestForm = () => {
           </Typography>
           <Table2<ContestProblem>
             columns={columns}
-            data={problemSet}
+            data={!isEmpty(problemSet) ? problemSet.sort(compareOrder) : []}
             enableTopToolbar={true}
             recordName="items"
             enablePagination={false}
@@ -387,6 +396,28 @@ const ContestForm = () => {
             state={{
               isLoading: isFetching,
             }}
+            autoResetPageIndex={false}
+            enableRowOrdering={true}
+            muiRowDragHandleProps={({ table }) => ({
+              onDragEnd: () => {
+                const { draggingRow, hoveredRow } = table.getState();
+                if (hoveredRow && draggingRow) {
+                  problemSet.splice(
+                    (hoveredRow as MRT_Row<ContestProblem>).index,
+                    0,
+                    problemSet.splice(draggingRow.index, 1)[0]
+                  );
+
+                  const clonedSet = [...problemSet];
+
+                  for (let i = 0; i < clonedSet.length; i++) {
+                    clonedSet[i].order = i + 1;
+                  }
+
+                  setProblemSet(clonedSet);
+                }
+              },
+            })}
             renderTopToolbarCustomActions={() => (
               <Stack direction="row" spacing={1} my={0.5} width="100%">
                 <Grid.Wrap>
@@ -445,7 +476,7 @@ const ContestForm = () => {
           </Typography>
           <Table2<ContestMember>
             columns={columnsMember}
-            data={userSet}
+            data={!isEmpty(userSet) ? userSet.sort(compareRole) : []}
             enableTopToolbar={true}
             recordName="items"
             enablePagination={false}

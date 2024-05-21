@@ -15,7 +15,10 @@ import { stringify } from "../../shared";
 const getProfiles = (params: GetPropertiesParams) => {
   const queryString = stringify(params);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return axios.get<Profile<any>[]>(`${API_URL}/api/profiles?${queryString}`, {});
+  return axios.get<Profile<any>[]>(
+    `${API_URL}/api/profiles?${queryString}`,
+    {}
+  );
 };
 
 const editProfile = (body: EditProfileBody) => {
@@ -48,12 +51,13 @@ const getProblemStatisticById = (params: { id: string }) => {
   );
 };
 
-const getRankings = () => {
+const getRankings = (params: GetPropertiesParams) => {
+  const queryString = stringify(params);
   return axios.get<Ranking[]>(
-    `${API_URL}/api/profiles/ranking`,
+    `${API_URL}/api/profiles/ranking?${queryString}`,
     {}
   );
-}
+};
 export {
   getProfiles,
   getProfileById,
@@ -61,5 +65,5 @@ export {
   getLanguagesUsageById,
   getAnnualSubmissionById,
   getProblemStatisticById,
-  getRankings
+  getRankings,
 };

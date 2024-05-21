@@ -47,7 +47,7 @@ export const allColumns = (): MRT_ColumnDef<MySubmissionsRecord>[] => {
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 20,
-      Cell: ({ cell }) => cell.getValue<string>() + " MB",
+      Cell: ({ cell }) => cell.getValue<string>() + " KB",
     },
     {
       accessorKey: "languageName",

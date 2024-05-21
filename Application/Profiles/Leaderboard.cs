@@ -48,7 +48,7 @@ namespace Application.Profiles
                         currentRank = i + 1;
                         previousElo = users[i].Elo;
                     }
-
+                    users[i].Id = users[i].Id.ToLower();
                     users[i].Rank = currentRank;
                 }
 

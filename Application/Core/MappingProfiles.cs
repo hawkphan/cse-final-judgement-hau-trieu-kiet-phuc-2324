@@ -73,7 +73,8 @@ namespace Application.Core
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.ContestId, o => o.MapFrom(s => s.ContestId))
             .ForMember(d => d.ProblemId, o => o.MapFrom(s => s.ProblemId))
-            .ForMember(d => d.Score, o => o.MapFrom(s => s.Score));
+            .ForMember(d => d.Score, o => o.MapFrom(s => s.Score))
+            .ForMember(d => d.Order, o => o.MapFrom(s => s.Order));
 
             CreateMap<Domain.Contest, ContestDto>()
               .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
@@ -96,7 +97,8 @@ namespace Application.Core
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.ContestId, o => o.MapFrom(s => s.ContestId))
             .ForMember(d => d.ProblemId, o => o.MapFrom(s => s.ProblemId))
-            .ForMember(d => d.Score, o => o.MapFrom(s => s.Score));
+            .ForMember(d => d.Score, o => o.MapFrom(s => s.Score))
+            .ForMember(d => d.Order, o => o.MapFrom(s => s.Order));
 
         }
     }

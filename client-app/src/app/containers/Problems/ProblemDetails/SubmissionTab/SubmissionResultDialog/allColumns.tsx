@@ -45,7 +45,7 @@ export const allColumns = (): MRT_ColumnDef<Result>[] => {
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 20,
-      Cell: ({ cell }) => cell.getValue<string>() + " MB",
+      Cell: ({ cell }) => cell.getValue<string>() + " KB",
     },
   ];
 };

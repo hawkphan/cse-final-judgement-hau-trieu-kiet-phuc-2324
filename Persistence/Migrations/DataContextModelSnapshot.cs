@@ -197,6 +197,9 @@ namespace Persistence.Migrations
                     b.Property<Guid>("ContestId")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Order")
+                        .HasColumnType("INTEGER");
+
                     b.Property<Guid>("ProblemId")
                         .HasColumnType("TEXT");
 

@@ -17,6 +17,14 @@ export const allColumns = ({
 }: Props): MRT_ColumnDef<ContestProblem>[] => {
   return [
     {
+      accessorKey: "order",
+      header: "Order",
+      enableColumnFilterModes: false,
+      enableSorting: false,
+      size: 114,
+      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+    },
+    {
       accessorKey: "problemId",
       header: "Problem",
       enableColumnFilterModes: false,

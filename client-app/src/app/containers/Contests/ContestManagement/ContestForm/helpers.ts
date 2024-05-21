@@ -1,4 +1,5 @@
 import { PATHS } from "../../../../configs/paths";
+import { ContestMember, ContestProblem } from "../../../../queries";
 import { Yup } from "../../../../shared";
 import { SelectOption } from "../../../../shared/components/common/MuiAutoComplete";
 
@@ -65,3 +66,17 @@ export const EditContestFormSchema = Yup.object().shape({
   [ContestProperties.TYPE]: Yup.string().required(),
   [ContestProperties.RULE]: Yup.string().required(),
 });
+
+export const compareOrder = (a: ContestProblem, b: ContestProblem) => {
+  if (a.order > b.order) return 1;
+  if (b.order > a.order) return -1;
+
+  return 0;
+};
+
+export const compareRole = (a: ContestMember, b: ContestMember) => {
+  if (a.role > b.role) return 1;
+  if (b.role > a.role) return -1;
+
+  return 0;
+};

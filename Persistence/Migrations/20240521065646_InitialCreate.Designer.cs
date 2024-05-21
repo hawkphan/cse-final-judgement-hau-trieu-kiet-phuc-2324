@@ -11,7 +11,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240520033536_InitialCreate")]
+    [Migration("20240521065646_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -199,6 +199,9 @@ namespace Persistence.Migrations
 
                     b.Property<Guid>("ContestId")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("ProblemId")
                         .HasColumnType("TEXT");

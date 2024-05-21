@@ -285,7 +285,8 @@ namespace Persistence.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     ContestId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ProblemId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Score = table.Column<double>(type: "REAL", nullable: false)
+                    Score = table.Column<double>(type: "REAL", nullable: false),
+                    Order = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

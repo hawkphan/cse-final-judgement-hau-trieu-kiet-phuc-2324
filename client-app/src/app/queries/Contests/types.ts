@@ -37,6 +37,7 @@ export interface ContestProblem {
   score: number;
   code?: string;
   title?: string;
+  order?: number;
 }
 
 export interface ContestMember {

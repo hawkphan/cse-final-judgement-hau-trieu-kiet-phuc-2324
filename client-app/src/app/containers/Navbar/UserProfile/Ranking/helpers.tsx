@@ -22,6 +22,12 @@ export const toBreadCrumbs = (id: string) => {
 export const allColumns = (): MRT_ColumnDef<Ranking>[] => {
   return [
     {
+      accessorKey: "id",
+      header: "id",
+      enableColumnFilterModes: false,
+      enableSorting: true,
+    },
+    {
       accessorKey: "rank",
       header: "Rank",
       enableColumnFilterModes: false,

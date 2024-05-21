@@ -35,7 +35,7 @@ export const mapFormData = (
   selectedLanguages: number[]
 ) => {
   const formData = new FormData();
-  
+
   if (isEdit && ProblemProperties.ID in data) {
     formData.append(ProblemProperties.ID, data.id);
   }

@@ -1,48 +1,96 @@
 import { Container, Grid } from "@mui/material";
-import { Breadcrumbs, EmptyTable, Table2 } from "../../../../shared";
+import {
+  Breadcrumbs,
+  EmptyTable,
+  LoadingCommon,
+  Table2,
+} from "../../../../shared";
 import { allColumns, toBreadCrumbs } from "./helpers";
 import { useStore } from "../../../../shared/common/stores/store";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Ranking } from "../../../../queries";
 import { useGetRankings } from "../../../../queries/Profiles/useGetRankings";
 import { useNavigate } from "react-router-dom";
 import { PATHS } from "../../../../configs/paths";
 
 export default function RankingPage() {
-  const { userStore } = useStore();
   const navigate = useNavigate();
-  const id = useMemo(() => {
-    return userStore?.user?.id;
-  }, [userStore.user]);
 
-  const { rankings, totalCount, isFetching } = useGetRankings();
+  const {
+    rankings,
+    totalRecords,
+    isFetching,
+    setParams,
+    handleInvalidateRankings,
+  } = useGetRankings();
+
+  const { userStore } = useStore();
 
   const handleNavigateToDetail = (id: string) => {
     navigate(PATHS.profile.replace(":id", id));
   };
 
-  const columns = useMemo(() => allColumns(), [id]);
+  const handleGetRanking = () => {
+    setParams({ pageSize: -1 });
+  };
+
+  const isUserInRankings = rankings.some(
+    (ranking) => ranking.id === userStore?.user?.id
+  );
+
+  useEffect(() => {
+    handleInvalidateRankings();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const columns = useMemo(() => allColumns(), []);
+
+  if (isFetching) {
+    return <LoadingCommon />;
+  }
 
   return (
-    <Grid container justifyContent={"center"} sx={{ marginTop: "60px" }}>
+    <Grid container justifyContent={"center"}>
       <Grid item xs={12}>
         <Container maxWidth="xl">
-          <Breadcrumbs items={toBreadCrumbs(id)} />
+          <Breadcrumbs items={toBreadCrumbs(userStore?.user?.id)} />
           <Table2<Ranking>
-            rowCount={totalCount}
+            rowCount={totalRecords}
             columns={columns}
             data={rankings}
             enableRowNumbers={false}
             enableTopToolbar={false}
+            enablePagination={false}
+            keepPinnedRows={true}
+            getRowId={(row) => row.id}
+            isLoading={isFetching}
+            rowPinningDisplayMode="top-and-bottom"
+            initialState={{
+              columnVisibility: {
+                id: false,
+              },
+              rowPinning: {
+                top: isUserInRankings ? [userStore?.user?.id] : [],
+                bottom: [],
+              },
+            }}
             recordName="items"
+            onAction={handleGetRanking}
             singularRecordName="item"
             enableDensityToggle={false}
             enableColumnOrdering={false}
+            enableRowPinning={true}
+            enableStickyHeader={true}
             enableRowActions
             paginationDisplayMode="pages"
             isColumnPinning={false}
             nameColumnPinning="actions"
             enableSorting={false}
+            muiTableContainerProps={{
+              sx: {
+                maxHeight: "800px",
+              },
+            }}
             state={{
               isLoading: isFetching,
             }}

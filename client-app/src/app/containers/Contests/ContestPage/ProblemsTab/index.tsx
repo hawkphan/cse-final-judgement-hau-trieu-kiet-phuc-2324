@@ -2,7 +2,11 @@ import { Box, CardContent, Typography } from "@mui/material";
 import parse from "html-react-parser";
 import "./styles.scss";
 import { API_QUERIES, useGetProblemById } from "../../../../queries";
-import { Accordion, formatDateOrNull, Text } from "../../../../shared";
+import {
+  Accordion,
+  formatDateOrNull,
+  Text,
+} from "../../../../shared";
 import { renderDifficultyTag } from "../../../Problems/helpers";
 import { ProblemDetailProp, ProblemTabProp } from "../helpers";
 import { useEffect } from "react";
@@ -12,7 +16,7 @@ const ProblemDetail = ({
   onSetProblem,
   problemList,
 }: ProblemDetailProp) => {
-  const { problem } = useGetProblemById({
+  const { problem, isFetching } = useGetProblemById({
     id: id,
     queryKey: [API_QUERIES.GET_PROBLEM_BY_ID, { id: id }],
   });
@@ -23,7 +27,11 @@ const ProblemDetail = ({
         onSetProblem(problem);
       }
     }
-  }, [problem]);
+  }, [onSetProblem, problem, problemList]);
+
+  if (isFetching) {
+    return <></>;
+  }
 
   return (
     <Accordion

@@ -54,7 +54,8 @@ export default function SignUp() {
     const lastName = data.get(SignUpFormKey.LAST_NAME) as string;
     const firstName = data.get(SignUpFormKey.FIRST_NAME) as string;
     const userName = data.get(SignUpFormKey.USER_NAME) as string;
-    
+    const displayName = data.get(SignUpFormKey.DISPLAY_NAME) as string;
+
     try {
       await userStore.register({
         email,
@@ -62,6 +63,7 @@ export default function SignUp() {
         firstName,
         lastName,
         userName,
+        displayName,
       });
     } catch (error) {
       console.log(error);

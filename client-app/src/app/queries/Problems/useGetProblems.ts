@@ -48,7 +48,7 @@ export function useGetProblems(
 
   const { data: problems = [], pageSize, totalCount, succeeded } = data || {};
 
-  const selectOptions: SelectOption[] = problems.map((item) => ({
+  const selectOptions: SelectOption[] = problems.filter(r => r.privacyStatus === 0).map((item) => ({
     label: `${item.code} - ${item.title}`,
     value: `${item.id}`,
   }));

@@ -1,48 +1,64 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-debugger */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { UseQueryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
-import {  Ranking } from "./types";
-import { API_QUERIES } from "../common/constants";
+import {
+  UseQueryOptions,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { useState } from "react";
+import {
+  PaginationResponseNetType,
+  isEmpty,
+  responseWrapper,
+} from "../../shared";
+import { API_QUERIES, Table2Params } from "../common";
 import { getRankings } from "./apis";
-import { responseWrapper } from "../common";
-import { ApiResponseType } from "../../shared";
+import { Ranking } from "./types";
 
 export function useGetRankings(
-  options?: UseQueryOptions<ApiResponseType<Ranking[]>, Error, any> & {
-    id?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  options?: UseQueryOptions<PaginationResponseNetType<Ranking>, Error> & {
+    [key: string]: string | number | string[] | boolean;
   }
 ) {
+  const [params, setParams] = useState<Table2Params>({});
   const {
-    data,
     error,
-    isError,
+    data,
     isFetching,
     refetch: onGetRankings,
-  } = useQuery<ApiResponseType<Ranking[]>, Error, any>({
-    queryKey: [API_QUERIES.GET_RANKING, { id: options?.id }],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } = useQuery<PaginationResponseNetType<Ranking>, Error>({
+    queryKey: [API_QUERIES.GET_RANKING, params],
     queryFn: (query) => {
-      const [_, ...params] = query.queryKey;
-      return responseWrapper<ApiResponseType<Ranking[]>>(getRankings, params);
+      const [, ...params] = query.queryKey;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return responseWrapper<PaginationResponseNetType<Ranking>>(
+        getRankings,
+        params
+      );
     },
-    enabled: true,
+
+    notifyOnChangeProps: ["data", "isFetching"],
+    enabled: !isEmpty(params),
     ...options,
   });
 
   const queryClient = useQueryClient();
 
   const handleInvalidateRankings = () =>
-    queryClient.invalidateQueries({queryKey: [API_QUERIES.GET_RANKING]});
+    queryClient.invalidateQueries({ queryKey: [API_QUERIES.GET_RANKING] });
 
-  const {data: rankings = [],totalCount} = data || [];
+  const { data: rankings = [], pageSize, totalCount, succeeded } = data || {};
 
   return {
     rankings,
+    payloadSize: pageSize,
+    totalRecords: totalCount,
     error,
-    isError,
-    totalCount,
     isFetching,
+    succeeded,
+    params,
     onGetRankings,
+    setParams,
     handleInvalidateRankings,
   };
 }

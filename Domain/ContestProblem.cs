@@ -15,5 +15,6 @@ namespace Domain
         public Guid ProblemId { get; set; }
         public Problem Problem { get; set; }
         public double Score { get; set; }
+        public int Order { get; set; }
     }
 }
