@@ -239,7 +239,8 @@ namespace Persistence.Migrations
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MemoryLimit = table.Column<int>(type: "INTEGER", nullable: false),
                     TimeLimit = table.Column<int>(type: "INTEGER", nullable: false),
-                    GradeMode = table.Column<int>(type: "INTEGER", nullable: false)
+                    GradeMode = table.Column<int>(type: "INTEGER", nullable: false),
+                    ApproximateRate = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {

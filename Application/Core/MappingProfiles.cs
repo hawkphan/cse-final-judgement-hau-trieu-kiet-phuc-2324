@@ -15,18 +15,20 @@ namespace Application.Core
             CreateMap<SolutionRequestDto, Solution>()
                 .ForMember(d => d.LanguageId, o => o.MapFrom(s => s.LanguageId))
                 .ForMember(d => d.ProblemId, o => o.MapFrom(s => s.ProblemId))
-                .ForMember(d => d.ContestId, o => o.MapFrom(s => s.ContestId))
-
-            ;
+                .ForMember(d => d.ContestId, o => o.MapFrom(s => s.ContestId));
             CreateMap<Solution, SolutionResponseDto>()
             .ForMember(d => d.Status, o => o.MapFrom(s => s.Status));
 
             CreateMap<Problem, ProblemDto>()
                 .ForMember(d => d.ProblemLanguages, o => o.MapFrom(s => s.ProblemLanguages))
-                .ForMember(d => d.PrivacyStatus, o => o.MapFrom(s => s.PrivacyStatus));
+                .ForMember(d => d.PrivacyStatus, o => o.MapFrom(s => s.PrivacyStatus))
+                .ForMember(d => d.GradeMode, o => o.MapFrom(s => s.GradeMode))
+                .ForMember(d => d.ApproximateRate, o => o.MapFrom(s => s.ApproximateRate));
             CreateMap<ProblemDto, Problem>()
                 .ForMember(d => d.ProblemLanguages, o => o.MapFrom(s => s.ProblemLanguages))
-                .ForMember(d => d.PrivacyStatus, o => o.MapFrom(s => s.PrivacyStatus));
+                .ForMember(d => d.PrivacyStatus, o => o.MapFrom(s => s.PrivacyStatus))
+                .ForMember(d => d.GradeMode, o => o.MapFrom(s => s.GradeMode))
+                .ForMember(d => d.ApproximateRate, o => o.MapFrom(s => s.ApproximateRate));
             CreateMap<ProblemLanguage, ProblemLanguageDto>()
                 .ForMember(d => d.LanguageId, o => o.MapFrom(s => s.LanguageId));
             CreateMap<ResultDto, Result>()

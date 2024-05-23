@@ -11,7 +11,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240521065646_InitialCreate")]
+    [Migration("20240522014453_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -256,6 +256,9 @@ namespace Persistence.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("ApproximateRate")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("Code")
                         .HasColumnType("TEXT");

@@ -11,6 +11,8 @@ export interface Problem {
   testCasesFiles?: any;
   problemLanguages?: any;
   privacyStatus?: number;
+  gradeMode: string;
+  approximateRate: number;
 }
 
 export interface CreateProblemBody {
@@ -22,8 +24,8 @@ export interface CreateProblemBody {
   description?: string;
   timeLimit?: number;
   memoryLimit?: number;
-  compareMode?: number;
-  approximateValue?: number;
+  gradeMode?: string;
+  approximateRate?: number;
   allowedLanguages?: string[];
   privacyStatus?: number;
 }
@@ -39,8 +41,8 @@ export interface EditProblemBody {
   description?: string;
   timeLimit?: number;
   memoryLimit?: number;
-  compareMode?: number;
-  approximateValue?: number;
+  gradeMode?: string;
+  approximateRate?: number;
   allowedLanguages?: string[];
   privacyStatus?: number;
 }

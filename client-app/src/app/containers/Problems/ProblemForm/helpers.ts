@@ -16,8 +16,8 @@ export enum ProblemProperties {
   USER_ID = "userId",
   TEST_CASES_FILE = "file",
   MEMORY_LIMIT = "memoryLimit",
-  COMPARE_MODE = "compareMode",
-  APPROXIMATE_VALUE = "approximateValue",
+  COMPARE_MODE = "gradeMode",
+  APPROXIMATE_VALUE = "approximateRate",
   VALID_LANGUAGES = "allowedLanguages",
   PRIVACY_STATUS = "privacyStatus",
 }
@@ -47,6 +47,11 @@ export const mapFormData = (
   formData.append(ProblemProperties.TIME_LIMIT, data.timeLimit.toString());
   formData.append(ProblemProperties.MEMORY_LIMIT, data.memoryLimit.toString());
   formData.append(ProblemProperties.USER_ID, userId);
+  formData.append(ProblemProperties.COMPARE_MODE, data.gradeMode.toString());
+  formData.append(
+    ProblemProperties.APPROXIMATE_VALUE,
+    data.approximateRate.toString()
+  );
   formData.append(
     ProblemProperties.VALID_LANGUAGES,
     !isEmpty(selectedLanguages) ? selectedLanguages.join(",") : ""

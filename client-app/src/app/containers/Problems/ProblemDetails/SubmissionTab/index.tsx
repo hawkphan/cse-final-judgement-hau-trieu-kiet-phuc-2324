@@ -43,8 +43,8 @@ const SubmissionTab = ({
   );
 
   useEffect(() => {
-    const hasPendingStatus = solutions.some(
-      (solution) => solution.status === 1 || solution.status === 2
+    const hasPendingStatus = solutions.some((solution) =>
+      [0, 1, 2].includes(solution.status)
     );
     const timerId = setTimeout(() => {
       if (hasPendingStatus && !isFetching) {
@@ -93,7 +93,7 @@ const SubmissionTab = ({
           isLoading={isFetching}
           muiTableBodyRowProps={({ row }) => ({
             onClick: () => {
-              if (![1, 2].includes(row.original.status)) {
+              if (![0, 1, 2].includes(row.original.status)) {
                 setSelectedSolutionId(row.original.id);
                 setIsOpen(true);
               }

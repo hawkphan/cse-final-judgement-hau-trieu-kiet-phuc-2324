@@ -37,11 +37,6 @@ namespace Application.Core
 
             return responseContent;
         }
-        //         options={[
-        //   { label: "Approximate", value: "0" },
-        //   { label: "Absolute", value: "1" },
-        //   { label: "Without Space", value: "2" },
-        // ]}
         public static bool Grade(int mode, string expectedOutput, string submittedOutput, double ApproximateRate)
         {
             switch (mode)

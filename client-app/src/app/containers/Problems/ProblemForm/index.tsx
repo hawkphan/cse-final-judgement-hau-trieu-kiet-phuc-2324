@@ -4,6 +4,8 @@ import {
   Container,
   FormControlLabel,
   InputLabel,
+  MenuItem,
+  Select,
   Stack,
   Typography,
 } from "@mui/material";
@@ -16,8 +18,10 @@ import {
   Grid,
   LoadingCommon,
   MuiInput,
+  MuiSelect,
   PermissionRestrict,
   Toastify,
+  View,
   isEmpty,
 } from "../../../shared";
 import { Controller, useForm } from "react-hook-form";
@@ -49,7 +53,7 @@ import WYSIWYGEditor from "../../../shared/components/common/RichTextEditor";
 
 const ProblemForm = () => {
   const [fileSelected, setFileSelected] = useState();
-  // const [compareValue, setCompareValue] = useState("");
+  const [compareValue, setCompareValue] = useState("");
   const [selectedLanguages, setSelectedLanguages] = useState<number[]>();
 
   const { id } = useParams();
@@ -118,6 +122,7 @@ const ProblemForm = () => {
           [ProblemProperties.MEMORY_LIMIT]: 128000,
           [ProblemProperties.APPROXIMATE_VALUE]: 0,
           [ProblemProperties.PRIVACY_STATUS]: 0,
+          [ProblemProperties.COMPARE_MODE]: "2",
         },
     mode: "onChange",
     shouldFocusError: true,
@@ -179,8 +184,9 @@ const ProblemForm = () => {
       ]);
     } else {
       setSelectedLanguages(problem?.problemLanguages?.map((p) => p.languageId));
+      setCompareValue(problem?.gradeMode + "");
     }
-  }, [isEdit, problem?.problemLanguages]);
+  }, [isEdit, problem?.gradeMode, problem?.problemLanguages]);
 
   useEffect(() => {
     setParams({ pageSize: -1 });
@@ -360,7 +366,7 @@ const ProblemForm = () => {
               />
             </Grid.Item>
           </Grid.Wrap>
-          {/* <Grid.Wrap style={{ marginBottom: "10px" }}>
+          <Grid.Wrap style={{ marginBottom: "10px" }}>
             <Grid.Item xs={3}>
               <Controller
                 name={ProblemProperties.COMPARE_MODE}
@@ -373,7 +379,7 @@ const ProblemForm = () => {
                       { label: "Absolute", value: "1" },
                       { label: "Without Space", value: "2" },
                     ]}
-                    value={field.value}
+                    value={field.value + ""}
                     onChange={(_, value) => {
                       field.onChange(value);
                       setCompareValue(value);
@@ -400,31 +406,31 @@ const ProblemForm = () => {
                       label=""
                       onChange={field.onChange}
                     >
-                      <MenuItem value={"0"}>
+                      <MenuItem value={0.1}>
                         10<sup>-1</sup>
                       </MenuItem>
-                      <MenuItem value={"1"}>
+                      <MenuItem value={0.01}>
                         10<sup>-2</sup>
                       </MenuItem>
-                      <MenuItem value={"2"}>
+                      <MenuItem value={0.001}>
                         10<sup>-3</sup>
                       </MenuItem>
-                      <MenuItem value={"3"}>
+                      <MenuItem value={0.0001}>
                         10<sup>-4</sup>
                       </MenuItem>
-                      <MenuItem value={"4"}>
+                      <MenuItem value={0.00001}>
                         10<sup>-5</sup>
                       </MenuItem>
-                      <MenuItem value={"5"}>
+                      <MenuItem value={0.000001}>
                         10<sup>-6</sup>
                       </MenuItem>
-                      <MenuItem value={"6"}>
+                      <MenuItem value={0.0000001}>
                         10<sup>-7</sup>
                       </MenuItem>
-                      <MenuItem value={"7"}>
+                      <MenuItem value={0.00000001}>
                         10<sup>-8</sup>
                       </MenuItem>
-                      <MenuItem value={"8"}>
+                      <MenuItem value={0.000000001}>
                         10<sup>-9</sup>
                       </MenuItem>
                     </Select>
@@ -432,7 +438,7 @@ const ProblemForm = () => {
                 />
               </View>
             </Grid.Item>
-          </Grid.Wrap> */}
+          </Grid.Wrap>
           <Grid.Wrap>
             <Grid.Item xs={12}>
               <InputLabel sx={{ fontSize: "14px" }}>

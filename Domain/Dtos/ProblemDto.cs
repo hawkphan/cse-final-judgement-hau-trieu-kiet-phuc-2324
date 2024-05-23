@@ -6,7 +6,7 @@ using Domain.Dtos;
 
 namespace Domain
 {
-public class ProblemDto
+    public class ProblemDto
     {
 
         public Guid Id { get; set; }
@@ -17,6 +17,8 @@ public class ProblemDto
         public double Difficulty { get; set; }
         public double PrivacyStatus { get; set; }
         public string Description { get; set; }
+        public int GradeMode { get; set; }
+        public double ApproximateRate { get; set; }
         public DateTime Date { get; set; }
         public int TimeLimit { get; set; }
         public int MemoryLimit { get; set; }

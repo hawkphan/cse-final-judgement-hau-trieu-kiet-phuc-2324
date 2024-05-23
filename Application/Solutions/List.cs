@@ -44,8 +44,6 @@ namespace Application.Solutions
                 Guid? contestId = request.ContestId;
                 FileManager _fileManager = new FileManager();
 
-                // var results = _context.Results.Where(r => r.Status == 1 || r.Status == 2).Include(r => r.TestCase).Include(r => r.Solution).ThenInclude(s => s.Problem).ToList();
-
                 var results = _context.Results.Where(r => new List<double>() { 1, 2 }.Contains(r.Status)).Include(r => r.TestCase).Include(r => r.Solution).ThenInclude(s => s.Problem).ToList();
 
                 foreach (var result in results)
@@ -134,10 +132,10 @@ namespace Application.Solutions
 
                         //update elo here
 
-                        double ExpectedCompletionRate = 1 / (1 + Math.Pow(10, (problem.Difficulty - user.Rating) / 400));
+                        double ExpectedCompletionRate = 1 / (1 + Math.Pow(10, (user.Rating - problem.Difficulty) / 400));
 
-                        user.Rating = Math.Round(user.Rating + 100 * (solution.Score - ExpectedCompletionRate), 0);
-                        problem.Difficulty = Math.Round(problem.Difficulty - 100 * (solution.Score - ExpectedCompletionRate), 0);
+                        user.Rating = Math.Round(user.Rating - 100 * (solution.Score - ExpectedCompletionRate), 0);
+                        problem.Difficulty = Math.Round(problem.Difficulty + 100 * (solution.Score - ExpectedCompletionRate), 0);
 
                         var newNotification = new Notification
                         {
@@ -159,7 +157,7 @@ namespace Application.Solutions
 
                 foreach (var solution in solutions)
                 {
-                    double sevStatus = 0;
+                    double sevStatus = 1;
                     double runTime = 0;
                     long memory = 0;
                     foreach (var result in solution.Results)
@@ -232,10 +230,10 @@ namespace Application.Solutions
                     case 0:
                         return ApproximateComparison(expectedOutput, expectedOutput, ApproximateRate);
                     case 1:
-                    //absolute
+                        //absolute
                         return AbsoluteComparison(expectedOutput, submittedOutput);
                     case 2:
-                    //without space
+                        //without space
                         return AbsoluteComparisonWithoutSpace(expectedOutput, submittedOutput);
                     default:
                         return AbsoluteComparison(expectedOutput, submittedOutput);

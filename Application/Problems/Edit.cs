@@ -112,6 +112,8 @@ namespace Application.Problems
                     problem.PrivacyStatus = request.Problem.PrivacyStatus;
                     problem.MemoryLimit = request.Problem.MemoryLimit;
                     problem.TimeLimit = request.Problem.TimeLimit;
+                    problem.GradeMode = request.Problem.GradeMode;
+                    problem.ApproximateRate = request.Problem.ApproximateRate;
 
                     var result = await _context.SaveChangesAsync();
 
