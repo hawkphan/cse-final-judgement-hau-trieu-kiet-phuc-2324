@@ -15,13 +15,13 @@ namespace Domain
         public string DisplayName { get; set; }
         public string AvatarUrl { get; set; }
         public double Rating { get; set; }
-        public ICollection<Problem> Problems { get; set; }
-        public ICollection<Solution> Solutions { get; set; }
+        public List<Problem> Problems { get; set; }
+        public List<Solution> Solutions { get; set; }
         // [JsonIgnore]
-        // public ICollection<Language> Languages { get; set; }
-        public ICollection<ContestMember> MemberContests { get; set; }
-        public ICollection<Notification> SentNotifications { get; set; }
-        public ICollection<Notification> ReceivedNotifications { get; set; }
+        // public List<Language> Languages { get; set; }
+        public List<ContestMember> MemberContests { get; set; }
+        public List<Notification> SentNotifications { get; set; }
+        public List<Notification> ReceivedNotifications { get; set; }
     }
 
 }

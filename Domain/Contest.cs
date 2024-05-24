@@ -17,8 +17,8 @@ namespace Domain
         public double Status { get; set; } // 0 for Not Started Yet, 1 for Started, 2 for Ended
         public double Rule { get; set; }  // 0 for ACM/ICPC, 1 for Olympic
         public double Type { get; set; } // 0 for Public, 1 for Private
-        public ICollection<ContestMember> Members { get; set; }
-        public ICollection<ContestProblem> Problems { get; set; }
-        public ICollection<Solution> Solutions { get; set; }
+        public List<ContestMember> Members { get; set; }
+        public List<ContestProblem> Problems { get; set; }
+        public List<Solution> Solutions { get; set; }
     }
 }

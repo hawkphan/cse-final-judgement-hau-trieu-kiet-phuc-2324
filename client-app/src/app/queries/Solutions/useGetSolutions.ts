@@ -4,10 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useState } from "react";
-import {
-  PaginationResponseNetType,
-  responseWrapper,
-} from "../../shared";
+import { PaginationResponseNetType, isEmpty, responseWrapper } from "../../shared";
 import { API_QUERIES } from "../common/constants";
 import { Table2Params } from "../common/types";
 import { Solution } from ".";
@@ -36,7 +33,7 @@ export function useGetSolutions(
 
     notifyOnChangeProps: ["data", "isFetching"],
     // enabled: !isEmpty(params),
-    enabled: !!params.problemId,
+    enabled: !isEmpty(params),
     ...options,
   });
 

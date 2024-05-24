@@ -1,6 +1,6 @@
 import { Avatar, Box, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import { Callback, Notification, useGetNotifications } from "../../queries";
-import { Button, LoadingCommon, isEmpty } from "../../shared";
+import { Button, isEmpty } from "../../shared";
 import { useStore } from "../../shared/common/stores/store";
 import * as signalR from "@microsoft/signalr";
 import { useEffect, useState } from "react";
@@ -57,7 +57,7 @@ const NotificationMenu = ({
         })
         .catch((e) => console.log("Connection failed: ", e));
     }
-  }, [connection, user.id]);
+  }, [connection, user?.id]);
 
   useEffect(() => {
     if (!isEmpty(notifications)) {
@@ -67,7 +67,7 @@ const NotificationMenu = ({
   }, [notifications, onSetNumber]);
 
   if (isFetching) {
-    return <LoadingCommon />;
+    return <></>;
   }
 
   return (

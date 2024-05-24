@@ -1,11 +1,5 @@
 import { Box, Card, CardContent, Stack } from "@mui/material";
-import {
-  Button,
-  Form,
-  MuiSelect,
-  Toastify,
-  isEmpty,
-} from "../../../../shared";
+import { Button, Form, MuiSelect, Toastify, isEmpty } from "../../../../shared";
 import { Editor } from "@monaco-editor/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
@@ -23,6 +17,7 @@ import { getLanguageNameById } from "../../../Problems/ProblemDetails/Submission
 import { SelectOption } from "../../../../shared/components/common/MuiAutoComplete";
 import { useStore } from "../../../../shared/common/stores/store";
 import { useForm } from "react-hook-form";
+import { compareOrder } from "../../ContestManagement/ContestForm/helpers";
 
 interface Props {
   contest: Contest;
@@ -50,7 +45,7 @@ export default function SubmitCodeTab(props: Readonly<Props>) {
     );
   };
 
-  const problemOptions = contest?.problems?.map((p) => ({
+  const problemOptions = contest?.problems?.sort(compareOrder).map((p) => ({
     value: p?.problemId,
     label: p?.problem?.code + " - " + p?.problem?.title,
   }));

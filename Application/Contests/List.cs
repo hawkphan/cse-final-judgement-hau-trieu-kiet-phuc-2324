@@ -37,6 +37,7 @@ namespace Application.Contests
                 var contestIds = new List<Guid>();
 
                 var contestMembers = _context.ContestMembers.Include(c => c.Contest).AsQueryable();
+                var contestProblems = _context.ContestProblems.Include(c => c.Contest).Include(c => c.Problem).ThenInclude(c => c.ProblemLanguages).AsQueryable();
 
                 if (userId != null)
                 {
@@ -67,8 +68,11 @@ namespace Application.Contests
                 var query = await contests.ProjectTo<ContestDto>(_mapper.ConfigurationProvider)
                      .ToListAsync(cancellationToken: cancellationToken);
 
+
                 foreach (var item in query)
                 {
+                    var problems = contestProblems.Where(p => p.ContestId == item.Id).ToList();
+                    item.Problems = problems;
                     item.StartTime = item.StartTime.AddHours(7);
                     item.EndTime = item.EndTime.AddHours(7);
                 }

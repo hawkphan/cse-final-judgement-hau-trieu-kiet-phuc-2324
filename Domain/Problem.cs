@@ -21,10 +21,10 @@ public class Problem
     //0 is without space
     public int GradeMode { get; set; }
     public double ApproximateRate { get; set; }
-    public ICollection<TestCase> TestCases { get; set; }
-    public ICollection<Result> Results { get; set; }
-    public ICollection<Solution> Solutions { get; set; }
-    public ICollection<ProblemLanguage> ProblemLanguages { get; set; }
-    public ICollection<ContestProblem> ProblemContests { get; set; }
+    public List<TestCase> TestCases { get; set; }
+    public List<Result> Results { get; set; }
+    public List<Solution> Solutions { get; set; }
+    public List<ProblemLanguage> ProblemLanguages { get; set; } = new List<ProblemLanguage>();
+    public List<ContestProblem> ProblemContests { get; set; } = new List<ContestProblem>();
 
 }

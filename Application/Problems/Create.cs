@@ -65,7 +65,7 @@ namespace Application.Problems
                 await fileManager.SaveAndExtractZipFile(request.TestCaseZip, request.Problem.Code);
                 var testCaseLocation = Path.Combine("Uploads\\TestCases", request.Problem.Code);
                 String[] files = fileManager.getFileNameInFolder(testCaseLocation, "*.in");
-                ICollection<TestCase> testCases = new List<TestCase>();
+                List<TestCase> testCases = new List<TestCase>();
                 foreach (var inputPath in files)
                 {
                     var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(inputPath);

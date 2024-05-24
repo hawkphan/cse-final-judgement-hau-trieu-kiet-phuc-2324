@@ -321,7 +321,7 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
       let languages: Lang[] = [];
 
       contest?.problems?.map((p) => {
-        p?.problem.problemLanguages.map((l) => {
+        p?.problem?.problemLanguages?.map((l) => {
           if (
             languages.find((item) => item.languageId == l.languageId) == null
           ) {

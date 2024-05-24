@@ -4,20 +4,27 @@ import "material-symbols";
 import { renderStatusTag } from "./helpers";
 import dayjs from "dayjs";
 import { formatValueOrNull } from "../../../../shared";
-import { MySubmissionsRecord } from "../data.mock";
+import { ContestProblem, Solution } from "../../../../queries";
+import { getLanguageNameById } from "../../../Problems/ProblemDetails/SubmissionTab/helpers";
 
-export const allColumns = (): MRT_ColumnDef<MySubmissionsRecord>[] => {
+export const allColumns = (
+  problems: ContestProblem[]
+): MRT_ColumnDef<Solution>[] => {
   return [
     {
-      accessorKey: "problemName",
+      accessorKey: "problemId",
       header: "Problem",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) =>
+        formatValueOrNull(
+          problems?.filter((p) => p?.problemId === cell.getValue<string>())[0]
+            .problem?.title
+        ),
     },
     {
-      accessorKey: "timeSubmitted",
+      accessorKey: "createdDate",
       header: "Time Submitted",
       enableColumnFilterModes: false,
       enableSorting: false,
@@ -34,7 +41,7 @@ export const allColumns = (): MRT_ColumnDef<MySubmissionsRecord>[] => {
       Cell: ({ cell }) => renderStatusTag(cell.getValue<number>()),
     },
     {
-      accessorKey: "runtime",
+      accessorKey: "executionTime",
       header: "Run Time",
       enableColumnFilterModes: false,
       enableSorting: false,
@@ -42,7 +49,7 @@ export const allColumns = (): MRT_ColumnDef<MySubmissionsRecord>[] => {
       Cell: ({ cell }) => cell.getValue<string>() + " ms",
     },
     {
-      accessorKey: "memory",
+      accessorKey: "memoryUsage",
       header: "Memory",
       enableColumnFilterModes: false,
       enableSorting: false,
@@ -50,20 +57,13 @@ export const allColumns = (): MRT_ColumnDef<MySubmissionsRecord>[] => {
       Cell: ({ cell }) => cell.getValue<string>() + " KB",
     },
     {
-      accessorKey: "languageName",
+      accessorKey: "languageId",
       header: "Language",
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 20,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
-    },
-    {
-      accessorKey: "testcasePassed",
-      header: "Testcase passed (%)",
-      enableColumnFilterModes: false,
-      enableSorting: false,
-      size: 20,
-      Cell: ({ cell }) => cell.getValue<string>() + "%",
+      Cell: ({ cell }) =>
+        formatValueOrNull(getLanguageNameById(cell.getValue<number>())),
     },
   ];
 };

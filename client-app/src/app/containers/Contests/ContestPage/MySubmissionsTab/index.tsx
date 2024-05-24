@@ -1,11 +1,52 @@
 import { Box, CardContent } from "@mui/material";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { allColumns } from "./allColumns";
 import { Table2, EmptyTable } from "../../../../shared";
-import { MySubmissionsRecord, submissions } from "../data.mock";
+import {
+  Contest,
+  GetPropertiesParams,
+  Solution,
+  useGetSolutions,
+} from "../../../../queries";
+import { useStore } from "../../../../shared/common/stores/store";
+import SubmissionResultDialog from "../../../Problems/ProblemDetails/SubmissionTab/SubmissionResultDialog";
 
-const MySubmissionTab = () => {
-  const columns = useMemo(() => allColumns(), []);
+interface Props {
+  contest: Contest;
+}
+
+const MySubmissionTab = ({ contest }: Props) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedSolutionId, setSelectedSolutionId] = useState<string>();
+
+  const { userStore } = useStore();
+
+  const { setParams, solutions, isFetching, totalRecords } = useGetSolutions();
+
+  const columns = useMemo(
+    () => allColumns(contest?.problems),
+    [contest?.problems]
+  );
+
+  const handleCloseResult = () => {
+    setIsOpen(false);
+  };
+
+  const handleGetRecords = useCallback(
+    (params: GetPropertiesParams) => {
+      setParams({
+        ...params,
+        contestId: contest?.id,
+        userId: userStore?.user?.id,
+      });
+    },
+    [contest?.id, setParams, userStore?.user?.id]
+  );
+
+  useEffect(() => {
+    setParams({ userId: userStore?.user?.id, contestId: contest?.id });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contest?.id]);
 
   return (
     <CardContent>
@@ -20,16 +61,18 @@ const MySubmissionTab = () => {
           overflow: "auto",
         }}
       >
-        <Table2<MySubmissionsRecord>
-          rowCount={10}
+        <Table2<Solution>
+          rowCount={totalRecords}
           columns={columns}
-          data={submissions}
+          data={solutions}
           enableTopToolbar={true}
+          onAction={handleGetRecords}
           recordName="items"
           singularRecordName="item"
           enableDensityToggle={false}
           enableColumnOrdering={false}
           enableRowActions
+          isLoading={isFetching}
           paginationDisplayMode="pages"
           isColumnPinning={false}
           additionalFilterParams={["keywords"]}
@@ -38,6 +81,14 @@ const MySubmissionTab = () => {
           renderToolbarInternalActions={() => {
             return <></>;
           }}
+          muiTableBodyRowProps={({ row }) => ({
+            onClick: () => {
+              if (![0, 1, 2].includes(row.original.status)) {
+                setSelectedSolutionId(row.original.id);
+                setIsOpen(true);
+              }
+            },
+          })}
           muiTopToolbarProps={{
             sx: {
               backgroundColor: "transparent",
@@ -48,6 +99,11 @@ const MySubmissionTab = () => {
           }}
         />
       </Box>
+      <SubmissionResultDialog
+        isOpen={isOpen}
+        handleCloseDeleteDialog={handleCloseResult}
+        solutionId={selectedSolutionId}
+      />
     </CardContent>
   );
 };

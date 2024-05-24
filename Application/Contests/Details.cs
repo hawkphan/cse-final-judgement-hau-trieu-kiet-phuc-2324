@@ -25,9 +25,12 @@ namespace Application.Contests
             }
             public async Task<ContestDto> Handle(Query request, CancellationToken cancellationToken)
             {
-                ContestDto contestDto = await _context.Contests.ProjectTo<ContestDto>(_mapper.ConfigurationProvider)
+                ContestDto contestDto = await _context.Contests.Include(c => c.Problems).ProjectTo<ContestDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(p => p.Id == request.Id);
 
+                var contestProblems = await _context.ContestProblems.Include(p => p.Problem).ThenInclude(c => c.ProblemLanguages).Where(p => p.ContestId == request.Id).ToListAsync();
+
+                contestDto.Problems = contestProblems;
                 contestDto.StartTime = contestDto.StartTime.AddHours(7);
                 contestDto.EndTime = contestDto.EndTime.AddHours(7);
 

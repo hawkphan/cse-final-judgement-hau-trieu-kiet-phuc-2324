@@ -22,6 +22,7 @@ namespace Domain
         public DateTime Date { get; set; }
         public int TimeLimit { get; set; }
         public int MemoryLimit { get; set; }
-        public ICollection<ProblemLanguageDto> ProblemLanguages { get; set; }
+        public List<ContestProblemDto> ProblemContests { get; set; }
+        public List<ProblemLanguageDto> ProblemLanguages { get; set; }
     }
 }

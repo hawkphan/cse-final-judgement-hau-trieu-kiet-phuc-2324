@@ -14,9 +14,9 @@ namespace Domain.Dtos
         public DateTime EndTime { get; set; }
         public double Rule { get; set; }  // 0 for ACM/ICPC, 1 for Olympic
         public double Type { get; set; } // 0 for Public, 1 for Private
-        public ICollection<ContestMemberDto> Members { get; set; }
-        public ICollection<ContestProblemDto> Problems { get; set; }
+        public List<ContestMember> Members { get; set; }
+        public List<ContestProblem> Problems { get; set; }
         public bool Succeeded { get; set; }
-        public ICollection<string> Errors { get; set; }
+        public List<string> Errors { get; set; }
     }
 }

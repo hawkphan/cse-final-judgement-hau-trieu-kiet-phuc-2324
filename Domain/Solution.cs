@@ -22,7 +22,7 @@ namespace Domain
         public long MemoryUsage { get; set; }
         public double ExecutionTime { get; set; }
         public DateTime CreatedDate { get; set; }
-        public ICollection<Result> Results { get; set; }
+        public List<Result> Results { get; set; }
         public double Score { get; set; }
         public int GradingStatus { get; set; }
     }
