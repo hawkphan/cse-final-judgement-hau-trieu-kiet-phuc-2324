@@ -1,6 +1,6 @@
 import { Problem } from "../Problems";
+import { LanguagesUsage } from "../Profiles";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Contest {
   id?: string;
   name?: string;
@@ -47,7 +47,38 @@ export interface ContestProblem {
   approximateRate?: string;
 }
 
+
 export interface ContestMember {
   userId: string;
   role: number;
+}
+
+export interface ContestStatistic {
+  contestId: string;
+  totalCandidates: number;
+  totalSubmissions: number;
+  problemSubmissionsStatistic: ProblemSubmissionStatistic[];
+  languagesUsageStatistic?: LanguagesUsage[];
+}
+
+export interface ProblemSubmissionStatistic {
+  problemId: string;
+  totalSubmissions: number;
+  submissionStatus?: SubmissionStatus;
+  languagesUsage?: LanguagesUsage[];
+}
+
+export interface SubmissionStatus {
+  accepted: number;
+  wrongAnswer: number;
+  timeLimitExceeded: number;
+  compileError: number;
+  internalError: number;
+  execFormatError: number;
+  runtimeErrorSIGSEGV: number;
+  runtimeErrorSIGXFSZ: number;
+  runtimeErrorSIGFPE: number;
+  runtimeErrorSIGABRT: number;
+  runtimeErrorNZEC: number;
+  runtimeErrorOther: number;
 }

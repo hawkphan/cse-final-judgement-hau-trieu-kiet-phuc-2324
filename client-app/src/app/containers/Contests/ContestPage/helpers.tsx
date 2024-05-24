@@ -1,4 +1,6 @@
+import { ContestProblem, Problem } from "../../../queries";
 import { PATHS } from "../../../configs/paths";
+import { Props } from "react-apexcharts";
 
 export const getTabList = (isAdmin: boolean) => {
   if (!isAdmin) {
@@ -84,3 +86,20 @@ export enum ProblemFilterQueryKey {
   TO_DATE = "toDate",
   KEYWORDS = "keywords",
 }
+
+export interface ProblemTabProp {
+  problems: ContestProblem[];
+  onSetProblemList: (problem: Problem) => void;
+  problemList: Problem[];
+}
+
+export interface ProblemDetailProp {
+  id?: string;
+  problemList: Problem[];
+  onSetProblem?: (problem: Problem) => void;
+}
+
+export const ApexEmptyProp: Props = {
+  options: {},
+  series: [],
+};

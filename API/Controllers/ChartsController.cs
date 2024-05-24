@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Dtos;
 using MediatR;
 using Application.Chart;
 using Microsoft.AspNetCore.Authorization;
@@ -37,10 +38,17 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("statistic-chart/{id}")] //api/chart/statistic-chart/id
+        [HttpGet("statistic-chart/{id}")] //api/charts/statistic-chart/id
         public async Task<IActionResult> GetStatisticChart(Guid id)
         {
             return HandleApiResult(await Mediator.Send(new ProblemStatisticChartDetail.Query { UserId = id }));
+        }
+
+        [AllowAnonymous]
+        [HttpGet("contests/{id}")] //api/charts/contests/id
+        public async Task<ActionResult<ContestSubmissionStatisticDto>>  GetContestChart(Guid id)
+        {
+            return await Mediator.Send(new ContestSubmissionStatisticChart.Query { Id = id });
         }
     }
 }
