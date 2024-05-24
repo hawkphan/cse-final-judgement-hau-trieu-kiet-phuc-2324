@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_URL } from "../common/constants";
-import { Contest, CreateContestBody, EditContestBody } from "./types";
+import { Contest, ContestStatistic, CreateContestBody, EditContestBody } from "./types";
 import { GetPropertiesParams } from "../Languages";
 import { stringify } from "../../shared";
 
@@ -38,6 +38,10 @@ const getContestById = (params: { id: string }) => {
   return axios.get<Contest>(`${API_URL}/api/contests/${params.id}`, {});
 };
 
+const getContestStatisticById = (params: { id: string }) => {
+  return axios.get<ContestStatistic>(`${API_URL}/api/charts/contests/${params.id}`, {});
+};
+
 const deleteContest = (id: string) => {
   return axios.delete(`${API_URL}/api/contests/${id}`, {});
 };
@@ -50,4 +54,5 @@ export {
   deleteContest,
   editContest,
   getContestById,
+  getContestStatisticById
 };

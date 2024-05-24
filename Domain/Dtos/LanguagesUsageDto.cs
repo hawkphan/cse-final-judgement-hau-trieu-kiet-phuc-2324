@@ -9,5 +9,6 @@ namespace Domain.Dtos
     {
         public int LanguageId { get; set; }
         public int TotalSubmissions { get; set; }
+        public SubmissionStatusDto SubmissionStatus { get; set; } = null;
     }
 }

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { SubmissionStatus } from "../Contests";
+
 export interface Profile<T> {
   id?: string;
   userName?: string;
@@ -40,7 +42,8 @@ export interface EditProfileBody {
 
 export interface LanguagesUsage {
   languageId?: number;
-  totalSubmission?: number;
+  totalSubmissions?: number;
+  submissionStatus?: SubmissionStatus;
 }
 
 export interface InMonthSubmissions {

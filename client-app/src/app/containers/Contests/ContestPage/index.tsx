@@ -13,17 +13,14 @@ import StandingsTab from "./StandingsTab";
 import MySubmissionTab from "./MySubmissionsTab";
 import ProblemsTab from "./ProblemsTab";
 import { useParams } from "react-router-dom";
-import { API_QUERIES, Problem, useGetContestById } from "../../../queries";
+import { API_QUERIES, useGetContestById } from "../../../queries";
+import MonitoringTab from "./MonitoringTab";
 
 const ContestPage = () => {
-  const [problemList, setProblemList] = useState<Problem[]>([]);
-  const handleSetProblem = (problem: Problem) => {
-    setProblemList((prevList) => [...prevList, problem]);
-  };
-
   const { id } = useParams<{ id: string }>();
-  const isAdmin = false;
+  const isAdmin = true;
   const [tab, setTab] = useState(isAdmin ? Tab.MONITORING : Tab.PROBLEMS);
+
   const { contest, isFetching } = useGetContestById({
     id,
     queryKey: [API_QUERIES.GET_CONTEST_BY_ID, { id: id }],
@@ -32,17 +29,15 @@ const ContestPage = () => {
   const renderTab = () => {
     switch (tab) {
       case Tab.PROBLEMS:
-        return (
-          <ProblemsTab
-            problems={contest?.problems}
-          />
-        );
+        return <ProblemsTab problems={contest?.problems} />;
       case Tab.SUBMIT_CODE:
-        return <SubmitCodeTab contest={contest}/>;
+        return <SubmitCodeTab contest={contest} />;
       case Tab.MY_SUBMISSIONS:
         return <MySubmissionTab />;
       case Tab.STANDINGS:
         return <StandingsTab />;
+      case Tab.MONITORING:
+        return <MonitoringTab contest={contest} />;
       default:
         <LoadingCommon />;
     }
