@@ -11,8 +11,8 @@ export interface Problem {
   testCasesFiles?: any;
   problemLanguages?: any;
   privacyStatus?: number;
-  gradeMode: string;
-  approximateRate: number;
+  gradeMode?: string;
+  approximateRate?: number;
 }
 
 export interface CreateProblemBody {

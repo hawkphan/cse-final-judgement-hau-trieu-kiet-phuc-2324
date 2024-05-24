@@ -34,13 +34,11 @@ const ContestPage = () => {
       case Tab.PROBLEMS:
         return (
           <ProblemsTab
-            problemList={problemList}
             problems={contest?.problems}
-            onSetProblemList={handleSetProblem}
           />
         );
       case Tab.SUBMIT_CODE:
-        return <SubmitCodeTab contest={contest} problemList={problemList} />;
+        return <SubmitCodeTab contest={contest}/>;
       case Tab.MY_SUBMISSIONS:
         return <MySubmissionTab />;
       case Tab.STANDINGS:

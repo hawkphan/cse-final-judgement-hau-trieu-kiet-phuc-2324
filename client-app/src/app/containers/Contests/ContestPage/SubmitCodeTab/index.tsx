@@ -1,5 +1,11 @@
 import { Box, Card, CardContent, Stack } from "@mui/material";
-import { Button, Form, MuiSelect, Toastify, isEmpty } from "../../../../shared";
+import {
+  Button,
+  Form,
+  MuiSelect,
+  Toastify,
+  isEmpty,
+} from "../../../../shared";
 import { Editor } from "@monaco-editor/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
@@ -8,8 +14,8 @@ import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { CompilerEnv, ThemeMode } from "../helpers";
 import {
   Contest,
+  ContestProblem,
   CreateSolutionBody,
-  Problem,
   useGetSolutions,
   useSubmitSolution,
 } from "../../../../queries";
@@ -20,15 +26,14 @@ import { useForm } from "react-hook-form";
 
 interface Props {
   contest: Contest;
-  problemList: Problem[];
 }
 
-export default function SubmitCodeTab(props: Props) {
-  const { contest, problemList } = props;
+export default function SubmitCodeTab(props: Readonly<Props>) {
+  const { contest } = props;
   const [currentLanguageId, setCurrentLanguageId] = useState("");
   const [currentProblemId, setCurrentProblemId] = useState("");
   const [darkOrLight, setDarkOrLight] = useState(ThemeMode.DARK);
-  const [problemOptions, setProblemOptions] = useState<SelectOption[]>([]);
+  // const [problemOptions, setProblemOptions] = useState<SelectOption[]>([]);
   const [languageOptions, setLanguageOptions] = useState<SelectOption[]>([]);
   const { userStore } = useStore();
   const user = userStore.user;
@@ -45,32 +50,24 @@ export default function SubmitCodeTab(props: Props) {
     );
   };
 
-  useEffect(() => {
-    problemList?.map((p) => {
-      const option: SelectOption = {
-        value: p.id,
-        label: p.code + " - " + p.title,
-      };
-      setProblemOptions((prevOptions) => [...prevOptions, option]);
-    });
-  }, []);
+  const problemOptions = contest?.problems?.map((p) => ({
+    value: p?.problemId,
+    label: p?.problem?.code + " - " + p?.problem?.title,
+  }));
 
   useEffect(() => {
-    if (currentProblemId != "" && problemOptions) {
-      setLanguageOptions([]);
-      setCurrentLanguageId("");
-      const problem: Problem = problemList.filter(
-        (p) => p.id == currentProblemId
+    if (!isEmpty(currentProblemId)) {
+      const problem: ContestProblem = contest?.problems?.filter(
+        (p) => p.problemId == currentProblemId
       )[0];
-      problem?.problemLanguages?.map((l) => {
-        const option: SelectOption = {
+      setLanguageOptions(
+        problem?.problem?.problemLanguages?.map((l) => ({
           label: getLanguageNameById(l.languageId),
           value: l.languageId,
-        };
-        setLanguageOptions((prevList) => [...prevList, option]);
-      });
+        }))
+      );
     }
-  }, [currentProblemId]);
+  }, [contest?.problems, currentProblemId, languageOptions]);
 
   const file = CompilerEnv["Python"];
 
@@ -138,6 +135,7 @@ export default function SubmitCodeTab(props: Props) {
   useEffect(() => {
     setSolutionParams({ problemId: currentProblemId, userId: user?.id });
   }, [currentProblemId, setSolutionParams, user?.id]);
+
   return (
     <CardContent>
       <Box overflow={"auto"}>

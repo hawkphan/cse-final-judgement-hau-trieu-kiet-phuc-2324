@@ -1,4 +1,3 @@
-import { ContestProblem, Problem } from "../../../queries";
 import { PATHS } from "../../../configs/paths";
 
 export const getTabList = (isAdmin: boolean) => {
@@ -84,16 +83,4 @@ export enum ProblemFilterQueryKey {
   FROM_DATE = "fromDate",
   TO_DATE = "toDate",
   KEYWORDS = "keywords",
-}
-
-export interface ProblemTabProp {
-  problems: ContestProblem[];
-  onSetProblemList: (problem: Problem) => void;
-  problemList: Problem[];
-}
-
-export interface ProblemDetailProp {
-  id?: string;
-  problemList: Problem[];
-  onSetProblem?: (problem: Problem) => void;
 }

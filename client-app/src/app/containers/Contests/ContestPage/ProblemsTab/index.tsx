@@ -1,38 +1,14 @@
 import { Box, CardContent, Typography } from "@mui/material";
 import parse from "html-react-parser";
 import "./styles.scss";
-import { API_QUERIES, useGetProblemById } from "../../../../queries";
 import {
-  Accordion,
-  formatDateOrNull,
-  Text,
-} from "../../../../shared";
+  ContestProblem,
+  Problem,
+} from "../../../../queries";
+import { Accordion, formatDateOrNull, isEmpty, Text } from "../../../../shared";
 import { renderDifficultyTag } from "../../../Problems/helpers";
-import { ProblemDetailProp, ProblemTabProp } from "../helpers";
-import { useEffect } from "react";
 
-const ProblemDetail = ({
-  id,
-  onSetProblem,
-  problemList,
-}: ProblemDetailProp) => {
-  const { problem, isFetching } = useGetProblemById({
-    id: id,
-    queryKey: [API_QUERIES.GET_PROBLEM_BY_ID, { id: id }],
-  });
-
-  useEffect(() => {
-    if (problem != null && onSetProblem) {
-      if (!problemList.find((p) => p.id === problem.id)) {
-        onSetProblem(problem);
-      }
-    }
-  }, [onSetProblem, problem, problemList]);
-
-  if (isFetching) {
-    return <></>;
-  }
-
+const ProblemDetail = ({ problem }: Props) => {
   return (
     <Accordion
       title={
@@ -67,27 +43,28 @@ const ProblemDetail = ({
   );
 };
 
-const ProblemsTab = ({
-  problems,
-  onSetProblemList,
-  problemList,
-}: ProblemTabProp) => {
+const ProblemsTab = ({ problems }: ProblemTabProp) => {
   return (
     <CardContent>
-      {!problems
-        ? ""
-        : problems.map((problem) => {
+      {!isEmpty(problems)
+        ? problems.map((problem) => {
             return (
               <ProblemDetail
-                problemList={problemList}
                 key={problem.problemId}
-                id={problem.problemId}
-                onSetProblem={onSetProblemList}
+                problem={problem.problem}
               />
             );
-          })}
+          })
+        : ""}
     </CardContent>
   );
 };
+export interface Props {
+  problem?: Problem;
+}
+
+export interface ProblemTabProp {
+  problems: ContestProblem[];
+}
 
 export default ProblemsTab;

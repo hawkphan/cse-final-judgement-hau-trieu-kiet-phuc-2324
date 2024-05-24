@@ -48,7 +48,7 @@ namespace Application.Contests
                     contestIds.Add(item.ContestId);
                 }
 
-                var contests = _context.Contests.AsQueryable<Domain.Contest>();
+                var contests = _context.Contests.Include(c => c.Problems).AsQueryable<Domain.Contest>();
 
                 if (!string.IsNullOrEmpty(key))
                 {
