@@ -34,6 +34,12 @@ namespace API.Controllers
             return await Mediator.Send(new Details.Query { Id = id });
         }
         [AllowAnonymous]
+        [HttpGet("{id}/leaderboard")]
+        public async Task<ActionResult<List<MemberDto>>> GetRank(Guid id)
+        {
+            return HandleApiResult(await Mediator.Send(new Grade.Command { Id = id }));
+        }
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> CreateContest([FromBody] ContestDto newContest)
         {

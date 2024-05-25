@@ -110,6 +110,7 @@ namespace Application.Core
             .ForMember(d => d.Description, o => o.MapFrom(s => s.Description))
             .ForMember(d => d.Problems, o => o.MapFrom(s => s.Problems))
             .ForMember(d => d.Members, o => o.MapFrom(s => s.Members));
+            CreateMap<ContestMember, MemberDto>();
         }
     }
 }
