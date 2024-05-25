@@ -10,23 +10,37 @@ import {
 } from "../../../../queries";
 import { useStore } from "../../../../shared/common/stores/store";
 import SubmissionResultDialog from "../../../Problems/ProblemDetails/SubmissionTab/SubmissionResultDialog";
+import { allColumnsAdmin } from "./allColumnsAdmin";
 
 interface Props {
   contest: Contest;
+  isAdmin: boolean;
 }
 
-const MySubmissionTab = ({ contest }: Props) => {
+const MySubmissionTab = ({ contest, isAdmin }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSolutionId, setSelectedSolutionId] = useState<string>();
 
+  const DELAY_MS = 5000;
+
   const { userStore } = useStore();
 
-  const { setParams, solutions, isFetching, totalRecords } = useGetSolutions();
+  const {
+    setParams,
+    solutions,
+    isFetching,
+    totalRecords,
+    handleInvalidateSolutions,
+    onGetSolutions,
+  } = useGetSolutions();
 
-  const columns = useMemo(
-    () => allColumns(contest?.problems),
-    [contest?.problems]
-  );
+  const columns = useMemo(() => {
+    if (isAdmin) {
+      return allColumnsAdmin(contest?.problems, contest?.members);
+    }
+
+    return allColumns(contest?.problems);
+  }, [contest?.problems]);
 
   const handleCloseResult = () => {
     setIsOpen(false);
@@ -34,17 +48,37 @@ const MySubmissionTab = ({ contest }: Props) => {
 
   const handleGetRecords = useCallback(
     (params: GetPropertiesParams) => {
-      setParams({
-        ...params,
-        contestId: contest?.id,
-        userId: userStore?.user?.id,
-      });
+      if (isAdmin) {
+        setParams({ ...params, contestId: contest?.id });
+      } else {
+        setParams({
+          ...params,
+          userId: userStore?.user?.id,
+          contestId: contest?.id,
+        });
+      }
     },
-    [contest?.id, setParams, userStore?.user?.id]
+    [contest?.id, isAdmin, setParams, userStore?.user?.id]
   );
 
   useEffect(() => {
-    setParams({ userId: userStore?.user?.id, contestId: contest?.id });
+    const timerId = setTimeout(() => {
+      handleInvalidateSolutions();
+      onGetSolutions();
+    }, DELAY_MS);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [solutions, handleInvalidateSolutions, isFetching, onGetSolutions]);
+
+  useEffect(() => {
+    if (isAdmin) {
+      setParams({ contestId: contest?.id });
+    } else {
+      setParams({ userId: userStore?.user?.id, contestId: contest?.id });
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contest?.id]);
 
@@ -73,6 +107,7 @@ const MySubmissionTab = ({ contest }: Props) => {
           enableColumnOrdering={false}
           enableRowActions
           isLoading={isFetching}
+          showLoadingOverlay={false}
           paginationDisplayMode="pages"
           isColumnPinning={false}
           additionalFilterParams={["keywords"]}

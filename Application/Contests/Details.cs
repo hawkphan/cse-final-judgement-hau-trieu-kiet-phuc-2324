@@ -29,8 +29,10 @@ namespace Application.Contests
                 .FirstOrDefaultAsync(p => p.Id == request.Id);
 
                 var contestProblems = await _context.ContestProblems.Include(p => p.Problem).ThenInclude(c => c.ProblemLanguages).Where(p => p.ContestId == request.Id).ToListAsync();
+                var contestMembers = await _context.ContestMembers.Include(p => p.User).Where(p => p.ContestId == request.Id).ToListAsync();
 
                 contestDto.Problems = contestProblems;
+                contestDto.Members = contestMembers;
                 contestDto.StartTime = contestDto.StartTime.AddHours(7);
                 contestDto.EndTime = contestDto.EndTime.AddHours(7);
 

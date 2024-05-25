@@ -1,4 +1,4 @@
-import { Problem } from "../Problems";
+import { Problem, User } from "../Problems";
 import { LanguagesUsage } from "../Profiles";
 
 export interface Contest {
@@ -42,6 +42,7 @@ export interface ContestProblem {
   code?: string;
   title?: string;
   order?: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   problemLanguages?: any;
   gradeMode?: string;
   approximateRate?: string;
@@ -51,6 +52,7 @@ export interface ContestProblem {
 export interface ContestMember {
   userId: string;
   role: number;
+  user: User;
 }
 
 export interface ContestStatistic {

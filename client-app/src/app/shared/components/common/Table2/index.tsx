@@ -33,6 +33,7 @@ interface Props<TData extends MRT_RowData> extends MRT_TableOptions<TData> {
   isLocalState?: boolean;
   additionalFilterParams?: string[];
   isLoading?: boolean;
+  showLoadingOverlay?: boolean;
   recordName?: string;
   singularRecordName?: string;
   onAction?: (..._args: any[]) => void;
@@ -116,6 +117,7 @@ const Table2 = <TData extends MRT_RowData>({
   isLocalState,
   additionalFilterParams = [],
   isLoading,
+  showLoadingOverlay = true,
   recordName = "records",
   singularRecordName = "record",
   onAction,
@@ -271,7 +273,7 @@ const Table2 = <TData extends MRT_RowData>({
       pagination,
       sorting,
       globalFilter: search,
-      showLoadingOverlay: isLoading,
+      showLoadingOverlay: showLoadingOverlay ? isLoading : false,
     },
     muiPaginationProps: {
       ...defaultMRTOptions.muiPaginationProps,

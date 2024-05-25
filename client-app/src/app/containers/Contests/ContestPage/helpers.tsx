@@ -33,6 +33,10 @@ export const getTabList = (isAdmin: boolean) => {
         value: "tab1",
       },
       {
+        label: "Submissions",
+        value: "tab3",
+      },
+      {
         label: "Standings",
         value: "tab4",
       },

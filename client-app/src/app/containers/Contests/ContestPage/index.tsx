@@ -42,7 +42,7 @@ const ContestPage = () => {
       case Tab.SUBMIT_CODE:
         return <SubmitCodeTab contest={contest} />;
       case Tab.MY_SUBMISSIONS:
-        return <MySubmissionTab contest={contest} />;
+        return <MySubmissionTab contest={contest} isAdmin={isAdmin} />;
       case Tab.STANDINGS:
         return <StandingsTab />;
       case Tab.MONITORING:
