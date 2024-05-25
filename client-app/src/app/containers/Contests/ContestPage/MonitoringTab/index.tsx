@@ -146,16 +146,10 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
       },
     };
     const xaxis = {
-      categories: contestStatistic?.problemSubmissionsStatistic.map((p) =>
-        contest?.problems?.map((problem) => {
-          if (problem.problemId == p.problemId) {
-            return problem?.problem?.title;
-          }
-        })
-      ),
+      categories: contest?.problems?.map((problem) => problem?.problem?.title),
       labels: {
         formatter: function (val) {
-          return val + "K";
+          return val.toFixed(2);
         },
       },
     };
@@ -221,7 +215,7 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
       list.map((p) => {
         let acRate = 0;
         if (p.totalSubmissions > 0) {
-          acRate = p.acSubmission / p.totalSubmissions;
+          acRate = (p.acSubmission / p.totalSubmissions) * 100;
         }
         series = [...series, acRate];
       });
@@ -264,18 +258,14 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
       },
     };
     const xaxis = {
-      categories: contestStatistic?.problemSubmissionsStatistic?.map((p) =>
-        contest?.problems?.map((problem) => {
-          if (problem.problemId == p.problemId) {
-            return problem?.problem?.title;
-          }
-        })
-      ),
+      categories: contest?.problems?.map((problem) => problem?.problem?.title),
       labels: {
         formatter: function (val) {
           return val + "%";
         },
       },
+      min: 0,
+      max: 100,
     };
     const yaxis = {
       labels: {
@@ -441,7 +431,7 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
       languages.map((l) => {
         let acRate = 0;
         if (l.totalSubmissions > 0) {
-          acRate = l.acSubmission / l.totalSubmissions;
+          acRate = (l.acSubmission / l.totalSubmissions) * 100;
         }
         categories = [...categories, l.languageName];
         data = [...data, acRate];
@@ -493,6 +483,8 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
           return val + "%";
         },
       },
+      min: 0,
+      max: 100,
     };
     const yaxis = {
       labels: {

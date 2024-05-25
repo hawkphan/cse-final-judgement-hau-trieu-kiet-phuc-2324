@@ -6,6 +6,7 @@ import {
   Grid,
   LoadingCommon,
   TabsBar,
+  Typo,
 } from "../../../shared";
 import { useState } from "react";
 import SubmitCodeTab from "./SubmitCodeTab";
@@ -14,9 +15,9 @@ import MySubmissionTab from "./MySubmissionsTab";
 import ProblemsTab from "./ProblemsTab";
 import { useParams } from "react-router-dom";
 import { API_QUERIES, useGetContestById } from "../../../queries";
-import { compareOrder } from "../ContestManagement/ContestForm/helpers";
 import MonitoringTab from "./MonitoringTab";
 import { useStore } from "../../../shared/common/stores/store";
+import ContestTimer from "./ContestTimer";
 
 const ContestPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -59,7 +60,11 @@ const ContestPage = () => {
   return (
     <Container maxWidth="xl" style={{ padding: "10px" }}>
       <Stack>
-        <Grid.Wrap>
+        <Grid.Wrap spacing={5} marginTop={1}>
+          <Grid.Item xs={12} justifyContent={'center'} flexDirection={'column'}>
+            <Typo align="center" variant="h3">{contest?.name}</Typo>
+            <ContestTimer startTime={contest.startTime} endTime={contest.endTime}/>
+          </Grid.Item>
           <Grid.Item xs={12}>
             <Card sx={{ minHeight: "700px" }}>
               <Box>

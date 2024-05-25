@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { COLOR_CODE, Typo } from "../../../../shared";
+
 interface TimeLeft {
   years?: number;
   months?: number;
@@ -57,8 +60,62 @@ export default function ContestTimer ({ startTime, endTime }: Props) {
       });
 
       return(
-        <div>
-            <h1>Left Time</h1>
-        </div>
+        <div style={{width: '100%', alignContent: 'center', textAlign: 'center', fontSize: 20}}>
+        {Object.values(timeLeft).some(
+          (value) => value !== undefined && value !== 0
+        ) ? (
+          <div>
+            Time Remains{" "}
+            {timeLeft.years !== 0 && (
+              <span>
+                {timeLeft.years} Year{timeLeft.years === 1 ? "" : "s"},{" "}
+              </span>
+            )}
+            {(timeLeft.months !== 0 || timeLeft.years !== 0) && (
+              <span>
+                {timeLeft.months} Month{timeLeft.months === 1 ? "" : "s"},{" "}
+              </span>
+            )}
+            {(timeLeft.days !== 0 ||
+              timeLeft.months !== 0 ||
+              timeLeft.years !== 0) && (
+              <span>
+                {timeLeft.days} Day{timeLeft.days === 1 ? "" : "s"},{" "}
+              </span>
+            )}
+            {(timeLeft.hours !== 0 ||
+              timeLeft.days !== 0 ||
+              timeLeft.months !== 0 ||
+              timeLeft.years !== 0) && (
+              <span>
+                {timeLeft.hours} Hour{timeLeft.hours === 1 ? "" : "s"},{" "}
+              </span>
+            )}
+            {(timeLeft.minutes !== 0 ||
+              timeLeft.hours !== 0 ||
+              timeLeft.days !== 0 ||
+              timeLeft.months !== 0 ||
+              timeLeft.years !== 0) && (
+              <span>
+                {timeLeft.minutes} Minute{timeLeft.minutes === 1 ? "" : "s"},{" "}
+              </span>
+            )}
+            {(timeLeft.seconds !== 0 ||
+              timeLeft.minutes !== 0 ||
+              timeLeft.hours !== 0 ||
+              timeLeft.days !== 0 ||
+              timeLeft.months !== 0 ||
+              timeLeft.years !== 0) && (
+              <span>
+                {timeLeft.seconds} Second{timeLeft.seconds === 1 ? "" : "s"}
+              </span>
+            )}
+          </div>
+        ) : (
+          <Typo color={COLOR_CODE.DANGER}>
+            {new Date() < new Date(endTime) ? "Started" : "Ended"}
+          </Typo>
+        )}
+      </div>
       )
 }
