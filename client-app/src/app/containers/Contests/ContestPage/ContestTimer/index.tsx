@@ -11,20 +11,19 @@ interface TimeLeft {
 }
 
 interface Props {
-  startTime: string;
   endTime: string;
 }
 
-export default function ContestTimer ({ startTime, endTime }: Props) {
-    const calculateTimeLeft = (start: Date, end: Date) => {
+export default function ContestTimer ({  endTime }: Props) {
+  
+    const calculateTimeLeft = ( end: Date) => {
         const now = new Date();
-    
-        start.setHours(start.getHours() - 7);
-        end.setHours(end.getHours() - 7);
-    
+        end.setHours(end.getHours());
         let timeLeft: TimeLeft = {};
-        if (now < start) {
-          const difference = start.getTime() - now.getTime();
+        if (now > end) {
+          timeLeft = {};
+        } else {
+          const difference =  end.getTime() - now.getTime();
           timeLeft = {
             years: Math.floor(difference / (1000 * 60 * 60 * 24 * 365)),
             months: Math.floor(
@@ -40,22 +39,19 @@ export default function ContestTimer ({ startTime, endTime }: Props) {
             minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
             seconds: Math.floor((difference % (1000 * 60)) / 1000),
           };
-        } else if (now > end) {
-          timeLeft = {};
         }
     
         return timeLeft;
       };
     
       const [timeLeft, setTimeLeft] = useState<TimeLeft>(
-        calculateTimeLeft(new Date(startTime), new Date(endTime))
+        calculateTimeLeft( new Date(endTime))
       );
     
       useEffect(() => {
         const timer = setTimeout(() => {
-          setTimeLeft(calculateTimeLeft(new Date(startTime), new Date(endTime)));
+          setTimeLeft(calculateTimeLeft( new Date(endTime)));
         }, 1000);
-    
         return () => clearTimeout(timer);
       });
 
@@ -63,9 +59,9 @@ export default function ContestTimer ({ startTime, endTime }: Props) {
         <div style={{width: '100%', alignContent: 'center', textAlign: 'center', fontSize: 20}}>
         {Object.values(timeLeft).some(
           (value) => value !== undefined && value !== 0
-        ) ? (
+        )  ? (
           <div>
-            Time Remains{" "}
+            Time Remaining:{" "}
             {timeLeft.years !== 0 && (
               <span>
                 {timeLeft.years} Year{timeLeft.years === 1 ? "" : "s"},{" "}
@@ -112,9 +108,7 @@ export default function ContestTimer ({ startTime, endTime }: Props) {
             )}
           </div>
         ) : (
-          <Typo color={COLOR_CODE.DANGER}>
-            {new Date() < new Date(endTime) ? "Started" : "Ended"}
-          </Typo>
+          <Typo color={COLOR_CODE.DANGER}>"Ended"</Typo>
         )}
       </div>
       )

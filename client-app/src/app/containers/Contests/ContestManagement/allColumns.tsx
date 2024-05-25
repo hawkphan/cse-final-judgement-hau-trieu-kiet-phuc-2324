@@ -29,7 +29,9 @@ export const allColumns = ({
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => (
+        <span style={{fontWeight: 'bold'}}> {formatValueOrNull(cell.getValue<string>())}</span>
+      ),
     },
     {
       accessorKey: "rule",

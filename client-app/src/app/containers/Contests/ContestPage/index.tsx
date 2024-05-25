@@ -62,8 +62,8 @@ const ContestPage = () => {
       <Stack>
         <Grid.Wrap spacing={5} marginTop={1}>
           <Grid.Item xs={12} justifyContent={'center'} flexDirection={'column'}>
-            <Typo align="center" variant="h3">{contest?.name}</Typo>
-            <ContestTimer startTime={contest.startTime} endTime={contest.endTime}/>
+            <Typo align="center" variant="h3" >{contest?.name}</Typo>
+            <ContestTimer  endTime={contest.endTime}/>
           </Grid.Item>
           <Grid.Item xs={12}>
             <Card sx={{ minHeight: "700px" }}>
