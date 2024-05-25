@@ -136,11 +136,11 @@ function Navbar() {
               label={LABELS.users}
               path={PATHS.users}
             />
-            <MuiMenuItem
+            {/* <MuiMenuItem
               itemKey={KEYS.dev}
               label={LABELS.dev}
               path={PATHS.dev}
-            />
+            /> */}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

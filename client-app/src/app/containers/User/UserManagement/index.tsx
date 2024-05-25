@@ -378,7 +378,7 @@ const UserManagement = () => {
                 }}
               >
                 <Typography variant="h6" component="div" color="text.primary">
-                  Start This Month:
+                  Started This Month:
                 </Typography>
                 <Typography variant="h6" component="div" color="text.secondary">
                   {overallStatistic?.thisMonthStartContests ?? 0}

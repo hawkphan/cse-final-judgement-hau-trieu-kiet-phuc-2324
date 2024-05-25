@@ -11,6 +11,7 @@ import {
 import { useStore } from "../../../../shared/common/stores/store";
 import SubmissionResultDialog from "../../../Problems/ProblemDetails/SubmissionTab/SubmissionResultDialog";
 import { allColumnsAdmin } from "./allColumnsAdmin";
+import SubmissionToolbar from "./SubmissionToolbar";
 
 interface Props {
   contest: Contest;
@@ -113,8 +114,9 @@ const MySubmissionTab = ({ contest, isAdmin }: Props) => {
           additionalFilterParams={["keywords"]}
           nameColumnPinning="actions"
           renderFallbackValue={<EmptyTable />}
-          renderToolbarInternalActions={() => {
-            return <></>;
+          
+          renderToolbarInternalActions={({ table }) => {
+            return <SubmissionToolbar table={table} />;
           }}
           muiTableBodyRowProps={({ row }) => ({
             onClick: () => {
@@ -128,7 +130,7 @@ const MySubmissionTab = ({ contest, isAdmin }: Props) => {
             sx: {
               backgroundColor: "transparent",
               mx: "-8px",
-              my: "-10px",
+              my: "-2px",
               fontFamily: "Roboto",
             },
           }}
