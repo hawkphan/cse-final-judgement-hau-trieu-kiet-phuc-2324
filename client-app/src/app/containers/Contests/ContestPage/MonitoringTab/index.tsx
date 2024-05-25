@@ -146,7 +146,13 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
       },
     };
     const xaxis = {
-      categories: contest?.problems?.map((problem) => problem?.problem?.title),
+      categories: contest?.problems?.map((problem) => {
+        if (problem?.problem?.title.length > 15) {
+          return problem?.problem?.title.split(" ");
+        } else {
+          return problem?.problem?.title;
+        }
+      }),
       labels: {
         formatter: function (val) {
           return val.toFixed(2);
@@ -247,7 +253,7 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
       },
     };
     const stroke = {
-      width: 1,
+      width: 4,
     };
     const title = {
       text: "Problem AC Rate",
@@ -258,7 +264,13 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
       },
     };
     const xaxis = {
-      categories: contest?.problems?.map((problem) => problem?.problem?.title),
+      categories: contest?.problems?.map((problem) => {
+        if (problem?.problem?.title.length > 15) {
+          return problem?.problem?.title.split(" ");
+        } else {
+          return problem?.problem?.title;
+        }
+      }),
       labels: {
         formatter: function (val) {
           return val + "%";
@@ -391,7 +403,7 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
     function onGetCatergogiesSeries() {
       type Lang = {
         languageId: number;
-        languageName: string;
+        languageName: string | string[];
         totalSubmissions: number;
         acSubmission: number;
       };
@@ -408,7 +420,10 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
               ...languages,
               {
                 languageId: l.languageId,
-                languageName: getLanguageNameById(l.languageId),
+                languageName:
+                  getLanguageNameById(l.languageId).length > 15
+                    ? getLanguageNameById(l.languageId).split(" ")
+                    : getLanguageNameById(l.languageId),
                 totalSubmissions: 0,
                 acSubmission: 0,
               },
@@ -436,7 +451,6 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
         categories = [...categories, l.languageName];
         data = [...data, acRate];
       });
-
       return { categories, data };
     }
 
@@ -501,10 +515,8 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
         data: data,
       },
     ];
-    setLanguageACRateStatistic((prevState) => ({
-      ...prevState,
+    setLanguageACRateStatistic(() => ({
       options: {
-        ...prevState.options,
         chart,
         dataLabels,
         plotOptions,
@@ -556,7 +568,12 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
           series={submissionStatistic.series}
           options={submissionStatistic.options}
           type="bar"
-          height={400}
+          height={
+            submissionStatistic
+              ? 180 +
+                submissionStatistic?.options?.xaxis?.categories.length * 15
+              : 300
+          }
           width="100%"
         />
       </Grid>
@@ -566,7 +583,11 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
           series={submissionACRate.series}
           options={submissionACRate.options}
           type="bar"
-          height={400}
+          height={
+            submissionACRate
+              ? 180 + submissionACRate?.options?.xaxis?.categories.length * 15
+              : 300
+          }
           width="100%"
         />
       </Grid>
@@ -585,8 +606,13 @@ export default function MonitoringTab(props: Readonly<MonitoringProps>) {
         <Chart
           series={languageACRateStatistic.series}
           options={languageACRateStatistic.options}
+          height={
+            languageACRateStatistic
+              ? 180 +
+                languageACRateStatistic?.options?.xaxis?.categories.length * 50
+              : 300
+          }
           type="bar"
-          height={400}
           width="100%"
         />
       </Grid>

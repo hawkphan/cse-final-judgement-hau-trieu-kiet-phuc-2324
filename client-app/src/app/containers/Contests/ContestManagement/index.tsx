@@ -105,7 +105,7 @@ const ContestManagement = () => {
           <Stack direction="row" spacing={1} my={0.5}>
             <Stack width="328px">
               <CustomTableSearch
-                placeholder="Search by Title"
+                placeholder="Search by Name"
                 searchKey="keywords"
               />
             </Stack>
