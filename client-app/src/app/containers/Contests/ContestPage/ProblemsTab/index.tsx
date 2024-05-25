@@ -1,12 +1,10 @@
 import { Box, CardContent, Typography } from "@mui/material";
 import parse from "html-react-parser";
 import "./styles.scss";
-import {
-  ContestProblem,
-  Problem,
-} from "../../../../queries";
+import { ContestProblem, Problem } from "../../../../queries";
 import { Accordion, formatDateOrNull, isEmpty, Text } from "../../../../shared";
 import { renderDifficultyTag } from "../../../Problems/helpers";
+import { compareOrder } from "../../ContestManagement/ContestForm/helpers";
 
 const ProblemDetail = ({ problem }: Props) => {
   return (
@@ -44,6 +42,7 @@ const ProblemDetail = ({ problem }: Props) => {
 };
 
 const ProblemsTab = ({ problems }: ProblemTabProp) => {
+  problems = problems?.sort(compareOrder);
   return (
     <CardContent>
       {!isEmpty(problems)
