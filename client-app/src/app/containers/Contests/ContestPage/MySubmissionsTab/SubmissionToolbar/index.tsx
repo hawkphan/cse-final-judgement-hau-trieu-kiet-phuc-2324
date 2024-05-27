@@ -7,14 +7,16 @@ import {
   CustomTableColumnOptions,
   CustomTableFilterContainer,
 } from "../../../../../shared";
-import { Solution, useGetSolutions } from "../../../../../queries";
+import { Contest, Solution, useGetSolutions } from "../../../../../queries";
 import SubmissionFilter from "./SubmissionFitler";
+import { SubmissionFilterQueryKey } from "./SubmissionFitler/types";
 
 type Props = {
   table: MRT_TableInstance<Solution>;
+  contest: Contest;
 };
 
-const SubmissionToolbar = ({ table }: Props) => {
+const SubmissionToolbar = ({ table, contest }: Props) => {
   const { handleInvalidateSolutions } = useGetSolutions();
 
   return (
@@ -37,8 +39,14 @@ const SubmissionToolbar = ({ table }: Props) => {
               <IoMdRefresh size={20} color={COLOR_CODE.GREY_800} />
             </IconButton>
           </Tooltip>
-          <CustomTableFilterContainer filterParamsKeys={[""]}>
-            <SubmissionFilter />
+          <CustomTableFilterContainer
+            filterParamsKeys={[
+              SubmissionFilterQueryKey.USERS,
+              SubmissionFilterQueryKey.LANGUAGES,
+              SubmissionFilterQueryKey.PROBLEMS,
+            ]}
+          >
+            <SubmissionFilter contest={contest} />
           </CustomTableFilterContainer>
           <CustomTableColumnOptions>
             <Tooltip title="Column Options" arrow placement="top">

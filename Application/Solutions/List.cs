@@ -22,6 +22,8 @@ namespace Application.Solutions
             public Guid? ProblemId { get; set; }
             public Guid? ContestId { get; set; }
             public PagingParams Params { get; set; }
+            public List<Guid> ContestantIds { get; set; }
+            public List<Guid> ContestProblemIds { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, Result<PagedList<SolutionResponseDto>>>
@@ -42,6 +44,8 @@ namespace Application.Solutions
                 Guid? problemId = request.ProblemId;
                 Guid? userId = request.UserId;
                 Guid? contestId = request.ContestId;
+                List<Guid> contestantIds = request.ContestantIds;
+                List<Guid> contestProblemIds = request.ContestProblemIds;
                 FileManager _fileManager = new FileManager();
 
                 var results = _context.Results.Where(r => new List<double>() { 1, 2 }.Contains(r.Status)).Include(r => r.TestCase).Include(r => r.Solution).ThenInclude(s => s.Problem).ToList();
@@ -190,6 +194,16 @@ namespace Application.Solutions
                 await _context.SaveChangesAsync();
 
                 solutions = (IOrderedQueryable<Solution>)solutions.Where(s => s.ContestId == contestId);
+
+                if (contestantIds.Any())
+                {
+                    solutions = (IOrderedQueryable<Solution>)solutions.Where(s => contestantIds.Contains(s.UserId));
+                }
+
+                if (contestProblemIds.Any())
+                {
+                    solutions = (IOrderedQueryable<Solution>)solutions.Where(s => contestProblemIds.Contains(s.ProblemId));
+                }
 
                 if (userId != null)
                 {

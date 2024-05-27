@@ -50,9 +50,9 @@ export interface ContestProblem {
 
 
 export interface ContestMember {
-  userId: string;
-  role: number;
-  user: User;
+  userId?: string;
+  role?: number;
+  user?: User;
 }
 
 export interface ContestStatistic {

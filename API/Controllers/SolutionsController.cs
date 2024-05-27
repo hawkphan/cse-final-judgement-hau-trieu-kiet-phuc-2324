@@ -17,9 +17,9 @@ namespace API.Controllers
         //api/solutions
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<SolutionResponseDto>> GetSolutions([FromQuery] Guid? userId, [FromQuery] Guid? problemId, [FromQuery] Guid? contestId, [FromQuery] PagingParams param)
+        public async Task<ActionResult<SolutionResponseDto>> GetSolutions([FromQuery] Guid? userId, [FromQuery] Guid? problemId, [FromQuery] Guid? contestId, [FromQuery] PagingParams param, [FromQuery] List<Guid> contestantId, [FromQuery] List<Guid> contestProblemId)
         {
-            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param, UserId = userId, ProblemId = problemId, ContestId = contestId }));
+            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param, UserId = userId, ProblemId = problemId, ContestId = contestId, ContestantIds = contestantId, ContestProblemIds = contestProblemId }));
         }
 
         [AllowAnonymous]

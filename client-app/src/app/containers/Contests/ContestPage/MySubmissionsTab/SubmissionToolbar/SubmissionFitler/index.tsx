@@ -1,82 +1,72 @@
 import { Container, Stack, Typography } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
 import { useCallback, useMemo } from "react";
-import dayjs from "dayjs";
-import { ProblemFilterQueryKey } from "../../../../../Problems/helpers";
 import {
   Button,
   COLOR_CODE,
   Grid,
-  MuiDatePicker,
   MuiMultiSelect,
 } from "../../../../../../shared";
 import { SelectOption } from "../../../../../../shared/components/common/MuiAutoComplete";
+import { SubmissionFilterQueryKey } from "./types";
+import { Contest } from "../../../../../../queries";
 
-const SubmissionFilter = () => {
+interface Props {
+  contest: Contest;
+}
+
+const SubmissionFilter = ({ contest }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const difficultyOptions: SelectOption[] = [
-    { label: "New", value: "0" },
-    { label: "Easy", value: "1" },
-    { label: "Medium", value: "2" },
-    { label: "Hard", value: "3" },
-  ];
+  const userOptions: SelectOption[] = contest?.members?.map((item) => ({
+    label: item?.user?.displayName,
+    value: item?.userId,
+  }));
+
+  const problemOptions: SelectOption[] = contest?.problems?.map((item) => ({
+    label: `${item?.problem?.code} - ${item?.problem?.title}`,
+    value: item?.problemId,
+  }));
 
   const handleClearAll = () => {
-    searchParams.delete("");
+    searchParams.delete(SubmissionFilterQueryKey.LANGUAGES);
+    searchParams.delete(SubmissionFilterQueryKey.PROBLEMS);
+    searchParams.delete(SubmissionFilterQueryKey.USERS);
     setSearchParams(searchParams);
   };
 
-  const handleChangeDifficulties = useCallback(
-    (_name: string, difficulties: string[]) => {
-      searchParams.delete(ProblemFilterQueryKey.DIFFICULTY);
-      difficulties.forEach((item) =>
-        searchParams.append(ProblemFilterQueryKey.DIFFICULTY, item)
+  const handleChangeUsers = useCallback(
+    (_name: string, users: string[]) => {
+      searchParams.delete(SubmissionFilterQueryKey.USERS);
+      users.forEach((item) =>
+        searchParams.append(SubmissionFilterQueryKey.USERS, item)
       );
 
       setSearchParams(searchParams);
     },
     [setSearchParams, searchParams]
   );
-
-  const handleChangeFromDate = useCallback(
-    (_name: Date) => {
-      searchParams.delete(ProblemFilterQueryKey.FROM_DATE);
-      searchParams.set(
-        ProblemFilterQueryKey.FROM_DATE,
-        _name.toLocaleDateString()
+  const handleChangeProblems = useCallback(
+    (_name: string, problems: string[]) => {
+      searchParams.delete(SubmissionFilterQueryKey.PROBLEMS);
+      problems.forEach((item) =>
+        searchParams.append(SubmissionFilterQueryKey.PROBLEMS, item)
       );
-
-      setSearchParams(searchParams);
-    },
-    [setSearchParams, searchParams]
-  );
-  const handleChangeToDate = useCallback(
-    (_name: Date) => {
-      searchParams.delete(ProblemFilterQueryKey.TO_DATE);
-      searchParams.set(
-        ProblemFilterQueryKey.TO_DATE,
-        _name.toLocaleDateString()
-      );
-
+      console.log("problem", problems);
       setSearchParams(searchParams);
     },
     [setSearchParams, searchParams]
   );
 
-  const selectedDifficulties = useMemo(() => {
-    return searchParams.getAll(ProblemFilterQueryKey.DIFFICULTY) ?? [];
+  const selectedUsers = useMemo(() => {
+    return searchParams.getAll(SubmissionFilterQueryKey.USERS) ?? [];
+  }, [searchParams]);
+  const selectedProblems = useMemo(() => {
+    return searchParams.getAll(SubmissionFilterQueryKey.PROBLEMS) ?? [];
   }, [searchParams]);
 
-  const selectedFromDate = useMemo(() => {
-    return searchParams.get(ProblemFilterQueryKey.FROM_DATE) ?? "";
-  }, [searchParams]);
-
-  const selectedToDate = useMemo(() => {
-    return searchParams.get(ProblemFilterQueryKey.TO_DATE) ?? "";
-  }, [searchParams]);
-
-  const difficultyQuery = searchParams.has(ProblemFilterQueryKey.DIFFICULTY);
+  const userQuery = searchParams.has(SubmissionFilterQueryKey.USERS);
+  const problemQuery = searchParams.has(SubmissionFilterQueryKey.PROBLEMS);
 
   return (
     <Container maxWidth="xs" sx={{ p: 2, width: 360 }}>
@@ -107,26 +97,22 @@ const SubmissionFilter = () => {
       <Grid.Wrap spacing={2}>
         <Grid.Item xs={12}>
           <MuiMultiSelect
-            label="Difficulty"
-            placeholder={!difficultyQuery && "All"}
-            options={difficultyOptions}
-            value={selectedDifficulties}
-            onChange={handleChangeDifficulties}
+            label="Members"
+            placeholder={!userQuery && "All"}
+            options={userOptions}
+            value={selectedUsers}
+            onChange={handleChangeUsers}
             size="small"
           />
         </Grid.Item>
         <Grid.Item xs={12}>
-          <MuiDatePicker
-            label="Date after"
-            onChange={handleChangeFromDate}
-            value={dayjs(selectedFromDate)}
-          />
-        </Grid.Item>
-        <Grid.Item xs={12}>
-          <MuiDatePicker
-            label="Date before"
-            onChange={handleChangeToDate}
-            value={dayjs(selectedToDate)}
+          <MuiMultiSelect
+            label="Problems"
+            placeholder={!problemQuery && "All"}
+            options={problemOptions}
+            value={selectedProblems}
+            onChange={handleChangeProblems}
+            size="small"
           />
         </Grid.Item>
       </Grid.Wrap>
