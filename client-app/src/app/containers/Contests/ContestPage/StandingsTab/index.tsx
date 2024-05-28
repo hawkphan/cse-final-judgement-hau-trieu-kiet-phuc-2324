@@ -1,11 +1,21 @@
 import { Box, CardContent } from "@mui/material";
 import { EmptyTable, Table2 } from "../../../../shared";
-import {useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { allColumns } from "./allColumns";
-import { StandingsRecord, standings } from "../data.mock";
+import { Contest, RankingMember, useGetRanking } from "../../../../queries";
 
-const StandingsTab = () => {
-  const columns = useMemo(() => allColumns(), []);
+interface Props {
+  contest: Contest;
+}
+
+const StandingsTab = ({ contest }: Props) => {
+  const columns = useMemo(() => allColumns(contest), [contest]);
+
+  const { rankings, isFetching, totalRecords, setParams } = useGetRanking();
+
+  useEffect(() => {
+    setParams({ contestId: contest?.id });
+  }, []);
 
   return (
     <CardContent>
@@ -20,15 +30,16 @@ const StandingsTab = () => {
           overflow: "auto",
         }}
       >
-        <Table2<StandingsRecord>
-          rowCount={10}
+        <Table2<RankingMember>
+          rowCount={totalRecords}
           columns={columns}
-          data={standings}
+          data={rankings}
           enableTopToolbar={true}
           recordName="items"
           singularRecordName="item"
           enableDensityToggle={false}
           enableColumnOrdering={false}
+          isLoading={isFetching}
           enableRowActions
           paginationDisplayMode="pages"
           isColumnPinning={false}
@@ -51,6 +62,5 @@ const StandingsTab = () => {
     </CardContent>
   );
 };
-
 
 export default StandingsTab;

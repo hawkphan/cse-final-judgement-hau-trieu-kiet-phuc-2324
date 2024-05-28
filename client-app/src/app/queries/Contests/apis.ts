@@ -1,6 +1,12 @@
 import axios from "axios";
 import { API_URL } from "../common/constants";
-import { Contest, ContestStatistic, CreateContestBody, EditContestBody } from "./types";
+import {
+  Contest,
+  ContestStatistic,
+  CreateContestBody,
+  EditContestBody,
+  RankingMember,
+} from "./types";
 import { GetPropertiesParams } from "../Languages";
 import { stringify } from "../../shared";
 
@@ -25,6 +31,15 @@ const getContests = (params: GetPropertiesParams) => {
   return axios.get<Contest[]>(`${API_URL}/api/contests?${queryString}`, {});
 };
 
+const getRanking = (params: GetPropertiesParams) => {
+  const { contestId, ...others } = params;
+  const queryString = stringify(others);
+  return axios.get<RankingMember[]>(
+    `${API_URL}/api/contests/${contestId}/leaderboard?${queryString}`,
+    {}
+  );
+};
+
 const createContest = (body: CreateContestBody) => {
   return axios.post(`${API_URL}/api/contests`, body, {});
 };
@@ -39,7 +54,10 @@ const getContestById = (params: { id: string }) => {
 };
 
 const getContestStatisticById = (params: { id: string }) => {
-  return axios.get<ContestStatistic>(`${API_URL}/api/charts/contests/${params.id}`, {});
+  return axios.get<ContestStatistic>(
+    `${API_URL}/api/charts/contests/${params.id}`,
+    {}
+  );
 };
 
 const deleteContest = (id: string) => {
@@ -53,6 +71,7 @@ export {
   createContest,
   deleteContest,
   editContest,
+  getRanking,
   getContestById,
-  getContestStatisticById
+  getContestStatisticById,
 };

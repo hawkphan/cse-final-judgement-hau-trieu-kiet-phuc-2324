@@ -7,3 +7,4 @@ export * from "./useCreateContest";
 export * from "./useDeleteContest";
 export * from "./useGetContestById";
 export * from "./useEditContest";
+export * from "./useGetRanking";

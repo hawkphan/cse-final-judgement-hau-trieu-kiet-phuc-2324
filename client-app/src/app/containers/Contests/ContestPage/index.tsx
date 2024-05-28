@@ -45,7 +45,7 @@ const ContestPage = () => {
       case Tab.MY_SUBMISSIONS:
         return <MySubmissionTab contest={contest} isAdmin={isAdmin} />;
       case Tab.STANDINGS:
-        return <StandingsTab />;
+        return <StandingsTab contest={contest} />;
       case Tab.MONITORING:
         return <MonitoringTab contest={contest} />;
       default:
@@ -61,9 +61,11 @@ const ContestPage = () => {
     <Container maxWidth="xl" style={{ padding: "10px" }}>
       <Stack>
         <Grid.Wrap spacing={5} marginTop={1}>
-          <Grid.Item xs={12} justifyContent={'center'} flexDirection={'column'}>
-            <Typo align="center" variant="h3" >{contest?.name}</Typo>
-            <ContestTimer  endTime={contest.endTime}/>
+          <Grid.Item xs={12} justifyContent={"center"} flexDirection={"column"}>
+            <Typo align="center" variant="h3">
+              {contest?.name}
+            </Typo>
+            <ContestTimer endTime={contest.endTime} />
           </Grid.Item>
           <Grid.Item xs={12}>
             <Card sx={{ minHeight: "700px" }}>

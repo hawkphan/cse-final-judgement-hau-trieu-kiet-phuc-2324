@@ -28,6 +28,7 @@ export enum API_QUERIES {
   GET_CONTESTS = "/get-contests",
   GET_CONTEST_BY_ID = "/get-contest-by-id",
   GET_CONTEST_STATISTIC_BY_ID = "/get-contest-statistic-by-id",
+  GET_CONTEST_RANKING = "get-contest-ranking",
 
   //Management
   GET_OVERALL_STATISTIC = "/get-overall-statistic",

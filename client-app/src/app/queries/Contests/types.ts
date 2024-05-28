@@ -48,7 +48,6 @@ export interface ContestProblem {
   approximateRate?: string;
 }
 
-
 export interface ContestMember {
   userId?: string;
   role?: number;
@@ -83,4 +82,24 @@ export interface SubmissionStatus {
   runtimeErrorSIGABRT: number;
   runtimeErrorNZEC: number;
   runtimeErrorOther: number;
+}
+
+export interface RankingMember {
+  userId: string;
+  userName: string;
+  rank: number;
+  score: number;
+  solvedProblemCount: number;
+  totalTime: number;
+  problems: RankingProblem[];
+}
+
+export interface RankingProblem {
+  problemId: string;
+  problemName: string;
+  status: number;
+  score: number;
+  order: number;
+  submissionCount: number;
+  timeSpent: number;
 }

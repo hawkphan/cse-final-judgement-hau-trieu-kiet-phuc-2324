@@ -35,9 +35,9 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpGet("{id}/leaderboard")]
-        public async Task<ActionResult<List<MemberDto>>> GetRank(Guid id)
+        public async Task<ActionResult<List<RankingMemberDto>>> GetRank(Guid id)
         {
-            return HandleApiResult(await Mediator.Send(new Grade.Command { Id = id }));
+            return HandleApiResult(await Mediator.Send(new Grade.Command { ContestId = id }));
         }
         [AllowAnonymous]
         [HttpPost]
