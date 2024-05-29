@@ -3,6 +3,7 @@ import { EmptyTable, Table2 } from "../../../../shared";
 import { useEffect, useMemo } from "react";
 import { allColumns } from "./allColumns";
 import { Contest, RankingMember, useGetRanking } from "../../../../queries";
+import "./style.css";
 
 interface Props {
   contest: Contest;
@@ -30,6 +31,22 @@ const StandingsTab = ({ contest }: Props) => {
           overflow: "auto",
         }}
       >
+        <div className="fl-row from-end">
+          <div className="fl-row from-end contained">
+            <div className="fl-row fl-item">
+              <div className="iconSquare green"></div>
+              <div>First to solve problem</div>
+            </div>
+            <div className="fl-row fl-item">
+              <div className="iconSquare paleGreen"></div>
+              <div>Solved Problem</div>
+            </div>
+            <div className="fl-row fl-item">
+              <div className="iconSquare orange"></div>
+              <div>Attempted Problem</div>
+            </div>
+          </div>
+        </div>
         <Table2<RankingMember>
           rowCount={totalRecords}
           columns={columns}
@@ -49,11 +66,12 @@ const StandingsTab = ({ contest }: Props) => {
           renderToolbarInternalActions={() => {
             return <></>;
           }}
+          muiTableBodyProps={{}}
           muiTopToolbarProps={{
             sx: {
               backgroundColor: "transparent",
               mx: "-8px",
-              my: "-10px",
+              my: "-20px",
               fontFamily: "Roboto",
             },
           }}
