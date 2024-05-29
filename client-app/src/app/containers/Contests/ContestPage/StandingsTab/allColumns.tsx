@@ -13,6 +13,20 @@ export const allColumns = (
       header: `${problem?.problem?.code} - ${problem?.problem?.title}`,
       enableColumnFilterModes: false,
       enableSorting: false,
+      muiTableBodyCellProps: ({ row }) => ({
+        sx: {
+          background:
+            row.original.problems.find((p) => p.problemId === problem.problemId)
+              ?.status == 0
+              ? '#388e3c'
+              : row.original.problems.find(
+                  (p) => p.problemId === problem.problemId
+                )?.status == 1
+              ? '#00c853'
+              : "orange",
+          color: "white",
+        },
+      }),
       Cell: ({ cell }) => {
         const data = cell.row.original.problems[problem.order - 1];
 
