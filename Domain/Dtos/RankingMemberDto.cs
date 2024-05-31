@@ -12,6 +12,7 @@ namespace Domain.Dtos
         public string UserName { get; set; }
         public int Rank { get; set; }
         public double Score { get; set; }
+        public DateTime ScoreTime { get; set; } = DateTime.Now;
         public int SolvedProblemCount { get; set; } = 0;
         public double TotalTime { get; set; } = 0;
         public List<RankingProblemDto> Problems { get; set; } = new List<RankingProblemDto>();

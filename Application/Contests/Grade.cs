@@ -41,7 +41,7 @@ namespace Application.Contests
                     return await GradeContestICPC(contestId);
                 }
 
-                return await GradeContestICPC(contestId);
+                return await GradeContestOlympic(contestId);
             }
             public async Task<ApiResult<List<RankingMemberDto>>> GradeContestICPC(Guid contestId)
             {
@@ -182,46 +182,136 @@ namespace Application.Contests
                 return ApiResult<List<RankingMemberDto>>.Success(responseList.OrderBy(r => r.Rank).ToList());
             }
 
-            // public async Task GradeContestOlympic(Guid contestId)
-            // {
-            //     var contest = _context.Contests.Find(contestId);
-            //     var problemsForContest = _context.Contests
-            //         .Where(c => c.Id == contestId)
-            //         .Include(m => m.Members)
-            //         .Include(m => m.Problems)
-            //         .ToList();
-            //     foreach (ContestMember member in contest.Members)
-            //     {
-            //         DateTime TempTime = contest.StartTime;
-            //         double Score = 0;
-            //         foreach (var problem in problemsForContest)
-            //         {
-            //             List<Solution> memberSolution = _context.Solutions
-            //             .Where(x => x.ContestId == contestId && x.UserId == member.UserId && x.ProblemId == problem.Id)
-            //             .OrderBy(s => s.CreatedDate).ToList();
+            public async Task<ApiResult<List<RankingMemberDto>>> GradeContestOlympic(Guid contestId)
+            {
+                List<RankingMemberDto> responseList = new List<RankingMemberDto>();
 
-            //             DateTime startTime = contest.StartTime < TempTime ? TempTime : contest.StartTime;
-            //             TimeSpan timeDifference;
-            //             double totalMinutes = 0;
+                var contest = await _context.Contests.Include(c => c.Problems).Include(c => c.Members).FirstOrDefaultAsync(c => c.Id == contestId);
+                var contestProblems = _context.ContestProblems.Include(p => p.Problem).Where(p => p.ContestId == contestId);
+                var contestants = _context.ContestMembers.Include(m => m.User).Where(m => Math.Abs(m.Role - 0) >= 0.0000001 && m.ContestId == contestId).ToList();
 
-            //             foreach (Solution solution in memberSolution)
-            //             {
-            //                 DateTime completedTime = solution.CreatedDate;
-            //                 if (solution.Status == 3)
-            //                 {
-            //                     Score += solution.Score * 100;
-            //                     timeDifference = completedTime - startTime;
-            //                     totalMinutes = timeDifference.TotalMinutes;
-            //                     TempTime = completedTime;
-            //                     break;
-            //                 }
-            //             }
-            //             // member.Score = Score;
-            //             // member.TotalMinutes += totalMinutes;
-            //         }
+                var adminIds = new List<Guid>();
+                foreach (var item in contest.Members.Where(m => Math.Abs(m.Role - 0) < 0.0000001))
+                {
+                    adminIds.Add(item.UserId);
+                }
 
-            //     }
-            // }
+                var solutions = await _context.Solutions.Include(s => s.Results).Where(s => s.ContestId == contestId && !adminIds.Contains(s.UserId)).OrderBy(s => s.CreatedDate).ToListAsync();
+
+                var problems = new List<ContestProblemDto>();
+
+                foreach (var item in contestProblems)
+                {
+                    problems.Add(_mapper.Map<ContestProblemDto>(item));
+                }
+
+                foreach (var contestant in contestants)
+                {
+                    RankingMemberDto rankingMember = new RankingMemberDto
+                    {
+                        UserId = contestant.UserId,
+                        UserName = contestant.User.DisplayName
+                    };
+
+                    Dictionary<Guid, Solution> bestAcceptedSolutionMap = new Dictionary<Guid, Solution>();
+
+                    Dictionary<Guid, double> solutionScores = new Dictionary<Guid, double>();
+
+                    foreach (var problemItem in problems)
+                    {
+                        RankingProblemDto rankingProblem = new RankingProblemDto
+                        {
+                            ProblemId = problemItem.ProblemId,
+                            ProblemName = problemItem.Problem.Code + " - " + problemItem.Problem.Title,
+                            Order = problemItem.Order,
+                            MaxScore = problemItem.Score,
+                        };
+
+                        var problemSolutions = solutions.Where(s => s.UserId == rankingMember.UserId && s.ProblemId == problemItem.ProblemId
+                                                        && Math.Abs(s.Status - 1) >= 0.0000001
+                                                        && Math.Abs(s.Status - 2) >= 0.0000001
+                                                        && Math.Abs(s.Status - 6) >= 0.0000001).ToList();
+                        foreach (var solution in problemSolutions)
+                        {
+                            var results = solution.Results;
+
+                            var acceptedCount = 0;
+                            foreach (var result in results)
+                            {
+                                if (Math.Abs(result.Status - 3) < 0.0000001)
+                                {
+                                    acceptedCount++;
+                                }
+                            }
+
+                            var score = (double)acceptedCount / results.Count * rankingProblem.MaxScore;
+                            solutionScores.Add(solution.Id, score);
+
+                            if (bestAcceptedSolutionMap.ContainsKey(problemItem.ProblemId))
+                            {
+                                var tempScore = solutionScores[bestAcceptedSolutionMap[problemItem.ProblemId].Id];
+                                if (Math.Abs(tempScore - score) < 0.0000001 && solution.CreatedDate < bestAcceptedSolutionMap[problemItem.ProblemId].CreatedDate)
+                                {
+                                    bestAcceptedSolutionMap.Add(problemItem.ProblemId, solution);
+                                }
+
+                                if (score - tempScore > 0.0000001)
+                                {
+                                    bestAcceptedSolutionMap.Add(problemItem.ProblemId, solution);
+                                }
+                            }
+                            else
+                            {
+                                bestAcceptedSolutionMap.Add(problemItem.ProblemId, solution);
+                            }
+
+                        }
+
+                        if (bestAcceptedSolutionMap.ContainsKey(problemItem.ProblemId))
+                        {
+                            var problemScore = solutionScores[bestAcceptedSolutionMap[problemItem.ProblemId].Id];
+                            rankingProblem.Score = problemScore;
+                            rankingProblem.Status = Math.Abs(problemScore - 0) < 0.0000001 ? 3 : 1;
+                            rankingMember.SolvedProblemCount++;
+                        }
+                        else
+                        {
+                            rankingProblem.Score = 0;
+                            rankingProblem.Status = 3;
+                        }
+
+                        rankingMember.Problems.Add(rankingProblem);
+                    }
+
+
+                    rankingMember.Problems = rankingMember.Problems.OrderBy(p => p.Order).ToList();
+
+                    foreach (var problem in rankingMember.Problems)
+                    {
+                        var timeSpent = bestAcceptedSolutionMap.ContainsKey(problem.ProblemId) ? (bestAcceptedSolutionMap[problem.ProblemId].CreatedDate - contest.StartTime).TotalSeconds : 0;
+                        rankingMember.TotalTime += timeSpent;
+                        rankingMember.Score += problem.Score;
+
+                        if (bestAcceptedSolutionMap.ContainsKey(problem.ProblemId) && bestAcceptedSolutionMap[problem.ProblemId].CreatedDate < rankingMember.ScoreTime)
+                        {
+                            rankingMember.ScoreTime = rankingMember.ScoreTime = bestAcceptedSolutionMap[problem.ProblemId].CreatedDate;
+                        }
+                    }
+
+                    responseList.Add(rankingMember);
+                }
+
+                responseList = responseList.OrderByDescending(p => p.Score).ThenBy(p => p.ScoreTime).ToList();
+
+                int rank = 1;
+
+                foreach (var item in responseList)
+                {
+                    item.Rank = rank++;
+                }
+
+                return ApiResult<List<RankingMemberDto>>.Success(responseList.OrderBy(r => r.Rank).ToList());
+            }
         }
 
 

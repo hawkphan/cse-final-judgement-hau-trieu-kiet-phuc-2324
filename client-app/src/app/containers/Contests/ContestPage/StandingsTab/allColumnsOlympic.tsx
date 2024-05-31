@@ -4,7 +4,7 @@ import "material-symbols";
 import { formatValueOrNull } from "../../../../shared";
 import { Contest, RankingMember } from "../../../../queries";
 
-export const allColumns = (
+export const allColumnsOlympic = (
   contest: Contest
 ): MRT_ColumnDef<RankingMember>[] => {
   const problemColumns: MRT_ColumnDef<RankingMember>[] = contest?.problems.map(
@@ -23,28 +23,13 @@ export const allColumns = (
                   (p) => p.problemId === problem.problemId
                 )?.status == 1
               ? "#00c853"
-              : row.original.problems.find(
-                  (p) => p.problemId === problem.problemId
-                )?.status == 2
-              ? "orange"
-              : "white",
-          color:
-            row.original.problems.find((p) => p.problemId === problem.problemId)
-              ?.status == 3
-              ? "black"
-              : "white",
+              : "orange",
+          color: "white",
         },
       }),
       Cell: ({ cell }) => {
         const data = cell.row.original.problems[problem.order - 1];
-
-        if (data.timeSpent === 0) {
-          return "--";
-        }
-
-        return formatValueOrNull(
-          data.submissionCount + "/" + parseInt(data.timeSpent / 60 + "")
-        );
+        return formatValueOrNull(data.score + "");
       },
     })
   );
@@ -82,6 +67,14 @@ export const allColumns = (
       size: 20,
       Cell: ({ cell }) =>
         formatValueOrNull(parseInt(cell.getValue<number>() / 60 + "") + ""),
+    },
+    {
+      accessorKey: "score",
+      header: "Score",
+      enableColumnFilterModes: false,
+      enableSorting: false,
+      size: 20,
+      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
     },
     ...problemColumns,
   ];

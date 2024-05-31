@@ -45,7 +45,7 @@ const Problems = () => {
       handleInvalidateProblems();
     },
     onError: (error) => {
-      Toastify.error(error.toString());
+      Toastify.error(error.message);
     },
   });
 

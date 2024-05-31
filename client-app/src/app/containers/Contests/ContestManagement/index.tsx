@@ -41,7 +41,7 @@ const ContestManagement = () => {
       handleInvalidateContests();
     },
     onError: (error) => {
-      Toastify.error(error.toString());
+      Toastify.error(error.message);
     },
   });
 

@@ -4,19 +4,25 @@ import { useEffect, useMemo } from "react";
 import { allColumns } from "./allColumns";
 import { Contest, RankingMember, useGetRanking } from "../../../../queries";
 import "./style.css";
+import { allColumnsOlympic } from "./allColumnsOlympic";
 
 interface Props {
   contest: Contest;
 }
 
 const StandingsTab = ({ contest }: Props) => {
-  const columns = useMemo(() => allColumns(contest), [contest]);
+  const columns = useMemo(() => {
+    if (contest?.rule === 1) {
+      return allColumnsOlympic(contest);
+    }
 
+    return allColumns(contest);
+  }, [contest]);
   const { rankings, isFetching, totalRecords, setParams } = useGetRanking();
 
   useEffect(() => {
     setParams({ contestId: contest?.id });
-  }, []);
+  }, [contest?.id, setParams]);
 
   return (
     <CardContent>
@@ -52,9 +58,11 @@ const StandingsTab = ({ contest }: Props) => {
           columns={columns}
           data={rankings}
           enableTopToolbar={true}
+          enableColumnVirtualization={false}
           recordName="items"
           singularRecordName="item"
           enableDensityToggle={false}
+          enablePagination={false}
           enableColumnOrdering={false}
           isLoading={isFetching}
           enableRowActions
@@ -66,7 +74,7 @@ const StandingsTab = ({ contest }: Props) => {
           renderToolbarInternalActions={() => {
             return <></>;
           }}
-          muiTableBodyProps={{}}
+          muiTableBodyProps={{ className: "no-hover-effect" }}
           muiTopToolbarProps={{
             sx: {
               backgroundColor: "transparent",
