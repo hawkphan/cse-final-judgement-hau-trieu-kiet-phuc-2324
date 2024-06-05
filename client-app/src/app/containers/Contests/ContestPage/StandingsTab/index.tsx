@@ -83,6 +83,20 @@ const StandingsTab = ({ contest }: Props) => {
               fontFamily: "Roboto",
             },
           }}
+          muiTableBodyCellProps= {(({row}) => ({
+            sx:{
+              fontSize:
+              row.original.rank === 1
+                ? "19px"
+                : row.original.rank === 2
+                ? "17px"
+                : row.original.rank === 3
+                ? "15px"
+                : "normal",
+            fontWeight: row.original.rank < 4 ? "bold" : "normal",
+            }
+          }))
+          }
         />
       </Box>
     </CardContent>

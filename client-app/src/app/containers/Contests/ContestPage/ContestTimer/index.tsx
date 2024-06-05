@@ -108,7 +108,7 @@ export default function ContestTimer ({  endTime }: Props) {
             )}
           </div>
         ) : (
-          <Typo color={COLOR_CODE.DANGER}>"Ended"</Typo>
+          <Typo color={COLOR_CODE.DANGER}>"The contest has been ended"</Typo>
         )}
       </div>
       )

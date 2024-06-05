@@ -3,6 +3,9 @@ import { MRT_ColumnDef } from "material-react-table";
 import "material-symbols";
 import { formatValueOrNull } from "../../../../shared";
 import { Contest, RankingMember } from "../../../../queries";
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import { Box } from "@mui/material";
+
 
 export const allColumns = (
   contest: Contest
@@ -56,7 +59,33 @@ export const allColumns = (
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 20,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ renderedCellValue, row }) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "1rem",
+          }}
+        >
+          <div style={{ width: "15px" }}>
+            <MilitaryTechIcon
+              style={{
+                display: row.original.rank < 4 ? "block" : "none",
+                right: "0px",
+                color:
+                  row.original.rank === 1
+                    ? "#D6AF36"
+                    : row.original.rank === 2
+                    ? "#D7D7D7"
+                    : "#A77044",
+              }}
+            />
+          </div>
+          <div>
+            <span>{renderedCellValue}</span>
+          </div>
+        </Box>
+      ),
     },
     {
       accessorKey: "userName",

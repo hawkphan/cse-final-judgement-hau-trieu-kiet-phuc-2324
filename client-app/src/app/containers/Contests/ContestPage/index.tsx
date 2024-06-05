@@ -58,9 +58,9 @@ const ContestPage = () => {
   }
 
   return (
-    <Container maxWidth="xl" style={{ padding: "10px" }}>
+    <Container maxWidth="xl" style={{ padding: "0px 10px" }}>
       <Stack>
-        <Grid.Wrap spacing={5} marginTop={1}>
+        <Grid.Wrap spacing={2} marginTop={0}>
           <Grid.Item xs={12} justifyContent={"center"} flexDirection={"column"}>
             <Typo align="center" variant="h3">
               {contest?.name}
