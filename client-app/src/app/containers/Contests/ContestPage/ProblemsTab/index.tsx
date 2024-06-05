@@ -14,7 +14,7 @@ const ProblemDetail = ({ problem }: Props) => {
           {problem?.code} - {problem?.title}
         </Text>
       }
-      isExpanded
+      isExpanded={false}
     >
       <Box
         sx={{

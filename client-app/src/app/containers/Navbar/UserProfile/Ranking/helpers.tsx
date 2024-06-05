@@ -67,24 +67,7 @@ export const allColumns = (): MRT_ColumnDef<Ranking>[] => {
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-
-      Cell: ({ cell, row }) => (
-        <span
-          style={{
-            fontSize:
-              row.original.rank === 1
-                ? "19px"
-                : row.original.rank === 2
-                ? "17px"
-                : row.original.rank === 3
-                ? "15px"
-                : "normal",
-            fontWeight: row.original.rank < 4 ? "bold" : "normal",
-          }}
-        >
-          {formatValueOrNull(cell.getValue<string>())}
-        </span>
-      ),
+      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
     },
     {
       accessorKey: "elo",
@@ -98,23 +81,7 @@ export const allColumns = (): MRT_ColumnDef<Ranking>[] => {
       muiTableHeadCellProps: {
         align: "center",
       },
-      Cell: ({ cell, row }) => (
-        <span
-          style={{
-            fontSize:
-              row.original.rank === 1
-                ? "19px"
-                : row.original.rank === 2
-                ? "17px"
-                : row.original.rank === 3
-                ? "15px"
-                : "normal",
-            fontWeight: row.original.rank < 4 ? "bold" : "normal",
-          }}
-        >
-          {Math.floor(cell.getValue<number>())}
-        </span>
-      ),
+      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
     },
   ];
 };

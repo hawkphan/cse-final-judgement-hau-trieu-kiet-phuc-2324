@@ -30,14 +30,17 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("solutions-statistic")] //api/management/solutions-statistic?dateString={dateString}
-        public async Task<IActionResult> GetSolutionStatistic(string dateString)
+        [HttpGet("solutions-statistic")] //api/management/solutions-statistic?start={start}&end={end}
+        public async Task<IActionResult> GetSolutionStatistic(string start, string end)
         {
-            DateTime date = DateTime.ParseExact(dateString, 
+            DateTime startDate = DateTime.ParseExact(start, 
+                                                "yyyy-MM-ddTHH:mm:ss.fffZ", 
+                                                System.Globalization.CultureInfo.InvariantCulture);
+            DateTime endDate = DateTime.ParseExact(end, 
                                                 "yyyy-MM-ddTHH:mm:ss.fffZ", 
                                                 System.Globalization.CultureInfo.InvariantCulture);
             
-            return HandleApiResult(await Mediator.Send(new WebsiteSolutionStatistic.Query { dateTime = date }));
+            return HandleApiResult(await Mediator.Send(new WebsiteSolutionStatistic.Query { startTime = startDate, endTime = endDate }));
         }
 
         [AllowAnonymous]

@@ -10,7 +10,7 @@ import { getSolutionsStatistic } from "./api";
 
 export function useGetSolutionsStatistic(
   options?: UseQueryOptions<ApiResponseType<DataStatistic>, Error, any> & {
-    date: string;
+    startDate: string; endDate: string;
   }
 ) {
   const {
@@ -20,7 +20,7 @@ export function useGetSolutionsStatistic(
     isFetching,
     refetch: onGetSolutionStatistic,
   } = useQuery<ApiResponseType<DataStatistic>, Error, any>({
-    queryKey: [API_QUERIES.GET_SOLLUTIONS_STATISTIC, { date: options?.date }],
+    queryKey: [API_QUERIES.GET_SOLLUTIONS_STATISTIC, { startDate: options?.startDate , endDate: options?.endDate }],
     queryFn: (query) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
 

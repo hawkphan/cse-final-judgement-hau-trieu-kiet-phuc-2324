@@ -6,9 +6,9 @@ const getOverallStatistic = () => {
   return axios.get<OverallStatistic>(`${API_URL}/api/management/overall-statistic`, {});
 };
 
-const getSolutionsStatistic = (params: string ) => {
+const getSolutionsStatistic = (start: string, end: string ) => {
   return axios.get<DataStatistic>(
-    `${API_URL}/api/management/solutions-statistic?dateString=${params}`,
+    `${API_URL}/api/management/solutions-statistic?start=${start}&end=${end}`,
     {}
   );
 };
