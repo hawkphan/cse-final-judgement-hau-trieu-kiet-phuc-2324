@@ -9,6 +9,7 @@ import {
 } from "../../../shared";
 import RowActions from "../../../shared/components/RowActions";
 import CountdownTimer from "./CountdownTimer";
+import { Typography } from "@mui/material";
 
 interface Props {
   onDetail: Callback;
@@ -22,7 +23,7 @@ export const allColumns = ({ onDetail }: Props): MRT_ColumnDef<Contest>[] => {
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => <Typography fontWeight={600}>{formatValueOrNull(cell.getValue<string>())}</Typography>,
     },
     {
       accessorKey: "startTime",

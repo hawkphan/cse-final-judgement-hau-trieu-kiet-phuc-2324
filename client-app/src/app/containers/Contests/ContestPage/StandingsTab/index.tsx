@@ -64,6 +64,7 @@ const StandingsTab = ({ contest }: Props) => {
           enableDensityToggle={false}
           enablePagination={false}
           enableColumnOrdering={false}
+          enableRowSelection={false}
           isLoading={isFetching}
           enableRowActions
           paginationDisplayMode="pages"
@@ -83,20 +84,20 @@ const StandingsTab = ({ contest }: Props) => {
               fontFamily: "Roboto",
             },
           }}
-          muiTableBodyCellProps= {(({row}) => ({
-            sx:{
+          muiTableBodyCellProps={({ row }) => ({
+            sx: {
               fontSize:
-              row.original.rank === 1
-                ? "19px"
-                : row.original.rank === 2
-                ? "17px"
-                : row.original.rank === 3
-                ? "15px"
-                : "normal",
-            fontWeight: row.original.rank < 4 ? "bold" : "normal",
-            }
-          }))
-          }
+                row.original.rank === 1
+                  ? "19px"
+                  : row.original.rank === 2
+                  ? "17px"
+                  : row.original.rank === 3
+                  ? "15px"
+                  : "normal",
+              fontWeight: row.original.rank < 4 ? "bold" : "normal",
+              pointerEvents: "none",
+            },
+          })}
         />
       </Box>
     </CardContent>

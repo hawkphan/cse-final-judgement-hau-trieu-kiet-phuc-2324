@@ -18,6 +18,7 @@ export const allColumnsOlympic = (
       enableSorting: false,
       muiTableBodyCellProps: ({ row }) => ({
         sx: {
+          pointerEvents: "none",
           background:
             row.original.problems.find((p) => p.problemId === problem.problemId)
               ?.status == 0

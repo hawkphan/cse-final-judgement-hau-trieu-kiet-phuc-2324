@@ -18,7 +18,7 @@ const ProblemDetail = ({ problem }: Props) => {
     >
       <Box
         sx={{
-          border: "1px solid blue",
+          border: "1px solid #2596be",
           borderRadius: "15px",
           paddingTop: "20px",
         }}
@@ -26,14 +26,16 @@ const ProblemDetail = ({ problem }: Props) => {
         <div style={{ marginLeft: 20 }}>
           {renderDifficultyTag(problem?.difficulty)}
           <Typography
-            style={{ marginLeft: "5px", fontSize: "14px", display: "inline" }}
+            style={{
+              marginLeft: "5px",
+              fontSize: "14px",
+              display: "inline",
+            }}
           >
             Published on {formatDateOrNull(problem?.date)}
           </Typography>
-          <Box overflow={"auto"}>
-            <div className="description">
-              {parse(problem?.description ?? "")}
-            </div>
+          <Box overflow="auto">
+            <div>{parse(problem?.description ?? "")}</div>
           </Box>
         </div>
       </Box>

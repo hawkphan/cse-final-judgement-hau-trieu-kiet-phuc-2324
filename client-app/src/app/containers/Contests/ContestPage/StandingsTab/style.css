@@ -17,8 +17,13 @@
 }
 
 .no-hover-effect tr:hover {
-    background-color: inherit; /* Loại bỏ màu nền khi hover */
-    cursor: default; /* Đặt con trỏ mặc định */
+    background-color: inherit;
+    cursor: default;
+}
+
+.MuiTableRow-root {
+    background-color: inherit;
+    cursor: default;
 }
 
 

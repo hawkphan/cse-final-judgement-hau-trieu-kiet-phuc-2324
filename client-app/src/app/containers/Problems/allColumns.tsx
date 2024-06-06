@@ -4,6 +4,7 @@ import { Problem } from "../../queries";
 import "material-symbols";
 import RowActions from "../../shared/components/RowActions";
 import { renderDifficultyTag } from "./helpers";
+import { Typography } from "@mui/material";
 
 interface Props {
   handleEditProblem: (id: string) => void;
@@ -25,7 +26,9 @@ export const allColumns = ({
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => (
+        <Typography fontWeight={600}>{formatValueOrNull(cell.getValue<string>())}</Typography>
+      ),
     },
     {
       accessorKey: "title",
@@ -33,7 +36,7 @@ export const allColumns = ({
       enableColumnFilterModes: false,
       enableSorting: false,
       size: 114,
-      Cell: ({ cell }) => formatValueOrNull(cell.getValue<string>()),
+      Cell: ({ cell }) => <Typography fontWeight={600}>{formatValueOrNull(cell.getValue<string>())}</Typography>,
     },
     {
       accessorKey: "difficulty",
