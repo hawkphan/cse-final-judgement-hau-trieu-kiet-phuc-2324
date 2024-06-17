@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Card, Stack } from "@mui/material";
+import { Box, Card, Stack, Typography } from "@mui/material";
 import {
   Accordion,
   CustomTableSearch,
@@ -11,6 +11,7 @@ import {
 import {
   API_QUERIES,
   Contest,
+  EditContestBody,
   GetPropertiesParams,
   useEditContest,
   useGetContestById,
@@ -73,7 +74,7 @@ const UnregisteredListView = () => {
 
   const handleRegisterContest = () => {
     contest.members = [...contest.members, { role: 1, userId: user?.id }];
-    onEditContest(contest);
+    onEditContest(contest as EditContestBody);
   };
 
   const columns = useMemo(
@@ -90,7 +91,14 @@ const UnregisteredListView = () => {
 
   return (
     <Stack marginTop={2}>
-      <Accordion title={<Text>Other Contests</Text>} isExpanded>
+      <Accordion
+        title={
+          <Typography fontWeight={600} fontSize={18}>
+            Other Contests
+          </Typography>
+        }
+        isExpanded
+      >
         <Box padding={2}>
           <Card sx={{ paddingLeft: 2, paddingRight: 2, paddingTop: 0 }}>
             <Table2<Contest>

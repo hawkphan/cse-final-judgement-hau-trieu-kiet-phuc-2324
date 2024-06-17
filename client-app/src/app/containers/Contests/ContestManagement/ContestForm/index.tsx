@@ -12,7 +12,14 @@ import {
   ViewItem,
   isEmpty,
 } from "../../../../shared";
-import { Card, Container, InputLabel, Stack, Typography } from "@mui/material";
+import {
+  Card,
+  Container,
+  FormHelperText,
+  InputLabel,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import {
   API_QUERIES,
@@ -336,19 +343,24 @@ const ContestForm = () => {
                   // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   fieldState: { error },
                 }) => (
-                  <DateTimePicker
-                    value={dayjs(value)}
-                    label=""
-                    minDateTime={dayjs(new Date().toISOString())}
-                    onChange={(data) => {
-                      onChange(data);
-                      setValue(
-                        ContestProperties.END_TIME,
-                        dayjs(data).toISOString()
-                      );
-                    }}
-                    {...props}
-                  />
+                  <>
+                    <DateTimePicker
+                      value={dayjs(value)}
+                      label=""
+                      minDateTime={dayjs(new Date().toISOString())}
+                      onChange={(data) => {
+                        onChange(data);
+                        setValue(
+                          ContestProperties.END_TIME,
+                          dayjs(data).toISOString()
+                        );
+                      }}
+                      {...props}
+                    />
+                    {error && (
+                      <FormHelperText error>{error.message}</FormHelperText>
+                    )}
+                  </>
                 )}
               />
             </Grid.Item>
@@ -364,15 +376,20 @@ const ContestForm = () => {
                   // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   fieldState: { error },
                 }) => (
-                  <DateTimePicker
-                    value={dayjs(value)}
-                    label=""
-                    minDateTime={dayjs(startTime)}
-                    onChange={(data) => {
-                      onChange(data);
-                    }}
-                    {...props}
-                  />
+                  <>
+                    <DateTimePicker
+                      value={dayjs(value)}
+                      label=""
+                      minDateTime={dayjs(startTime)}
+                      onChange={(data) => {
+                        onChange(data);
+                      }}
+                      {...props}
+                    />
+                    {error && (
+                      <FormHelperText error>{error.message}</FormHelperText>
+                    )}
+                  </>
                 )}
               />
             </Grid.Item>

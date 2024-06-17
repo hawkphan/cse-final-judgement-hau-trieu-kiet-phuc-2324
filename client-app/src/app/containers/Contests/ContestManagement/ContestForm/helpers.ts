@@ -54,7 +54,17 @@ export const contestRuleOptions: SelectOption[] = [
 export const CreateContestFormSchema = Yup.object().shape({
   [ContestProperties.NAME]: Yup.string().required(),
   [ContestProperties.START_TIME]: Yup.date().required(),
-  [ContestProperties.END_TIME]: Yup.date().required(),
+  [ContestProperties.END_TIME]: Yup.date()
+    .required("End time is required")
+    .nullable()
+    .test(
+      "is-after-start",
+      "End time must be after start time",
+      function (value) {
+        const { startTime } = this.parent;
+        return !startTime || !value || new Date(value) > new Date(startTime);
+      }
+    ),
   [ContestProperties.TYPE]: Yup.string().required(),
   [ContestProperties.RULE]: Yup.string().required(),
 });
@@ -62,7 +72,17 @@ export const CreateContestFormSchema = Yup.object().shape({
 export const EditContestFormSchema = Yup.object().shape({
   [ContestProperties.NAME]: Yup.string().required(),
   [ContestProperties.START_TIME]: Yup.date().required(),
-  [ContestProperties.END_TIME]: Yup.date().required(),
+  [ContestProperties.END_TIME]: Yup.date()
+    .required("End time is required")
+    .nullable()
+    .test(
+      "is-after-start",
+      "End time must be after start time",
+      function (value) {
+        const { startTime } = this.parent;
+        return !startTime || !value || new Date(value) > new Date(startTime);
+      }
+    ),
   [ContestProperties.TYPE]: Yup.string().required(),
   [ContestProperties.RULE]: Yup.string().required(),
 });

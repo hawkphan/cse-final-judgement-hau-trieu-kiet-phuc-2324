@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Card, Stack } from "@mui/material";
+import { Box, Card, Stack, Typography } from "@mui/material";
 import { Accordion, EmptyTable, Table2, Text } from "../../../shared";
 import {
   Contest,
@@ -53,7 +53,7 @@ const RegisteredListView = () => {
 
   return (
     <Stack marginTop={2}>
-      <Accordion title={<Text>Your Schedule</Text>} isExpanded>
+      <Accordion title={<Typography fontWeight={600} fontSize={18}>Your Schedule</Typography>} isExpanded>
         <Box padding={2}>
           <Card sx={{ paddingLeft: 2, paddingRight: 2, paddingTop: 0 }}>
             <Table2<Contest>
