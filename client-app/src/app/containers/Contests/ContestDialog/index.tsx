@@ -27,10 +27,12 @@ const ContestDialog: React.FC<Props> = ({
   data,
   onClose,
   isJoining = false,
+  onVirtualJoin = emptyFunction,
   onJoin = emptyFunction,
   onRegister = emptyFunction,
   isButtonLoading = false,
 }) => {
+  const isEnded = new Date() >= new Date(data?.endTime);
   return (
     <Dialog
       open={open}
@@ -59,6 +61,15 @@ const ContestDialog: React.FC<Props> = ({
           >
             Join
           </Button>
+        ) : isEnded ? (
+          <Button
+            isLoading={isButtonLoading}
+            onClick={() => {
+              onVirtualJoin();
+            }}
+          >
+            Virtual Join
+          </Button>
         ) : (
           <Button
             isLoading={isButtonLoading}
@@ -79,6 +90,7 @@ interface Props {
   onClose: Callback;
   onJoin?: Callback;
   onRegister?: Callback;
+  onVirtualJoin?: Callback;
   data: Contest;
   isJoining?: boolean;
   isButtonLoading?: boolean;

@@ -5,7 +5,9 @@ import {
   AnimatedTabPanel,
   Grid,
   LoadingCommon,
+  PermissionRestrict,
   TabsBar,
+  Toastify,
   Typo,
 } from "../../../shared";
 import { useState } from "react";
@@ -33,6 +35,7 @@ const ContestPage = () => {
   );
 
   const isAdmin = member?.role === 0;
+  const isVirtual = member?.role === 2;
 
   const [tab, setTab] = useState(isAdmin ? Tab.MONITORING : Tab.PROBLEMS);
 
@@ -55,6 +58,16 @@ const ContestPage = () => {
 
   if (isFetching) {
     return <LoadingCommon />;
+  }
+
+  if (!isAdmin && !isVirtual && new Date() < new Date(contest.startTime)) {
+    Toastify.info("The contest has not started yet, please come back later!");
+    return <PermissionRestrict />;
+  }
+
+  if (isVirtual && new Date() < new Date(contest.endTime)) {
+    Toastify.info("The virtual contest is not ready, please come back later!");
+    return <PermissionRestrict />;
   }
 
   return (

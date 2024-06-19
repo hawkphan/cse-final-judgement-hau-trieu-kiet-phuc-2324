@@ -179,6 +179,12 @@ namespace Persistence.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("VirtualEndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("VirtualStartTime")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ContestId");

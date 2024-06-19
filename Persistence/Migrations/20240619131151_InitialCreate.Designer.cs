@@ -11,7 +11,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240525073300_InitialCreate")]
+    [Migration("20240619131151_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -180,6 +180,12 @@ namespace Persistence.Migrations
                         .HasColumnType("REAL");
 
                     b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("VirtualEndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("VirtualStartTime")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

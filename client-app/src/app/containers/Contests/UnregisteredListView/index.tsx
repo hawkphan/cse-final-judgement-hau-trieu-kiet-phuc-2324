@@ -24,12 +24,15 @@ import { allColumns } from "./allColumns";
 import UnregisteredListToolbar from "./UnregisteredListToolbar";
 import { useStore } from "../../../shared/common/stores/store";
 import ContestDialog from "../ContestDialog";
+import { PATHS } from "../../../configs/paths";
+import { useNavigate } from "react-router-dom";
 
 const UnregisteredListView = () => {
   const { userStore } = useStore();
   const user = userStore.user;
 
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [isVirtual, setIsVirtual] = useState(false);
   const [selectedContestData, setSelectedContestData] = useState<Contest>();
 
   const {
@@ -45,6 +48,7 @@ const UnregisteredListView = () => {
     queryKey: [API_QUERIES.GET_CONTEST_BY_ID, { id: selectedContestData?.id }],
   });
 
+  const navigate = useNavigate();
   const { handleInvalidateContests } = useGetContests();
   const { handleInvalidateRegisteredContest } = useGetRegisteredContest();
 
@@ -56,6 +60,9 @@ const UnregisteredListView = () => {
       handleInvalidateUnregisteredContest();
       handleInvalidateRegisteredContest();
       setOpenDetailDialog(false);
+      if (isVirtual) {
+        navigate(PATHS.contestPage.replace(":id", selectedContestData?.id));
+      }
     },
     onError: (error) => {
       Toastify.error(error.message);
@@ -74,6 +81,27 @@ const UnregisteredListView = () => {
 
   const handleRegisterContest = () => {
     contest.members = [...contest.members, { role: 1, userId: user?.id }];
+
+    const startTime = new Date(contest.startTime);
+    const endTime = new Date(contest.endTime);
+
+    contest.startTime = startTime.toISOString();
+    contest.endTime = endTime.toISOString();
+
+    setIsVirtual(false);
+    onEditContest(contest as EditContestBody);
+  };
+
+  const handleVirtualJoinContest = () => {
+    contest.members = [...contest.members, { role: 2, userId: user?.id }];
+
+    const startTime = new Date(contest.startTime);
+    const endTime = new Date(contest.endTime);
+
+    contest.startTime = startTime.toISOString();
+    contest.endTime = endTime.toISOString();
+
+    setIsVirtual(true);
     onEditContest(contest as EditContestBody);
   };
 
@@ -153,6 +181,7 @@ const UnregisteredListView = () => {
         data={selectedContestData}
         open={openDetailDialog}
         onRegister={handleRegisterContest}
+        onVirtualJoin={handleVirtualJoinContest}
         isButtonLoading={isEditPending}
       />
     </Stack>

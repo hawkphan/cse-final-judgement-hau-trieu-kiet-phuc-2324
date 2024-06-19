@@ -342,7 +342,7 @@ const ProblemForm = () => {
                         title="Private for contests"
                       />
                     }
-                    label="Private for Contests (This contest cannot be included in any contests)"
+                    label="Private for Contests (This problem cannot be included in any contests)"
                   />
                 )}
               />

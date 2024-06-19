@@ -260,7 +260,9 @@ namespace Persistence.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Role = table.Column<double>(type: "REAL", nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ContestId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    ContestId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    VirtualStartTime = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    VirtualEndTime = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

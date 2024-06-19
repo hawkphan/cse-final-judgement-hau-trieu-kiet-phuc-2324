@@ -26,6 +26,10 @@ export const renderRole = (value: number) => {
     return "Contestant";
   }
 
+  if(value === 2) {
+    return "Virtual Contestant"
+  }
+
   return "--";
 };
 

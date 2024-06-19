@@ -81,6 +81,13 @@ namespace Application.Contests
                             UserId = item.UserId,
                             Role = item.Role,
                         };
+
+                        if (Math.Abs(newMember.Role - 2) < 0.0000001)
+                        {
+                            var duration = contest.EndTime - contest.StartTime;
+                            newMember.VirtualStartTime = DateTime.Now.AddHours(-7);
+                            newMember.VirtualEndTime = newMember.VirtualStartTime + duration;
+                        }
                         await _context.ContestMembers.AddAsync(newMember);
                     }
 
