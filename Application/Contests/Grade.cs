@@ -18,6 +18,7 @@ namespace Application.Contests
         public class Command : IRequest<ApiResult<List<RankingMemberDto>>>
         {
             public Guid ContestId { get; set; }
+            public bool VirtualIncluded { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, ApiResult<List<RankingMemberDto>>>
@@ -38,18 +39,20 @@ namespace Application.Contests
 
                 if (Math.Abs(contest.Rule - 0) < 0.0000001)
                 {
-                    return await GradeContestICPC(contestId);
+                    return await GradeContestICPC(contestId, request.VirtualIncluded);
                 }
 
-                return await GradeContestOlympic(contestId);
+                return await GradeContestOlympic(contestId, request.VirtualIncluded);
             }
-            public async Task<ApiResult<List<RankingMemberDto>>> GradeContestICPC(Guid contestId)
+            public async Task<ApiResult<List<RankingMemberDto>>> GradeContestICPC(Guid contestId, bool virtualIncluded)
             {
                 List<RankingMemberDto> responseList = new List<RankingMemberDto>();
 
                 var contest = await _context.Contests.Include(c => c.Problems).Include(c => c.Members).FirstOrDefaultAsync(c => c.Id == contestId);
                 var contestProblems = _context.ContestProblems.Include(p => p.Problem).Where(p => p.ContestId == contestId);
-                var contestants = _context.ContestMembers.Include(m => m.User).Where(m => Math.Abs(m.Role - 0) >= 0.0000001 && m.ContestId == contestId).ToList();
+                var contestMembers = _context.ContestMembers.Include(m => m.User).AsQueryable();
+                var contestants = virtualIncluded ? contestMembers.Where(m => Math.Abs(m.Role - 0) >= 0.0000001 && m.ContestId == contestId).ToList()
+                                                    : contestMembers.Where(m => Math.Abs(m.Role - 0) >= 0.0000001 && Math.Abs(m.Role - 2) >= 0.0000001 && m.ContestId == contestId).ToList();
 
                 var adminIds = new List<Guid>();
                 foreach (var item in contest.Members.Where(m => Math.Abs(m.Role - 0) < 0.0000001))
@@ -182,13 +185,14 @@ namespace Application.Contests
                 return ApiResult<List<RankingMemberDto>>.Success(responseList.OrderBy(r => r.Rank).ToList());
             }
 
-            public async Task<ApiResult<List<RankingMemberDto>>> GradeContestOlympic(Guid contestId)
+            public async Task<ApiResult<List<RankingMemberDto>>> GradeContestOlympic(Guid contestId, bool virtualIncluded)
             {
                 List<RankingMemberDto> responseList = new List<RankingMemberDto>();
 
                 var contest = await _context.Contests.Include(c => c.Problems).Include(c => c.Members).FirstOrDefaultAsync(c => c.Id == contestId);
                 var contestProblems = _context.ContestProblems.Include(p => p.Problem).Where(p => p.ContestId == contestId);
-                var contestants = _context.ContestMembers.Include(m => m.User).Where(m => Math.Abs(m.Role - 0) >= 0.0000001 && m.ContestId == contestId).ToList();
+                var contestants = virtualIncluded ? _context.ContestMembers.Include(m => m.User).Where(m => Math.Abs(m.Role - 0) >= 0.0000001 && m.ContestId == contestId).ToList()
+                                                    : _context.ContestMembers.Include(m => m.User).Where(m => Math.Abs(m.Role - 0) >= 0.0000001 && Math.Abs(m.Role - 2) >= 0.0000001 && m.ContestId == contestId).ToList();
 
                 var adminIds = new List<Guid>();
                 foreach (var item in contest.Members.Where(m => Math.Abs(m.Role - 0) < 0.0000001))

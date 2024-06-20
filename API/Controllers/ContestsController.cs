@@ -35,9 +35,9 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpGet("{id}/leaderboard")]
-        public async Task<ActionResult<List<RankingMemberDto>>> GetRank(Guid id)
+        public async Task<ActionResult<List<RankingMemberDto>>> GetRank(Guid id, [FromQuery] bool virtualIncluded)
         {
-            return HandleApiResult(await Mediator.Send(new Grade.Command { ContestId = id }));
+            return HandleApiResult(await Mediator.Send(new Grade.Command { ContestId = id, VirtualIncluded = virtualIncluded }));
         }
         [AllowAnonymous]
         [HttpPost]

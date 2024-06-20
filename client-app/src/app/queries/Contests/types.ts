@@ -52,6 +52,8 @@ export interface ContestMember {
   userId?: string;
   role?: number;
   user?: User;
+  virtualStartTime?: string;
+  virtualEndTime?: string;
 }
 
 export interface ContestStatistic {

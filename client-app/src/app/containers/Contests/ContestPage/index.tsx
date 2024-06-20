@@ -69,6 +69,12 @@ const ContestPage = () => {
     Toastify.info("The virtual contest is not ready, please come back later!");
     return <PermissionRestrict />;
   }
+  
+  const virtualEndTime = isVirtual
+    ? new Date(member.virtualEndTime)
+    : new Date();
+
+  virtualEndTime.setHours(virtualEndTime.getHours() + 7);
 
   return (
     <Container maxWidth="xl" style={{ padding: "0px 10px" }}>
@@ -78,7 +84,11 @@ const ContestPage = () => {
             <Typo align="center" variant="h3">
               {contest?.name}
             </Typo>
-            <ContestTimer endTime={contest.endTime} />
+            <ContestTimer
+              endTime={
+                isVirtual ? virtualEndTime.toISOString() : contest.endTime
+              }
+            />
           </Grid.Item>
           <Grid.Item xs={12}>
             <Card sx={{ minHeight: "700px" }}>

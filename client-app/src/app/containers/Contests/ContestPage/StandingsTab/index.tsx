@@ -1,6 +1,6 @@
-import { Box, CardContent } from "@mui/material";
-import { EmptyTable, Table2 } from "../../../../shared";
-import { useEffect, useMemo } from "react";
+import { Box, CardContent, Stack } from "@mui/material";
+import { EmptyTable, MuiSwitch, Table2 } from "../../../../shared";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { allColumns } from "./allColumns";
 import { Contest, RankingMember, useGetRanking } from "../../../../queries";
 import "./style.css";
@@ -11,6 +11,8 @@ interface Props {
 }
 
 const StandingsTab = ({ contest }: Props) => {
+  const [virtualIncluded, setVirtualIncluded] = useState(false);
+
   const columns = useMemo(() => {
     if (contest?.rule === 1) {
       return allColumnsOlympic(contest);
@@ -18,11 +20,17 @@ const StandingsTab = ({ contest }: Props) => {
 
     return allColumns(contest);
   }, [contest]);
-  const { rankings, isFetching, totalRecords, setParams } = useGetRanking();
+  const { rankings, isFetching, totalRecords, params, setParams } =
+    useGetRanking();
+
+  const handleSetVirtualIncluded = useCallback(() => {
+    setParams({ ...params, virtualIncluded });
+    setVirtualIncluded(!virtualIncluded);
+  }, [params, setParams, virtualIncluded]);
 
   useEffect(() => {
-    setParams({ contestId: contest?.id });
-  }, [contest?.id, setParams]);
+    setParams({ contestId: contest?.id, virtualIncluded });
+  }, [contest?.id, setParams, virtualIncluded]);
 
   return (
     <CardContent>
@@ -38,6 +46,14 @@ const StandingsTab = ({ contest }: Props) => {
         }}
       >
         <div className="fl-row from-end">
+          <Stack direction="row" spacing={1} my={0.5} mr={2}>
+            <MuiSwitch
+              label="Include virtual statistics"
+              isShowDescription={false}
+              onChange={handleSetVirtualIncluded}
+              checked={virtualIncluded}
+            />
+          </Stack>
           <div className="fl-row from-end contained">
             <div className="fl-row fl-item">
               <div className="iconSquare green"></div>
