@@ -69,7 +69,7 @@ const ContestPage = () => {
     Toastify.info("The virtual contest is not ready, please come back later!");
     return <PermissionRestrict />;
   }
-  
+
   const virtualEndTime = isVirtual
     ? new Date(member.virtualEndTime)
     : new Date();

@@ -136,10 +136,10 @@ namespace Application.Solutions
 
                         //update elo here
 
-                        double ExpectedCompletionRate = 1 / (1 + Math.Pow(10, (user.Rating - problem.Difficulty) / 400));
+                        double ExpectedCompletionRate = 1 / (1 + Math.Pow(10, (problem.Difficulty - user.Rating) / 400));
 
-                        user.Rating = Math.Round(user.Rating - 100 * (solution.Score - ExpectedCompletionRate), 0);
-                        problem.Difficulty = Math.Round(problem.Difficulty + 100 * (solution.Score - ExpectedCompletionRate), 0);
+                        user.Rating = Math.Round(user.Rating + 100 * (solution.Score - ExpectedCompletionRate), 0);
+                        problem.Difficulty = Math.Round(problem.Difficulty - 100 * (solution.Score - ExpectedCompletionRate), 0);
 
                         var newNotification = new Notification
                         {
